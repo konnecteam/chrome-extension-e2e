@@ -1,0 +1,17 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "sourceMap": false,
+    "types": ["@types/chrome", "node", "jest"],
+    "typeRoots": ["node_modules/@types"],
+    "moduleResolution": "node",
+    "lib": ["es2017", "dom"],
+    "baseUrl": "./src",
+    "skipLibCheck": true
+  },
+  "include": [
+    "./src/**/*"
+  ],
+}

@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+.idea
+build
+dist
+dist-zip
+*.pem
+*.crx
+package-lock.json
+.vscode

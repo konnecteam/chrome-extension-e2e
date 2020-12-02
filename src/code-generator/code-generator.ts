@@ -1,0 +1,189 @@
+import ActionEvents from '../constants/action-events';
+import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
+import { EventModel } from './../models/event-model';
+import { Block } from './block';
+import { OptionModel } from './../models/options-model';
+import { defaults } from '../constants/default-options';
+import { FooterFactory } from '../factory/code-generator/footer-factory';
+import { HeaderFactory } from '../factory/code-generator/header-factory';
+
+
+/**
+ * Class qui permet de générer le scénario à partir des événement enregistrés
+ */
+export default class CodeGenerator {
+
+  /** Options du plugin */
+  private _options : OptionModel;
+
+  /** Liste des Block du scénario */
+  private _blocks : Block[];
+
+  /** Frame courante */
+  private _frame : string = 'page';
+
+  /** Id de la framess */
+  private _frameId : number = 0;
+
+  /** Liste des frames */
+  private _allFrames : any = {};
+
+  /** Permet de savoir si il y a eu une navigation */
+  private _hasNavigation = false;
+
+  /** Dernière position du scroll verticale */
+  private _lastScrollY = 0;
+
+  /** Dernière position du scroll horizontale */
+  private _lastScrollX =  0;
+
+  constructor(options : OptionModel ) {
+    this._options = Object.assign(defaults, options);
+    this._blocks = [];
+  }
+
+  public generate(events : EventModel[]) : string {
+    return HeaderFactory.getHeader(
+      this._options.recordHttpRequest,
+      this._options.wrapAsync,
+      this._options.headless,
+      this._options.regexHTTPrequest
+      )
+     + this._parseEvents(events)
+     + FooterFactory.generateFooter(this._options.wrapAsync);
+  }
+
+  /**
+   * On génère le code à partir des events enregistrés
+   */
+  private _parseEvents(events : EventModel[]) : string {
+
+    let result = '';
+
+    let newBlock : Block;
+    // 1- On parcourt la liste de tous les event sauvegardés pour générer les blocks
+    for (let i = 0; i < events.length; i++) {
+
+      const currentEvent = events[i];
+      // Si le scroll de le page a changé, alors on le change aussi
+      if (!isNaN(currentEvent.scrollX) && !isNaN(currentEvent.scrollY)) {
+
+        if (this._lastScrollX !== currentEvent.scrollX || this._lastScrollY !== currentEvent.scrollY) {
+          this._lastScrollX = currentEvent.scrollX;
+          this._lastScrollY = currentEvent.scrollY;
+
+          this._blocks.push(
+            ScenarioFactory.generateScroll(this._frameId, this._frame, currentEvent.scrollX, currentEvent.scrollY)
+          );
+        }
+      }
+
+      // On update les frames
+      this._setFrames(currentEvent.frameId, currentEvent.frameUrl);
+      //On parse l'event en block
+      newBlock = ScenarioFactory.parseEvent(currentEvent, this._frameId, this._frame, this._options);
+
+      if (newBlock) {
+
+        /* Si l'option custom Line befoer event est utilisé
+           Alors on rajoute la ligne customisé
+        */
+        if (this._options.customLineBeforeEvent) {
+          this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLineBeforeEvent));
+        }
+
+        /* Si l'event contient un commentaire alors on rajoute un block de commentaire */
+        if (currentEvent.comments) {
+          this._blocks.push(ScenarioFactory.generateComments(newBlock, currentEvent.comments));
+        } else {
+          this._blocks.push(newBlock);
+        }
+      }
+
+      // Si l'action détéctée est un navigation alors on met la navigation à true
+      if  (currentEvent.action === ActionEvents.NAVIGATION) {
+        this._hasNavigation = true;
+      }
+
+    }
+
+    /* Si il y a eu une navigation et que l'oopion pour wait la navigation est activée
+       Alors on rajoute le block de navigation
+    */
+    if (this._hasNavigation && this._options.waitForNavigation) {
+      this._blocks.unshift(ScenarioFactory.generateNavigationVar(this._frameId));
+    }
+
+    // 2- on effectue les opération post processs
+    this._postProcess();
+
+    const indent = this._options.wrapAsync ? '  ' : '';
+    const newLine = `\n`;
+    // 3- on récupère le result
+    for (const block of this._blocks) {
+      const lines = block.getLines();
+
+      for (const line of lines) {
+        result += indent + line.value + newLine;
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Modifie la frame
+   */
+  private _setFrames(frameId : number, frameUrl : string) : void {
+
+    if (frameId && frameId !== 0) {
+      this._frameId = frameId;
+      this._frame = `frame_${frameId}`;
+      this._allFrames[frameId] = frameUrl;
+    } else {
+      this._frameId = 0;
+      this._frame = 'page';
+    }
+  }
+
+  /**
+   * Effectue des opérations après le parsage en block des events,
+   * pour set les frames et ajouter une ligne blanche
+   */
+  private _postProcess() {
+    // when events are recorded from different frames, we want to add a frame setter near the code that uses that frame
+    if (Object.keys(this._allFrames).length > 0) {
+      this._postProcessSetFrames();
+    }
+
+    if (this._options.blankLinesBetweenBlocks && this._blocks.length > 0) {
+      this._postProcessAddBlankLines();
+    }
+  }
+
+  /**
+   *  Set les frames
+   */
+  private _postProcessSetFrames() : void {
+    for (const [i, block] of this._blocks.entries()) {
+
+      const result = ScenarioFactory.generateSetFrame(block, block[i], this._allFrames);
+      this._allFrames = result.allFrames ;
+      block[i] = result.block;
+    }
+  }
+
+  /**
+   * Ajoute des lignes blanches entre chaques blocks
+   */
+  private _postProcessAddBlankLines() {
+
+    let i = 0;
+    while (i <= this._blocks.length) {
+
+      const blankLine = ScenarioFactory.generateBlankLine();
+      this._blocks.splice(i, 0, blankLine);
+      i += 2;
+    }
+  }
+
+}

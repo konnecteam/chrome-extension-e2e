@@ -1,0 +1,54 @@
+<!-- File Drop Zone file document-->
+<collapse-panel theme.bind="theme" container-class.bind="containerClass" full-height.bind="fullHeight"
+  has-collapse.bind="hasCollapse" prevent-click-on-header.bind="preventClickOnHeader" class="au-target block"
+  au-target-id="712">
+  <div class="au-target panel panel-primary" au-target-id="117" data-group="">
+    <div show.bind="useHeader" class="au-target panel-heading clearfix flex" au-target-id="118">
+      <h4 class="panel-title flex-col au-target" click.trigger="preventClickOnHeader ? '' : changeVisibleState()"
+        au-target-id="119"><span slot="headerSlot" class="au-target" au-target-id="713"> Documents </span>
+        <!--slot-->
+      </h4>
+      <div class="flex-col-auto align-self-center m-r hidden-print"><span slot="actionsSlot" class="au-target"
+          au-target-id="715">
+          <!--anchor--><a data-toggle="tooltip" data-placement="bottom" click.delegate="dropzone.click()"
+            class="au-target btn btn-sm btn-icon btn-circle btn-primary m-r-xs" au-target-id="718"
+            title="Ajouter un document"><i class="fa fa-plus-square"></i></a>
+          <!--anchor--></span>
+        <!--slot-->
+        <!--anchor--> <a href="#" click.trigger="changeVisibleState()"
+          class="au-target btn btn-sm btn-icon btn-circle btn-primary" au-target-id="125"><span
+            class="au-target fa fa-chevron-up" au-target-id="126"></span></a>
+        <!--anchor-->
+      </div>
+    </div>
+    <div show.bind="isVisible || isFullscreen" class="au-target panel-body" au-target-id="128">
+      <!--anchor-->
+      <div slot="contentSlot" class="au-target" au-target-id="720">
+        <file-dropzone show.bind="showDropzone" class="hidden-print au-target" view-model.ref="dropzone"
+          module-name.bind="moduleName" value-id.bind="valueId" upload-multiple.bind="uploadMultiple"
+          max-file-size.bind="maxFileSize " accepted-files.bind="acceptedFiles " au-target-id="721">
+          <div ref="dropzonearea" class="m-b-sm dropzone container-dashed au-target dz-clickable"
+            style="padding:0;min-height:0" au-target-id="645">
+            <div class="dz-message m-b-sm m-t-sm" data-dz-message=""><a style="vertical-align:sub"><i
+                  class="fa fa-plus-square fa-2x"></i> </a><span show.bind="placeholder" class="au-target aurelia-hide"
+                au-target-id="646"></span><span hide.bind="placeholder" class="au-target" au-target-id="648">Cliquez ici
+                ou glissez un document dans cette zone pour
+                l'ajouter.</span></div>
+          </div>
+          <div ref="dropzonereplacearea" style="display:none" class="au-target" au-target-id="650"></div>
+        </file-dropzone>
+        <!--anchor-->
+        <!--anchor-->
+        <modal-view view-model.ref="modalDocView" on-close.call="onModalClose()" class="au-target" au-target-id="733">
+        </modal-view>
+        <!--anchor-->
+      </div>
+      <!--slot-->
+    </div>
+    <div show.bind="(isVisible || isFullscreen) &amp;&amp; useFooter"
+      class="au-target panel-footer text-right hidden-print aurelia-hide" au-target-id="131">
+      <!--slot-->
+    </div>
+  </div>
+</collapse-panel>
+<input id="fileItem" type="file">

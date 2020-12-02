@@ -1,0 +1,463 @@
+<!-- K list simple-->
+<div class="col-md-7">
+  <konnect-dropdownlist view-model.ref="originSiteViewModelList" model-name="cpyaddr" id-field="cpyaddrincde"
+    fields="cpyaddrincde,cpyincde,cpyaddrexcde,cpyaddrstreet1dsc,cpyaddrstreet2dsc,cpyaddrzipdsc,cpyaddrtwndsc,cpyaddrphnnum,cpyaddrfaxnum,validpnt"
+    value-id.bind="requestModel.origaddrincde &amp; validateForm" check-field="field: SYSTEM.CPYADDR_ADDR;"
+    expands="cpy|[&quot;cpytrdnamdsc&quot;]" order-by="cpy.cpytrdnamdsc,cpyaddrexcde"
+    group-field.bind="[&quot;cpy.cpytrdnamdsc&quot;]" filter="cpyaddrincde ne N[0] and validpnt ne N[0]"
+    changed.call="siteHasChanged(newValue, oldValue)" item-height.bind="30" ,=""
+    query-format="cpyaddrexcde like S[{0}%] or cpy.cpytrdnamdsc like S[{0}%]" class="au-target" au-target-id="872"
+    validation-id="vld13">
+    <div show.bind="false" ref="currentElement" class="au-target aurelia-hide" au-target-id="257">
+      <data-template class="au-target" au-target-id="873"></data-template>
+      <data-template for="value" class="au-target" au-target-id="874"></data-template>
+      <!--slot-->
+    </div>
+    <!--anchor-->
+    <div class="au-target" au-target-id="263"><span title="" class="k-widget k-dropdown au-target" unselectable="on"
+        role="listbox" aria-haspopup="true" aria-expanded="true" tabindex="0" aria-owns="kdp7_listbox"
+        aria-live="polite" aria-disabled="false" style="width: 100%;" aria-busy="false"
+        aria-activedescendant="0e29402c-a8b5-41ae-ba31-4f6a0de7fda9"><span unselectable="on"
+          class="k-dropdown-wrap k-state-default"><span unselectable="on" class="k-input"><span
+              show.bind="cpy &amp;&amp; cpy.cpytrdnamdsc" class="au-target" au-target-id="2116">DHL - </span>A
+            renseigner </span><span unselectable="on" class="k-select" aria-label="select"><span
+              class="k-icon k-i-arrow-60-down"></span></span></span>
+        <ak-drop-down-list id.bind="currentId" view-model.ref="akComponent" k-data-text-field.bind="displayField"
+          k-filter="startswith" k-data-value-field.bind="idField" k-data-source.bind="dataSource"
+          k-ignore-case="ignoreCase" k-virtual.bind="virtual" k-height.bind="componentHeight" k-value.two-way="valueId"
+          k-on-filtering.delegate="onFiltering($event.detail)" k-on-open.delegate="onOpen($event.detail)"
+          k-on-data-bound.delegate="onDataBound($event.detail)" k-on-change.delegate="onValueChange($event.detail)"
+          k-widget.two-way="kWidget" k-on-select.delegate="onKendoSelect($event.detail)" k-delay.bind="500"
+          k-auto-bind.bind="autoBind" k-option-label.bind="optionLabel | t" k-min-length.bind="minLength"
+          k-enforce-min-length.bind="enforceMinLength" style="display: none; width: 100%;" class="au-target"
+          au-target-id="264" id="kdp7" data-role="dropdownlist">
+          <!--slot-->
+        </ak-drop-down-list>
+      </span>
+      <!--anchor-->
+      <!--anchor-->
+      <!--anchor-->
+    </div>
+  </konnect-dropdownlist>
+</div>
+<div class="k-animation-container"
+  style="width: 497.421px; height: 326.239px; box-sizing: content-box; overflow: hidden; display: none; position: absolute; top: 473.879px; z-index: 10002; left: 425.452px;"
+  aria-hidden="true">
+  <div class="k-list-container k-popup k-group k-reset" id="kdp20-list" data-role="popup"
+    style="display: none; position: absolute; font-size: 14px; font-family: &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-stretch: 100%; font-style: normal; font-weight: 400; line-height: normal; width: 495.42px; min-width: 495.42px; white-space: normal; transform: translateY(-326.239px);"
+    aria-hidden="true"><span class="k-list-filter"><input class="k-textbox" role="listbox" aria-haspopup="true"
+        aria-expanded="false" aria-owns="kdp20_listbox" tabindex="0" aria-disabled="false"
+        aria-activedescendant="7a77d091-626f-413b-8930-9c0fc54cf50e" style="display: inline-block; width: 495.42px;"
+        aria-busy="false"><span class="k-icon k-i-zoom"></span></span>
+    <div class="k-virtual-wrap">
+      <div class="k-group-header">DELL</div>
+      <div unselectable="on" class="k-virtual-content" style="height: 256px;">
+        <ul unselectable="on" class="k-list k-reset k-virtual-list" tabindex="-1" aria-hidden="true" id="kdp20_listbox"
+          aria-live="polite" data-role="virtuallist" role="listbox">
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="4da456ce-7ea7-4545-be99-1c75abb88c95" data-offset-index="26"
+            style="height: 30px; min-height: 30px; transform: translateY(780px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2193" title="BESANCON">BESANCON</span>
+            <div class="k-group">DELSEY</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="f176688b-0699-4cb3-806e-14f8479c82a7" data-offset-index="27"
+            style="height: 30px; min-height: 30px; transform: translateY(810px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2195" title="A renseigner">A renseigner</span>
+            <div class="k-group">DHL</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first" role="option"
+            data-uid="248ce758-d8ca-4339-a43e-906634590108" data-offset-index="28"
+            style="height: 30px; min-height: 30px; transform: translateY(840px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2197" title="BULLY">BULLY</span>
+            <div class="k-group">DMARQUES</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="c3ca7769-bbf0-475f-8c41-3022156f2da6"
+            data-offset-index="29" style="height: 30px; min-height: 30px; transform: translateY(870px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2199" title="Magasin 1">Magasin 1</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="1f655745-b0f9-4250-a9a9-444b542d621a"
+            data-offset-index="30" style="height: 30px; min-height: 30px; transform: translateY(900px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2201" title="Magasin 10">Magasin 10</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="14adc06a-595e-460f-b173-34020a35c3a2"
+            data-offset-index="31" style="height: 30px; min-height: 30px; transform: translateY(930px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2203" title="Magasin 11">Magasin 11</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="ccd08f62-f86e-4f39-b69d-730f617a0fd6"
+            data-offset-index="32" style="height: 30px; min-height: 30px; transform: translateY(960px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2205" title="Magasin 12">Magasin 12</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="0b4b99ea-ebec-4225-a4a7-1afe770beecc"
+            data-offset-index="33" style="height: 30px; min-height: 30px; transform: translateY(990px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2207" title="Magasin 13">Magasin 13</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="28b1c0ad-ca5a-44fb-9da4-2230e2295ed3"
+            data-offset-index="34" style="height: 30px; min-height: 30px; transform: translateY(1020px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2209" title="Magasin 14">Magasin 14</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="92de7926-92c9-4b82-a300-91ec38a935c2"
+            data-offset-index="35" style="height: 30px; min-height: 30px; transform: translateY(1050px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2211" title="Magasin 15">Magasin 15</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="39fac1ac-acc7-4fde-a2bf-86920f3484e4"
+            data-offset-index="36" style="height: 30px; min-height: 30px; transform: translateY(1080px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2213" title="Magasin 2">Magasin 2</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="96e2fd23-d36a-48ee-9fa3-9f6fa468ae97"
+            data-offset-index="37" style="height: 30px; min-height: 30px; transform: translateY(1110px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2215" title="Magasin 3">Magasin 3</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="233a71bb-fa59-441f-9941-194b63f97460"
+            data-offset-index="38" style="height: 30px; min-height: 30px; transform: translateY(1140px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2217" title="Magasin 4">Magasin 4</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="9ab2eb6d-4e9c-4db9-bac7-f02c95fdf631"
+            data-offset-index="39" style="height: 30px; min-height: 30px; transform: translateY(1170px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2219" title="Magasin 5">Magasin 5</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item k-last" role="option"
+            data-uid="1a5e6092-ceeb-4501-96f0-6fef6321eeb6" data-offset-index="40"
+            style="height: 30px; min-height: 30px; transform: translateY(1200px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2221" title="Magasin 6">Magasin 6</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item k-last" role="option"
+            data-uid="1e5c322f-897b-4c42-8232-b7a44fbfa029" data-offset-index="6"
+            style="height: 30px; min-height: 30px; transform: translateY(180px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2153" title="A renseigner">A renseigner</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="31c60e33-b37a-4046-9b73-db03eea1625b" data-offset-index="7"
+            style="height: 30px; min-height: 30px; transform: translateY(210px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2155" title="A renseigner">A renseigner</span>
+            <div class="k-group">BANQUE COURTOIS</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="ccfed06e-c90c-445c-8271-a153c6f50629" data-offset-index="8"
+            style="height: 30px; min-height: 30px; transform: translateY(240px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2157" title="A renseigner">A renseigner</span>
+            <div class="k-group">BANQUE KOLB</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="2d3e7975-9fcb-4e0b-b00e-e4d9a256a234" data-offset-index="9"
+            style="height: 30px; min-height: 30px; transform: translateY(270px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2159" title="A renseigner">A renseigner</span>
+            <div class="k-group">BANQUE LAYDERNIER</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="82f8c2ff-0508-4a75-8b53-261aeb62e0e5" data-offset-index="10"
+            style="height: 30px; min-height: 30px; transform: translateY(300px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2161" title="A renseigner">A renseigner</span>
+            <div class="k-group">BANQUE POUYANNE</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="53c43e9a-699a-4843-970e-ceb2c1105aa5" data-offset-index="11"
+            style="height: 30px; min-height: 30px; transform: translateY(330px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2163" title="A renseigner">A renseigner</span>
+            <div class="k-group">BANQUE RHONE ALPES</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="8fd16e0a-a543-431f-b8fb-bbcd58da8ce7" data-offset-index="12"
+            style="height: 30px; min-height: 30px; transform: translateY(360px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2165" title="A renseigner">A renseigner</span>
+            <div class="k-group">BANQUE TARNEAUD</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="a7005263-c890-4035-838b-e2b20cf9d2a2" data-offset-index="13"
+            style="height: 30px; min-height: 30px; transform: translateY(390px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2167" title="GRENOBLE">GRENOBLE</span>
+            <div class="k-group">BIJOUTERIE LOMBARD</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="cfb5e13c-9f95-424d-bda6-12f193dd4e82" data-offset-index="14"
+            style="height: 30px; min-height: 30px; transform: translateY(420px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2169" title="blablasite">blablasite</span>
+            <div class="k-group">blabla</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="ec244bde-5dca-4008-806b-14445bb91da3" data-offset-index="15"
+            style="height: 30px; min-height: 30px; transform: translateY(450px);"
+            id="7a77d091-626f-413b-8930-9c0fc54cf50e"><span title.bind="cpyaddrexcde" class="au-target"
+              au-target-id="2171" title="A renseigner">A renseigner</span>
+            <div class="k-group">CHRONOPOST</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-last k-first" role="option"
+            data-uid="83553110-20f5-4d98-b8d7-e52eb7868d0e" data-offset-index="16"
+            style="height: 30px; min-height: 30px; transform: translateY(480px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2173" title="A renseigner">A renseigner</span>
+            <div class="k-group">CIRRA</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="4f023099-0789-4552-a3d7-28177274f70b" data-offset-index="17"
+            style="height: 30px; min-height: 30px; transform: translateY(510px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2175" title="ST PIERRE EN FAUCIGNY">ST PIERRE EN FAUCIGNY</span>
+            <div class="k-group">CLIENT 2</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="ffbd7bc0-6b10-48a6-a44a-3e2f4d5b8040" data-offset-index="18"
+            style="height: 30px; min-height: 30px; transform: translateY(540px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2177" title="ECULLY">ECULLY</span>
+            <div class="k-group">COCCI MARKET</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="40c3126a-e8f5-4967-bcaa-5b37b61bff9a" data-offset-index="19"
+            style="height: 30px; min-height: 30px; transform: translateY(570px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2179" title="A renseigner">A renseigner</span>
+            <div class="k-group">CRCAM DES SAVOIE</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="3421dca0-990f-4425-b1b3-96fb3cf1e138" data-offset-index="20"
+            style="height: 30px; min-height: 30px; transform: translateY(600px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2181" title="A renseigner">A renseigner</span>
+            <div class="k-group">CRCAM SUD RHONE ALPES</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first k-last" role="option"
+            data-uid="dc4a417a-9b55-4d12-b5a6-8fdcf67ef99d" data-offset-index="21"
+            style="height: 30px; min-height: 30px; transform: translateY(630px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2183" title="A renseigner">A renseigner</span>
+            <div class="k-group">CREDIT AGRICOLE CENTRE-EST</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item k-first" role="option"
+            data-uid="fed312fa-0035-408b-9800-cacdc684d39e" data-offset-index="22"
+            style="height: 30px; min-height: 30px; transform: translateY(660px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2185" title="Erstein">Erstein</span>
+            <div class="k-group">DELL</div>
+          </li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="c4f5c07e-20d9-4b77-b76d-d68b089cde79"
+            data-offset-index="23" style="height: 30px; min-height: 30px; transform: translateY(690px);"><span
+              title.bind="cpyaddrexcde" class="au-target" au-target-id="2187" title="Molsheim">Molsheim</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item k-state-focused k-state-selected" role="option"
+            data-uid="2720ac95-6f69-4630-92aa-e25093d7f970" data-offset-index="24"
+            style="height: 30px; min-height: 30px; transform: translateY(720px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2189" title="Strasbourg">Strasbourg</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item k-last" role="option"
+            data-uid="2f1a16aa-82ae-4440-9f2c-01acf5bd59d3" data-offset-index="25"
+            style="height: 30px; min-height: 30px; transform: translateY(750px);"><span title.bind="cpyaddrexcde"
+              class="au-target" au-target-id="2191" title="Strasbourg">Strasbourg</span></li>
+        </ul>
+        <div class="k-height-container">
+          <div style="height: 2610px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="k-nodata" style="display:none">
+      <div>
+        <div>Aucun enregistrement trouvé</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Multiple K list -->
+<konnect-multiselect value-id.bind="item.value" model-name.bind="item.modelName" filter.bind="item.options.filter"
+  query-format.bind="item.options.queryFormat" expands.bind="item.options.expands" fields.bind="item.options.fields"
+  preset.bind="item.options.preset" display-fields.bind="item.options.displayFields"
+  order-by.bind="item.options.orderBy"
+  check-field="field.bind: item.options.customName || item.name;is-required.bind: item.options.required;"
+  id-field.bind="item.targetFieldName" code-field.bind="item.codeField" display-field.bind="item.options.displayField"
+  readonly.bind="$parent.currentFilter || $parent.readOnly" tab-index="1" class="au-target" au-target-id="3043"
+  validation-id="vld52">
+  <div show.bind="false" ref="currentElement" class="au-target aurelia-hide" au-target-id="273">
+    <!--slot-->
+  </div>
+  <div>
+    <div class="k-widget k-multiselect au-target k-multiselect-clearable" unselectable="on" title=""
+      style="width: 100%;">
+      <div class="k-multiselect-wrap k-floatwrap" role="listbox" unselectable="on">
+        <ul unselectable="on" class="k-reset" id="kdp51_taglist"></ul><input class="k-input k-readonly"
+          style="width: 25px" accesskey="" autocomplete="off" role="listbox" title="" aria-expanded="false"
+          aria-haspopup="listbox" aria-autocomplete="list" tabindex="1" aria-describedby="kdp51_taglist"
+          aria-disabled="false" aria-busy="false"><span unselectable="on"
+          class="k-icon k-clear-value k-i-close k-hidden" title="clear" role="button" tabindex="-1"></span><span
+          class="k-icon k-i-loading k-hidden"></span>
+      </div>
+      <ak-multiselect view-model.ref="akComponent" id.bind="currentId" k-data-text-field.bind="displayField"
+        k-filter="startswith" k-data-value-field.bind="idField" k-data-source.bind="dataSource"
+        k-ignore-case="ignoreCase" k-virtual.bind="virtual" k-auto-close.bind="false" k-height.bind="componentHeight"
+        k-value.two-way="valueId" k-on-filtering.delegate="onFiltering($event.detail)"
+        k-on-open.delegate="onOpen($event.detail)" k-on-change.delegate="onValueChange($event.detail)"
+        k-on-data-bound.delegate="onDataBound($event.detail)" k-widget.two-way="kWidget" k-auto-bind.bind="autoBind"
+        k-delay.bind="500" k-on-select.delegate="onKendoSelect($event.detail)"
+        k-on-deselect.delegate="onKendoDeSelect($event.detail)" tabindex.bind="tabIndex"
+        style="display: none; width: 100%;" class="au-target" au-target-id="275" id="kdp51" data-role="multiselect"
+        multiple="multiple" aria-disabled="false">
+        <option value="810">1802000810</option>
+        <option value="816">1803000816</option>
+        <option value="817">1803000817</option>
+        <option value="820">1803000820</option>
+        <option value="832">1804000832</option>
+        <option value="846">1805000846</option>
+        <option value="847">1805000847</option>
+        <option value="848">1805000848</option>
+        <option value="859">1806000859</option>
+        <option value="863">1806000863</option>
+        <option value="864">1806000864</option>
+        <option value="865">1806000865</option>
+        <option value="866">1806000866</option>
+        <option value="867">1806000867</option>
+        <option value="868">1806000868</option>
+        <option value="869">1806000869</option>
+        <option value="870">1806000870</option>
+        <option value="871">1806000871</option>
+        <option value="875">1806000875</option>
+        <option value="876">1806000876</option>
+        <option value="877">1807000877</option>
+        <option value="890">1808000890</option>
+        <option value="896">1808000896</option>
+        <option value="898">1808000898</option>
+        <option value="901">1808000901</option>
+        <option value="939">1901000939</option>
+        <option value="942">1901000942</option>
+        <option value="943">1901000943</option>
+        <option value="959">1903000959</option>
+        <option value="982">1904000982</option>
+        <option value="991">1906000991</option>
+        <option value="992">1906000992</option>
+        <option value="993">1906000993</option>
+        <option value="1001">1907001001</option>
+        <option value="1006">1907001006</option>
+        <option value="1018">1908001018</option>
+        <option value="1043">1910001043</option>
+        <option value="1047">1910001047</option>
+        <option value="1057">1910001057</option>
+        <option value="1140">1911001140</option>
+      </ak-multiselect><span
+        style="font-family: &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-size: 14px; font-stretch: 100%; font-style: normal; font-weight: 400; letter-spacing: normal; text-transform: none; line-height: 18.34px; position: absolute; visibility: hidden; top: -3333px; left: -3333px;"></span>
+    </div>
+    <!--anchor-->
+    <!--anchor-->
+  </div>
+</konnect-multiselect>
+
+<div class="k-animation-container"
+  style="width: 300.116px; height: 261.992px; overflow: hidden; top: 245.92px; z-index: 10002; left: 1182.58px; box-sizing: content-box; display: none; position: absolute;"
+  aria-hidden="true">
+  <div class="k-list-container k-popup k-group k-reset" id="kdp51-list" data-role="popup"
+    style="display: none; position: absolute; font-size: 14px; font-family: &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif; font-stretch: 100%; font-style: normal; font-weight: 400; line-height: normal; width: 298.13px; min-width: 298.13px; white-space: normal; transform: translateY(-261.992px);"
+    aria-hidden="true">
+    <div class="k-virtual-wrap">
+      <div class="k-group-header" style="display: none;"></div>
+      <div unselectable="on" class="k-virtual-content" style="height: 256px;">
+        <ul unselectable="on" class="k-list k-reset k-virtual-list" tabindex="-1" aria-hidden="true" id="kdp51_listbox"
+          aria-live="polite" data-role="virtuallist" role="listbox">
+          <li tabindex="-1" class="k-virtual-item k-item k-state-focused" role="option"
+            data-uid="471d4bb5-dc98-4a63-89d9-e0fbbb687bb3" data-offset-index="0"
+            style="height: 26px; min-height: 26px; transform: translateY(0px);"
+            id="31102f90-a196-4f41-bcab-aeba57fa9ee2"><span>1802000810 - titi</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="8a46ae94-312e-4369-9ea4-48d27ea47e2c"
+            data-offset-index="1" style="height: 26px; min-height: 26px; transform: translateY(26px);"><span>1803000816
+              - test</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="aec091e8-bec4-46d1-82bc-30c563539197"
+            data-offset-index="2" style="height: 26px; min-height: 26px; transform: translateY(52px);"><span>1803000817
+              - test</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="c6a55472-d7c7-4057-8785-a9ff7c7ebc47"
+            data-offset-index="3" style="height: 26px; min-height: 26px; transform: translateY(78px);"><span>1803000820
+              - Objectif Lune</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="1d1c990d-fe0d-4186-bf66-d477a9aa3c9b"
+            data-offset-index="4" style="height: 26px; min-height: 26px; transform: translateY(104px);"><span>1804000832
+              - Je fais un test de amande de projet !</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="558728b7-9c38-4830-a07c-6475571600ba"
+            data-offset-index="5" style="height: 26px; min-height: 26px; transform: translateY(130px);"><span>1805000846
+              - test</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="1c5922ac-2e63-45e3-975f-8023b5b1088a"
+            data-offset-index="6" style="height: 26px; min-height: 26px; transform: translateY(156px);"><span>1805000847
+              - test</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="9f111fd9-ab78-4b09-8c3a-fd58088e5341"
+            data-offset-index="7" style="height: 26px; min-height: 26px; transform: translateY(182px);"><span>1805000848
+              - stdgfg</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="5045d6f3-1bd7-4b35-9474-4f62903b307a"
+            data-offset-index="8" style="height: 26px; min-height: 26px; transform: translateY(208px);"><span>1806000859
+              - test de titre</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="87e33c1e-4d78-43aa-941f-fe9074c64694"
+            data-offset-index="9" style="height: 26px; min-height: 26px; transform: translateY(234px);"><span>1806000863
+              - qsdsqdsqd</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="1ee5b879-6576-40af-9034-a7c19a34e128"
+            data-offset-index="10" style="height: 26px; min-height: 26px; transform: translateY(260px);">
+            <span>1806000864 - testtt</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="9fb95625-c480-41ad-bad1-3aee015d0f3e"
+            data-offset-index="11" style="height: 26px; min-height: 26px; transform: translateY(286px);">
+            <span>1806000865 - dghdh</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="3be6a78e-16d1-4369-b185-17bcaf4d3580"
+            data-offset-index="12" style="height: 26px; min-height: 26px; transform: translateY(312px);">
+            <span>1806000866 - lojljilji</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="75c2f520-ef01-415c-8e1b-2f57aac80dc7"
+            data-offset-index="13" style="height: 26px; min-height: 26px; transform: translateY(338px);">
+            <span>1806000867 - cvbxcvbxcbxcbv</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="8aaa3880-2424-403a-84d4-67b6c7408091"
+            data-offset-index="14" style="height: 26px; min-height: 26px; transform: translateY(364px);">
+            <span>1806000868 - unhynynyh</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="bdcd33dd-ba8c-449e-9c8b-47030312510b"
+            data-offset-index="15" style="height: 26px; min-height: 26px; transform: translateY(390px);">
+            <span>1806000869 - sgsdgsd</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="6de8e77d-ff80-49fd-95c9-a720aeafe9d8"
+            data-offset-index="16" style="height: 26px; min-height: 26px; transform: translateY(416px);">
+            <span>1806000870 - whgfjwjwjw</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="cdebf7f0-ec02-4420-94e4-3b38ab774a6f"
+            data-offset-index="17" style="height: 26px; min-height: 26px; transform: translateY(442px);">
+            <span>1806000871 - wkxwkwkw</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="1e21d82c-d58d-4ee5-9a82-adae97adca46"
+            data-offset-index="18" style="height: 26px; min-height: 26px; transform: translateY(468px);">
+            <span>1806000875 - ata</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="a9c21c95-f165-41f3-829c-a15805325979"
+            data-offset-index="19" style="height: 26px; min-height: 26px; transform: translateY(494px);">
+            <span>1806000876 - dfsfsdf</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="b5c7f613-fad2-40f9-b8f1-eb46f9998ae2"
+            data-offset-index="20" style="height: 26px; min-height: 26px; transform: translateY(520px);">
+            <span>1807000877 - 18070201</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="2aeccce5-7119-44ef-b498-1b7d2c1a5a34"
+            data-offset-index="21" style="height: 26px; min-height: 26px; transform: translateY(546px);">
+            <span>1808000890 - rtr</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="2d803403-d665-438d-b405-b0baa6f5d597"
+            data-offset-index="22" style="height: 26px; min-height: 26px; transform: translateY(572px);">
+            <span>1808000896 - Pub de parfum</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="fd7a49fc-a248-4bd5-8355-053173ccfabe"
+            data-offset-index="23" style="height: 26px; min-height: 26px; transform: translateY(598px);">
+            <span>1808000898 - gdfgdg</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="70524e33-2fb8-45bf-88f7-22a0a67f36b2"
+            data-offset-index="24" style="height: 26px; min-height: 26px; transform: translateY(624px);">
+            <span>1808000901 - test</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="0cc63ceb-332a-4985-916e-8207800f6237"
+            data-offset-index="25" style="height: 26px; min-height: 26px; transform: translateY(650px);">
+            <span>1901000939 - test étanchéité</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="fa9738d7-11b0-46e6-8e6c-001e39a37885"
+            data-offset-index="26" style="height: 26px; min-height: 26px; transform: translateY(676px);">
+            <span>1901000942 - vérif i pas bug</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="586a325d-f881-4855-ab7f-e19276789739"
+            data-offset-index="27" style="height: 26px; min-height: 26px; transform: translateY(702px);">
+            <span>1901000943 - Renouvellement équipements R&amp;D</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="047c1dda-5942-4471-b57e-fa58d47d9040"
+            data-offset-index="28" style="height: 26px; min-height: 26px; transform: translateY(728px);">
+            <span>1903000959 - fsdfsdf</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="b73cabb4-844a-4d2f-9cc5-4e362bb513bd"
+            data-offset-index="29" style="height: 26px; min-height: 26px; transform: translateY(754px);">
+            <span>1904000982 - cvbvcbvcbvc</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="6139aace-b2e7-493f-a673-4522e3fddc64"
+            data-offset-index="30" style="height: 26px; min-height: 26px; transform: translateY(780px);">
+            <span>1906000991 - sdfsdfsd</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="dfbd8ee4-189f-44c2-88b9-32011c492274"
+            data-offset-index="31" style="height: 26px; min-height: 26px; transform: translateY(806px);">
+            <span>1906000992 - sq</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="0855cc77-4c3d-4982-ba09-d1a0dc6dac89"
+            data-offset-index="32" style="height: 26px; min-height: 26px; transform: translateY(832px);">
+            <span>1906000993 - xcvcxvxc</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="922cdef2-d36d-4a44-b864-8664ba7a36e4"
+            data-offset-index="33" style="height: 26px; min-height: 26px; transform: translateY(858px);">
+            <span>1907001001 - sqdsqdsq</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="b872cdfd-21b5-49c6-9b1b-21f9ad990857"
+            data-offset-index="34" style="height: 26px; min-height: 26px; transform: translateY(884px);">
+            <span>1907001006 - test</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="4c72a473-a849-49f7-aab8-10f9be06fcbc"
+            data-offset-index="35" style="height: 26px; min-height: 26px; transform: translateY(910px);">
+            <span>1908001018 - sqdsqdsq</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="12da4ebc-8e33-437d-9861-7f764ca4c6c8"
+            data-offset-index="36" style="height: 26px; min-height: 26px; transform: translateY(936px);">
+            <span>1910001043 - tresdgtertrt</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="bb6b14c9-16ce-413e-a57c-7dc09b670104"
+            data-offset-index="37" style="height: 26px; min-height: 26px; transform: translateY(962px);">
+            <span>1910001047 - fghgfhfghgfh</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item" role="option" data-uid="8e4f3c6f-e14b-4b43-8533-c714feac6de9"
+            data-offset-index="38" style="height: 26px; min-height: 26px; transform: translateY(988px);">
+            <span>1910001057 - Projet d'achats standard</span></li>
+          <li tabindex="-1" class="k-virtual-item k-item k-last" role="option"
+            data-uid="642e575e-8acb-44da-b0b0-d5034df80560" data-offset-index="39"
+            style="height: 26px; min-height: 26px; transform: translateY(1014px);"><span>1911001140 - test</span></li>
+        </ul>
+        <div class="k-height-container">
+          <div style="height: 1456px;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="k-nodata" style="display:none">
+      <div>
+        <div>Aucun enregistrement trouvé</div>
+      </div>
+    </div>
+  </div>
+</div>

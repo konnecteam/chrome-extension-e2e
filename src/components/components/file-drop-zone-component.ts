@@ -1,0 +1,94 @@
+import { FileService } from './../../services/file/file-service';
+import { EventModel } from '../../models/event-model';
+import { ComponentModel } from '../../models/component-model';
+import { ElementFinderService } from '../../services/finder/element-finder-service';
+import elementsTagName from '../../constants/elements-tagName';
+import componentName from '../../constants/component-name';
+import actionEvents from '../../constants/action-events';
+
+/**
+ * Composant qui permet la gestion du composant file drop zone
+ */
+export class FileDropZoneComponent {
+
+  /** Attribut titre d'un HTMLElement */
+  private static readonly  _TITLE_ATTRIBUTE = 'title';
+
+  /** Valeur de l'attribut titre */
+  private static readonly _TITLE_ATTRIBUTE_VALUE = 'Ajouter un document';
+
+  /**
+   * Vérifie si l'élément est dans un file drop zone
+   */
+  public static isFileDropZone(element : HTMLElement) : ComponentModel {
+    let elementFind = this._isFileDropZoneElement(element);
+
+    // Si c'est un file  drop zone
+    if (elementFind) {
+
+      return {component : componentName.FILEDROPZONE , element: elementFind};
+    }
+
+    elementFind = this._isClickInAddFileButton(element);
+
+    // Si c'est un le bouton ajouter un fichier du file drop zone
+    if (elementFind) {
+
+      return {component : componentName.FILEDROPZONEADD , element: elementFind};
+    }
+
+    return null;
+  }
+
+  /**
+   * Vérifie si c'est un file drop zone et retourne l'HTMLElement
+   */
+  private static _isFileDropZoneElement(element : HTMLElement) : HTMLElement {
+
+    return ElementFinderService.findParentElementWithTagName(element,
+       elementsTagName.FILEDROPZONE.toLocaleUpperCase(),
+        10
+    );
+  }
+
+  /**
+   * Vérifie si l'élément est le bouton pour ajouter les fichiers
+   * et retourne l'HTMLElement
+   */
+  private static _isClickInAddFileButton(element : HTMLElement) : HTMLElement {
+
+    return ElementFinderService.findParentElementWithTagNameAndValueAttribute(
+      element, elementsTagName.LINK.toUpperCase(), this._TITLE_ATTRIBUTE, this._TITLE_ATTRIBUTE_VALUE, 2
+    );
+  }
+
+  /**
+   * Edit et retourne l'event pour le file drop zone event
+   */
+  public static editFileDropZoneMessage(event : EventModel, files : FileList) : EventModel {
+    const newMessage = event;
+
+    /* Si il y a des fichiers à uplaoder
+       On les envoie au background pour qu'il les rajoute dans le zip
+    */
+    if (files) {
+      newMessage.action = actionEvents.DROP_DROPZONE;
+      newMessage.files = FileService.Instance.sendFilesToBackground(files);
+
+    } else {
+      // Sinon c'est qu'on a juste click sur la dropzone
+      newMessage.action = actionEvents.CLICK_DROPZONE;
+    }
+
+    return newMessage;
+  }
+
+  /**
+   * Edit et retourne l'event pour le click sur le bouton ajouter des fichiers
+   */
+  public static editFileDropZoneButtonMessage(event : EventModel) : EventModel {
+    event.action = actionEvents.CLICK_DROPZONE;
+    return event;
+  }
+
+}

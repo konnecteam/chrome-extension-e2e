@@ -1,0 +1,36 @@
+{
+  "name": "Puppeteer Recorder",
+  "version": "0.5.0",
+  "manifest_version": 2,
+  "description": "A Chrome extension for recording browser interaction and generating Puppeteer scripts",
+  "permissions": [
+    "storage",
+    "downloads",
+    "webNavigation",
+    "tabs",
+    "activeTab",
+    "*://*/*"
+  ],
+  "icons" : {
+    "128": "assets/images/app_icon_128.png"
+  },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "browser_action": {
+    "default_icon": "assets/images/icon-black.png",
+    "default_title": "Puppeteer Recorder",
+    "default_popup": "index.html"
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ],
+    "persistent": false
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "web_accessible_resources": [
+    "polly-build/polly.js"
+  ]
+}
