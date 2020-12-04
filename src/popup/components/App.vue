@@ -2,7 +2,7 @@
   <div id="puppeteer-recorder" class="recorder">
     <div class="header">
       <a href="#" @click="goHome">
-        Puppeteer recorder <span class="text-muted"><small>{{version}}</small></span>
+       Extension Chrome e2e  <span class="text-muted"><small>{{version}}</small></span>
       </a>
       <div class="left">
         <div class="recording-badge" v-show="isRecording">
@@ -119,6 +119,8 @@
       },
       start () {
         this.cleanUp()
+        // On récupère la date au moment de commencer le record
+        this.$chrome.storage.local.set({dateTimeStart : new Date().getTime()})
         console.debug('start recorder')
         this.bus.postMessage({ action: 'start' })
       },

@@ -9,7 +9,8 @@ import pptrActions from '../constants/pptr-actions';
 import { PollyService } from '../services/polly/polly-service';
 import { PollyFactory } from '../factory/polly/polly-factory';
 import packageJsonZip from '../constants/package-json-zip';
-
+import * as path from 'path';
+import { resolve } from 'path';
 /**
  * Background du Plugin qui permet de gérer le recording
  */
@@ -24,6 +25,9 @@ class RecordingController {
 
   /** type de data utilisé pour créé le data url du fichier zip */
   private static readonly _TYPEDATA : string = 'base64';
+
+  /** Path du script fake time buildé et qui se situe dans dist */
+  private static readonly _FAKE_TIME_SCRIPT : string = './scripts/fake-time-script.js';
 
   // Modèle custom
   /** évenements récéptionnés */
@@ -50,6 +54,8 @@ class RecordingController {
   /** Contient le contenu du scéario à exporter */
   private _zipContent : File;
 
+  /** Contenu du fichier Fake Time service buildé */
+  private _contentFakeTimeServiceBuild : string;
   // Boolean
   /** Permet de savoir si on est en pause ou non */
   private _isPaused : boolean = false;
@@ -126,10 +132,11 @@ class RecordingController {
       });
 
       ChromeService.download(this._zipContent, RecordingController._FILENAME);
+      return Promise.resolve();
     }
 
     // 3 - Recupération du code dans le local storage
-    StorageService.get(['code'], async result => {
+    StorageService.get(['code', 'dateTimeStart'], async result => {
 
       // Ajout du fichier script.js dans l'archive
       this._zipService.addFileInFolder('script.js', result.code);
@@ -146,6 +153,13 @@ class RecordingController {
       for (let i = 0; i < files.length; i++) {
         this._zipService.addFileInFolder(`recordings/files/${files[i].name}`, files[i]);
       }
+
+      // On remplace 0 par la time de départ du record
+      const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuild.replace('now:0', `now:${result.dateTimeStart}`);
+      // On créé le fil à ajouter dans le zip
+      const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], 'fake-time-script.js' );
+      // On ajoute le fake script permettant de fake le time dans le zip
+      this._zipService.addFileInFolder(`recordings/scripts-build/${buildFakeTimeScript.name}`, buildFakeTimeScript);
 
       // changement de la barre de progression
       ChromeService.sendMessage({
@@ -222,6 +236,7 @@ class RecordingController {
   private _cleanUp(callback? : () => void) : void {
 
     this._recording = [];
+    this._contentFakeTimeServiceBuild = '';
     ChromeService.setBadgeText('');
     StorageService.remove('recording', callback);
   }
@@ -276,7 +291,10 @@ class RecordingController {
     // 3 - suppression du recording en local storage
     StorageService.remove('recording');
 
-    // 4 - Inject le script
+    // 4 - On récupère le contenu du fichier fake-timer-service build
+    this._getContentFakeTimeScript();
+
+    // 5 - Inject le script
     ChromeService.executeScript({
       file : 'content-script.js',
       allFrames : false,
@@ -314,6 +332,21 @@ class RecordingController {
       ChromeService.setIcon('../assets/images/icon-green.png');
       ChromeService.setBadgeText(this._badgeState);
       ChromeService.setBadgeBackgroundColor('#FF0000');
+    });
+  }
+
+  /**
+   * Permet de récupérer le contenu du fake time script buildé
+   */
+  private _getContentFakeTimeScript() : void {
+    /* Pour lire un fichier dans un plugin chrome
+       il faut qu'il soit accesible et
+       il faut fetch l'url pour récupéré le résultat
+    */
+    fetch(ChromeService.getUrl(RecordingController._FAKE_TIME_SCRIPT))
+    .then(response => response.text())
+    .then(value => {
+      this._contentFakeTimeServiceBuild = value;
     });
   }
 

@@ -28,7 +28,8 @@ module.exports = {
     'services/storage/storage-service' : './src/services/storage/storage-service.ts',
     'services/window/window-service' : './src/services/window/window-service.ts',
     'services/zip/zip-service' : './src/services/zip/zip-service.ts',
-    'polly-build/polly' : './src/polly/polly-recorder.ts'
+    'polly-build/polly' : './src/polly/polly-recorder.ts',
+    'scripts/fake-time-script' : './src/scripts/fake-time-script.ts'
 /*
     'constants/action-events' : './src/constants/action-events.ts',
     'constants/elements-tagName' : './src/constants/elements-tagName.ts',

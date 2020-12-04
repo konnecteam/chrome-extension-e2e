@@ -107,7 +107,8 @@ export class ChromeService {
   public static download(content : File, filename : string) : void {
     chrome.downloads.download({
       url: URL.createObjectURL(content),
-      filename
+      filename,
+      saveAs: true
     });
   }
 

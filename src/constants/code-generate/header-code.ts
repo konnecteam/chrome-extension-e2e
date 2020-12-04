@@ -2,11 +2,17 @@
  * Constantes du header du scénario
  */
 export default {
-  importPuppeteer: `const puppeteer = require('puppeteer');\n`,
+  importPuppeteer: `const puppeteer = require('puppeteer');
+  const fs = require('fs');
+  const path = require('path');
+  const fakeTimeScriptContent = fs.readFileSync(path.join(__dirname, './recordings/scripts-build/fake-time-script.js'), 'utf-8');\n`,
+
   importHTTPrequest : `const puppeteer = require('puppeteer');
 const fs = require('fs');
 const atob = require('atob');
-var url = require('url');
+const url = require('url');
+const path = require('path');
+const fakeTimeScriptContent = fs.readFileSync(path.join(__dirname, './recordings/scripts-build/fake-time-script.js'), 'utf-8');
 function manageUrl(urlM) {
   let parseURL = new URL(urlM);
 
@@ -48,7 +54,7 @@ function manageTokenFind(currentToken) {
 
 let nameFile = "";
 fs.readdirSync(__dirname+"/recordings").forEach(file => {
-    nameFile = file;
+  if(file.includes('scenario')) nameFile = file;
 });
 const fileContents = fs.readFileSync(__dirname+"/recordings/"+nameFile+"/recording.har");
 let fileFinal = JSON.stringify(JSON.parse(fileContents)).split("//aureliaProject.configure(aurelia, configCallback);").join("aureliaProject.configure(aurelia, configCallback);");
@@ -97,13 +103,31 @@ let normalizeChar= ['%2C', '%28', '%29', '%7B', '%7D', '%5B', '%5D', '%7C', '%21
   header : `const browser = await puppeteer.launch()
 const page = await browser.newPage()
 page.setDefaultTimeout('100000')
-let fileChooser = null; \n`,
+let fileChooser = null;
+page.on('load', async () => {
+
+  await page.evaluate(content => {
+    let scriptAdd = document.createElement('script');
+    scriptAdd.id = 'fake-time-script';
+    scriptAdd.innerHTML = content;
+    document.head.append(scriptAdd);
+  }, fakeTimeScriptContent)
+}); \n`,
 
   wrappedHeader : `(async () => {
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
   page.setDefaultTimeout('100000')
-  let fileChooser = null; \n`,
+  let fileChooser = null;
+  page.on('load', async () => {
+
+    await page.evaluate(content => {
+      let scriptAdd = document.createElement('script');
+      scriptAdd.id = 'fake-time-script';
+      scriptAdd.innerHTML = content;
+      document.head.append(scriptAdd);
+    }, fakeTimeScriptContent)
+  });\n`,
 
   listenerPage : `   await page.setRequestInterception(true);
   await page.setBypassCSP(true);
@@ -188,6 +212,16 @@ let fileChooser = null; \n`,
   });
   page.on('pageerror', err=> {
     console.log('err page: '+err);
+  });
+
+  page.on('load', async () => {
+
+    await page.evaluate(content => {
+      let scriptAdd = document.createElement('script');
+      scriptAdd.id = 'fake-time-script';
+      scriptAdd.innerHTML = content;
+      document.head.append(scriptAdd);
+    }, fakeTimeScriptContent)
   });
 `
 };
