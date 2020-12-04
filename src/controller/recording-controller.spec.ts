@@ -60,8 +60,6 @@ async function verfiyBadgeContent(action : string ) : Promise<string> {
 // tslint:disable: no-identical-functions
 describe('Test de Recording Controller', function () {
 
-  this.timeout(5000000);
-
   before('Mise en place du serveur', async function () {
 
     // On met un timeout car runbuild met plus de 2000ms
@@ -106,6 +104,10 @@ describe('Test de Recording Controller', function () {
         callback(JSON.parse(window.localStorage.getItem(key[0])));
         return browserOption.options;
       };
+
+
+      // On overwrite la foncion pour lui donner l'url de fake time script js
+      window.chrome.extension.getURL = () => 'scripts/fake-time-script.js';
 
       // On overwrite le set pour set dans local storage pour les tests
       window.chrome.storage.local.set = valueTOsave => {
