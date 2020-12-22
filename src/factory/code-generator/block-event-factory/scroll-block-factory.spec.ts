@@ -1,11 +1,10 @@
 import { ScrollBlockFactory } from './scroll-block-factory';
 import { Block } from './../../../code-generator/block';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 
-it('Test de Scroll Block factory', () => {
+describe('Test de Scroll Block factory', () => {
 
-  it('Build un scroll', () => {
+  test('Build un scroll', () => {
 
     const frame = 'page';
     const frameId = 0;
@@ -21,13 +20,14 @@ it('Test de Scroll Block factory', () => {
       });`
     });
 
-    assert.deepStrictEqual(
+    expect(
       ScrollBlockFactory.buildScroll(
         frame,
         frameId,
         scrollX,
         scrollY
-      ),
+      )
+    ).toEqual(
       excpetedResult
     );
   });

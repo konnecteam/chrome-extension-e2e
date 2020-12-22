@@ -8,11 +8,10 @@ import  pptrActions  from '../constants/pptr-actions';
 import  actionEvents from '../constants/action-events';
 import { EventModel } from '../models/event-model';
 import { Block } from './block';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import CodeGenerator from './code-generator';
 
-/** Frame dans laquelle on se situe */
+/** Frame dans laquelle on se stestue */
 const frameId = 0;
 
 /** Le tableau qui va contenir les events à parser */
@@ -102,7 +101,7 @@ function createScenario(options : OptionModel) {
 
 describe('Test de Code Generator', () => {
 
-  before('Initialisation du tableau d\'event', () => {
+  beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
     listEventModel.push(
       {typeEvent: pptrActions.pptr , action: actionEvents.GOTO, value: 'localhost'}
@@ -118,98 +117,107 @@ describe('Test de Code Generator', () => {
   });
 
   /**
-   * On fait cela car dans code generator
+   * On fatest cela car dans code generator
    * On change les valeurs par défauts par celle passer en paramètre
    */
-  after('On remet les valeurs initales des options par défauts', () => {
+  afterAll(() => {
     Object.assign(defaults, optionsDefault);
   });
 
-  it('Test avec les options par défauts', () => {
+  test('Test avec les options par défauts', () => {
 
-    assert.strictEqual(
-      new CodeGenerator(optionsDefault).generate(listEventModel),
+    expect(
+      new CodeGenerator(optionsDefault).generate(listEventModel))
+      .toEqual(
       createScenario(optionsDefault)
     );
   });
 
-  it('Test avec les options la custom ligne après chaque click', () => {
+  test('Test avec les options la custom ligne après chaque click', () => {
 
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.customLineAfterClick = 'ligne custom 2';
 
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(listEventModel))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec les options la custom ligne après chaque event', () => {
+  test('Test avec les options la custom ligne après chaque event', () => {
 
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.customLineBeforeEvent = 'line beofre event';
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(listEventModel))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec l\'option des requetes http activé', () => {
+  test('Test avec l\'option des requetes http activé', () => {
 
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.recordHttpRequest = true;
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(listEventModel))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec l\'option des requetes http desactivé', () => {
+  test('Test avec l\'option des requetes http desactivé', () => {
 
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.recordHttpRequest = false;
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(listEventModel))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec le scénario dans une fonction async', () => {
+  test('Test avec le scénario dans une fonction async', () => {
 
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.wrapAsync = true;
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(listEventModel))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec le scénario en dehors de la fonction async', () => {
+  test('Test avec le scénario en dehors de la fonction async', () => {
 
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.wrapAsync = false;
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(listEventModel))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec un event', () => {
+  test('Test avec un event', () => {
 
     // On garde que le premier event
     listEventModel = listEventModel.splice(0, 1);
 
-    assert.strictEqual(
-      new CodeGenerator(optionsDefault).generate(listEventModel),
+    expect(
+      new CodeGenerator(optionsDefault).generate(listEventModel))
+      .toEqual(
       createScenario(optionsDefault)
     );
   });
 
-  it('Test avec une liste d\'event vide', () => {
+  test('Test avec une liste d\'event vide', () => {
 
     listEventModel = [];
-    assert.strictEqual(
-      new CodeGenerator(optionsDefault).generate(listEventModel),
+    expect(
+      new CodeGenerator(optionsDefault).generate(listEventModel))
+      .toEqual(
       createScenario(optionsDefault)
     );
   });

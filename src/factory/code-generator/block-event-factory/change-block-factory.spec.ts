@@ -1,8 +1,7 @@
 import { ChangeBlockFactory } from './change-block-factory';
 import { Block } from './../../../code-generator/block';
 import { defaults } from '../../../constants/default-options';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 import actionEvents from '../../../constants/action-events';
 import elementsTagName from '../../../constants/elements-tagName';
@@ -14,14 +13,15 @@ const value = 'testValue';
 
 describe('Test de Change Block Factory', () => {
 
-  before('Initialisation des attributs de change-block-factory ', () => {
+  // Initialisation des attributs de change-block-factory
+  beforeAll(() => {
 
     ChangeBlockFactory.options = JSON.parse(JSON.stringify(defaults));
     ChangeBlockFactory.frameId = 0;
     ChangeBlockFactory.frame = 'page';
   });
 
-  it('Test de buildChangeInputNumeric', () => {
+  test('Test de buildChangeInputNumeric', () => {
 
     // Attributs utilisé pour générer le block
     const selectorFocus = '#inputNum';
@@ -48,10 +48,10 @@ describe('Test de Change Block Factory', () => {
       selectorFocus
     );
 
-    assert.deepStrictEqual(result, exceptedBlock);
+    expect(result).toEqual(exceptedBlock);
   });
 
-  it('Test de buildSelectChange', () => {
+  test('Test de buildSelectChange', () => {
 
     const exceptedBlock = new Block(ChangeBlockFactory.frameId);
     exceptedBlock.addLine({
@@ -64,10 +64,10 @@ describe('Test de Change Block Factory', () => {
       value
     );
 
-    assert.deepStrictEqual(result, exceptedBlock);
+    expect(result).toEqual(exceptedBlock);
   });
 
-  it('Test de buildChange', () => {
+  test('Test de buildChange', () => {
 
     const exceptedBlock = new Block(ChangeBlockFactory.frameId);
     exceptedBlock.addLine({
@@ -80,10 +80,10 @@ describe('Test de Change Block Factory', () => {
       value
     );
 
-    assert.deepStrictEqual(result, exceptedBlock);
+    expect(result).toEqual(exceptedBlock);
   });
 
-  it('Test de buildAcceptUploadFileChange', () => {
+  test('Test de buildAcceptUploadFileChange', () => {
 
     // Attributs utilisé pour générer le block
     const files = '\"./recordings/files/test.txt\"';
@@ -99,10 +99,10 @@ describe('Test de Change Block Factory', () => {
       'test.txt'
     );
 
-    assert.deepStrictEqual(result, exceptedBlock);
+    expect(result).toEqual(exceptedBlock);
   });
 
-  it('Test de generateBlock pour un change input numeric', () => {
+  test('Test de generateBlock pour un change input numeric', () => {
     // Attributs utilisé pour générer le block
     const eventModel = {
       selector,
@@ -111,22 +111,24 @@ describe('Test de Change Block Factory', () => {
       action : actionEvents.CHANGE_INPUTNUMERIC
     };
 
-    assert.deepStrictEqual(
+    expect(
       ChangeBlockFactory.generateBlock(
-      eventModel,
-      ChangeBlockFactory.frameId,
-      ChangeBlockFactory.frame,
-      defaults
-      ),
+        eventModel,
+        ChangeBlockFactory.frameId,
+        ChangeBlockFactory.frame,
+        defaults
+      )
+    ).toEqual(
       ChangeBlockFactory.buildChangeInputNumeric(
         selector,
         value,
         '#input'
       )
     );
+
   });
 
-  it('Test de generateBlock pour un change simple', () => {
+  test('Test de generateBlock pour un change simple', () => {
     // Attributs utilisé pour générer le block
     const eventModel = {
       selector,
@@ -134,13 +136,14 @@ describe('Test de Change Block Factory', () => {
       action : actionEvents.CHANGE
     };
 
-    assert.deepStrictEqual(
+    expect(
       ChangeBlockFactory.generateBlock(
-      eventModel,
-      ChangeBlockFactory.frameId,
-      ChangeBlockFactory.frame,
-      defaults
-      ),
+        eventModel,
+        ChangeBlockFactory.frameId,
+        ChangeBlockFactory.frame,
+        defaults
+      )
+    ).toEqual(
       ChangeBlockFactory.buildChange(
         selector,
         value
@@ -148,7 +151,7 @@ describe('Test de Change Block Factory', () => {
     );
   });
 
-  it('Test de generateBlock pour un select change', () => {
+  test('Test de generateBlock pour un select change', () => {
     // Attributs utilisé pour générer le block
     const eventModel = {
       selector,
@@ -157,13 +160,14 @@ describe('Test de Change Block Factory', () => {
       tagName : elementsTagName.SELECT.toUpperCase()
     };
 
-    assert.deepStrictEqual(
+    expect(
       ChangeBlockFactory.generateBlock(
-      eventModel,
-      ChangeBlockFactory.frameId,
-      ChangeBlockFactory.frame,
-      defaults
-      ),
+        eventModel,
+        ChangeBlockFactory.frameId,
+        ChangeBlockFactory.frame,
+        defaults
+      )
+    ).toEqual(
       ChangeBlockFactory.buildSelectChange(
         selector,
         value
@@ -172,7 +176,7 @@ describe('Test de Change Block Factory', () => {
   });
 
 
-  it('Test de generateBlock pour un input file', () => {
+  test('Test de generateBlock pour un input file', () => {
     // Attributs utilisé pour générer le block
     const files = 'test.txt';
     const eventModel = {
@@ -182,13 +186,14 @@ describe('Test de Change Block Factory', () => {
       files
     };
 
-    assert.deepStrictEqual(
+    expect(
       ChangeBlockFactory.generateBlock(
-      eventModel,
-      ChangeBlockFactory.frameId,
-      ChangeBlockFactory.frame,
-      defaults
-      ),
+        eventModel,
+        ChangeBlockFactory.frameId,
+        ChangeBlockFactory.frame,
+        defaults
+      )
+    ).toEqual(
       ChangeBlockFactory.buildAcceptUploadFileChange(
         selector,
         files

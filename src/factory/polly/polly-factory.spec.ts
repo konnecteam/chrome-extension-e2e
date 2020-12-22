@@ -1,7 +1,7 @@
+import { Polly } from '@pollyjs/core';
 import { PollyService } from './../../services/polly/polly-service';
 import { PollyFactory } from './polly-factory';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 
 let pollyService : PollyService;
 
@@ -10,50 +10,54 @@ const idEmpty = 'emptyResult';
 
 describe('Test de Polly Factory', () => {
 
-  before('Mise en place des instances', () => {
+  // Mise en place des instances
+  beforeAll(() => {
     pollyService = PollyService.Instance;
   });
 
-  it('Polly Id vide', () => {
+  test('Polly Id vide', () => {
     pollyService.har = 'content';
 
-    assert.deepStrictEqual(
-      PollyFactory.buildResultObject(),
+    expect(
+      PollyFactory.buildResultObject()
+    ).toEqual(
       { folderName : idEmpty , har : 'content'}
     );
-
   });
 
-  it('Polly HAR vide', () => {
+  test('Polly HAR vide', () => {
     // On reset les attributs
     pollyService.flush();
 
     pollyService.id = 'id';
 
-    assert.deepStrictEqual(
-      PollyFactory.buildResultObject(),
+    expect(
+      PollyFactory.buildResultObject()
+    ).toEqual(
       { folderName : 'id' , har : harEmpty}
     );
   });
 
 
-  it('Polly Id et HAR vides', () => {
+  test('Polly Id et HAR vides', () => {
 
     pollyService.flush();
 
-    assert.deepStrictEqual(
-      PollyFactory.buildResultObject(),
+    expect(
+      PollyFactory.buildResultObject()
+    ).toEqual(
       { folderName : idEmpty , har : harEmpty}
     );
 
   });
 
-  it('Polly Id et HAR', () => {
+  test('Polly Id et HAR', () => {
     pollyService.har = 'har content';
     pollyService.id = 'PollyID';
 
-    assert.deepStrictEqual(
-      PollyFactory.buildResultObject(),
+    expect(
+      PollyFactory.buildResultObject()
+    ).toEqual(
       { folderName : 'PollyID' , har : 'har content'}
     );
 

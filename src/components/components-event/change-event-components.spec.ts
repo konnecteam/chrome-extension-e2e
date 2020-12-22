@@ -1,9 +1,8 @@
 import { InputFilesComponent } from './../components/input-file-component';
 import { InputNumericComponent } from '../components/input-numeric-component';
-import { ComponentModel } from '../../models/component-model';
 import { ChangeEventComponents} from './change-event-components';
 import * as path from 'path';
-
+import 'jest';
 const fs = require('fs');
 /**
  * Path qui contient le body d'un input numeric

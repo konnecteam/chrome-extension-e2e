@@ -1,8 +1,7 @@
 import { MessageModel } from './../models/message-model';
 import { defaults } from './../constants/default-options';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 const puppeteer = require('puppeteer');
 import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
@@ -47,10 +46,11 @@ async function isContentScriptReady() : Promise<string> {
 
 describe('Test Content script ', () => {
 
-  before('Start test server', async function () {
+  // Start test server
+  beforeAll(async function (done) {
 
     // On met un timeout car runbuild met plus de 2000ms
-    this.timeout(50000);
+   // this.timeout(50000);
     await runBuild();
     buildDir = '../../../dist';
     const fixture = path.join(__dirname, '../../static/test/page-test/html-page/forms.html');
@@ -125,15 +125,17 @@ describe('Test Content script ', () => {
       document.body.parentElement.appendChild(el);
     }, 'build/content-script.js');
 
-  });
+    done();
+  }, 50000);
 
-  after('Close server', async () => {
+  // Close Server
+  afterAll(async () => {
     await page.close();
     await browser.close();
     await server.close();
-  });
+  }, 50000);
 
-  it('Test de record d\'un click', async () => {
+  test('Test de record d\'un click', async () => {
 
     await isContentScriptReady();
 
@@ -143,10 +145,10 @@ describe('Test Content script ', () => {
     const events = await getEvensRecord();
 
     // Le dernier event doit contenir le selecteur de l'input
-    assert.strictEqual(events[events.length - 1].selector, '#inputText');
+    expect(events[events.length - 1].selector).toEqual('#inputText');
   });
 
-  it('Test de récupération d\'un user event', async () => {
+  test('Test de récupération d\'un user event', async () => {
     /**
      * On dispatch un event car
      * le content script
@@ -162,11 +164,11 @@ describe('Test Content script ', () => {
     // On récupère la liste des events
     const events = await getEvensRecord();
     // Le dernier event doit avoir un un frameUrl
-    assert.ok(events[events.length - 1].frameUrl);
+    expect(events[events.length - 1].frameUrl).toBeDefined();
 
   });
 
-  it('Test de récupération de viewport', async () => {
+  test('Test de récupération de viewport', async () => {
     /**
      * On dispatch un event car
      * le content script
@@ -181,7 +183,7 @@ describe('Test Content script ', () => {
     // On récupère la liste des events
     const events = await getEvensRecord();
     // Le dernier event doit avoir l'attribut coordinates non vide
-    assert.ok(events[events.length - 1].coordinates);
+    expect(events[events.length - 1].coordinates).toBeDefined();
 
   });
 });

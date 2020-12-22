@@ -1,8 +1,7 @@
 import { defaults } from './../../../constants/default-options';
 import { PPtrActionBlockFactory } from './pptr-action-block-factory';
 import { Block } from '../../../code-generator/block';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import pptrActions from '../../../constants/pptr-actions';
 
 /** Frame définie pour les tests */
@@ -11,14 +10,15 @@ const frameId = 0;
 
 describe('Test de Pptr Action Block Factory', () => {
 
-  before('Initialisation PPtrActionBlockFactory', () => {
+  // Initialisation PPtrActionBlockFactory
+  beforeAll(() => {
     PPtrActionBlockFactory.options = JSON.parse(JSON.stringify(defaults));
     PPtrActionBlockFactory.frame = frame;
     PPtrActionBlockFactory.frameId = frameId;
 
   });
 
-  it('Test de build de GOTO', () => {
+  test('Test de build de GOTO', () => {
     const href = 'localhost';
 
     const exceptedResult = new Block(frameId, {
@@ -26,10 +26,14 @@ describe('Test de Pptr Action Block Factory', () => {
       value: `await ${frame}.goto('${href}');`
     });
 
-    assert.deepStrictEqual(PPtrActionBlockFactory.buildGoto(href), exceptedResult);
+    expect(
+      PPtrActionBlockFactory.buildGoto(href)
+    ).toEqual(
+      exceptedResult
+    );
   });
 
-  it('Test de build ViewPort', () => {
+  test('Test de build ViewPort', () => {
 
     const width = 1920;
     const height = 1080;
@@ -38,17 +42,18 @@ describe('Test de Pptr Action Block Factory', () => {
       value: `await ${frame}.setViewport({ width: ${width}, height: ${height} });`
     });
 
-    assert.deepStrictEqual(
+    expect(
       PPtrActionBlockFactory.buildViewport(
         width,
         height
-      ),
+      )
+    ).toEqual(
       exceptedResult
     );
 
   });
 
-  it('Test de build WaitForNavigation avec option WaitForNavigation activée', () => {
+  test('Test de build WaitForNavigation avec option WaitForNavigation activée', () => {
     PPtrActionBlockFactory.options.waitForNavigation = true;
 
     const exceptedResult = new Block(frameId, {
@@ -56,49 +61,60 @@ describe('Test de Pptr Action Block Factory', () => {
       value: `await navigationPromise`
     });
 
-    assert.deepStrictEqual(PPtrActionBlockFactory.buildWaitForNavigation(), exceptedResult);
+    expect(
+      PPtrActionBlockFactory.buildWaitForNavigation()
+    ).toEqual(
+      exceptedResult
+    );
   });
 
-  it('Test de build WaitForNavigation avec option WaitForNavigation desactivée', () => {
+  test('Test de build WaitForNavigation avec option WaitForNavigation desactivée', () => {
     PPtrActionBlockFactory.options.waitForNavigation = false;
 
     const exceptedResult = new Block(frameId);
 
-    assert.deepStrictEqual(PPtrActionBlockFactory.buildWaitForNavigation(), exceptedResult);
+    expect(
+      PPtrActionBlockFactory.buildWaitForNavigation()
+    ).toEqual(
+      exceptedResult
+    );
   });
 
-  it('Test de generate d\'un GOTO ', () => {
+  test('Test de generate d\'un GOTO ', () => {
 
     const eventModel = {
       action : pptrActions.GOTO,
       value : 'localhost'
     };
 
-    assert.deepStrictEqual(
-      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults),
+    expect(
+      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+    ).toEqual(
       PPtrActionBlockFactory.buildGoto(eventModel.value)
     );
   });
 
-  it('Test de generate d\'un ViewPort ', () => {
+  test('Test de generate d\'un ViewPort ', () => {
     const eventModel = {
       action : pptrActions.VIEWPORT,
       value : { width : 1920, height : 1080}
     };
 
-    assert.deepStrictEqual(
-      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults),
+    expect(
+      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+    ).toEqual(
       PPtrActionBlockFactory.buildViewport(eventModel.value.width, eventModel.value.height)
     );
   });
 
-  it('Test de generate d\'un WaitForNavigation ', () => {
+  test('Test de generate d\'un WaitForNavigation ', () => {
     const eventModel = {
       action : pptrActions.NAVIGATION,
     };
 
-    assert.deepStrictEqual(
-      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults),
+    expect(
+      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+    ).toEqual(
       PPtrActionBlockFactory.buildWaitForNavigation()
     );
   });

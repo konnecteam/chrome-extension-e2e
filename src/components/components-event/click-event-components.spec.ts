@@ -1,14 +1,11 @@
-import { InputFilesComponent } from './../components/input-file-component';
-import { InputNumericComponent } from '../components/input-numeric-component';
-import { ComponentModel } from '../../models/component-model';
 import { ClickEventComponents} from './click-event-components';
 import * as path from 'path';
 import { FileDropZoneComponent } from './../components/file-drop-zone-component';
 import { KSelectComponent } from './../components/k-select-component';
 import { KmSwitchComponent } from './../components/km-switch- component';
 import { KListComponent } from '../components/k-list-component';
-import componentName from '../../constants/component-name';
 import { InputCalendarComponent } from '../components/input-calendar-component';
+import 'jest';
 const fs = require('fs');
 
 

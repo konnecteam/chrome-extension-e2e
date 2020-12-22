@@ -1,10 +1,7 @@
 import { FileDropZoneComponent } from './../components/file-drop-zone-component';
-import { InputFilesComponent } from './../components/input-file-component';
-import { InputNumericComponent } from '../components/input-numeric-component';
-import { ComponentModel } from '../../models/component-model';
 import { DropEventComponents} from './drop-event-components';
 import * as path from 'path';
-
+import 'jest';
 const fs = require('fs');
 
 /**

@@ -20,7 +20,7 @@ const addEventListener = function() {
   message = 'addEvent';
 };
 
-describe('Test de Wndow Service', () => {
+describe('Test de Window Service', () => {
 
   beforeAll(() => {
     // mock chrome

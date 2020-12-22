@@ -1,6 +1,5 @@
 import { StorageService } from './storage-service';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import * as chrome from 'sinon-chrome';
 
 
@@ -23,24 +22,26 @@ chrome.storage.local.remove.withArgs('data').callsFake(() => {
 
 describe('Test de Storage Service', () => {
 
-  before('Mock chrome', () => {
+  // Mock chrome
+  beforeAll(() => {
     global.chrome = chrome;
   });
 
-  it('Test de set data', () => {
+  test('Test de set data', () => {
 
     StorageService.setData({data : 'test de data'});
-    assert.strictEqual(dataStorage, DATAVALUE);
+    expect(dataStorage).toEqual(DATAVALUE);
   });
 
-  it('Test de get data', () => {
+  test('Test de get data', () => {
     StorageService.get(['data'], () => {});
-    assert.strictEqual(getStorage, DATAVALUE);
+    expect(getStorage).toEqual(DATAVALUE);
+
   });
 
-  it('Test de remove data', () => {
+  test('Test de remove data', () => {
     StorageService.remove('data');
-    assert.strictEqual(dataStorage, '');
+    expect(dataStorage).toEqual('');
   });
 
 });

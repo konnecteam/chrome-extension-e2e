@@ -1,13 +1,11 @@
-import { IframeComponent } from './../../components/components/iframe-component';
-import { InputNumericComponent } from './../../components/components/input-numeric-component';
-import { InputFilesComponent } from './../../components/components/input-file-component';
+import { IframeComponent } from '../../components/components/iframe-component';
+import { InputNumericComponent } from '../../components/components/input-numeric-component';
 import { EventMessageBuilderFactory } from './event-message-builder-factory';
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import { EventModel } from '../../models/event-model';
 import * as path from 'path';
 import 'jest';
 import { KSelectComponent } from '../../components/components/k-select-component';
-import componentName from '../../constants/component-name';
 import { KListComponent } from '../../components/components/k-list-component';
 import { InputCalendarComponent } from '../../components/components/input-calendar-component';
 

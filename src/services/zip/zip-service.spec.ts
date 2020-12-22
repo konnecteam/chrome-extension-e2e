@@ -1,5 +1,4 @@
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import * as path from 'path';
 import { ZipService } from './zip-service';
 import * as fs from 'fs';
@@ -61,12 +60,12 @@ function deleteFile(filePath : string) : Promise<boolean> {
 
 describe('Test de Zip service', () => {
 
-  before(function(done) {
+  beforeAll(function(done) {
     zipService = ZipService.Instance;
     done();
   });
 
-  after(async () => {
+  afterAll(async () => {
     const zipPath = path.join(__dirname, './../../../static/test/file/test.zip');
     const fileExist = await isFileExist(zipPath);
 
@@ -75,7 +74,7 @@ describe('Test de Zip service', () => {
     }
   });
 
-  it('Test ajouter un fichier dans le zip', async () => {
+  test('Test ajouter un fichier dans le zip', async () => {
 
     const filePath = 'test/test.txt';
     const fileContent = await readFileAsync(fileTestFile);
@@ -84,10 +83,15 @@ describe('Test de Zip service', () => {
 
     const zipValue = new JSZip();
     const zipResult = zipValue.file(filePath, fileContent);
-    assert.strictEqual(zipServiceResult.file(filePath).name, zipResult.file(filePath).name);
+
+    expect(
+      zipServiceResult.file(filePath).name
+    ).toEqual(
+      zipResult.file(filePath).name
+    );
   });
 
-  it('Test générer le fichier zip', async () => {
+  test('Test générer le fichier zip', async () => {
 
     // Récupération du fichier de test
     const filePath = 'test/test.txt';
@@ -102,6 +106,6 @@ describe('Test de Zip service', () => {
     await createFileAsync(zipPath, zip);
 
     const fileExist = await isFileExist(zipPath);
-    assert.strictEqual(fileExist, true);
+    expect(fileExist).toBeTruthy();
   });
 });

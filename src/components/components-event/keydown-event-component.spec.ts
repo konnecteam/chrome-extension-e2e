@@ -1,6 +1,4 @@
-import { InputFilesComponent } from './../components/input-file-component';
-import { InputNumericComponent } from '../components/input-numeric-component';
-import { ComponentModel } from '../../models/component-model';
+import 'jest';
 import { KeydownEventComponent } from './keydown-event-component';
 import * as path from 'path';
 import { IframeComponent } from '../components/iframe-component';

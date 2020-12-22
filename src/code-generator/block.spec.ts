@@ -1,22 +1,21 @@
 
 import { LineBlockModel } from '../models/line-block-model';
 import { Block } from './block';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 
 describe('Test de la classe Block', function () {
 
-  it('Test récupération des lignes', function () {
+  test('Test récupération des lignes', function () {
     const lineModelResult : LineBlockModel[] = [
       {frameId: 0, type: 'click', value: 'ligne1' },
     ];
     const block = new Block(
       0, {frameId: 0, type: 'click', value: 'ligne1' }
     );
-    assert.deepStrictEqual(lineModelResult, block.getLines());
+    expect(lineModelResult).toEqual(block.getLines());
   });
 
-  it('Test ajout de ligne au top du block', function () {
+  test('Test ajout de ligne au top du block', function () {
     const lineModelResult : LineBlockModel[] = [
       {frameId: 0, type: 'click', value: 'ligne1' },
       {frameId: 0, type: 'change', value: 'ligne2' },
@@ -27,10 +26,10 @@ describe('Test de la classe Block', function () {
     );
     block.addLineToTop({frameId: 0, type: 'click', value: 'ligne1' });
 
-    assert.deepStrictEqual(lineModelResult, block.getLines());
+    expect(lineModelResult).toEqual(block.getLines());
   });
 
-  it('Test ajout de ligne à la suite dans un block', function () {
+  test('Test ajout de ligne à la suteste dans un block', function () {
     const lineModelResult : LineBlockModel[] = [
       {frameId: 0, type: 'click', value: 'ligne1' },
       {frameId: 0, type: 'change', value: 'ligne2' },
@@ -41,6 +40,6 @@ describe('Test de la classe Block', function () {
     );
     block.addLine({frameId: 0, type: 'change', value: 'ligne2' });
 
-    assert.deepStrictEqual(lineModelResult, block.getLines());
+    expect(lineModelResult).toEqual(block.getLines());
   });
 });

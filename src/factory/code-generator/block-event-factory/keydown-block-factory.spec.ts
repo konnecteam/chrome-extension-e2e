@@ -1,8 +1,7 @@
 import { defaults } from './../../../constants/default-options';
 import { KeydownBlockFactory } from './keydown-block-factory';
 import { Block } from './../../../code-generator/block';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import actionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 
@@ -13,13 +12,14 @@ const selector = '#id';
 const value = 'test de value';
 describe('Test de Keydown Block Factory', () => {
 
-  before('Initialisation des attributs de Keydown block factory', () => {
+  // Initialisation des attributs de Keydown block factory
+  beforeAll(() => {
     KeydownBlockFactory.frame = frame;
     KeydownBlockFactory.frameId = frameId;
     KeydownBlockFactory.options = JSON.parse(JSON.stringify(defaults));
   });
 
-  it('Test de build ListKeydown dans une iframe', () => {
+  test('Test de build ListKeydown dans une iframe', () => {
     KeydownBlockFactory.options.waitForSelectorOnClick = false;
     const exceptedResult = new Block(KeydownBlockFactory.frameId);
 
@@ -37,18 +37,19 @@ describe('Test de Keydown Block Factory', () => {
         });`
     });
 
-    assert.deepStrictEqual(
+    expect(
       KeydownBlockFactory.buildListKeydown(
         selector,
         value,
         iframe
-      ),
+      )
+    ).toEqual(
       exceptedResult
     );
 
   });
 
-  it('Test de build ListKeydown', () => {
+  test('Test de build ListKeydown', () => {
     const exceptedResult = new Block(KeydownBlockFactory.frameId);
 
     exceptedResult.addLine({
@@ -71,17 +72,18 @@ describe('Test de Keydown Block Factory', () => {
         });`
     });
 
-    assert.deepStrictEqual(
+    expect(
       KeydownBlockFactory.buildListKeydown(
         selector,
         value,
-        null // cas qui n'est pas dans une iframe
-      ),
+        null
+      )
+    ).toEqual(
       exceptedResult
     );
   });
 
-  it('Test de build ListKeydown avec l\'option waitForSelectorOnClick', () => {
+  test('Test de build ListKeydown avec l\'option waitForSelectorOnClick', () => {
 
     KeydownBlockFactory.options.waitForSelectorOnClick = true;
 
@@ -112,12 +114,13 @@ describe('Test de Keydown Block Factory', () => {
         });`
     });
 
-    assert.deepStrictEqual(
+    expect(
       KeydownBlockFactory.buildListKeydown(
         selector,
         value,
         null // cas qui n'est pas dans une iframe
-      ),
+      )
+    ).toEqual(
       exceptedResult
     );
   });

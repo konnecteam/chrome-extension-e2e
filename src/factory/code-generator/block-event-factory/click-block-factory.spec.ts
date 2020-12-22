@@ -1,8 +1,7 @@
 import { LineBlockModel } from './../../../models/line-block-model';
 import { Block } from './../../../code-generator/block';
 import { defaults } from '../../../constants/default-options';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 import actionEvents from '../../../constants/action-events';
 import elementsTagName from '../../../constants/elements-tagName';
@@ -35,7 +34,7 @@ function simpleClickLineBlock() : LineBlockModel {
 }
 
 /**
- * Génère le line block d'un click sur un item de liste
+ * Génère le line block d'un click sur un testem de liste
  */
 function clickListItemLineBlock() : LineBlockModel {
   return {
@@ -256,14 +255,15 @@ describe('Test de Click Block Factory', () => {
   // tslint:disable-next-line: no-big-function
   describe('Test des buiders', () => {
 
-    before('Initialisation des attributs de class', () => {
+    // Initialisation des attributs de classe
+    beforeAll(() => {
 
       ClickBlockFactory.frame = 'page';
       ClickBlockFactory.frameId = 0;
       ClickBlockFactory.options = options;
     });
 
-    it('Test d\'un simple click avec option waitForSelectorOnClick' , () => {
+    test('Test d\'un simple click avec option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = '';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -273,10 +273,14 @@ describe('Test de Click Block Factory', () => {
       // Click
       exceptedBlock.addLine(simpleClickLineBlock());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClick(selector), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildClick(selector)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un simple click sans option waitForSelectorOnClick' , () => {
+    test('Test d\'un simple click sans option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = false;
 
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -284,11 +288,16 @@ describe('Test de Click Block Factory', () => {
       // Click
       exceptedBlock.addLine(simpleClickLineBlock());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClick(selector), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildClick(selector)
+      ).toEqual(
+        exceptedBlock
+      );
+
 
     });
 
-    it('Test d\'un simple click avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
+    test('Test d\'un simple click avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = 'ligne custom';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -300,48 +309,65 @@ describe('Test de Click Block Factory', () => {
       // Custom line
       exceptedBlock.addLine(customeLineLineBlock());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClick(selector), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildClick(selector)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un ClickListItem avec option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickListItem avec option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = '';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
 
       // waitForSelector
       exceptedBlock.addLine(waitForSelectorSourceOnClickLineBlock());
-      // Click in list item
+      // Click in list testem
       exceptedBlock.addLine(clickListItemLineBlock());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClickListItem(listItemIndex, sourceSelector), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildClickListItem(listItemIndex, sourceSelector)
+      ).toEqual(
+        exceptedBlock
+      );
+
     });
 
-    it('Test d\'un ClickListItem sans option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickListItem sans option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = false;
 
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
-      // Click in list item
+      // Click in list testem
       exceptedBlock.addLine(clickListItemLineBlock());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClickListItem(listItemIndex, sourceSelector), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildClickListItem(listItemIndex, sourceSelector)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un ClickListItem avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
+    test('Test d\'un ClickListItem avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = 'ligne custom';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
 
       // waitForSelector
       exceptedBlock.addLine(waitForSelectorSourceOnClickLineBlock());
-      // Click in list item
+      // Click in list testem
       exceptedBlock.addLine(clickListItemLineBlock());
       // Custom line
       exceptedBlock.addLine(customeLineLineBlock());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClickListItem(listItemIndex, sourceSelector), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildClickListItem(listItemIndex, sourceSelector)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un clickFileDropZone avec option waitForSelectorOnClick' , () => {
+    test('Test d\'un clickFileDropZone avec option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = '';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -350,19 +376,27 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(waitForSelectorOnClickSelectorLineBlock());
       // Click in file drop zone
       exceptedBlock.addLine(clickFileDropZoneLineModel());
-      assert.deepStrictEqual(ClickBlockFactory.buildclickFileDropZone(selector), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildclickFileDropZone(selector)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un clickFileDropZone sans option waitForSelectorOnClick' , () => {
+    test('Test d\'un clickFileDropZone sans option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = false;
 
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
       // Click in file drop zone
       exceptedBlock.addLine(clickFileDropZoneLineModel());
-      assert.deepStrictEqual(ClickBlockFactory.buildclickFileDropZone(selector), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildclickFileDropZone(selector)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un ClickMouseInputNumeric avec option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickMouseInputNumeric avec option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = '';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -373,10 +407,14 @@ describe('Test de Click Block Factory', () => {
       // Click Mouse input numeric
       exceptedBlock.addLine(clickMouseInputNumericLineModel());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClickMouseInputNumeric(selector, time), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildClickMouseInputNumeric(selector, time)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un ClickMouseInputNumeric sans option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickMouseInputNumeric sans option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = false;
 
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -384,11 +422,14 @@ describe('Test de Click Block Factory', () => {
       // Click Mouse input numeric
       exceptedBlock.addLine(clickMouseInputNumericLineModel());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClickMouseInputNumeric(selector, time), exceptedBlock);
-
+      expect(
+        ClickBlockFactory.buildClickMouseInputNumeric(selector, time)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un ClickMouseInputNumeric avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
+    test('Test d\'un ClickMouseInputNumeric avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = 'ligne custom';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -403,10 +444,14 @@ describe('Test de Click Block Factory', () => {
         value : options.customLineAfterClick
       });
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClickMouseInputNumeric(selector, time), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildClickMouseInputNumeric(selector, time)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un ClickMouse avec option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickMouse avec option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = '';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -415,10 +460,15 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(waitForSelectorOnClickSelectorLineBlock());
       // Click Mouse
       exceptedBlock.addLine(clickMouseLineModel());
-      assert.deepStrictEqual(ClickBlockFactory.buildClickMouse(selector), exceptedBlock);
+
+      expect(
+        ClickBlockFactory.buildClickMouse(selector)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un ClickMouse sans option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickMouse sans option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = false;
 
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -426,11 +476,14 @@ describe('Test de Click Block Factory', () => {
       // Click Mouse
       exceptedBlock.addLine(clickMouseLineModel());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClickMouse(selector), exceptedBlock);
-
+      expect(
+        ClickBlockFactory.buildClickMouse(selector)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un ClickMouse avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
+    test('Test d\'un ClickMouse avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = 'ligne custom';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -442,77 +495,84 @@ describe('Test de Click Block Factory', () => {
       // Custom line
       exceptedBlock.addLine(customeLineLineBlock());
 
-      assert.deepStrictEqual(ClickBlockFactory.buildClickMouse(selector), exceptedBlock);
+      expect(
+        ClickBlockFactory.buildClickMouse(selector)
+      ).toEqual(
+        exceptedBlock
+      );
     });
 
-    it('Test d\'un ClickMultiplekListItem avec option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickMultiplekListItem avec option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = '';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
 
       // waitForSelector
       exceptedBlock.addLine(waitForSelectorOnClickScrollElementLineBlock());
-      // Click multiple liste item
+      // Click multiple liste testem
       exceptedBlock.addLine(scrollInMultiplekListItemLineBlock());
       exceptedBlock.addLine(clickMultiplekListItemLineBlock());
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.buildClickMultiplekListItem(
           selector,
           scrollElement,
           scrollXElement,
           scrollYElement
         )
-        , exceptedBlock
+      ).toEqual(
+        exceptedBlock
       );
     });
 
-    it('Test d\'un ClickMultiplekListItem sans option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickMultiplekListItem sans option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = false;
 
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
 
-      // Click multiple list item
+      // Click multiple list testem
       exceptedBlock.addLine(scrollInMultiplekListItemLineBlock());
       exceptedBlock.addLine(clickMultiplekListItemLineBlock());
 
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.buildClickMultiplekListItem(
           selector,
           scrollElement,
           scrollXElement,
           scrollYElement
         )
-        , exceptedBlock
+      ).toEqual(
+        exceptedBlock
       );
     });
 
-    it('Test d\'un ClickMultiplekListItem avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
+    test('Test d\'un ClickMultiplekListItem avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = 'ligne custom';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
 
       // waitForSelector
       exceptedBlock.addLine(waitForSelectorOnClickScrollElementLineBlock());
-      // Click multiple list item
+      // Click multiple list testem
       exceptedBlock.addLine(scrollInMultiplekListItemLineBlock());
       exceptedBlock.addLine(clickMultiplekListItemLineBlock());
       // Custom line
       exceptedBlock.addLine(customeLineLineBlock());
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.buildClickMultiplekListItem(
           selector,
           scrollElement,
           scrollXElement,
           scrollYElement
         )
-        , exceptedBlock
+      ).toEqual(
+        exceptedBlock
       );
     });
 
-    it('Test d\'un ClickInDateElement avec option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickInDateElement avec option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = '';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -522,16 +582,17 @@ describe('Test de Click Block Factory', () => {
       // Click date element
       exceptedBlock.addLine(clickInDateElementLineBlock());
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.buildClickInDateElement(
           selector,
           dateSelector
         )
-        , exceptedBlock
+      ).toEqual(
+        exceptedBlock
       );
     });
 
-    it('Test d\'un ClickInDateElement sans option waitForSelectorOnClick' , () => {
+    test('Test d\'un ClickInDateElement sans option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = false;
 
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -539,16 +600,17 @@ describe('Test de Click Block Factory', () => {
       // Click date element
       exceptedBlock.addLine(clickInDateElementLineBlock());
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.buildClickInDateElement(
           selector,
           dateSelector
         )
-        , exceptedBlock
+      ).toEqual(
+        exceptedBlock
       );
     });
 
-    it('Test d\'un ClickInDateElement avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
+    test('Test d\'un ClickInDateElement avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = 'ligne custom';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -560,33 +622,35 @@ describe('Test de Click Block Factory', () => {
       // Custom line
       exceptedBlock.addLine(customeLineLineBlock());
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.buildClickInDateElement(
           selector,
           dateSelector
         )
-        , exceptedBlock
+      ).toEqual(
+        exceptedBlock
       );
     });
 
-    it('Test d\'un clickInInputCalendar' , () => {
+    test('Test d\'un clickInInputCalendar' , () => {
       options.customLineAfterClick = '';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
       // Click date element
       exceptedBlock.addLine(clickInInputCalendarLineModel());
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.buildClickInInputCalendar(
           selector,
           value,
           calendarHeaderSelector,
           calendarViewSelector
         )
-        , exceptedBlock
+      ).toEqual(
+        exceptedBlock
       );
     });
 
-    it('Test d\'un clickInInputCalendar avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
+    test('Test d\'un clickInInputCalendar avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = 'ligne custom';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
@@ -596,14 +660,15 @@ describe('Test de Click Block Factory', () => {
       // Custom line
       exceptedBlock.addLine(customeLineLineBlock());
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.buildClickInInputCalendar(
           selector,
           value,
           calendarHeaderSelector,
           calendarViewSelector
         )
-        , exceptedBlock
+      ).toEqual(
+        exceptedBlock
       );
     });
   });
@@ -611,39 +676,41 @@ describe('Test de Click Block Factory', () => {
   describe('Test de generate', () => {
 
 
-    it('Test de generateBlock pour un simple click', () => {
+    test('Test de generateBlock pour un simple click', () => {
       const eventModel = {
         selector,
         action : actionEvents.BASIC_CLICK,
       };
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.generateBlock(
-        eventModel,
-        ClickBlockFactory.frameId,
-        ClickBlockFactory.frame,
-        defaults
-        ),
+          eventModel,
+          ClickBlockFactory.frameId,
+          ClickBlockFactory.frame,
+          defaults
+        )
+      ).toEqual(
         ClickBlockFactory.buildClick(
           selector
         )
       );
     });
 
-    it('Test de generateBlock pour un item de list', () => {
+    test('Test de generateBlock pour un testem de list', () => {
       const eventModel = {
         sourceSelector,
         listItemIndex : listItemIndex.toString(),
         action : actionEvents.CLICK_SIMPLELIST,
       };
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.generateBlock(
-        eventModel,
-        ClickBlockFactory.frameId,
-        ClickBlockFactory.frame,
-        defaults
-        ),
+          eventModel,
+          ClickBlockFactory.frameId,
+          ClickBlockFactory.frame,
+          defaults
+        )
+      ).toEqual(
         ClickBlockFactory.buildClickListItem(
           listItemIndex,
           sourceSelector
@@ -651,19 +718,20 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    it('Test de generateBlock pour un click sur un file drop zone', () => {
+    test('Test de generateBlock pour un click sur un file drop zone', () => {
       const eventModel = {
         selector,
         action : actionEvents.CLICK_DROPZONE
       };
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.generateBlock(
-        eventModel,
-        ClickBlockFactory.frameId,
-        ClickBlockFactory.frame,
-        defaults
-        ),
+          eventModel,
+          ClickBlockFactory.frameId,
+          ClickBlockFactory.frame,
+          defaults
+        )
+      ).toEqual(
         ClickBlockFactory.buildclickFileDropZone(
           selector
         )
@@ -671,20 +739,21 @@ describe('Test de Click Block Factory', () => {
     });
 
 
-    it('Test de generateBlock pour un click sur les flêches d\'un input numeric', () => {
+    test('Test de generateBlock pour un click sur les flêches d\'un input numeric', () => {
       const eventModel = {
         selector,
         durancyClick : time,
         action : actionEvents.CLICKMOUSE_INPUTNUMERIC
       };
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.generateBlock(
-        eventModel,
-        ClickBlockFactory.frameId,
-        ClickBlockFactory.frame,
-        defaults
-        ),
+          eventModel,
+          ClickBlockFactory.frameId,
+          ClickBlockFactory.frame,
+          defaults
+        )
+      ).toEqual(
         ClickBlockFactory.buildClickMouseInputNumeric(
           selector,
           time
@@ -692,26 +761,27 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    it('Test de generateBlock pour un click mouse', () => {
+    test('Test de generateBlock pour un click mouse', () => {
       const eventModel = {
         selector,
         action : actionEvents.CLICKMOUSE
       };
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.generateBlock(
-        eventModel,
-        ClickBlockFactory.frameId,
-        ClickBlockFactory.frame,
-        defaults
-        ),
+          eventModel,
+          ClickBlockFactory.frameId,
+          ClickBlockFactory.frame,
+          defaults
+        )
+      ).toEqual(
         ClickBlockFactory.buildClickMouse(
           selector
         )
       );
     });
 
-    it('Test de generateBlock pour une liste à choix multiples', () => {
+    test('Test de generateBlock pour une liste à choix multiples', () => {
       const eventModel = {
         selector,
         scrollElement,
@@ -720,13 +790,14 @@ describe('Test de Click Block Factory', () => {
         action : actionEvents.CLICK_MULTIPLELIST
       };
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.generateBlock(
-        eventModel,
-        ClickBlockFactory.frameId,
-        ClickBlockFactory.frame,
-        defaults
-        ),
+          eventModel,
+          ClickBlockFactory.frameId,
+          ClickBlockFactory.frame,
+          defaults
+        )
+      ).toEqual(
         ClickBlockFactory.buildClickMultiplekListItem(
           selector,
           scrollElement,
@@ -736,7 +807,7 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    it('Test de generateBlock pour un click sur un input calendar ', () => {
+    test('Test de generateBlock pour un click sur un input calendar ', () => {
       const eventModel = {
         selector,
         value,
@@ -745,13 +816,14 @@ describe('Test de Click Block Factory', () => {
         action : actionEvents.CLICK_INPUT_CALENDAR
       };
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.generateBlock(
-        eventModel,
-        ClickBlockFactory.frameId,
-        ClickBlockFactory.frame,
-        defaults
-        ),
+          eventModel,
+          ClickBlockFactory.frameId,
+          ClickBlockFactory.frame,
+          defaults
+        )
+      ).toEqual(
         ClickBlockFactory.buildClickInInputCalendar(
           selector,
           value,
@@ -761,20 +833,21 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    it('Test de generateBlock pour un click sur un date element ', () => {
+    test('Test de generateBlock pour un click sur un date element ', () => {
       const eventModel = {
         selector,
         dateSelector,
         action : actionEvents.CLICK_DATE_ELEMENT
       };
 
-      assert.deepStrictEqual(
+      expect(
         ClickBlockFactory.generateBlock(
-        eventModel,
-        ClickBlockFactory.frameId,
-        ClickBlockFactory.frame,
-        defaults
-        ),
+          eventModel,
+          ClickBlockFactory.frameId,
+          ClickBlockFactory.frame,
+          defaults
+        )
+      ).toEqual(
         ClickBlockFactory.buildClickInDateElement(
           selector,
           dateSelector

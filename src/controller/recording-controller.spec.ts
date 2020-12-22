@@ -1,7 +1,6 @@
 import { defaults } from './../constants/default-options';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 const puppeteer = require('puppeteer');
 import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
@@ -60,10 +59,9 @@ async function verfiyBadgeContent(action : string ) : Promise<string> {
 // tslint:disable: no-identical-functions
 describe('Test de Recording Controller', function () {
 
-  before('Mise en place du serveur', async function () {
+  // Mise en place du serveur
+  beforeAll(async function (done) {
 
-    // On met un timeout car runbuild met plus de 2000ms
-    this.timeout(50000);
     await runBuild();
     buildDir = '../../../dist';
     const fixture = path.join(__dirname, '../../static/test/page-test/html-page/forms.html');
@@ -214,50 +212,52 @@ describe('Test de Recording Controller', function () {
       document.body.parentElement.appendChild(el);
     }, 'build/background.js');
 
-  });
+    done();
+  }, 50000);
 
-  after('Close server', async () => {
+  // Close server
+  afterAll(async () => {
     await page.close();
     await browser.close();
     await server.close();
-  });
+  }, 50000);
 
 
-  it('Test de start', async () => {
+  test('Test de start', async () => {
 
     const badge = await verfiyBadgeContent('start');
     // Verifier si il est égale à 'rec' car il n'y a pas d'event à save
-    assert.strictEqual(badge, 'rec');
+    expect(badge).toEqual('rec');
   });
 
-  it('Test de stop', async () => {
+  test('Test de stop', async () => {
     const badge = await verfiyBadgeContent('stop');
     // Verifier si il est égale à '' car il n'y a pas d'event à save
-    assert.strictEqual(badge, '');
+    expect(badge).toEqual('');
   });
 
-  it('Test de cleanUp', async () => {
+  test('Test de cleanUp', async () => {
 
     const badge = await verfiyBadgeContent('cleanup');
     // Verifier si il est égale à '' car il n'y a pas d'event à save
-    assert.strictEqual(badge, '');
+    expect(badge).toEqual('');
   });
 
-  it('Test de pause', async () => {
+  test('Test de pause', async () => {
 
     const badge = await verfiyBadgeContent('pause');
     // Verifier si il est égale à '❚❚' car on est en pause
-    assert.strictEqual(badge, '❚❚');
+    expect(badge).toEqual('❚❚');
   });
 
-  it('Test de unpause', async () => {
+  test('Test de unpause', async () => {
 
     const badge = await verfiyBadgeContent('unpause');
     // Verifier si il est égale à 'rec' car on record
-    assert.strictEqual(badge, 'rec');
+    expect(badge).toEqual('rec');
   });
 
-  it('Test de exportScript', async () => {
+  test('Test de exportScript', async () => {
 
     await isBackgroundReady();
 
@@ -283,6 +283,6 @@ describe('Test de Recording Controller', function () {
       return (window as any).ddlFile;
     });
     // Verifier si il est égale à true car on a ddl
-    assert.ok(ddlFile);
+    expect(ddlFile).toBeTruthy();
   });
 });

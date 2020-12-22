@@ -1,6 +1,5 @@
 import { HeaderFactory } from './header-factory';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import HeaderCode from '../../constants/code-generate/header-code';
 import { RegExpFactory } from '../../factory/regexp/regexp-factory';
 
@@ -24,25 +23,26 @@ describe('Test du Header Factory', () => {
 
   describe('Test de generate du header', () => {
 
-    it('Test du header avec en dehors d\'une fonction async', () => {
+    test('Test du header avec en dehors d\'une fonction async', () => {
       resetParamter();
       // Ajout des imports et du header
       let exceptedResult = HeaderCode.importPuppeteer + HeaderCode.header;
       // headless est à false donc on le met à false
       exceptedResult = exceptedResult.replace('launch()', 'launch({ headless: false })');
 
-      assert.strictEqual(
+      expect(
         HeaderFactory.getHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
          regexHttp
-        ),
+        )
+      ).toEqual(
         exceptedResult
       );
     });
 
-    it('Test du header avec une fonction async', () => {
+    test('Test du header avec une fonction async', () => {
       resetParamter();
       wrapAsync = true;
       // Ajout des imports et du header
@@ -50,18 +50,19 @@ describe('Test du Header Factory', () => {
       // headless est à false donc on le met à false
       exceptedResult = exceptedResult.replace('launch()', 'launch({ headless: false })');
 
-      assert.strictEqual(
+      expect(
         HeaderFactory.getHeader(
-          recordHttpRequest,
-          wrapAsync,
-          headless,
-          regexHttp
-        ),
+         recordHttpRequest,
+         wrapAsync,
+         headless,
+         regexHttp
+        )
+      ).toEqual(
         exceptedResult
       );
     });
 
-    it('Test du header avec l\'option record http activée', () => {
+    test('Test du header avec l\'option record http activée', () => {
       resetParamter();
       recordHttpRequest = true;
       // Ajout des imports et du header
@@ -74,35 +75,38 @@ describe('Test du Header Factory', () => {
 
       // On enlève la condition de filtrage des requètes
       exceptedResult += HeaderCode.listenerPage.replace('**httpregex**', ``);
-      assert.strictEqual(
-        HeaderFactory.getHeader(
-          recordHttpRequest,
-          wrapAsync,
-          headless,
-          regexHttp
-        ),
-        exceptedResult
-      );
-    });
 
-    it('Test du header avec l\'option headless activée', () => {
-      resetParamter();
-      headless = true;
-      // Ajout des imports et du header
-      const exceptedResult = HeaderCode.importPuppeteer + HeaderCode.header;
-
-      assert.strictEqual(
+      expect(
         HeaderFactory.getHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
          regexHttp
-        ),
+        )
+      ).toEqual(
         exceptedResult
       );
     });
 
-    it('Test du header avec une regexp pour le filtrage des requètes http', () => {
+    test('Test du header avec l\'option headless activée', () => {
+      resetParamter();
+      headless = true;
+      // Ajout des imports et du header
+      const exceptedResult = HeaderCode.importPuppeteer + HeaderCode.header;
+
+      expect(
+        HeaderFactory.getHeader(
+         recordHttpRequest,
+         wrapAsync,
+         headless,
+         regexHttp
+        )
+      ).toEqual(
+        exceptedResult
+      );
+    });
+
+    test('Test du header avec une regexp pour le filtrage des requètes http', () => {
       resetParamter();
       recordHttpRequest = true;
       regexHttp = '/.*localhost*./gm';
@@ -125,18 +129,19 @@ describe('Test du Header Factory', () => {
         `&& !new RegExp(${codeRegExp}).test(url) `
       );
 
-      assert.strictEqual(
+      expect(
         HeaderFactory.getHeader(
-          recordHttpRequest,
-          wrapAsync,
-          headless,
-          regexHttp
-        ),
+         recordHttpRequest,
+         wrapAsync,
+         headless,
+         regexHttp
+        )
+      ).toEqual(
         exceptedResult
       );
     });
 
-    it('Test du header avec wrapAsync et headless', () => {
+    test('Test du header avec wrapAsync et headless', () => {
       resetParamter();
       wrapAsync = true;
       headless = true;
@@ -144,18 +149,19 @@ describe('Test du Header Factory', () => {
       // Ajout des imports et du header
       const exceptedResult = HeaderCode.importPuppeteer + HeaderCode.wrappedHeader;
 
-      assert.strictEqual(
+      expect(
         HeaderFactory.getHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
          regexHttp
-        ),
+        )
+      ).toEqual(
         exceptedResult
       );
     });
 
-    it('Test du header avec wrapAsync, headless et record http request', () => {
+    test('Test du header avec wrapAsync, headless et record http request', () => {
       resetParamter();
       wrapAsync = true;
       headless = true;
@@ -168,18 +174,19 @@ describe('Test du Header Factory', () => {
 
       // On enlève la condition de filtrage des requètes
       exceptedResult += HeaderCode.listenerPage.replace('**httpregex**', ``);
-      assert.strictEqual(
+      expect(
         HeaderFactory.getHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
          regexHttp
-        ),
+        )
+      ).toEqual(
         exceptedResult
       );
     });
 
-    it('Test du header avec wrapAsync, headless, record http request et le filtrage des requètes', () => {
+    test('Test du header avec wrapAsync, headless, record http request et le filtrage des requètes', () => {
       resetParamter();
       wrapAsync = true;
       headless = true;
@@ -200,13 +207,14 @@ describe('Test du Header Factory', () => {
            `&& !new RegExp(${codeRegExp}).test(url) `
        );
 
-      assert.strictEqual(
+      expect(
         HeaderFactory.getHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
          regexHttp
-        ),
+        )
+      ).toEqual(
         exceptedResult
       );
     });

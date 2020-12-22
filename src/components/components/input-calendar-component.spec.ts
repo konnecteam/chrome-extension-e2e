@@ -1,5 +1,4 @@
 import { InputCalendarComponent } from './input-calendar-component';
-import { IframeComponent } from './iframe-component';
 import 'jest';
 import * as path from 'path';
 import { ComponentModel } from 'models/component-model';

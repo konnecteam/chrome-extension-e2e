@@ -1,5 +1,4 @@
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
 const puppeteer = require('puppeteer');
 import { startServer } from '../../static/test/page-test/server';
@@ -32,10 +31,9 @@ async function getPollyID() : Promise<any> {
 
 describe('Test de Polly recorder', function () {
 
-  before('Start test server', async function () {
+  // Start test server
+  beforeAll(async function (done) {
 
-    // On met un timeout car runbuild met plus de 2000ms donc on met timeout
-    this.timeout(50000);
     await runBuild();
     buildDir = '../../../dist';
     const fixture = path.join(__dirname, '../../static/test/page-test/html-page/forms.html');
@@ -67,24 +65,26 @@ describe('Test de Polly recorder', function () {
       document.body.parentElement.appendChild(el);
 
     }, 'build/polly-build/polly.js');
-  });
+    done();
+  }, 50000);
 
-  after('Close server', async () => {
+  // Close server
+  afterAll(async () => {
     await page.close();
     await browser.close();
     await server.close();
   });
 
-  it('Test de création de polly', async () => {
+  test('Test de création de polly', async () => {
 
     // On attend que polly soit prêt
     await isPollyReady();
     // On récupère l'id de polly
     const polly = await getPollyID();
-    assert.ok(polly);
+    expect(polly).toBeDefined();
   });
 
-  it('Test de récupération du résultat de polly', async () => {
+  test('Test de récupération du résultat de polly', async () => {
 
     // On attend que polly soit prêt
     await isPollyReady();
@@ -101,7 +101,7 @@ describe('Test de Polly recorder', function () {
     });
 
     // Le résultat ne doit pas être vide
-    assert.ok(result);
+    expect(result).toBeDefined();
   });
 
 });

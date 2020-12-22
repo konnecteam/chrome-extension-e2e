@@ -1,10 +1,8 @@
 import { IframeComponent } from './iframe-component';
 import 'jest';
-import * as path from 'path';
 import { ComponentModel } from 'models/component-model';
 import componentName from '../../constants/component-name';
 import { EventModel } from '../../models/event-model';
-import actionEvents from '../../constants/action-events';
 const fs = require('fs');
 
 describe('Test de Iframe Component', () => {

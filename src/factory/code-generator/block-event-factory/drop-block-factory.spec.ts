@@ -1,8 +1,6 @@
 import { DropBlockFactory } from './drop-block-factory';
-import { Block } from './../../../code-generator/block';
 import { defaults } from '../../../constants/default-options';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import actionEvents from '../../../constants/action-events';
 import { ClickBlockFactory } from './click-block-factory';
 import { ChangeBlockFactory } from './change-block-factory';
@@ -13,7 +11,8 @@ const frameId = 0;
 
 describe('Test de Drop Block Factory', () => {
 
-  before('Initialisation', () => {
+  // Initialisation
+  beforeAll(() => {
 
     ClickBlockFactory.options = JSON.parse(JSON.stringify(defaults));
     ClickBlockFactory.frameId = frameId;
@@ -24,7 +23,7 @@ describe('Test de Drop Block Factory', () => {
     ChangeBlockFactory.frame = frame;
   });
 
-  it('Généré un Drop Block', () => {
+  test('Généré un Drop Block', () => {
     const eventModel  = {
       action : actionEvents.DROP_DROPZONE,
       selector: '#test',
@@ -38,14 +37,15 @@ describe('Test de Drop Block Factory', () => {
 
     exceptedResult.addLine(chooserFile.getLines()[0]);
 
-    assert.deepStrictEqual(
+    expect(
       DropBlockFactory.generateBlock(
         eventModel,
         frameId,
         frame,
         defaults
-      ),
-       exceptedResult
+      )
+    ).toEqual(
+      exceptedResult
     );
   });
 });
