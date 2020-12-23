@@ -66,11 +66,11 @@ export class SelectorService {
       element, {
         root : document.body,
         className: name => false, tagName: name => true ,
-        idName: name => !name.startsWith('formv')  && !name.startsWith('kdp')
+        idName: name => !name.startsWith('formv')  && !name.startsWith('kdp') && !name.startsWith('mv')
          && !name.match(this._idToIgnore) && !this._idToIgnore.test(name),
-        seedMinLength : 5,
-        optimizedMinLength : 8,
-        threshold : 1000,
+        seedMinLength : 7,
+        optimizedMinLength : 12,
+        threshold : 1500,
         maxNumberOfTries : 15000
       } as any
     );
