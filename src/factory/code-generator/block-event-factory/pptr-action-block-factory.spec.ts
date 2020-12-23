@@ -26,6 +26,13 @@ describe('Test de Pptr Action Block Factory', () => {
       value: `await ${frame}.goto('${href}');`
     });
 
+    exceptedResult.addLine({
+      type: pptrActions.GOTO,
+      value: `await page.waitForTimeout(1000);
+  await page.evaluate(content => {
+    window.konnect.engineStateService.Instance.start();
+  });`
+    });
     expect(
       PPtrActionBlockFactory.buildGoto(href)
     ).toEqual(

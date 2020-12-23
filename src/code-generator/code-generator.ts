@@ -1,4 +1,5 @@
-import ActionEvents from '../constants/action-events';
+import { ObjectComparatorService } from './../services/object-comparator/object-comparator-service';
+import { default as pptrActions} from '../constants/pptr-actions';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { EventModel } from './../models/event-model';
 import { Block } from './block';
@@ -85,11 +86,13 @@ export default class CodeGenerator {
 
       if (newBlock) {
 
-        /* Si l'option custom Line befoer event est utilisé
+        /* Si l'option custom Line before event est utilisé et que ce n'est pas un action puppeteer
            Alors on rajoute la ligne customisé
         */
-        if (this._options.customLineBeforeEvent) {
-          this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLineBeforeEvent));
+        if (this._options.customLinesBeforeEvent &&
+          !ObjectComparatorService.isValueInObject(pptrActions, currentEvent.action)) {
+
+          this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLinesBeforeEvent));
         }
 
         /* Si l'event contient un commentaire alors on rajoute un block de commentaire */
@@ -101,7 +104,7 @@ export default class CodeGenerator {
       }
 
       // Si l'action détéctée est un navigation alors on met la navigation à true
-      if  (currentEvent.action === ActionEvents.NAVIGATION) {
+      if  (currentEvent.action === pptrActions.NAVIGATION) {
         this._hasNavigation = true;
       }
 

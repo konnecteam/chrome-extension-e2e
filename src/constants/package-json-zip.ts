@@ -8,7 +8,7 @@ export default {
     "description": "Exported script",
     "dependencies": {
       "atob": "^2.1.2",
-      "puppeteer": "5.2.1",
+      "puppeteer": "5.5.0",
       "url": "^0.11.0"
     }
   }`

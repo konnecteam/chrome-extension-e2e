@@ -10,6 +10,7 @@ import { EventModel } from '../models/event-model';
 import { Block } from './block';
 import 'jest';
 import CodeGenerator from './code-generator';
+import { ObjectComparatorService } from '../services/object-comparator/object-comparator-service';
 
 /** Frame dans laquelle on se stestue */
 const frameId = 0;
@@ -70,8 +71,8 @@ function createScenario(options : OptionModel) {
 
     if (block) {
 
-      if (options.customLineBeforeEvent) {
-        listBlock.push(ScenarioFactory.generateCustomLine(frameId, options.customLineBeforeEvent));
+      if (options.customLinesBeforeEvent && !ObjectComparatorService.isValueInObject(pptrActions, currentEvent.action)) {
+        listBlock.push(ScenarioFactory.generateCustomLine(frameId, options.customLinesBeforeEvent));
       }
 
       if (currentEvent.comments) {
@@ -104,7 +105,7 @@ describe('Test de Code Generator', () => {
   beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
     listEventModel.push(
-      {typeEvent: pptrActions.pptr , action: actionEvents.GOTO, value: 'localhost'}
+      {typeEvent: pptrActions.pptr , action: pptrActions.GOTO, value: 'localhost'}
     );
 
     listEventModel.push(
@@ -148,7 +149,7 @@ describe('Test de Code Generator', () => {
   test('Test avec les options la custom ligne après chaque event', () => {
 
     const options = JSON.parse(JSON.stringify(optionsDefault));
-    options.customLineBeforeEvent = 'line beofre event';
+    options.customLinesBeforeEvent = 'line before event';
     expect(
       new CodeGenerator(options).generate(listEventModel))
       .toEqual(

@@ -219,7 +219,7 @@ describe('Test de Scenario Factory', () => {
     const eventModel : EventModel = {
       typeEvent : pptrActions.pptr,
       selector : '#id',
-      action : actionEvents.GOTO,
+      action : pptrActions.GOTO,
       value : 'localhost'
     };
 

@@ -80,7 +80,7 @@
             </div>
             <div class="settings-group">
                <label class="settings-label"> add custom lines before every <code>Event</code></label>
-               <input id="options-code-customLineAfterClick" type="text" v-model="options.code.customLineBeforeEvent" @change="save">
+               <textarea id="options-code-customLineAfterClick" rows ="7" cols="70" v-model="options.code.customLinesBeforeEvent" @change="save"/>
             </div>
           </div>
         </div>

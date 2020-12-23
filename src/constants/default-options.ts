@@ -13,5 +13,7 @@ export const defaults : OptionModel = {
   customLineAfterClick: '',
   recordHttpRequest: true,
   regexHTTPrequest: '',
-  customLineBeforeEvent : 'await page.waitFor(1000);'
+  customLinesBeforeEvent : `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`
 };

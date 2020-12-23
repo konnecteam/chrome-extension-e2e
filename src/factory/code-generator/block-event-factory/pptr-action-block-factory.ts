@@ -33,16 +33,16 @@ export class PPtrActionBlockFactory {
     // En fonction de l'action de l'event
     switch (action) {
       // Si l'action est un goto
-      case ActionEvents.GOTO:
+      case pptrActions.GOTO:
         return this.buildGoto(value);
         break;
       // Si l'action est la récupération du viewport
-      case ActionEvents.VIEWPORT:
+      case pptrActions.VIEWPORT:
         return this.buildViewport(
           value.width, value.height);
         break;
       // Si l'action est une navigation
-      case ActionEvents.NAVIGATION:
+      case pptrActions.NAVIGATION:
         return this.buildWaitForNavigation();
         break;
     }
@@ -53,10 +53,20 @@ export class PPtrActionBlockFactory {
    */
   public static buildGoto(href : string) : Block {
 
-    return new Block(this.frameId, {
+    const block =  new Block(this.frameId, {
       type: pptrActions.GOTO,
       value: `await ${this.frame}.goto('${href}');`
     });
+
+    // On wait une seconde pour attendre konnect
+    block.addLine({
+      type: pptrActions.GOTO,
+      value: `await page.waitForTimeout(1000);
+  await page.evaluate(content => {
+    window.konnect.engineStateService.Instance.start();
+  });`
+    });
+    return block;
   }
 
   /**

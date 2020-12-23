@@ -34,5 +34,5 @@ export class OptionModel {
   public regexHTTPrequest : string;
 
   /** Ligne customisée à rajouter avant le block d'un event */
-  public customLineBeforeEvent : string;
+  public customLinesBeforeEvent : string;
 }
