@@ -18,4 +18,22 @@ describe('Test de Object Comparator Service', () => {
       ObjectComparatorService.isValueInObject(object, 'v')
     ).toBeFalsy();
   });
+
+  test('Test de string qui est contenu dans un tableau ', () => {
+
+    const value = 'mv64';
+    const tab = ['test', 'mv'];
+    expect(
+      ObjectComparatorService.isStringStartInTab(value, tab)
+    ).toBeTruthy();
+  });
+
+  test('Test de string qui n\'est pas contenu dans un tableau ', () => {
+
+    const value = 'no';
+    const tab = ['test', 'mv'];
+    expect(
+      ObjectComparatorService.isStringStartInTab(value, tab)
+    ).toBeFalsy();
+  });
 });

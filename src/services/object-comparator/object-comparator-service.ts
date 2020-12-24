@@ -16,4 +16,18 @@ export class ObjectComparatorService {
 
     return false;
   }
+
+  /**
+   * Vérifie si la value commence par une des string du tableau
+   */
+  public static isStringStartInTab(value : string, tab : string[]) {
+
+    for (let index = 0; index < tab.length; index++) {
+      const element = tab[index];
+
+      if (value.startsWith(element)) return true;
+    }
+
+    return false;
+  }
 }

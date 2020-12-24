@@ -1,3 +1,4 @@
+import { ObjectComparatorService } from './../object-comparator/object-comparator-service';
 import finder from '@medv/finder';
 
 /**
@@ -6,7 +7,8 @@ import finder from '@medv/finder';
 export class SelectorService {
 
   /** Id à ignorer */
-  private static readonly _idToIgnore  = new RegExp('([A-Za-z0-9]+-){4}', 'g');
+  private static readonly _idToIgnoreReg  = new RegExp('([A-Za-z0-9]+-){4}', 'g');
+  private static readonly _idToIgnore = ['formv', 'kdp', 'mv'];
 
   /**
    * Récupère un élément html
@@ -14,7 +16,9 @@ export class SelectorService {
   public static find(element : HTMLElement) : string {
 
     // Gestion de l'id
-    if (element.id  && !this._idToIgnore.test(element.id)) {
+    if (element.id  && !this._idToIgnoreReg.test(element.id)
+    && !ObjectComparatorService.isStringStartInTab(element.id, this._idToIgnore) ) {
+
       return '#' + element.id.split(':').join('\\:');
     }
 
@@ -66,8 +70,8 @@ export class SelectorService {
       element, {
         root : document.body,
         className: name => false, tagName: name => true ,
-        idName: name => !name.startsWith('formv')  && !name.startsWith('kdp') && !name.startsWith('mv')
-         && !name.match(this._idToIgnore) && !this._idToIgnore.test(name),
+        idName: name => !ObjectComparatorService.isStringStartInTab(name, this._idToIgnore)
+         && !name.match(this._idToIgnoreReg) && !this._idToIgnoreReg.test(name),
         seedMinLength : 7,
         optimizedMinLength : 12,
         threshold : 1500,
