@@ -62,7 +62,7 @@ export class PPtrActionBlockFactory {
     block.addLine({
       type: pptrActions.GOTO,
       value: `await page.waitForTimeout(1000);
-  await page.evaluate(content => {
+  await page.evaluate( () => {
     window.konnect.engineStateService.Instance.start();
   });`
     });
