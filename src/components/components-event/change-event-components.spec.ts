@@ -3,33 +3,18 @@ import { InputNumericComponent } from '../components/input-numeric-component';
 import { ChangeEventComponents} from './change-event-components';
 import * as path from 'path';
 import 'jest';
-const fs = require('fs');
+import { FileService } from '../../services/file/file-service';
+
 /**
  * Path qui contient le body d'un input numeric
  */
 const pathFile = path.join(__dirname, './../../../static/test/dom/dom-input-numeric.html');
 
-/**
- * Permet de lire un fichier
- * @param filePath
- */
-function readFileAsync(filePath : string) : Promise<any> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(data);
-      }
-    });
-  });
-}
-
 describe('Test de change event component', () => {
 
   beforeAll(async () => {
     // On init le body
-    const content = await readFileAsync(pathFile);
+    const content = await FileService.readFileAsync(pathFile);
 
     document.body.innerHTML =
     `<div>

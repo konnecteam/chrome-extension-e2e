@@ -6,23 +6,8 @@ import domEventsToRecord from '../constants/dom-events-to-record';
 import { ChangeEventComponents } from '../components/components-event/change-event-components';
 import { KeydownEventComponent } from '../components/components-event/keydown-event-component';
 import 'jest';
-const fs = require('fs');
+import { FileService } from '../services/file/file-service';
 
-/**
- * Permet de lire un fichier
- * @param filePath
- */
-function readFileAsync(filePath : string) : Promise<any> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(data);
-      }
-    });
-  });
-}
 
 /**
  * Permet de mettre à jour body
@@ -31,7 +16,7 @@ function readFileAsync(filePath : string) : Promise<any> {
 async function changeBodyDocument(pathDoc : string) {
   const pathFile = path.join(__dirname, pathDoc );
 
-  const content = await readFileAsync(pathFile);
+  const content = await FileService.readFileAsync(pathFile);
   document.body.innerHTML = content;
 }
 

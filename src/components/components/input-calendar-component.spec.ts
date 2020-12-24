@@ -6,32 +6,16 @@ import componentName from '../../constants/component-name';
 import { EventModel } from '../../models/event-model';
 import actionEvents from '../../constants/action-events';
 import elementsTagName from '../../constants/elements-tagName';
-const fs = require('fs');
+import { FileService } from '../../services/file/file-service';
 
 // Path pour lire le fichier html pour le body
 const pathFile = path.join(__dirname, './../../../static/test/dom/dom-input-date.html');
-
-/**
- * Permet de lire un fichier
- * @param filePath
- */
-function readFileAsync(filePath : string) : Promise<any> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(data);
-      }
-    });
-  });
-}
 
 describe('Test de input calendar Component', () => {
 
   beforeAll(async () => {
     // On initialise le body
-    const content = await readFileAsync(pathFile);
+    const content = await FileService.readFileAsync(pathFile);
     document.body.innerHTML = content;
   });
 

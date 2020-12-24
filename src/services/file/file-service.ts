@@ -1,5 +1,6 @@
 import { FileFactory } from '../../factory/file/file-facory';
 import { ChromeService } from './../chrome/chrome-service';
+import * as fs from 'fs';
 
 /**
  * Service Global qui permet la gestion des enregistrements depuis le background
@@ -111,5 +112,20 @@ export class FileService {
     }
 
     return listFiles.join(';');
+  }
+
+  /**
+   * Permet de lire un fichier
+   */
+  public static async readFileAsync(filePath : string) : Promise<any> {
+    return new Promise((resolve, reject) => {
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(data);
+        }
+      });
+    });
   }
 }

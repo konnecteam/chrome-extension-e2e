@@ -4,35 +4,19 @@ import * as path from 'path';
 import componentName from '../../constants/component-name';
 import { EventModel } from '../../models/event-model';
 import actionEvents from '../../constants/action-events';
-const fs = require('fs');
+import { FileService } from '../../services/file/file-service';
 
 /**
  * chemin du fichier html qui contient le body
  */
 const pathFile = path.join(__dirname, './../../../static/test/dom/dom-checkbox.html');
 
-/**
- * Permet de lire un fichier
- *
- */
-function readFileAsync(filePath : string) : Promise<any> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(data);
-      }
-    });
-  });
-}
-
 describe('Test de Checkbox', () => {
 
   beforeAll(async() => {
 
     // on ajoute le contenu au body
-    const content = await readFileAsync(pathFile);
+    const content = await FileService.readFileAsync(pathFile);
     document.body.innerHTML = content;
   });
 

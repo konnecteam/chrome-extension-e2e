@@ -3,24 +3,13 @@ import * as path from 'path';
 import { ZipService } from './zip-service';
 import * as fs from 'fs';
 import JSZip = require('jszip');
+import { FileService } from '../../services/file/file-service';
 
 let zipService : ZipService;
 
 const fileTestFile = path.join(__dirname, './../../../static/test/file/test.txt');
 
 // tslint:disable: no-identical-functions
-/** Lecture du contenu du fichier */
-function readFileAsync(filePath : string) : Promise<any> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(data);
-      }
-    });
-  });
-}
 
 /** Création d'un fichier sur le disque */
 function createFileAsync(filePath : string, content : Buffer) : Promise<boolean> {
@@ -77,7 +66,7 @@ describe('Test de Zip service', () => {
   test('Test ajouter un fichier dans le zip', async () => {
 
     const filePath = 'test/test.txt';
-    const fileContent = await readFileAsync(fileTestFile);
+    const fileContent = await FileService.readFileAsync(fileTestFile);
 
     const zipServiceResult = zipService.addFileInFolder(filePath, fileContent);
 
@@ -95,7 +84,7 @@ describe('Test de Zip service', () => {
 
     // Récupération du fichier de test
     const filePath = 'test/test.txt';
-    const fileContent = await readFileAsync(fileTestFile);
+    const fileContent = await FileService.readFileAsync(fileTestFile);
 
     // Création du zip (buffer)
     zipService.addFileInFolder(filePath, fileContent);

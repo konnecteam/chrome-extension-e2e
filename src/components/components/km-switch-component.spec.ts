@@ -5,35 +5,19 @@ import { ComponentModel } from 'models/component-model';
 import componentName from '../../constants/component-name';
 import { EventModel } from '../../models/event-model';
 import actionEvents from '../../constants/action-events';
-const fs = require('fs');
+import { FileService } from '../../services/file/file-service';
+
 /**
  * Path du fichier qui contient le body
  */
 const pathFile = path.join(__dirname, './../../../static/test/dom/dom-km-switch.html');
-
-/**
- * Permet de lire un fichier
- * @param filePath
- */
-function readFileAsync(filePath : string) : Promise<any> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(data);
-      }
-    });
-  });
-}
-
 
 describe('Test de km switch Component', () => {
 
   beforeAll(async() => {
 
     // On init le body
-    const content = await readFileAsync(pathFile);
+    const content = await FileService.readFileAsync(pathFile);
     document.body.innerHTML = content;
   });
 

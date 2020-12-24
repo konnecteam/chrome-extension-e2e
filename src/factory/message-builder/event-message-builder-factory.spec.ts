@@ -10,24 +10,7 @@ import 'jest';
 import { KSelectComponent } from '../../components/components/k-select-component';
 import { KListComponent } from '../../components/components/k-list-component';
 import { InputCalendarComponent } from '../../components/components/input-calendar-component';
-
-const fs = require('fs');
-
-/**
- * Permet de lire un fichier
- * @param filePath
- */
-function readFileAsync(filePath : string) : Promise<any> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(data);
-      }
-    });
-  });
-}
+import { FileService } from '../../services/file/file-service';
 
 /**
  * Permet de changer le contenu du body
@@ -36,9 +19,10 @@ function readFileAsync(filePath : string) : Promise<any> {
 async function changeBodyDocument(pathDoc : string) {
   const pathFile = path.join(__dirname, pathDoc );
 
-  const content = await readFileAsync(pathFile);
+  const content = await FileService.readFileAsync(pathFile);
   document.body.innerHTML = content;
 }
+
 describe('Test de event message builder factory', () => {
 
   test('Test de FileDropZone component message', async () => {

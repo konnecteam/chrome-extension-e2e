@@ -6,24 +6,7 @@ import { KmSwitchComponent } from './../components/km-switch- component';
 import { KListComponent } from '../components/k-list-component';
 import { InputCalendarComponent } from '../components/input-calendar-component';
 import 'jest';
-const fs = require('fs');
-
-
-/**
- * Pemret de lire un fichier
- * @param filePath
- */
-function readFileAsync(filePath : string) : Promise<any> {
-  return new Promise((resolve, reject) => {
-    fs.readFile(filePath, 'utf8', (err, data) => {
-      if (err) {
-        return reject(err);
-      } else {
-        return resolve(data);
-      }
-    });
-  });
-}
+import { FileService } from '../../services/file/file-service';
 
 /**
  * Permet de changer le contenu du body
@@ -32,7 +15,7 @@ function readFileAsync(filePath : string) : Promise<any> {
 async function changeBodyDocument(pathDoc : string) {
   const pathFile = path.join(__dirname, pathDoc );
 
-  const content = await readFileAsync(pathFile);
+  const content = await FileService.readFileAsync(pathFile);
   document.body.innerHTML = content;
 }
 
