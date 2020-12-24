@@ -1,3 +1,5 @@
+import { RadioGroupComponent } from './../../components/components/radio-group-component';
+import { CheckboxComponent } from './../../components/components/checkbox-component';
 import { InputCalendarComponent } from '../../components/components/input-calendar-component';
 import { KListComponent } from '../../components/components/k-list-component';
 import { IframeComponent } from '../../components/components/iframe-component';
@@ -55,6 +57,14 @@ export class EventMessageBuilderFactory {
       // Si c'est un input calendar
       case componentName.DATECALENDAR :
         newMessage = InputCalendarComponent.editDateMessage(event, component);
+        break;
+      // Si c'est un checkbox
+      case componentName.CHECKBOX :
+        newMessage = CheckboxComponent.editCheckboxMessage(event);
+        break;
+      // Si c'est un radio group
+      case componentName.RADIOGROUP :
+        newMessage = RadioGroupComponent.editRadioGroupMessage(event);
         break;
     }
     return newMessage;

@@ -10,6 +10,7 @@ export default {
   KMSWITCH: 'Km-switch',
   IFRAME: 'iframe',
   KLIST : 'K-list',
-  DATECALENDAR: 'Date-calendar'
-
+  DATECALENDAR: 'Date-calendar',
+  CHECKBOX: 'checkbox',
+  RADIOGROUP: 'radio-group'
 };

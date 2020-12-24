@@ -27,5 +27,7 @@ export default {
   NUMERIC: 'numeric',
   KONNECT_DROPDOWNLIST: 'konnect-dropdownlist',
   LIST_ELEMENT : 'ul',
-  DATE : 'date'
+  DATE : 'date',
+  CHECKBOX: 'checkbox',
+  RADIOGROUP: 'radio-group'
 };

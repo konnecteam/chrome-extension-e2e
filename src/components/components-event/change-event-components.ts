@@ -1,3 +1,5 @@
+import { RadioGroupComponent } from './../components/radio-group-component';
+import { CheckboxComponent } from './../components/checkbox-component';
 import { InputFilesComponent } from './../components/input-file-component';
 import { InputNumericComponent } from '../components/input-numeric-component';
 import { ComponentModel } from '../../models/component-model';
@@ -11,6 +13,7 @@ export class ChangeEventComponents {
    */
   public static determinateChangeComponent(element : HTMLElement) : ComponentModel {
 
-    return InputFilesComponent.isInputFile(element as HTMLInputElement) || InputNumericComponent.isInputNumeric(element);
+    return InputFilesComponent.isInputFile(element as HTMLInputElement) || InputNumericComponent.isInputNumeric(element)
+    || CheckboxComponent.isCheckboxComponent(element) || RadioGroupComponent.isRadioGroupComponent(element);
   }
 }
