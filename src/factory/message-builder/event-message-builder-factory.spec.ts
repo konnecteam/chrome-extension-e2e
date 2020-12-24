@@ -1,3 +1,5 @@
+import { RadioGroupComponent } from './../../components/components/radio-group-component';
+import { CheckboxComponent } from './../../components/components/checkbox-component';
 import { IframeComponent } from '../../components/components/iframe-component';
 import { InputNumericComponent } from '../../components/components/input-numeric-component';
 import { EventMessageBuilderFactory } from './event-message-builder-factory';
@@ -254,6 +256,54 @@ describe('Test de event message builder factory', () => {
     )
     .toEqual(InputCalendarComponent.
       editDateMessage(event, component)
+    );
+  });
+
+  test('Test de Checkbox component message', async () => {
+    // On init le body
+    await changeBodyDocument('./../../../static/test/dom/dom-checkbox.html');
+
+    const element = document.getElementById('ckb146');
+
+    const component = CheckboxComponent.isCheckboxComponent(element);
+
+    const event : EventModel =  {
+      action : '',
+    };
+    // On doit trouver un event model d'input calendar
+    expect(
+      EventMessageBuilderFactory.buildMessageEvent(
+        component,
+        event,
+        null
+      )
+    )
+    .toEqual(CheckboxComponent.
+      editCheckboxMessage(event)
+    );
+  });
+
+  test('Test de radio group component message', async () => {
+    // On init le body
+    await changeBodyDocument('./../../../static/test/dom/dom-radio-group.html');
+
+    const element = document.getElementById('rg168_0');
+
+    const component = RadioGroupComponent.isRadioGroupComponent(element);
+
+    const event : EventModel =  {
+      action : '',
+    };
+    // On doit trouver un event model d'input calendar
+    expect(
+      EventMessageBuilderFactory.buildMessageEvent(
+        component,
+        event,
+        null
+      )
+    )
+    .toEqual(RadioGroupComponent.
+      editRadioGroupMessage(event)
     );
   });
 });

@@ -1,0 +1,15 @@
+<radio-group items.bind="yesNoValues" group="spec" display-field="text" value.bind="yesNoValues[1]"
+  view-model.ref="specRadio" class="au-target" au-target-id="1206">
+  <div show.bind="false" class="au-target aurelia-hide" au-target-id="81">
+    <!--slot-->
+  </div>
+  <div ref="parentElement" class="au-target" au-target-id="83"><span class="m-r-10"><label><input
+          class="m-r-5 au-target" type="radio" name.bind="group" model.bind="item" disabled.bind="readonly"
+          checked.bind="value" au-target-id="84" id="rg168_0" name="spec">Oui
+        <!--anchor--></label></span><span class="m-r-10"><label><input class="m-r-5 au-target" type="radio"
+          name.bind="group" model.bind="item" disabled.bind="readonly" checked.bind="value" au-target-id="84"
+          id="rg168_1" name="spec">Non
+        <!--anchor--></label></span>
+    <!--anchor-->
+  </div>
+</radio-group>
