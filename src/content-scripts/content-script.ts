@@ -1,8 +1,8 @@
+import { SelectorService } from './../services/selector/selector-service';
 import { ComponentModel } from './../models/component-model';
 import  elementsTagName  from '../constants/elements-tagName';
 import { EventModel } from './../models/event-model';
 import { KeyDownService } from '../services/key-down/key-down-service';
-import { SelectorService } from '../services/selector/selector-service';
 import { StorageService } from '../services/storage/storage-service';
 import eventsToRecord from '../constants/dom-events-to-record';
 import { ChromeService } from '../services/chrome/chrome-service';
@@ -165,110 +165,101 @@ class EventRecorder {
     }
 
     // Gestion de la durée du click (principalement pour les input numérique)
-    if (e.type === eventsToRecord.MOUSEDOWN ) {
-      this._startMouseDown =  Date.now();
+    if (e.type === eventsToRecord.MOUSEDOWN) {
+      this._startMouseDown = Date.now();
       return;
     }
 
-    if (e.type === eventsToRecord.CLICK ) {
+    if (e.type === eventsToRecord.CLICK) {
       durationClick = Date.now() - this._startMouseDown;
     }
 
-    // On vérifie que la box use attribute est coché
-    StorageService.get(['useRegexForDataAttribute'], data => {
+    // Si un evènement précédent est toujours en cours on ne fait rien
+    if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp) {
+      return;
+    }
 
-      // Mise à jour du boolean
-      this._useRegexForDataAttribute = data.useRegexForDataAttribute;
+    let customAttribute = null;
 
-      // Si un evènement précédent est toujours en cours on ne fait rien
-      if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp) {
-        return;
-      }
+    // Gestion des cutom attributes
+    if (this._dataAttributes && this._dataAttributes.length && e.target.hasAttribute) {
+      // On recherche les custom attributes
+      const targetAttributes = e.target.attributes;
+      // Ordre des patterns sont important
+      this._dataAttributes.find(patternAttr => {
+        const regexp = RegExp(patternAttr);
+        // On test chaques attribute avec le pattern
+        for (let i = 0; i < targetAttributes.length; i++) {
+          // Regex ou string test
+          if (this._useRegexForDataAttribute ? regexp.test(targetAttributes[i].name) : patternAttr === targetAttributes[i].name) {
+            customAttribute = targetAttributes[i].name;
 
-      let customAttribute = null;
-
-      // Gestion des cutom attributes
-      if (this._dataAttributes && this._dataAttributes.length && e.target.hasAttribute) {
-        // On recherche les custom attributes
-        const targetAttributes = e.target.attributes;
-        // Ordre des patterns sont important
-        this._dataAttributes.find(patternAttr => {
-          const regexp = RegExp(patternAttr);
-          // On test chaques attribute avec le pattern
-          for (let i = 0; i < targetAttributes.length; i++) {
-            // Regex ou string test
-            if (this._useRegexForDataAttribute ? regexp.test(targetAttributes[i].name) : patternAttr === targetAttributes[i].name) {
-              customAttribute = targetAttributes[i].name;
-
-              // La recherche est terminé
-              // On traite les cas spéciaux des customs attributes
-              customAttribute = SelectorService.manageSpecialCase(customAttribute);
-              return true;
-            }
+            // La recherche est terminé
+            // On traite les cas spéciaux des customs attributes
+            customAttribute = SelectorService.manageSpecialCase(customAttribute);
+            return true;
           }
-          return false;
-        });
-      }
+        }
+        return false;
+      });
+    }
 
-      // définition du selecteur
-      let selector = '';
-      if (e.target.type === 'file'  && e.target.tagName === elementsTagName.INPUT.toLocaleUpperCase() && e.type === eventsToRecord.CHANGE) {
-        selector = this._previousSelector;
-      } else {
-        selector = customAttribute
-          ? SelectorService.formatDataOfSelector(e.target, customAttribute)
-          : SelectorService.find(e.target);
-      }
+    // définition du selecteur
+    let selector = '';
+    if (e.target.type === 'file' && e.target.tagName === elementsTagName.INPUT.toLocaleUpperCase() && e.type === eventsToRecord.CHANGE) {
+      selector = this._previousSelector;
+    } else {
+      selector = customAttribute
+        ? SelectorService.formatDataOfSelector(e.target, customAttribute)
+        : SelectorService.find(e.target);
+    }
 
-      let comments = '';
+    let comments = '';
 
-      // On vérifie si le sélecteur est ambigu (plus de deux réponses)
-      if (customAttribute && document.querySelectorAll(selector).length > 1) {
-        comments = '/!\\ The selector returns more than one element, thus the test will be wrong.';
-      }
+    // On vérifie si le sélecteur est ambigu (plus de deux réponses)
+    if (customAttribute && document.querySelectorAll(selector).length > 1) {
+      comments = '/!\\ The selector returns more than one element, thus the test will be wrong.';
+    }
 
-      // construction du message model: EventModel
-      let message : EventModel;
-      message = {
-        selector: SelectorService.standardizeSelector(selector),
-        comments,
-        value: e.target.value,
-        tagName: e.target.tagName,
-        action: e.type,
-        typeEvent : e.type,
-        key: e.key ? e.key : null,
-        keyCode: e.keyCode ? e.keyCode : null,
-        href: e.target.href ? e.target.href : null,
-        durancyClick: durationClick ? durationClick : 0,
-        coordinates: this._keyDownService.getCoordinates(e),
-        scrollY: window.pageYOffset,
-        scrollX: window.pageXOffset
-      };
+    // construction du message model: EventModel
+    let message : EventModel;
+    message = {
+      selector: SelectorService.standardizeSelector(selector),
+      comments,
+      value: e.target.value,
+      tagName: e.target.tagName,
+      action: e.type,
+      typeEvent: e.type,
+      key: e.key ? e.key : null,
+      keyCode: e.keyCode ? e.keyCode : null,
+      href: e.target.href ? e.target.href : null,
+      durancyClick: durationClick ? durationClick : 0,
+      coordinates: this._keyDownService.getCoordinates(e),
+      scrollY: window.pageYOffset,
+      scrollX: window.pageXOffset
+    };
 
-      // On vérifie si un composant est concerné par l'event
-      const component = ComponentManager.determinateComponent(message.typeEvent, e.target,
-         message.selector , this._previousSelector, this._previousKList);
+    // On vérifie si un composant est concerné par l'event
+    const component = ComponentManager.determinateComponent(message.typeEvent, e.target, this._previousKList);
 
-      /* Si c'est le cas et qu'on a un previousElement
-         c'est que on a une klist, on update donc la value des k list
-      */
-      if (component && component.previousElement) {
-        this._previousKList = component.previousElement;
-        this._previousSelector = component.previousSelector;
-      }
+    /* Si c'est le cas et qu'on a un previousElement
+       c'est que on a une klist, on update donc la value des k list
+    */
+    if (component && component.previousElement) {
+      this._previousKList = component.previousElement;
+    }
 
-      // Si on a un component on edit le message de l'event
-      if (component) {
-        message = EventMessageBuilderFactory.buildMessageEvent(component, message, filesUpload);
-      }
-      // On vérifie si on a eu des keydown ou si on a fini les keydown et dans ce cas on modifie le message car c'est un listkeydown
-      this._keyDownService.handleEvent(message, e.target);
-      this._previousEvent = e;
-      this._previousSelector = selector;
+    // Si on a un component on edit le message de l'event
+    if (component) {
+      message = EventMessageBuilderFactory.buildMessageEvent(component, message, filesUpload);
+    }
+    // On vérifie si on a eu des keydown ou si on a fini les keydown et dans ce cas on modifie le message car c'est un listkeydown
+    this._keyDownService.handleEvent(message, e.target);
+    this._previousEvent = e;
+    this._previousSelector = selector;
+    ChromeService.sendMessage(message);
+    this._isRecordTreated = true;
 
-      ChromeService.sendMessage(message);
-      this._isRecordTreated = true;
-    });
   }
 
   /**
@@ -301,7 +292,7 @@ class EventRecorder {
           child.addEventListener('change', boundedRecordEvent, false);
         }
 
-        /* Si on a une balise style aurelia-hide, on la supprimer
+        /* Si on a une balise style aurelia-hide, on l'a supprime
            car elle apparait à cause l'injection du scripts
         */
         if (child.tagName === 'STYLE' && child.parentElement.tagName === 'BODY') {

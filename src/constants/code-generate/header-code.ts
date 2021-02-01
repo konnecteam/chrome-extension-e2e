@@ -57,8 +57,7 @@ fs.readdirSync(__dirname+"/recordings").forEach(file => {
   if(file.includes('scenario')) nameFile = file;
 });
 const fileContents = fs.readFileSync(__dirname+"/recordings/"+nameFile+"/recording.har");
-let fileFinal = JSON.stringify(JSON.parse(fileContents)).split("//aureliaProject.configure(aurelia, configCallback);").join("aureliaProject.configure(aurelia, configCallback);");
-
+let fileFinal = JSON.stringify(JSON.parse(fileContents));
 let listToken = fileFinal.split("token=");
 let isFind = false;
 for (let i=1; i < listToken.length;i++) {
@@ -79,7 +78,6 @@ for (let i=1; i < listToken.length;i++) {
 }
 
 const jsonContents = JSON.parse(fileFinal);
-
 var requestHashMap = new Map();
 
 for (let index = 0; index < jsonContents.log.entries.length; index++) {
@@ -112,6 +110,14 @@ page.on('load', async () => {
     scriptAdd.innerHTML = content;
     document.head.append(scriptAdd);
   }, fakeTimeScriptContent)
+
+  await page.evaluate(() => {
+    window.addEventListener('SetupReady', function() {
+      window.dispatchEvent(new CustomEvent('PollyReady'));
+    } , false);
+    let event = new CustomEvent('PollyReady');
+    window.dispatchEvent(event);
+   })
 }); \n`,
 
   wrappedHeader : `(async () => {
@@ -127,6 +133,14 @@ page.on('load', async () => {
       scriptAdd.innerHTML = content;
       document.head.append(scriptAdd);
     }, fakeTimeScriptContent)
+
+    await page.evaluate(() => {
+      window.addEventListener('SetupReady', function() {
+        window.dispatchEvent(new CustomEvent('PollyReady'));
+      } , false);
+      let event = new CustomEvent('PollyReady');
+      window.dispatchEvent(event);
+     })
   });\n`,
 
   listenerPage : `   await page.setRequestInterception(true);
@@ -222,6 +236,14 @@ page.on('load', async () => {
       scriptAdd.innerHTML = content;
       document.head.append(scriptAdd);
     }, fakeTimeScriptContent)
+
+    await page.evaluate(() => {
+      window.addEventListener('SetupReady', function() {
+        window.dispatchEvent(new CustomEvent('PollyReady'));
+      } , false);
+      let event = new CustomEvent('PollyReady');
+      window.dispatchEvent(event);
+    })
   });
 `
 };

@@ -73,6 +73,9 @@ export default class CodeGenerator {
           this._lastScrollX = currentEvent.scrollX;
           this._lastScrollY = currentEvent.scrollY;
 
+          if (this._options.customLinesBeforeEvent) {
+            this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLinesBeforeEvent));
+          }
           this._blocks.push(
             ScenarioFactory.generateScroll(this._frameId, this._frame, currentEvent.scrollX, currentEvent.scrollY)
           );
