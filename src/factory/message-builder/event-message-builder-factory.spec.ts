@@ -68,31 +68,6 @@ describe('Test de event message builder factory', () => {
     );
   });
 
-  // On peut pas test car il faut avoir une file list
-  // test('Test de INPUT FILE component message', () => {
-  //   document.body.innerHTML =
-  //   `<div>
-  //   <input id="inFile" type="file"> </input>
-  //   </div>`;
-
-  //   const element  = document.getElementById('inFile') as HTMLInputElement;
-  //   const component = InputFilesComponent.isInputFile(element);
-  //   const event : EventModel = {
-  //     selector : '#id'
-  //   };
-
-  //   expect(
-  //     EventMessageBuilderFactory.buildMessageEvent(
-  //       component,
-  //       event,
-  //       null
-  //     )
-  //   ).toEqual(InputFilesComponent.
-  //     editInputFileMessage(event, (component.element as HTMLInputElement).files)
-  //   );
-
-  // });
-
   test('Test de INPUT NUMERIC component message', async () => {
     // On init
     await changeBodyDocument('./../../../static/test/dom/dom-input-numeric.html');
@@ -185,25 +160,22 @@ describe('Test de event message builder factory', () => {
     const element = document.querySelector(elementSelector);
 
     // Selector de la liste déroulante
-    const previousSelector : string = '.k-input';
+    const previousSelector : string = 'konnect-dropdownlist';
 
     // infos sur l'element klist
     const previousElement  = {
       selector : previousSelector,
-      typeList : 'simple-list',
-      element: document.querySelector('.k-input')
+      typeList : 'Dropdown',
+      element: document.querySelector(previousSelector)
     };
-
 
     // event model de base
     const eventModel : EventModel = {
       selector : elementSelector
     };
 
-    const component = KListComponent.isKlist(
-      elementSelector,
+    const component = KListComponent.isKList(
       element as HTMLElement,
-      previousSelector,
       previousElement
     );
     // On doit trouver un event model de klist
@@ -215,7 +187,7 @@ describe('Test de event message builder factory', () => {
       )
     )
     .toEqual(KListComponent.
-      editKListMessage(eventModel, component)
+      editKlistMessage(eventModel, component)
     );
   });
 

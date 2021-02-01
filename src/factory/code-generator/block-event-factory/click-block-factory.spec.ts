@@ -12,8 +12,6 @@ import { ClickBlockFactory } from './click-block-factory';
  */
 const selector = '#id';
 const value = 'testValue';
-const sourceSelector = '#klist';
-const listItemIndex = 15;
 const time = 1500;
 const options = JSON.parse(JSON.stringify(defaults));
 const scrollElement = '#idSrollElement';
@@ -30,35 +28,6 @@ function simpleClickLineBlock() : LineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: `await ${ClickBlockFactory.frame}.$eval('${selector}',  el=> el.click());`
-  };
-}
-
-/**
- * Génère le line block d'un click sur un testem de liste
- */
-function clickListItemLineBlock() : LineBlockModel {
-  return {
-    type: domEventsToRecord.CLICK,
-    value: `await ${ClickBlockFactory.frame}.evaluate( async function(){
-      let e = document.querySelector('${sourceSelector}');
-      let list = document.querySelector('#'+ e.getAttribute('aria-owns'));
-      let firstLI = list.getElementsByTagName('li')[0];
-      let h =firstLI.getBoundingClientRect().height;
-      e.scroll({top:${listItemIndex}*h});
-      const promise1 = new Promise((resolve, reject) => {
-        setInterval(function() {
-
-         if (list.querySelector('[data-offset-index="${listItemIndex}"]')) {
-              clearInterval(this);
-              resolve("Ready");
-          }
-
-        }, 100);
-      });
-      await promise1;
-      list.querySelector('[data-offset-index="${listItemIndex}"]').click();
-      return Promise.resolve('finish');
-    });`
   };
 }
 
@@ -129,6 +98,16 @@ function customeLineLineBlock() : LineBlockModel {
 }
 
 /**
+ * Génère la ligne customisé avant chaques event
+ * @param select
+ */
+function customLineBeforeEvent(event : string) : LineBlockModel {
+  return {
+    type : event,
+    value : options.customLinesBeforeEvent
+  };
+}
+/**
  * Génère le line block d'un waitForSelector
  */
 
@@ -151,20 +130,13 @@ function waitForSelectorOnClickScrollElementLineBlock() : LineBlockModel {
 }
 
 /**
- * Génère le line block d'un waitForSelector sur sourceSelector
+ * scroll pour le click sur un k list k list
  */
-function waitForSelectorSourceOnClickLineBlock() : LineBlockModel {
-  return waitForSelectorOnClickLineBlock(sourceSelector);
-}
-
-/**
- * scroll pour le click sur la multiple k list
- */
-function scrollInMultiplekListItemLineBlock() : LineBlockModel {
+function scrollInKListItemLineBlock() : LineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: ` await ${ClickBlockFactory.frame}.evaluate( async function(){
-        let e = document.querySelector('${scrollElement}');
+        let e = document.querySelector('${scrollElement}').parentElement;
         e.scroll(${scrollXElement}, ${scrollYElement});
         return Promise.resolve('finish');
       });`
@@ -172,9 +144,9 @@ function scrollInMultiplekListItemLineBlock() : LineBlockModel {
 }
 
 /**
- * Click sur l'item de la mutiple k list
+ * Click sur l'item de une k list
  */
-function clickMultiplekListItemLineBlock() : LineBlockModel {
+function clickKListItemLineBlock() : LineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: `await ${ClickBlockFactory.frame}.evaluate( async function(){
@@ -316,57 +288,6 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    test('Test d\'un ClickListItem avec option waitForSelectorOnClick' , () => {
-      options.waitForSelectorOnClick = true;
-      options.customLineAfterClick = '';
-      const exceptedBlock = new Block(ClickBlockFactory.frameId);
-
-      // waitForSelector
-      exceptedBlock.addLine(waitForSelectorSourceOnClickLineBlock());
-      // Click in list testem
-      exceptedBlock.addLine(clickListItemLineBlock());
-
-      expect(
-        ClickBlockFactory.buildClickListItem(listItemIndex, sourceSelector)
-      ).toEqual(
-        exceptedBlock
-      );
-
-    });
-
-    test('Test d\'un ClickListItem sans option waitForSelectorOnClick' , () => {
-      options.waitForSelectorOnClick = false;
-
-      const exceptedBlock = new Block(ClickBlockFactory.frameId);
-      // Click in list testem
-      exceptedBlock.addLine(clickListItemLineBlock());
-
-      expect(
-        ClickBlockFactory.buildClickListItem(listItemIndex, sourceSelector)
-      ).toEqual(
-        exceptedBlock
-      );
-    });
-
-    test('Test d\'un ClickListItem avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
-      options.waitForSelectorOnClick = true;
-      options.customLineAfterClick = 'ligne custom';
-      const exceptedBlock = new Block(ClickBlockFactory.frameId);
-
-      // waitForSelector
-      exceptedBlock.addLine(waitForSelectorSourceOnClickLineBlock());
-      // Click in list testem
-      exceptedBlock.addLine(clickListItemLineBlock());
-      // Custom line
-      exceptedBlock.addLine(customeLineLineBlock());
-
-      expect(
-        ClickBlockFactory.buildClickListItem(listItemIndex, sourceSelector)
-      ).toEqual(
-        exceptedBlock
-      );
-    });
-
     test('Test d\'un clickFileDropZone avec option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = '';
@@ -502,19 +423,20 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    test('Test d\'un ClickMultiplekListItem avec option waitForSelectorOnClick' , () => {
+    test('Test d\'un click list item avec option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = true;
       options.customLineAfterClick = '';
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
 
       // waitForSelector
       exceptedBlock.addLine(waitForSelectorOnClickScrollElementLineBlock());
-      // Click multiple liste testem
-      exceptedBlock.addLine(scrollInMultiplekListItemLineBlock());
-      exceptedBlock.addLine(clickMultiplekListItemLineBlock());
+      // Click list item
+      exceptedBlock.addLine(scrollInKListItemLineBlock());
+      exceptedBlock.addLine(customLineBeforeEvent(domEventsToRecord.CLICK));
+      exceptedBlock.addLine(clickKListItemLineBlock());
 
       expect(
-        ClickBlockFactory.buildClickMultiplekListItem(
+        ClickBlockFactory.buildClickKListItem(
           selector,
           scrollElement,
           scrollXElement,
@@ -525,18 +447,18 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    test('Test d\'un ClickMultiplekListItem sans option waitForSelectorOnClick' , () => {
+    test('Test d\'un click list item sans option waitForSelectorOnClick' , () => {
       options.waitForSelectorOnClick = false;
-
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
 
-      // Click multiple list testem
-      exceptedBlock.addLine(scrollInMultiplekListItemLineBlock());
-      exceptedBlock.addLine(clickMultiplekListItemLineBlock());
+      // Click item k list teste
+      exceptedBlock.addLine(scrollInKListItemLineBlock());
+      exceptedBlock.addLine(customLineBeforeEvent(domEventsToRecord.CLICK));
+      exceptedBlock.addLine(clickKListItemLineBlock());
 
 
       expect(
-        ClickBlockFactory.buildClickMultiplekListItem(
+        ClickBlockFactory.buildClickKListItem(
           selector,
           scrollElement,
           scrollXElement,
@@ -554,14 +476,16 @@ describe('Test de Click Block Factory', () => {
 
       // waitForSelector
       exceptedBlock.addLine(waitForSelectorOnClickScrollElementLineBlock());
-      // Click multiple list testem
-      exceptedBlock.addLine(scrollInMultiplekListItemLineBlock());
-      exceptedBlock.addLine(clickMultiplekListItemLineBlock());
+
+      // Click item k list teste
+      exceptedBlock.addLine(scrollInKListItemLineBlock());
+      exceptedBlock.addLine(customLineBeforeEvent(domEventsToRecord.CLICK));
+      exceptedBlock.addLine(clickKListItemLineBlock());
       // Custom line
       exceptedBlock.addLine(customeLineLineBlock());
 
       expect(
-        ClickBlockFactory.buildClickMultiplekListItem(
+        ClickBlockFactory.buildClickKListItem(
           selector,
           scrollElement,
           scrollXElement,
@@ -696,28 +620,6 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    test('Test de generateBlock pour un testem de list', () => {
-      const eventModel = {
-        sourceSelector,
-        listItemIndex : listItemIndex.toString(),
-        action : actionEvents.CLICK_SIMPLELIST,
-      };
-
-      expect(
-        ClickBlockFactory.generateBlock(
-          eventModel,
-          ClickBlockFactory.frameId,
-          ClickBlockFactory.frame,
-          defaults
-        )
-      ).toEqual(
-        ClickBlockFactory.buildClickListItem(
-          listItemIndex,
-          sourceSelector
-        )
-      );
-    });
-
     test('Test de generateBlock pour un click sur un file drop zone', () => {
       const eventModel = {
         selector,
@@ -787,7 +689,7 @@ describe('Test de Click Block Factory', () => {
         scrollElement,
         scrollXElement,
         scrollYElement,
-        action : actionEvents.CLICK_MULTIPLELIST
+        action : actionEvents.CLICK_ITEMLIST
       };
 
       expect(
@@ -798,7 +700,7 @@ describe('Test de Click Block Factory', () => {
           defaults
         )
       ).toEqual(
-        ClickBlockFactory.buildClickMultiplekListItem(
+        ClickBlockFactory.buildClickKListItem(
           selector,
           scrollElement,
           scrollXElement,

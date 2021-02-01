@@ -33,15 +33,11 @@ describe('Test du Component Manager' , () => {
       ComponentManager.determinateComponent(
         domEventsToRecord.CLICK,
         element as HTMLElement,
-        null,
-        null,
         null
         )
     ).toEqual(
       ClickEventComponents.determinateClickComponent(
       element as HTMLElement,
-      null,
-      null,
       null
     ));
   });
@@ -56,8 +52,6 @@ describe('Test du Component Manager' , () => {
       ComponentManager.determinateComponent(
         domEventsToRecord.DROP,
         element as HTMLElement,
-        null,
-        null,
         null
         )
     ).toEqual(
@@ -74,8 +68,6 @@ describe('Test du Component Manager' , () => {
       ComponentManager.determinateComponent(
         domEventsToRecord.CHANGE,
         element as HTMLElement,
-        null,
-        null,
         null
       )
     ).toEqual(ChangeEventComponents.determinateChangeComponent(element as HTMLElement)
@@ -100,10 +92,9 @@ describe('Test du Component Manager' , () => {
       ComponentManager.determinateComponent(
         domEventsToRecord.KEYDOWN,
         element,
-        null,
-        null,
         null
       )
     ).toEqual(KeydownEventComponent.determinateKeydownComponent(element));
   });
+
 });

@@ -31,8 +31,6 @@ describe('Test de click event component', () => {
     expect(
       ClickEventComponents.determinateClickComponent(
         element as HTMLElement,
-        null,
-        null,
         null
       )
     ).toEqual(FileDropZoneComponent.isFileDropZone(element as HTMLElement));
@@ -50,8 +48,6 @@ describe('Test de click event component', () => {
     expect(
       ClickEventComponents.determinateClickComponent(
         element as HTMLElement,
-        null,
-        null,
         null
       )
     ).toEqual(KSelectComponent.isKSelect(element as HTMLElement));
@@ -69,8 +65,6 @@ describe('Test de click event component', () => {
     expect(
       ClickEventComponents.determinateClickComponent(
         element as HTMLElement,
-        null,
-        null,
         null
       )
     ).toEqual(KmSwitchComponent.isKmSwitch(element as HTMLElement));
@@ -84,23 +78,21 @@ describe('Test de click event component', () => {
     const element = document.querySelector(elementSelector);
 
     // Selector de la liste déroulante
-    const previousSelector : string = '.k-input';
+    const previousSelector : string = 'konnect-dropdownlist';
 
     const previousElement  = {
       selector : previousSelector,
-      typeList : 'simple-list',
-      element: document.querySelector('.k-input')
+      typeList : 'Dropdown',
+      element: document.querySelector(previousSelector)
     };
 
     // On doit trouver un compoenent model qui fait référence à une k list
     expect(
       ClickEventComponents.determinateClickComponent(
         element as HTMLElement,
-        elementSelector,
-        previousSelector,
         previousElement
       )
-    ).toEqual(KListComponent.isKlist(elementSelector, element as HTMLElement, previousSelector, previousElement));
+    ).toEqual(KListComponent.isKList(element as HTMLElement, previousElement));
 
   });
 
@@ -114,8 +106,6 @@ describe('Test de click event component', () => {
     expect(
       ClickEventComponents.determinateClickComponent(
         element as HTMLElement,
-        null,
-        null,
         null
       )
     ).toEqual(InputCalendarComponent.isInputCalendar(element as HTMLElement));
