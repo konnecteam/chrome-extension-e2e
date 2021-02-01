@@ -11,8 +11,7 @@ export default {
   DROP_DROPZONE: 'drop_dropZoneFile',
   CHANGE_INPUTNUMERIC : 'change_inputNumeric',
   CHANGE : 'change',
-  CLICK_SIMPLELIST : 'click_listItem',
-  CLICK_MULTIPLELIST: 'click_multipleListItem',
+  CLICK_ITEMLIST: 'click_itemKlist',
   CLICK_DATE_ELEMENT : 'click_in_date_element',
   CLICK_INPUT_CALENDAR :  'click_in_input_calendar'
 };

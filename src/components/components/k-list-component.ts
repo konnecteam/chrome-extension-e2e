@@ -1,21 +1,24 @@
+import { SelectorService } from './../../services/selector/selector-service';
+import { EventModel } from './../../models/event-model';
 import componentName from '../../constants/component-name';
 import { ComponentModel } from '../../models/component-model';
-import { EventModel } from '../../models/event-model';
-import { SelectorService } from '../../services/selector/selector-service';
 import elementsTagName from '../../constants/elements-tagName';
 import { ElementFinderService } from '../../services/finder/element-finder-service';
 import actionEvents from '../../constants/action-events';
 
 /**
- * Composant qui permet de gérer les k list à choix simple et les k list à choix multiples
+ * Composant qui permet de gérer les konnect list
  */
 export class KListComponent {
 
+  /** TagName des lists */
+  private static readonly  _DROPDOWNLISTTAGNAME = 'konnect-dropdownlist';
+  private static readonly _MULTIPLELISTTAGNAME = 'konnect-multiselect';
 
   /** Attribut Role d'un HTMLElement */
   private static readonly  _ROLE = 'role';
 
-  /** Valeur d'un attribut role */
+  /** Valeur de l'attribut role */
   private static readonly _ROLE_VALUE = 'listbox';
 
   /** Id d'un HTMLElement */
@@ -24,116 +27,93 @@ export class KListComponent {
   /** Valeur de l'id */
   private static readonly _ID_LIST_VALUE = 'kdp';
 
-  /** Aria-describedy d'un HTMLElement */
-  private static readonly _ARIA_DESCRIBEDY = 'aria-describedby';
+  /** Types de liste */
+  private static readonly _DROPDOWN = 'Dropdown';
 
-  /** Aria-owns d'un HTMLElement */
-  private static readonly _ARIA_OWNS = 'aria-owns';
-
-  /** Attribut item index d'un HTMLELement */
-  private static readonly  _ITEM_INDEX = 'data-offset-index';
-
+  private static readonly _MULTIPLESELECT = 'Multiselect';
 
   /**
-   * Verifie si c'est une KList
+   * Verifie si c'est une konnect list
+   * @param element
+   * @param previousElement
    */
-  public static isKlist(
-    elementSelector : string,
+  public static isKList(
     element : HTMLElement,
-    previousSelector : string,
     previousElement : { selector : string; typeList : string; element : Element; }
-  ) : ComponentModel {
+    ) : ComponentModel {
 
+    // On récupère l'élement correspondant à la liste
+    const dropdownElement : Element = this._findListComponent(element, this._DROPDOWNLISTTAGNAME);
+    const multipleListElement : Element = this._findListComponent(element, this._MULTIPLELISTTAGNAME );
 
-    //On vérifie si on est dans une k list
-    const listUL = this._isInUlElement(element);
+    // si c'est une dropdown
+    if (dropdownElement) {
 
-    if (previousSelector && listUL) {
-      //Si on a cliqué ou écrit dans la simple k list
-      let previousEl = this._findKListAriaOwns(previousSelector);
-      let isMulti = false;
-
-      if (!previousEl) {
-        // On verifie si on est dans le input de la k list
-        const el = this._findKListAriaDescribedby(previousSelector);
-
-        // On verifie si avant on a click sur un k list element
-        previousEl = el ? el : this._isClickInputKList(previousElement.element as HTMLElement);
-        isMulti = true;
-      }
-
-      // Si on a un element précédant
-      if (previousEl) {
-        // Si on a l'attribut aria own on est sur une k list simple
-        if (previousEl.getAttribute(this._ARIA_OWNS)) {
-          previousElement.typeList = 'simple-list';
+      return this._kListComponent(
+        dropdownElement as HTMLElement,
+        {
+          selector : SelectorService.find(dropdownElement as HTMLElement),
+          element : dropdownElement,
+          typeList: this._DROPDOWN
         }
-
-        // Si on valide ces conditions on est sur un multiple K list
-        if (previousEl.getAttribute(this._ARIA_DESCRIBEDY) ||
-          previousEl.getAttribute(this._ROLE) && isMulti) {
-
-          previousElement.typeList = 'multiple-list';
-        }
-
-        // On update le previousElement;
-        previousElement.selector = SelectorService.find(previousEl as HTMLElement);
-        previousElement.element = previousEl;
-
-        previousSelector = SelectorService.find(previousEl as HTMLElement);
-      }
-
-      return { component: componentName.KLIST, element, previousSelector, previousElement};
-    } else if (this._isClickInputKList(element)) {
-      // Sinon on vérifie su c'est un input dans une k list
-      previousElement.selector = elementSelector;
-      previousElement.element = element;
-      return { component: componentName.KLIST, element, previousSelector, previousElement};
+      );
     }
 
-    return null;
+    // si c'est une mulitple
+    if (multipleListElement) {
+
+      return this._kListComponent(
+        multipleListElement as HTMLElement,
+        {
+          selector : SelectorService.find(multipleListElement as HTMLElement),
+          element : multipleListElement,
+          typeList: this._MULTIPLESELECT
+        }
+      );
+    }
+
+    // Si on a déjà cliqué sur une liste alors on peut acceder aux éléments qu'elle contient
+    if (previousElement && (previousElement.typeList === this._DROPDOWN || previousElement.typeList === this._MULTIPLESELECT)) {
+      // On vérifie si c'est un input
+      const input = this._isClickInputKList(element);
+
+      if (input) {
+        return this._kListComponent(input as HTMLElement, previousElement);
+      }
+      // On vérifie si c'est un element ul
+      const listUL = this._isInUlElement(element);
+      if (listUL) {
+        return this._kListComponent(listUL, previousElement);
+      }
+    }
   }
 
-  /**
-   * Permet de trouver l'index de l'élément sur lequel on a cliqué
+  /*
+   * Retourne un Klist component
+   * @param element
+   * @param previousElement
    */
-  private static _findListCustomElementIndex(element : HTMLElement) : string {
-
-    const elementFind = ElementFinderService.findParentElementWithTagNameAndAttribute(
+  private static _kListComponent(element : HTMLElement, previousElement : {selector : string, element : Element, typeList : string }) : ComponentModel {
+    return {
+      component : componentName.KLIST,
       element,
-      elementsTagName.ITEM.toLocaleUpperCase(),
-      this._ITEM_INDEX,
-      15
-    );
-    return elementFind.getAttribute(this._ITEM_INDEX);
+      previousElement
+    };
   }
 
   /**
-   * Trouve l'élément k list simple avec l'attribut aria-owns
+   * Trouve l'element d'une liste si on a clické sur une liste
+   * @param element
    */
-  private static _findKListAriaOwns(previousSelector : string) : Element {
+  private static _findListComponent(element : HTMLElement, listTagname : string) : Element {
 
-    return ElementFinderService.findElementWithSelectorAndAttribute(
-      previousSelector,
-      this._ARIA_OWNS,
-      4
+    return ElementFinderService.findParentElementWithTagName(
+      element, listTagname.toUpperCase(), 8
     );
   }
 
   /**
-   * Trouve le multiple klist avec l'attribut aria-sescribery
-   */
-  private static _findKListAriaDescribedby(previousSelector) : Element {
-
-    return ElementFinderService.findElementWithSelectorAndAttribute(
-      previousSelector,
-      this._ARIA_DESCRIBEDY,
-      4
-    );
-  }
-
-  /**
-   * Vérifie si on a cilqué sur un item de la k list
+   * Vérifie si on a cliqué sur un item de la liste
    */
   private static _isInUlElement(element : HTMLElement) : HTMLElement {
 
@@ -147,13 +127,13 @@ export class KListComponent {
   }
 
   /**
-   * Vérifie si on a cliqué sur l'input d'une k list
+   * Vérifie si on a cliqué sur l'input d'une liste
    */
   private static _isClickInputKList(element : HTMLElement) : Element {
 
     return ElementFinderService.findParentElementWithTagNameAndValueAttribute(
       element,
-      element.tagName,
+      elementsTagName.INPUT.toUpperCase(),
       this._ROLE,
       this._ROLE_VALUE,
       2
@@ -161,37 +141,34 @@ export class KListComponent {
   }
 
   /**
-   * Editer le message des k lists en fonction du type de liste
+   * On modifie l'event model en fonction de l'action voulue
+   * @param event
+   * @param component
    */
-  public static editKListMessage(event : EventModel, component : ComponentModel) : EventModel {
-    // we edit messsage
-    const listUL = this._isInUlElement(component.element);
+  public static editKlistMessage(event : EventModel, component : ComponentModel) : EventModel {
 
-    if (component.previousElement.typeList === 'simple-list') {
+    // Si click list item
+    if (this._isInUlElement(component.element)) {
 
-      // On cherche l'index de l'item
-      const indexItem = this._findListCustomElementIndex(component.element);
+      event.action = actionEvents.CLICK_ITEMLIST;
+      event.scrollElement = SelectorService.find(component.element);
+      event.scrollXElement = component.element.parentElement.scrollLeft;
+      event.scrollYElement = component.element.parentElement.scrollTop;
+      return event;
+    }
 
-      if (indexItem) {
-
-        event.action = actionEvents.CLICK_SIMPLELIST;
-        event.listItemIndex = indexItem;
-        event.sourceSelector = component.previousElement.selector;
-      }
-
-    } else if (component.previousElement.typeList === 'multiple-list') {
-
-      /* Si c'est un multiple k list on cherche le niveau descroll de la liste
-         pour la selection du bon item
-      */
-      event.action = actionEvents.CLICK_MULTIPLELIST;
-      event.scrollElement = SelectorService.find(listUL.parentElement);
-      event.scrollXElement = listUL.parentElement.scrollLeft;
-      event.scrollYElement = listUL.parentElement.scrollTop;
-    } else if (this._isClickInputKList(component.element)) {
+    /* Si input click
+     * OU
+     * Si ce n'est pas un click input et un click list item
+     * alors on vérifie si c'est une multiselect car
+     * pour l'ouvir il faut faire un click mouse
+    */
+    if (this._isClickInputKList(component.element) || component.previousElement.typeList === 'Multiselect') {
       event.action = actionEvents.CLICKMOUSE;
+      return event;
     }
 
     return event;
   }
+
 }

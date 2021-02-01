@@ -17,8 +17,6 @@ export class ComponentManager {
   public static determinateComponent(
     event : string,
     element : HTMLElement,
-    elementSelector : string,
-    previousSelector : string,
     previousElement : {selector : string, element : Element, typeList : string
   }) : ComponentModel {
 
@@ -27,7 +25,7 @@ export class ComponentManager {
     switch (event) {
       // Si c'est un click
       case domEventsToRecord.CLICK:
-        componentFinded = ClickEventComponents.determinateClickComponent(element, elementSelector, previousSelector, previousElement);
+        componentFinded = ClickEventComponents.determinateClickComponent(element, previousElement);
         break;
       // Si c'est un drop
       case domEventsToRecord.DROP:

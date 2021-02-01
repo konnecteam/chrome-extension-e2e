@@ -29,8 +29,8 @@ export class ClickBlockFactory {
     options : OptionModel
   ) : Block {
 
-    const { action, selector, value,  listItemIndex, sourceSelector,
-      durancyClick, scrollElement, scrollXElement, scrollYElement, calendarHeader, calendarView, dateSelector} = event;
+    const { action, selector, value, durancyClick, scrollElement,
+      scrollXElement, scrollYElement, calendarHeader, calendarView, dateSelector} = event;
 
     this.options = options;
     this.frameId = frameId;
@@ -43,12 +43,6 @@ export class ClickBlockFactory {
       case ActionEvents.BASIC_CLICK:
         return this.buildClick(selector);
         break;
-
-      // Si c'est un click sur une liste simple choix
-      case ActionEvents.CLICK_SIMPLELIST:
-        return this.buildClickListItem(
-          parseInt(listItemIndex, 10), sourceSelector);
-        break;
       // Si c'est un click sur un dropzone element
       case ActionEvents.CLICK_DROPZONE:
         return this.buildclickFileDropZone(selector);
@@ -60,9 +54,9 @@ export class ClickBlockFactory {
       // Si c'est un click mouse (mousdown, mouseup)
       case ActionEvents.CLICKMOUSE :
         return this.buildClickMouse(selector);
-      // Si c'est un click sur une multiple liste
-      case ActionEvents.CLICK_MULTIPLELIST:
-        return this.buildClickMultiplekListItem(
+      // Si c'est un click sur une liste
+      case ActionEvents.CLICK_ITEMLIST:
+        return this.buildClickKListItem(
           selector, scrollElement, scrollXElement, scrollYElement
         );
       // Si c'est un click sur un input calendar
@@ -97,55 +91,6 @@ export class ClickBlockFactory {
         value: `${this.options.customLineAfterClick}`
       });
     }
-    return block;
-  }
-
-/**
- * Génère un click d'un item d'une liste simple choix
- */
-  public static buildClickListItem(
-    listItemIndex : number, sourceSelector : string
-  ) : Block {
-
-    const block = new Block(this.frameId);
-
-    if (this.options.waitForSelectorOnClick) {
-      block.addLine({
-        type: domEventsToRecord.CLICK,
-        value: `await ${this.frame}.waitForSelector('${sourceSelector}');`
-      });
-    }
-    block.addLine({
-      type: domEventsToRecord.CLICK,
-      value: `await ${this.frame}.evaluate( async function(){
-      let e = document.querySelector('${sourceSelector}');
-      let list = document.querySelector('#'+ e.getAttribute('aria-owns'));
-      let firstLI = list.getElementsByTagName('li')[0];
-      let h =firstLI.getBoundingClientRect().height;
-      e.scroll({top:${listItemIndex}*h});
-      const promise1 = new Promise((resolve, reject) => {
-        setInterval(function() {
-
-         if (list.querySelector('[data-offset-index="${listItemIndex}"]')) {
-              clearInterval(this);
-              resolve("Ready");
-          }
-
-        }, 100);
-      });
-      await promise1;
-      list.querySelector('[data-offset-index="${listItemIndex}"]').click();
-      return Promise.resolve('finish');
-    });`
-    });
-
-    if (this.options.customLineAfterClick) {
-      block.addLine({
-        type: domEventsToRecord.CLICK,
-        value: `${this.options.customLineAfterClick}`
-      });
-    }
-
     return block;
   }
 
@@ -256,9 +201,9 @@ export class ClickBlockFactory {
   }
 
   /**
-   * Click sur un item de la multiple k list
+   * Click sur un item de konnect list
    */
-  public static buildClickMultiplekListItem(
+  public static buildClickKListItem(
      selector : string, scrollElement : string, scrollXElement : number, scrollYElement : number) : Block {
 
     const block = new Block(this.frameId);
@@ -273,11 +218,19 @@ export class ClickBlockFactory {
     block.addLine({
       type: domEventsToRecord.CLICK,
       value: ` await ${this.frame}.evaluate( async function(){
-        let e = document.querySelector('${scrollElement}');
+        let e = document.querySelector('${scrollElement}').parentElement;
         e.scroll(${scrollXElement}, ${scrollYElement});
         return Promise.resolve('finish');
       });`
     });
+
+    // Permet d'attendre que les items chargent
+    if (this.options.customLinesBeforeEvent) {
+      block.addLine({
+        type: domEventsToRecord.CLICK,
+        value: `${this.options.customLinesBeforeEvent}`
+      });
+    }
 
     block.addLine({
       type: domEventsToRecord.CLICK,

@@ -1,7 +1,6 @@
 import { RadioGroupComponent } from './../../components/components/radio-group-component';
 import { CheckboxComponent } from './../../components/components/checkbox-component';
 import { InputCalendarComponent } from '../../components/components/input-calendar-component';
-import { KListComponent } from '../../components/components/k-list-component';
 import { IframeComponent } from '../../components/components/iframe-component';
 import { KmSwitchComponent } from '../../components/components/km-switch- component';
 import { KSelectComponent } from '../../components/components/k-select-component';
@@ -11,6 +10,7 @@ import { FileDropZoneComponent } from '../../components/components/file-drop-zon
 import  componentName from '../../constants/component-name';
 import { EventModel } from '../../models/event-model';
 import { ComponentModel } from '../../models/component-model';
+import { KListComponent } from '../../components/components/k-list-component';
 
 /**
  * Factory qui permet de générer le message EventModel pour le code generator
@@ -34,7 +34,7 @@ export class EventMessageBuilderFactory {
       case componentName.INPUTFILE :
         newMessage = InputFilesComponent.editInputFileMessage(event, (component.element as HTMLInputElement).files);
         break;
-      // Si c'est un input nmeric
+      // Si c'est un input numeric
       case componentName.INPUTNUMERIC :
         newMessage = InputNumericComponent.editInputNumericMessage(event, component);
         break;
@@ -50,9 +50,9 @@ export class EventMessageBuilderFactory {
       case componentName.IFRAME :
         newMessage = IframeComponent.editIframeMessage(event, component);
         break;
-      // Si c'est un k list
+      // Si c'est une konnect liste
       case componentName.KLIST :
-        newMessage = KListComponent.editKListMessage(event, component);
+        newMessage = KListComponent.editKlistMessage(event, component);
         break;
       // Si c'est un input calendar
       case componentName.DATECALENDAR :

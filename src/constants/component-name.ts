@@ -9,8 +9,8 @@ export default {
   KSELECT: 'k-select',
   KMSWITCH: 'Km-switch',
   IFRAME: 'iframe',
-  KLIST : 'K-list',
-  DATECALENDAR: 'Date-calendar',
+  KLIST : 'k-list',
+  DATECALENDAR: 'date-calendar',
   CHECKBOX: 'checkbox',
-  RADIOGROUP: 'radio-group'
+  RADIOGROUP: 'radio-group',
 };
