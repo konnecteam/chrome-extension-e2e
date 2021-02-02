@@ -3,11 +3,10 @@ import { KmSwitchComponent } from '../components/km-switch- component';
 import { KSelectComponent } from '../components/k-select-component';
 import { ComponentModel } from './../../models/component-model';
 import { FileDropZoneComponent } from '../components/file-drop-zone-component';
-import { EventModel } from '../../models/event-model';
 import { KListComponent } from '../components/k-list-component';
 
 /**
- * EventsComponents qui permet de gérer les Click
+ * EventComponents qui permet de gérer les Click
  */
 export class ClickEventComponents {
 

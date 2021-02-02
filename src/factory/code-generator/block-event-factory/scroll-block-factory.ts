@@ -1,11 +1,7 @@
 import { Block } from '../../../code-generator/block';
-import { EventModel } from '../../../models/event-model';
-import { OptionModel } from '../../../models/options-model';
-import ActionEvents from '../../../constants/action-events';
-import domEventsToRecord from '../../../constants/dom-events-to-record';
 
 /**
- * Génère les blocks lié au scroll
+ * Génère les blocks liés au scroll
  */
 export class ScrollBlockFactory {
 

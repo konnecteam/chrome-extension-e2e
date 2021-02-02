@@ -52,13 +52,12 @@ describe('Test de Iframe Component', () => {
     // On selectionne l'iframe
     const element  = document.querySelector('iframe');
 
-    //
     const component : ComponentModel = {
       element,
       component : 'iframe'
     };
 
-    // On doit avoir  la proprétée iframe
+    // On doit avoir la propriété iframe
     expect(
       IframeComponent.editIframeMessage(eventCatched, component).iframe
     ).toBeDefined();

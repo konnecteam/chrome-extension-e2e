@@ -70,7 +70,7 @@ export class KmSwitchComponent {
   }
 
   /**
-   * Modifie le event message pour kmswitch
+   * Modifie l'event message pour km switch
    */
   public static editKmSwitchMessage(event : EventModel, component : ComponentModel) : EventModel {
 

@@ -1,5 +1,5 @@
 /**
- * Service qui permet la gestion des enregistrement depuis le background
+ * Service qui permet la gestion des enregistrements depuis le background
  */
 export class StorageService {
 

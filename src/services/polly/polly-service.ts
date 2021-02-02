@@ -1,5 +1,5 @@
 /**
- * Service qui permet la gestion des enregistrement depuis le background
+ * Service qui permet la gestion des enregistrements depuis le background
  */
 export class PollyService {
 
@@ -53,7 +53,7 @@ export class PollyService {
   }
 
   /**
-   * Réinitialise les data
+   * Réinitialise les datas
    */
   public flush() : void {
     this.id = '';

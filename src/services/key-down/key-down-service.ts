@@ -42,14 +42,14 @@ export class KeyDownService {
       }
     } else if (this._listsKeyDown.length > 0) {
 
-      // On récupère la liste des keydown
+      // On récupère la liste des keydowns
       ChromeService.sendMessage(this._processListsKeydown());
       this._listsKeyDown = [];
     }
   }
 
   /**
-   * Permet de gérer la liste des évènement pour un sélecteur
+   * Permet de gérer la liste des évènements pour un sélecteur
    */
   private _handleKeyDownEvent(msg : EventModel) : EventModel {
 
@@ -112,11 +112,11 @@ export class KeyDownService {
    */
   private _verifyIsinputList(element : HTMLElement) : boolean {
     let listbox = '';
-    // On verifié si c'est un input d'une simple k list
+    // On verifié si c'est un input d'une dropdown list
     listbox = element.getAttribute('aria-owns');
 
     if (!listbox) {
-      // On vérifie si c'est le input d'une multiple liste
+      // On vérifie si c'est le input d'une liste multiple select liste
       listbox = element.getAttribute('aria-describedby');
       if (!listbox) return false;
     }
@@ -125,7 +125,7 @@ export class KeyDownService {
   }
 
   /**
-   * Récupère les évènements lié au clic de la souris
+   * Récupère les évènements liés au clic de la souris
    */
   public getCoordinates(evt) {
     const eventsWithCoordinates = {

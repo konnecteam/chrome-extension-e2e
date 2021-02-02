@@ -18,10 +18,10 @@ async function changeBodyDocument(pathDoc : string) {
 describe('Test de drop event component', () => {
 
   test('Determiner drop d\'un FileDropZoneComponent', async () => {
-    // on inti le body
+    // on init le body
     await changeBodyDocument('./../../../static/test/dom/dom-filedropzone.html');
 
-    // On doit trouver un component file drop zine
+    // On doit trouver un component file dropzone
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
     expect(
       DropEventComponents.determinateDropComponent(element as HTMLElement)

@@ -12,7 +12,7 @@ export class ComponentModel {
   /** Le sélécteur de l'event précédant */
   public previousSelector? : string;
 
-  /** Utile pour déterminer dans quel type de k list on est */
+  /** Utile pour déterminer dans quel type de konnect liste on se situe */
   public previousElement? : {
     selector : string,
     element : Element,

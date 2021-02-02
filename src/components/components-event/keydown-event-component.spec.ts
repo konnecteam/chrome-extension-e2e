@@ -1,6 +1,5 @@
 import 'jest';
 import { KeydownEventComponent } from './keydown-event-component';
-import * as path from 'path';
 import { IframeComponent } from '../components/iframe-component';
 
 

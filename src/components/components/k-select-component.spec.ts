@@ -32,7 +32,6 @@ describe('Test de k select Component', () => {
 
 
   test('Test de editKSelectMessage', () => {
-
     const eventModel : EventModel = {
       selector: '#id'
     };

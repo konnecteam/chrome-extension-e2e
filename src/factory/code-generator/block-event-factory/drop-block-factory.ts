@@ -13,13 +13,13 @@ export class DropBlockFactory {
   public static generateBlock(event : EventModel, frameId : number, frame : string, options : OptionModel) : Block {
     const { action, selector, files} = event;
 
-    // Si l'action est un drop sur in file drop zone
+    // Si l'action est un drop sur un file dropzone
     if (action === ActionEvents.DROP_DROPZONE) {
 
       ClickBlockFactory.options = options;
       ClickBlockFactory.frameId = frameId;
       ClickBlockFactory.frame = frame;
-      // On rajoute d'abord la partie du click du file drop zone
+      // On rajoute d'abord la partie du click du file dropzone
       const newBlock = ClickBlockFactory.buildclickFileDropZone(selector);
 
       // On modifie les attribus de la classe utilisé pour les mettre à jour

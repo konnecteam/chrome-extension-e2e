@@ -1,4 +1,3 @@
-import { Polly } from '@pollyjs/core';
 import { PollyService } from './../../services/polly/polly-service';
 import { PollyFactory } from './polly-factory';
 import 'jest';

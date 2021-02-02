@@ -4,7 +4,6 @@ import { defaults } from '../../../constants/default-options';
 import 'jest';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 import actionEvents from '../../../constants/action-events';
-import elementsTagName from '../../../constants/elements-tagName';
 import { ClickBlockFactory } from './click-block-factory';
 
 /**
@@ -32,7 +31,7 @@ function simpleClickLineBlock() : LineBlockModel {
 }
 
 /**
- * Génère le line block d'un click sur une drop zone
+ * Génère le line block d'un click sur une dropzone
  */
 function clickFileDropZoneLineModel() : LineBlockModel {
   return {
@@ -98,7 +97,7 @@ function customeLineLineBlock() : LineBlockModel {
 }
 
 /**
- * Génère la ligne customisé avant chaques event
+ * Génère la ligne customisé avant chaque event
  * @param select
  */
 function customLineBeforeEvent(event : string) : LineBlockModel {
@@ -130,7 +129,7 @@ function waitForSelectorOnClickScrollElementLineBlock() : LineBlockModel {
 }
 
 /**
- * scroll pour le click sur un k list k list
+ * scroll pour le click sur un konnect liste
  */
 function scrollInKListItemLineBlock() : LineBlockModel {
   return {
@@ -144,7 +143,7 @@ function scrollInKListItemLineBlock() : LineBlockModel {
 }
 
 /**
- * Click sur l'item de une k list
+ * Click sur l'item de konnect liste
  */
 function clickKListItemLineBlock() : LineBlockModel {
   return {
@@ -295,7 +294,7 @@ describe('Test de Click Block Factory', () => {
 
       // waitForSelector
       exceptedBlock.addLine(waitForSelectorOnClickSelectorLineBlock());
-      // Click in file drop zone
+      // Click in file dropzone
       exceptedBlock.addLine(clickFileDropZoneLineModel());
       expect(
         ClickBlockFactory.buildclickFileDropZone(selector)
@@ -308,7 +307,7 @@ describe('Test de Click Block Factory', () => {
       options.waitForSelectorOnClick = false;
 
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
-      // Click in file drop zone
+      // Click in file dropzone
       exceptedBlock.addLine(clickFileDropZoneLineModel());
       expect(
         ClickBlockFactory.buildclickFileDropZone(selector)
@@ -451,7 +450,7 @@ describe('Test de Click Block Factory', () => {
       options.waitForSelectorOnClick = false;
       const exceptedBlock = new Block(ClickBlockFactory.frameId);
 
-      // Click item k list teste
+      // Click item konnect liste teste
       exceptedBlock.addLine(scrollInKListItemLineBlock());
       exceptedBlock.addLine(customLineBeforeEvent(domEventsToRecord.CLICK));
       exceptedBlock.addLine(clickKListItemLineBlock());

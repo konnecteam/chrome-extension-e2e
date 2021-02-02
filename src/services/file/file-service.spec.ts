@@ -33,27 +33,6 @@ describe('Test de File Service', () => {
     ).toStrictEqual(0);
   });
 
-  test('Test de sendFilesToBackground', () => {
-
-    // FileList n'est pas utilisable comme une objet normal
-    // const blob = new Blob([''], { type: 'text/html' });
-    // blob['lastModifiedDate'] = new Date();
-    // blob['name'] = 'text.txt';
-    // const file = blob as File;
-    // const fileList = {
-    //   0: file,
-    //   1: file,
-    //   length: 2,
-    //   item: (index : number) => file
-    // };
-    // const fileTosend = new File(['content'], 'text.txt');
-    // const fileList = [];
-    // fileList.push(fileTosend);
-    // expect(
-    //   fileService.sendFilesToBackground(fileList)).toStrictEqual('text.txt');
-  });
-
-
   test('Test de readFileAsync', async () => {
     const fileTestFile = path.join(__dirname, './../../../static/test/file/test.txt');
 

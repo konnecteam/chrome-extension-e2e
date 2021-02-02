@@ -23,12 +23,12 @@ async function changeBodyDocument(pathDoc : string) {
 describe('Test du Component Manager' , () => {
 
   test('Determiner component à partir d\'un click', async () => {
-    // On init le bodt
+    // On init le body
     await changeBodyDocument('./../../static/test/dom/dom-filedropzone.html');
 
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
 
-    // ON doit trouver un compoenent model de file drop zone
+    // ON doit trouver un compoenent model de file dropzone
     expect(
       ComponentManager.determinateComponent(
         domEventsToRecord.CLICK,
@@ -47,7 +47,7 @@ describe('Test du Component Manager' , () => {
     await changeBodyDocument('./../../static/test/dom/dom-filedropzone.html');
 
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
-    // ON doit trouver un compoenent model de file drop zone
+    // ON doit trouver un component model de file dropzone
     expect(
       ComponentManager.determinateComponent(
         domEventsToRecord.DROP,
@@ -63,7 +63,7 @@ describe('Test du Component Manager' , () => {
     await changeBodyDocument('./../../static/test/dom/dom-input-numeric.html');
 
     const element = document.querySelector('numeric > div > span > span > input\:nth-child(2)');
-    // ON doit trouver un compoenent model d'input numeric
+    // ON doit trouver un component model d'input numeric
     expect(
       ComponentManager.determinateComponent(
         domEventsToRecord.CHANGE,
@@ -87,7 +87,7 @@ describe('Test du Component Manager' , () => {
     docIframe.close();
 
     const element = document.querySelector('iframe').contentWindow.document.querySelector('h1');
-    // ON doit trouver un compoenent model d'iframe
+    // ON doit trouver un component model d'iframe
     expect(
       ComponentManager.determinateComponent(
         domEventsToRecord.KEYDOWN,

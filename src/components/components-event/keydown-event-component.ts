@@ -2,7 +2,7 @@ import { IframeComponent } from '../components/iframe-component';
 import { ComponentModel } from '../../models/component-model';
 
 /**
- * EventsComponent qui permet de gérer les Keydown
+ * EventComponents qui permet de gérer les Keydown
  */
 export class KeydownEventComponent {
 

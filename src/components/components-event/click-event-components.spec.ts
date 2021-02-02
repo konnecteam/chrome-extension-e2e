@@ -27,7 +27,7 @@ describe('Test de click event component', () => {
 
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
 
-    // On doit trouver que l'on est dans un file drop zone
+    // On doit trouver que l'on est dans un file dropzone
     expect(
       ClickEventComponents.determinateClickComponent(
         element as HTMLElement,
@@ -86,7 +86,7 @@ describe('Test de click event component', () => {
       element: document.querySelector(previousSelector)
     };
 
-    // On doit trouver un compoenent model qui fait référence à une k list
+    // On doit trouver un component model qui fait référence à une k list
     expect(
       ClickEventComponents.determinateClickComponent(
         element as HTMLElement,
@@ -102,7 +102,7 @@ describe('Test de click event component', () => {
 
     const element = document.querySelector('[data-value="2020/10/26"]');
 
-    // on dot trouver un componenet input calendar
+    // on doit trouver un component input calendar
     expect(
       ClickEventComponents.determinateClickComponent(
         element as HTMLElement,

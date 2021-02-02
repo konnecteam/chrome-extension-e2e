@@ -7,7 +7,7 @@ import componentName from '../../constants/component-name';
 import actionEvents from '../../constants/action-events';
 
 /**
- * Composant qui permet la gestion du composant file drop zone
+ * Composant qui permet la gestion du composant file dropzone
  */
 export class FileDropZoneComponent {
 
@@ -18,12 +18,12 @@ export class FileDropZoneComponent {
   private static readonly _TITLE_ATTRIBUTE_VALUE = 'Ajouter un document';
 
   /**
-   * Vérifie si l'élément est dans un file drop zone
+   * Vérifie si l'élément est dans un file dropzone
    */
   public static isFileDropZone(element : HTMLElement) : ComponentModel {
     let elementFind = this._isFileDropZoneElement(element);
 
-    // Si c'est un file  drop zone
+    // Si c'est un file  dropzone
     if (elementFind) {
 
       return {component : componentName.FILEDROPZONE , element: elementFind};
@@ -31,7 +31,7 @@ export class FileDropZoneComponent {
 
     elementFind = this._isClickInAddFileButton(element);
 
-    // Si c'est un le bouton ajouter un fichier du file drop zone
+    // Si c'est un le bouton ajouter un fichier du file dropzone
     if (elementFind) {
 
       return {component : componentName.FILEDROPZONEADD , element: elementFind};
@@ -41,7 +41,7 @@ export class FileDropZoneComponent {
   }
 
   /**
-   * Vérifie si c'est un file drop zone et retourne l'HTMLElement
+   * Vérifie si c'est un file dropzone et retourne l'HTMLElement
    */
   private static _isFileDropZoneElement(element : HTMLElement) : HTMLElement {
 
@@ -63,7 +63,7 @@ export class FileDropZoneComponent {
   }
 
   /**
-   * Edit et retourne l'event pour le file drop zone event
+   * Edit et retourne l'event pour le file dropzone event
    */
   public static editFileDropZoneMessage(event : EventModel, files : FileList) : EventModel {
     const newMessage = event;

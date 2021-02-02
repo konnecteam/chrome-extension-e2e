@@ -10,7 +10,7 @@ import { HeaderFactory } from '../factory/code-generator/header-factory';
 
 
 /**
- * Class qui permet de générer le scénario à partir des événement enregistrés
+ * Classe qui permet de générer le scénario à partir des événements enregistrés
  */
 export default class CodeGenerator {
 
@@ -73,9 +73,11 @@ export default class CodeGenerator {
           this._lastScrollX = currentEvent.scrollX;
           this._lastScrollY = currentEvent.scrollY;
 
+          // Si on a une ligne customisé avant chaque event, on l'a rajoute
           if (this._options.customLinesBeforeEvent) {
             this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLinesBeforeEvent));
           }
+
           this._blocks.push(
             ScenarioFactory.generateScroll(this._frameId, this._frame, currentEvent.scrollX, currentEvent.scrollY)
           );
@@ -84,12 +86,12 @@ export default class CodeGenerator {
 
       // On update les frames
       this._setFrames(currentEvent.frameId, currentEvent.frameUrl);
-      //On parse l'event en block
+      // On parse l'event en block
       newBlock = ScenarioFactory.parseEvent(currentEvent, this._frameId, this._frame, this._options);
 
       if (newBlock) {
 
-        /* Si l'option custom Line before event est utilisé et que ce n'est pas un action puppeteer
+        /* Si l'option custom Line before event est utilisée et que ce n'est pas un action puppeteer
            Alors on rajoute la ligne customisé
         */
         if (this._options.customLinesBeforeEvent &&
@@ -113,7 +115,7 @@ export default class CodeGenerator {
 
     }
 
-    /* Si il y a eu une navigation et que l'oopion pour wait la navigation est activée
+    /* Si il y a eu une navigation et que l'option pour wait la navigation est activée
        Alors on rajoute le block de navigation
     */
     if (this._hasNavigation && this._options.waitForNavigation) {
@@ -156,7 +158,7 @@ export default class CodeGenerator {
    * pour set les frames et ajouter une ligne blanche
    */
   private _postProcess() {
-    // when events are recorded from different frames, we want to add a frame setter near the code that uses that frame
+    // quand les event sont record à partir des différentes frame, on ve ajouterd la bonne frame
     if (Object.keys(this._allFrames).length > 0) {
       this._postProcessSetFrames();
     }
@@ -179,7 +181,7 @@ export default class CodeGenerator {
   }
 
   /**
-   * Ajoute des lignes blanches entre chaques blocks
+   * Ajoute des lignes blanches entre chaque block
    */
   private _postProcessAddBlankLines() {
 

@@ -15,14 +15,16 @@ const multiselect = 'Multiselect';
 function isKList(elementSelector : string,
   previousSelector : string, typeList : string
   ) : void {
-  // Selector de l'item d'une liste
+
+    // Selector de l'item d'une liste
   const element = document.querySelector(elementSelector);
   const previousElement  = {
     selector : previousSelector,
     typeList,
     element: document.querySelector(previousSelector)
   };
-  // On doit trouver que l'on est dans une klist
+
+  // On doit trouver que l'on est dans une konnect liste
   expect(
     KListComponent.isKList(element as HTMLElement, previousElement).component
   ).toEqual(componentName.KLIST);
@@ -40,7 +42,7 @@ describe('Test de k list Component', () => {
   test('Test de isKList pour konnect dropdown', () => {
     // Selector de la konnect dropdown
     const elementSelector = 'konnect-dropdownlist';
-    // On doit trouver que l'on est dans une klist
+    // On doit trouver que l'on est dans une konnect liste
     isKList(elementSelector, null, null);
   });
 
@@ -52,7 +54,7 @@ describe('Test de k list Component', () => {
   test('Test de isKList pour input de list', () => {
     // Selector de l'input d'une liste
     const elementSelector = 'input[role="listbox"]';
-    // On doit trouver que l'on est dans une klist
+    // On doit trouver que l'on est dans une konnect liste
     isKList(elementSelector, 'konnect-dropdownlist', dropdown);
   });
 
@@ -62,7 +64,7 @@ describe('Test de k list Component', () => {
     const elementSelector = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
     // Selector de la liste déroulante
     const previousSelector : string = 'konnect-dropdownlist';
-    // On doit trouver que l'on est dans une liste
+    // On doit trouver que l'on est dans une konnect liste
     isKList(elementSelector,  previousSelector, dropdown);
   });
 
@@ -85,6 +87,7 @@ describe('Test de k list Component', () => {
       selector : elementSelector
     };
 
+    // On est dans un component Dropdown liste
     const component : ComponentModel = {
       component : componentName.KLIST,
       element: element as HTMLElement,

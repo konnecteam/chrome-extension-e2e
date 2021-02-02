@@ -4,7 +4,7 @@ import { InputFilesComponent } from './../components/input-file-component';
 import { InputNumericComponent } from '../components/input-numeric-component';
 import { ComponentModel } from '../../models/component-model';
 /**
- * EventComposent qui permet de gérer les event de change
+ * EventComponents qui permet de gérer les event de change
  */
 export class ChangeEventComponents {
 

@@ -106,7 +106,7 @@ export class ChangeBlockFactory {
   }
 
   /**
-   * Génère une accptation d'uploader de fichier
+   * Génère une acceptation d'uploader de fichier
    */
   public static buildAcceptUploadFileChange(selector : string, files : string) : Block {
 

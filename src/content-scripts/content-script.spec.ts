@@ -50,7 +50,6 @@ describe('Test Content script ', () => {
   beforeAll(async function (done) {
 
     // On met un timeout car runbuild met plus de 2000ms
-   // this.timeout(50000);
     await runBuild();
     buildDir = '../../../dist';
     const fixture = path.join(__dirname, '../../static/test/page-test/html-page/forms.html');
@@ -102,7 +101,7 @@ describe('Test Content script ', () => {
       };
 
       (window as any).events = [];
-      // On overwrite sendMessage pour sauvegarder les events catché
+      // On overwrite sendMessage pour sauvegarder les events catchés
       window.chrome.runtime.sendMessage = event => {
         // Si le recorder est prêt alors on resolve pour continuer les tests
         if (event.control && event.control === 'event-recorder-started') {

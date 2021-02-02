@@ -31,7 +31,7 @@ export class KSelectComponent {
   }
 
   /**
-   * Vérfiie si c'est un k select elementsaceiklmnopsvw
+   * Vérfiie si c'est un k select element
    */
   private static _isKSelectElement(element) : Element {
 

@@ -46,7 +46,7 @@ describe('Test de Keydown Service', () => {
     */
     expect(
       messageSend
-    ).toEqual('');
+    ).toBeDefined();
   });
 
   test('Test de handle event avec un event autre que keydown', () => {

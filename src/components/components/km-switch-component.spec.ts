@@ -26,7 +26,7 @@ describe('Test de km switch Component', () => {
     const elementSelector = 'switch > div > span > span:nth-child(3) > span';
     const element = document.querySelector(elementSelector);
 
-    // on doit trouver le kmswitch
+    // on doit trouver le km switch
     expect(
       KmSwitchComponent.isKmSwitch(element as HTMLElement).component
     ).toEqual(componentName.KMSWITCH);

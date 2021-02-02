@@ -1,5 +1,6 @@
 import { RegExpFactory } from '../../factory/regexp/regexp-factory';
 import HeaderCode from '../../constants/code-generate/header-code';
+
 /**
  * Factory qui génère le header du scénario
  */

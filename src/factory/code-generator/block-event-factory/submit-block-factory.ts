@@ -6,7 +6,7 @@ import { Block } from '../../../code-generator/block';
 import elementsTagName from '../../../constants/elements-tagName';
 
 /**
- * Facotry qui génère les blocks lié au submit
+ * Facotry qui génère les blocks liés au submit
  */
 export class SubmitBlockFactory {
 
@@ -26,7 +26,7 @@ export class SubmitBlockFactory {
    */
   public static generateBlock(event : EventModel, frameId : number, frame : string, options : OptionModel) : Block {
 
-    const { action, selector, value, tagName} = event;
+    const { action, tagName} = event;
     this.frameId = frameId;
     this.frame = frame;
     this.options = options;

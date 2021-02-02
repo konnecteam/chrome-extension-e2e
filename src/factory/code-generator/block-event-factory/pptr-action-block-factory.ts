@@ -1,6 +1,5 @@
 import { EventModel } from '../../../models/event-model';
 import { OptionModel } from '../../../models/options-model';
-import ActionEvents from '../../../constants/action-events';
 import { Block } from '../../../code-generator/block';
 import pptrActions from '../../../constants/pptr-actions';
 
@@ -70,7 +69,7 @@ export class PPtrActionBlockFactory {
   }
 
   /**
-   * Génère le block de lataille de la page
+   * Génère le block de la taille de la page
    */
   public static buildViewport(width : number, height : number) : Block {
 

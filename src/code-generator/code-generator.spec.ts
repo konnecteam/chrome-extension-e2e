@@ -12,7 +12,7 @@ import 'jest';
 import CodeGenerator from './code-generator';
 import { ObjectComparatorService } from '../services/object-comparator/object-comparator-service';
 
-/** Frame dans laquelle on se stestue */
+/** Frame dans laquelle on se situe */
 const frameId = 0;
 
 /** Le tableau qui va contenir les events à parser */
@@ -118,8 +118,8 @@ describe('Test de Code Generator', () => {
   });
 
   /**
-   * On fatest cela car dans code generator
-   * On change les valeurs par défauts par celle passer en paramètre
+   * On fait cela car dans code generator
+   * On change les valeurs par défauts par celles passer en paramètres
    */
   afterAll(() => {
     Object.assign(defaults, optionsDefault);
@@ -134,7 +134,7 @@ describe('Test de Code Generator', () => {
     );
   });
 
-  test('Test avec les options la custom ligne après chaque click', () => {
+  test('Test avec les options de base et la custom ligne après chaque click', () => {
 
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.customLineAfterClick = 'ligne custom 2';
@@ -146,7 +146,7 @@ describe('Test de Code Generator', () => {
     );
   });
 
-  test('Test avec les options la custom ligne après chaque event', () => {
+  test('Test avec les options de  base et la custom ligne après chaque event', () => {
 
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.customLinesBeforeEvent = 'line before event';

@@ -47,7 +47,10 @@ async function dispatchEvent(event : string, message : MessageModel) : Promise<v
   }, { event, message });
 }
 
-
+/**
+ * Permet de verifie le contenu du badge
+ * @param action
+ */
 async function verfiyBadgeContent(action : string ) : Promise<string> {
   await isBackgroundReady();
   // Dispatch event
@@ -196,7 +199,7 @@ describe('Test de Recording Controller', function () {
       };
 
       /**
-       * On overwrite downland pour savoir si on a exporter le script
+       * On overwrite download pour savoir si on a exporter le script
        */
       (window as any).ddlFile = false;
       chrome.downloads.download =  () => {
@@ -261,7 +264,7 @@ describe('Test de Recording Controller', function () {
 
     await isBackgroundReady();
 
-    // On met result à true pour simuler la recption d'un résultat
+    // On met result à true pour simuler la reception d'un résultat
     await page.evaluate(() => {
       (window as any).recordingController._isResult = true;
       Promise.resolve('good');
@@ -278,7 +281,7 @@ describe('Test de Recording Controller', function () {
     // On fait une pause pour laisser exportScript le temps de finir
     await page.waitFor(40);
 
-    // On vérfie si on a bien utiliser la méthode downland
+    // On vérfie si on a bien utilisé la méthode download
     const ddlFile = await page.evaluate(() => {
       return (window as any).ddlFile;
     });

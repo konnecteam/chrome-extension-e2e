@@ -9,8 +9,6 @@ import pptrActions from '../constants/pptr-actions';
 import { PollyService } from '../services/polly/polly-service';
 import { PollyFactory } from '../factory/polly/polly-factory';
 import packageJsonZip from '../constants/package-json-zip';
-import * as path from 'path';
-import { resolve } from 'path';
 /**
  * Background du Plugin qui permet de gérer le recording
  */
@@ -288,7 +286,7 @@ class RecordingController {
     // 2 - Set du badge texte
     chrome.browserAction.setBadgeText({ text : '' });
 
-    // 3 - suppression du recording en local storage
+    // 3 - Suppression du recording en local storage
     StorageService.remove('recording');
 
     // 4 - On récupère le contenu du fichier fake-timer-service build
@@ -340,7 +338,7 @@ class RecordingController {
    */
   private _getContentFakeTimeScript() : void {
     /* Pour lire un fichier dans un plugin chrome
-       il faut qu'il soit accesible et
+       il faut qu'il soit accessible et
        il faut fetch l'url pour récupéré le résultat
     */
     fetch(ChromeService.getUrl(RecordingController._FAKE_TIME_SCRIPT))
@@ -434,7 +432,7 @@ class RecordingController {
   }
 
   /**
-   * Permet de gérer les message de "type" contrôle
+   * Permet de gérer les messages de "type" contrôle
    */
   private _handleControlMessage(message : MessageModel) : void {
     if (message.control === 'event-recorder-started') ChromeService.setBadgeText(this._badgeState);
@@ -464,13 +462,13 @@ class RecordingController {
    */
   private _getHARcontent(message : MessageModel) : void {
 
-    // on vérifie si on à le résultat de la séquence et on affecte à polly
+    // on vérifie si on a le résultat de la séquence et on affecte à polly
     if (message.result) {
       this._pollyService.id = message.recordingId;
       this._pollyService.har = message.result;
     }
 
-    // On à reçus toute les requêtes
+    // On a reçus toute les requêtes
     this._isResult = true;
 
     if (this._badgeState === '1' || this._badgeState === '') {

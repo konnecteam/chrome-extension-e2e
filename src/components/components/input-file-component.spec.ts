@@ -17,7 +17,7 @@ describe('Test de input file Component', () => {
     // On selectione l'input file
     const element  = document.getElementById('inFile') as HTMLInputElement;
 
-    // On doit trouver nul car l'input file n'as pas de fichier (files)
+    // On doit trouver null car l'input file n'as pas de fichier (files)
     expect(
       InputFilesComponent.isInputFile(element)
     ).toBeNull();
@@ -33,7 +33,7 @@ describe('Test de input file Component', () => {
     };
 
     /* On doit trouver un files defined mais vide
-     *  car la proprété file de l'input est vide
+     *  car la propriété file de l'input est vide
      */
     expect(
       InputFilesComponent.editInputFileMessage(event, element.files).files

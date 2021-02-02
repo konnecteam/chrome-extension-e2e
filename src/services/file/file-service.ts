@@ -19,7 +19,7 @@ export class FileService {
   /** Control du message */
   private _control : string;
 
-  /** Lis le contenu du fichier */
+  /** Lit le contenu du fichier */
   private _reader : FileReader;
 
   constructor() {
@@ -50,7 +50,7 @@ export class FileService {
   }
 
   /**
-   * Ajoute un fichier dans la liste de fichier uploadé
+   * Ajoute un fichier dans la liste de fichiers uploadés
    *
    * @param name nom du fichier
    * @param content contenu du fichier en base 64
@@ -71,7 +71,7 @@ export class FileService {
   }
 
   /**
-   * Permet de nettoyer la liste des fichier uploadé
+   * Permet de nettoyer la liste des fichiers uploadés
    */
   public clearList() : void {
     this._uploadedFiles = [];

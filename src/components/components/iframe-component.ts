@@ -35,7 +35,7 @@ export class IframeComponent {
   }
 
   /**
-   * Modifier l'event et retourne les modification lié à l'iframe
+   * Modifier l'event et retourne les modifications liées à l'iframe
    */
   public static editIframeMessage(event : EventModel, component : ComponentModel) : EventModel {
 

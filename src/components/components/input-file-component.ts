@@ -20,7 +20,7 @@ export class InputFilesComponent {
 
   /**
    * Modifie l'event et
-   * envoi les fichiers au background pour les ajouter dans le zip
+   * envoie les fichiers au background pour les ajouter dans le zip
    */
   public static editInputFileMessage(event : EventModel, filesUpload : FileList) : EventModel {
 

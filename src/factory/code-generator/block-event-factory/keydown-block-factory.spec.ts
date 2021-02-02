@@ -2,7 +2,6 @@ import { defaults } from './../../../constants/default-options';
 import { KeydownBlockFactory } from './keydown-block-factory';
 import { Block } from './../../../code-generator/block';
 import 'jest';
-import actionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 
 const frame = 'page';
@@ -10,6 +9,7 @@ const frameId = 0;
 const iframe = 'body > iframe';
 const selector = '#id';
 const value = 'test de value';
+
 describe('Test de Keydown Block Factory', () => {
 
   // Initialisation des attributs de Keydown block factory

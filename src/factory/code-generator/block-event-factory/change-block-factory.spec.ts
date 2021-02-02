@@ -23,7 +23,7 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de buildChangeInputNumeric', () => {
 
-    // Attributs utilisé pour générer le block
+    // Attributs utilisés pour générer le block
     const selectorFocus = '#inputNum';
 
     const exceptedBlock = new Block(ChangeBlockFactory.frameId);
@@ -85,7 +85,7 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de buildAcceptUploadFileChange', () => {
 
-    // Attributs utilisé pour générer le block
+    // Attributs utilisés pour générer le block
     const files = '\"./recordings/files/test.txt\"';
 
     const exceptedBlock = new Block(ChangeBlockFactory.frameId);
@@ -103,7 +103,7 @@ describe('Test de Change Block Factory', () => {
   });
 
   test('Test de generateBlock pour un change input numeric', () => {
-    // Attributs utilisé pour générer le block
+    // Attributs utilisés pour générer le block
     const eventModel = {
       selector,
       value,
@@ -129,7 +129,7 @@ describe('Test de Change Block Factory', () => {
   });
 
   test('Test de generateBlock pour un change simple', () => {
-    // Attributs utilisé pour générer le block
+    // Attributs utilisés pour générer le block
     const eventModel = {
       selector,
       value,
@@ -152,7 +152,7 @@ describe('Test de Change Block Factory', () => {
   });
 
   test('Test de generateBlock pour un select change', () => {
-    // Attributs utilisé pour générer le block
+    // Attributs utilisés pour générer le block
     const eventModel = {
       selector,
       value,
@@ -177,7 +177,7 @@ describe('Test de Change Block Factory', () => {
 
 
   test('Test de generateBlock pour un input file', () => {
-    // Attributs utilisé pour générer le block
+    // Attributs utilisés pour générer le block
     const files = 'test.txt';
     const eventModel = {
       selector,

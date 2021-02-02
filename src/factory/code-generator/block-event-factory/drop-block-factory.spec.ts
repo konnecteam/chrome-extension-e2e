@@ -30,7 +30,7 @@ describe('Test de Drop Block Factory', () => {
       files : 'text.txt'
     };
 
-    // On rajoute d'abord la partie du click du file drop zone
+    // On rajoute d'abord la partie du click du file dropzone
     const exceptedResult = ClickBlockFactory.buildclickFileDropZone(eventModel.selector);
     // On rajoute la partie acceptation du fichier
     const chooserFile = ChangeBlockFactory.buildAcceptUploadFileChange(eventModel.selector, eventModel.files);

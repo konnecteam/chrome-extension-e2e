@@ -19,6 +19,7 @@ export class InputNumericComponent {
    * Verifie si c'est un input numeric et retourne le component associé
    */
   public static isInputNumeric(element : HTMLElement) : ComponentModel  {
+
     if (this._isNumericElement(element)) {
 
       const inputElement = this._isInputNumericElement(element);
@@ -43,7 +44,7 @@ export class InputNumericComponent {
   }
 
   /**
-   * Verifie si c'est un input numeric element et returne l'element
+   * Verifie si c'est un input numeric element et retourne l'element
    */
   private static _isNumericElement(element : HTMLElement) : Element {
 

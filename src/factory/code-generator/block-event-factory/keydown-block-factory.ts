@@ -30,14 +30,14 @@ export class KeydownBlockFactory {
     this.frameId = frameId;
     this.frame = frame;
 
-    // Si c'est une action event de list keydown
+    // Si c'est une action event de liste keydown
     if (action === ActionEvents.LISTKEYDOWN) {
       return this.buildListKeydown(selector, value, iframe);
     }
   }
 
   /**
-   * Généré une list keydown
+   * Généré une liste keydown
    */
   public static buildListKeydown(
     selector : string, value : string, iframe : string) : Block {

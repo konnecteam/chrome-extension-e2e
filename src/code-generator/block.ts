@@ -1,4 +1,5 @@
 import { LineBlockModel } from './../models/line-block-model';
+
 /**
  * Un block est une partie du scenario que l'on va exporter
  */

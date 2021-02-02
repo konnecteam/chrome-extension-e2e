@@ -39,7 +39,7 @@ describe('Test de Input numeric Component', () => {
       selector : '#id'
     };
 
-    // On créé un component poour pouvoir tester
+    // On créé un component pour pouvoir tester
     const component : ComponentModel = {
 
       component : 'component',

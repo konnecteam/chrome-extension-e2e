@@ -66,7 +66,7 @@ export class ScenarioFactory {
   }
 
   /**
-   * Génèré le scroll
+   * Génère le scroll
    */
   public static generateScroll(frameId : number, frame : string,
      scrollX : number, scrollY : number) : Block {

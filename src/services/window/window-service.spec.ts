@@ -1,6 +1,7 @@
 import { WindowService } from './window-service';
 import 'jest';
 import * as chrome from 'sinon-chrome';
+
 let message = '';
 
 chrome.runtime.sendMessage.withArgs({control: 'get-current-url', frameUrl: window.location.href }).callsFake(() => {

@@ -49,7 +49,7 @@ export class WindowService {
   }
 
   /**
-   * Dispatch un eventment
+   * Dispatch un event
    */
   public static dispatchEvent(event : CustomEvent) : void {
     window.dispatchEvent(event);

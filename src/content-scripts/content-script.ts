@@ -1,5 +1,4 @@
 import { SelectorService } from './../services/selector/selector-service';
-import { ComponentModel } from './../models/component-model';
 import  elementsTagName  from '../constants/elements-tagName';
 import { EventModel } from './../models/event-model';
 import { KeyDownService } from '../services/key-down/key-down-service';
@@ -113,7 +112,7 @@ class EventRecorder {
     // Récupération des options
     StorageService.get(['options'], data => {
 
-      // mise à jour des options
+      // Mise à jour des options
       this._updateOptions(data.options);
 
       if (!(window as any).pptRecorderAddedControlListeners) {
@@ -159,7 +158,7 @@ class EventRecorder {
       return;
     }
 
-    // si des fichiers sont en cours de transfère on les stocks
+    // Si des fichiers sont en cours de transfère on les stocks
     if (e.dataTransfer) {
       filesUpload = e.dataTransfer.files;
     }
@@ -188,13 +187,13 @@ class EventRecorder {
       // Ordre des patterns sont important
       this._dataAttributes.find(patternAttr => {
         const regexp = RegExp(patternAttr);
-        // On test chaques attribute avec le pattern
+        // On test chaque attribute avec le pattern
         for (let i = 0; i < targetAttributes.length; i++) {
           // Regex ou string test
           if (this._useRegexForDataAttribute ? regexp.test(targetAttributes[i].name) : patternAttr === targetAttributes[i].name) {
             customAttribute = targetAttributes[i].name;
 
-            // La recherche est terminé
+            // La recherche est terminée
             // On traite les cas spéciaux des customs attributes
             customAttribute = SelectorService.manageSpecialCase(customAttribute);
             return true;
@@ -243,7 +242,7 @@ class EventRecorder {
     const component = ComponentManager.determinateComponent(message.typeEvent, e.target, this._previousKList);
 
     /* Si c'est le cas et qu'on a un previousElement
-       c'est que on a une klist, on update donc la value des k list
+       c'est que on a une konnect liste, on update donc la value des k list
     */
     if (component && component.previousElement) {
       this._previousKList = component.previousElement;
@@ -270,6 +269,7 @@ class EventRecorder {
     while (!(window as any).eventRecorder._isRecordTreated) {
       await new Promise(resolve => setTimeout(resolve, 500));
     }
+
     // On bind la méthode de record des events
     const boundedRecordEvent = ((window as any).eventRecorder as EventRecorder)._recordEvent.bind(
       (window as any).eventRecorder
@@ -278,7 +278,7 @@ class EventRecorder {
     for (const mutation of mutationList) {
 
       for (const child of mutation.addedNodes) {
-        // Si pn a une iframe on rajoute les listener car de base il n'y en pas
+        // Si on a une iframe on rajoute les listener car de base il n'y en pas
         if (child.tagName === elementsTagName.IFRAME.toUpperCase()) {
 
           (window as any).eventRecorder._events.forEach(type => {
@@ -286,7 +286,7 @@ class EventRecorder {
           });
         }
 
-        // Si ona un input file on rajoute le listener des change
+        // Si on a un input file on rajoute le listener des change
         if (child.tagName === elementsTagName.INPUT.toUpperCase() && child.type === 'file') {
 
           child.addEventListener('change', boundedRecordEvent, false);
@@ -372,12 +372,6 @@ class EventRecorder {
     }
   }
 }
-
-// //usefull when we start record with buttom of plugin
-// if (document.readyState == "complete") {
-//   (window as any).eventRecorder.injectScript();
-//   (window as any).saveBody = document.cloneNode(true);
-// }
 
 (window as any).eventRecorder = new EventRecorder();
 (window as any).eventRecorder.start();

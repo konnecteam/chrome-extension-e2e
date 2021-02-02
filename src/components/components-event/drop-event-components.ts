@@ -2,7 +2,7 @@ import { ComponentModel } from './../../models/component-model';
 import { FileDropZoneComponent } from '../components/file-drop-zone-component';
 
 /**
- * EventsComponents qui permet de gérer les Drop
+ * EventComponents qui permet de gérer les Drop
  */
 export class DropEventComponents {
 

@@ -7,7 +7,7 @@ import { ElementFinderService } from '../../services/finder/element-finder-servi
 import { ComponentModel } from '../../models/component-model';
 
 /**
- * Composant qui peremt de gérer les input calendar
+ * Composant qui permet de gérer les input calendar
  */
 export class InputCalendarComponent {
 
@@ -75,7 +75,6 @@ export class InputCalendarComponent {
 
     return null;
   }
-
 
   /**
    * Récupère l'element du calendrier

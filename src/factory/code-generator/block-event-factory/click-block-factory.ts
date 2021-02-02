@@ -201,7 +201,7 @@ export class ClickBlockFactory {
   }
 
   /**
-   * Click sur un item de konnect list
+   * Click sur un item de konnect liste
    */
   public static buildClickKListItem(
      selector : string, scrollElement : string, scrollXElement : number, scrollYElement : number) : Block {

@@ -53,7 +53,7 @@ export class SelectorService {
     // A partir du selecteur on récupère la liste des éléments
     const elements = (window as any).saveBody.querySelectorAll(selector);
     for (let i = 0; i < elements.length; i++) {
-      // On compare le contenu de chaque élément afin de trouvé le bon
+      // On compare le contenu de chaque élément afin de trouver le bon
       if (elements[i].textContent === element.textContent) {
         element = elements[i];
       }
@@ -81,7 +81,7 @@ export class SelectorService {
   }
 
   /**
-   * Gestion des attribut spéciale pour un élément
+   * Gestion des attributs spéciaux pour un élément
    */
   public static manageSpecialCase(attribute : string) : string {
     if (attribute === 'href.bind') {
@@ -91,14 +91,14 @@ export class SelectorService {
   }
 
   /**
-   * Permet de formatter les données d'un sélecteur
+   * Permet de formater les données d'un sélecteur
    */
   public static formatDataOfSelector(element : HTMLElement, attribute : string) : string {
     return `[${attribute.replace(/[.]/g, '\\\.')}="${element.getAttribute(attribute).replace(/[']/g, '\\\'')}"]`;
   }
 
   /**
-   * Permet de standardisé un sélecteur
+   * Permet de standardiser un sélecteur
    */
   public static standardizeSelector(selector : string) : string {
     return selector.replace(/\\\./g, '\\\\.').replace('\n', '\\"').split('\:').join('\\\:');
