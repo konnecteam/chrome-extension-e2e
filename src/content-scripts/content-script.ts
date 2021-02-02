@@ -205,7 +205,7 @@ class EventRecorder {
 
     // définition du selecteur
     let selector = '';
-    if (e.target.type === 'file' && e.target.tagName === elementsTagName.INPUT.toLocaleUpperCase() && e.type === eventsToRecord.CHANGE) {
+    if (e.target.type === 'file' && e.target.tagName === elementsTagName.INPUT.toUpperCase() && e.type === eventsToRecord.CHANGE) {
       selector = this._previousSelector;
     } else {
       selector = customAttribute

@@ -38,7 +38,7 @@ export class InputNumericComponent {
 
     return ElementFinderService.findElementChildWithTagNameAndAttribute(
       element.parentElement,
-      elementsTagName.INPUT.toLocaleUpperCase(),
+      elementsTagName.INPUT.toUpperCase(),
       this._TITLE
     );
   }
@@ -50,7 +50,7 @@ export class InputNumericComponent {
 
     return ElementFinderService.findParentElementWithTagName(
       element,
-      elementsTagName.NUMERIC.toLocaleUpperCase(),
+      elementsTagName.NUMERIC.toUpperCase(),
       5
     );
   }

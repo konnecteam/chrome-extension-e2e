@@ -32,7 +32,7 @@ export class CheckboxComponent {
 
     return ElementFinderService.findParentElementWithTagName(
       element,
-      elementsTagName.CHECKBOX.toLocaleUpperCase(),
+      elementsTagName.CHECKBOX.toUpperCase(),
       5
     );
   }

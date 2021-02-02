@@ -36,7 +36,7 @@ export class KeyDownService {
   public handleEvent(msg : EventModel, element : HTMLElement) : void {
     // On vérifie que l'event est un keydown et que ce n'est pas un input ou que c'est un input de liste
     if (msg.action === domEventsToRecord.KEYDOWN) {
-      if (!msg.value && element.tagName !== elementsTagName.INPUT.toLocaleUpperCase() ||  this._verifyIsinputList(element)) {
+      if (!msg.value && element.tagName !== elementsTagName.INPUT.toUpperCase() ||  this._verifyIsinputList(element)) {
         // On récupère l'event
         this._handleKeyDownEvent(msg);
       }

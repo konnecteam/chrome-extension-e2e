@@ -32,7 +32,7 @@ describe('Test de Submit Block Factory', () => {
 
   test('généré un block pour submit dans un formulaire', () => {
     const eventModel = {
-      tagName : elementsTagName.FORM.toLocaleUpperCase(),
+      tagName : elementsTagName.FORM.toUpperCase(),
       action : actionEvents.SUBMIT
     };
 

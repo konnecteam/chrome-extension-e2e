@@ -119,7 +119,7 @@ export class KListComponent {
 
     return ElementFinderService.findParentElementWithTagNameAndValueAttribute(
       element,
-      elementsTagName.LIST_ELEMENT.toLocaleUpperCase(),
+      elementsTagName.LIST_ELEMENT.toUpperCase(),
       this._ID,
       this._ID_LIST_VALUE,
       15

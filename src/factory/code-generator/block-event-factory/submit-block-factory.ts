@@ -33,7 +33,7 @@ export class SubmitBlockFactory {
 
     // Si l'event est un submit
     if (action === ActionEvents.SUBMIT) {
-      if (tagName === elementsTagName.FORM.toLocaleUpperCase()) {
+      if (tagName === elementsTagName.FORM.toUpperCase()) {
         return this.buildSubmit();
       }
     }

@@ -82,7 +82,7 @@ export class InputCalendarComponent {
   private static _getCalendar(element : HTMLElement) : Element {
     return ElementFinderService.findParentElementWithTagNameAndValueAttribute(
       element,
-      elementsTagName.DIVISION.toLocaleUpperCase(),
+      elementsTagName.DIVISION.toUpperCase(),
       this._CLASS_ATTRIBUTE,
       this._K_CALENDAR_CLASS,
       15
@@ -95,7 +95,7 @@ export class InputCalendarComponent {
   private static _getCalendarValue(element : HTMLElement) : Element {
     return ElementFinderService.findParentElementWithTagNameAndAttribute(
       element,
-      elementsTagName.LINK.toLocaleUpperCase(),
+      elementsTagName.LINK.toUpperCase(),
       this._K_SELECTED_DAY_VALUE_ATTRIBUTE,
        3
     );
@@ -107,7 +107,7 @@ export class InputCalendarComponent {
   private static _getCalendarPreview(element : HTMLElement) : Element {
     return ElementFinderService.findParentElementWithTagNameAndValueAttribute(
       element,
-      elementsTagName.DIVISION.toLocaleUpperCase(),
+      elementsTagName.DIVISION.toUpperCase(),
       this._CLASS_ATTRIBUTE,
       this._K_CALENDAR_VIEW_CLASS,
       10
@@ -127,7 +127,7 @@ export class InputCalendarComponent {
   private static _getDateElement(element : HTMLElement) : Element {
     return ElementFinderService.findParentElementWithTagName(
       element,
-      elementsTagName.DATE.toLocaleUpperCase(),
+      elementsTagName.DATE.toUpperCase(),
       8
     );
   }

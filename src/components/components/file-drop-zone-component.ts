@@ -46,7 +46,7 @@ export class FileDropZoneComponent {
   private static _isFileDropZoneElement(element : HTMLElement) : HTMLElement {
 
     return ElementFinderService.findParentElementWithTagName(element,
-       elementsTagName.FILEDROPZONE.toLocaleUpperCase(),
+       elementsTagName.FILEDROPZONE.toUpperCase(),
         10
     );
   }

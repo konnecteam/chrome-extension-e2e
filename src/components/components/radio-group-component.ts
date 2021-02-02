@@ -32,7 +32,7 @@ export class RadioGroupComponent {
 
     return ElementFinderService.findParentElementWithTagName(
       element,
-      elementsTagName.RADIOGROUP.toLocaleUpperCase(),
+      elementsTagName.RADIOGROUP.toUpperCase(),
       5
     );
   }
