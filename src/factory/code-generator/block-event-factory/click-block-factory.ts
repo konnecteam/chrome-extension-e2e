@@ -139,12 +139,12 @@ export class ClickBlockFactory {
       type: domEventsToRecord.CLICK,
       value: ` await ${this.frame}.evaluate( async function(){
       let e = document.querySelector('${selector}');
-      var clickEvent = document.createEvent ('MouseEvents');
-      clickEvent.initEvent ('mousedown', true, true);
-      e.dispatchEvent (clickEvent);
+      var docEvent = document.createEvent ('MouseEvents');
+      docEvent.initEvent ('mousedown', true, true);
+      e.dispatchEvent (docEvent);
       await new Promise(resolve => setTimeout(resolve, ${time}));
-      clickEvent.initEvent ('mouseup', true, true);
-      e.dispatchEvent (clickEvent);
+      docEvent.initEvent ('mouseup', true, true);
+      e.dispatchEvent (docEvent);
       // we go in parent that containes numeric input
       let list = e.parentNode.parentNode.parentNode.querySelectorAll('input');
       for(let i=0; i< list.length ;i++) {
@@ -180,11 +180,11 @@ export class ClickBlockFactory {
       type: domEventsToRecord.CLICK,
       value: ` await ${this.frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
-        var clickEvent = document.createEvent ('MouseEvents');
-        clickEvent.initEvent ('mousedown', true, true);
-        e.dispatchEvent (clickEvent);
-        clickEvent.initEvent ('mouseup', true, true);
-        e.dispatchEvent (clickEvent);
+        var docEvent = document.createEvent ('MouseEvents');
+        docEvent.initEvent ('mousedown', true, true);
+        e.dispatchEvent (docEvent);
+        docEvent.initEvent ('mouseup', true, true);
+        e.dispatchEvent (docEvent);
         return Promise.resolve('finish');
       });`
     });

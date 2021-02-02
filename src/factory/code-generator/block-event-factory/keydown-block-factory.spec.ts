@@ -28,11 +28,12 @@ describe('Test de Keydown Block Factory', () => {
       type: domEventsToRecord.KEYDOWN,
       value: ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
-          let element = iframeElement.contentDocument.querySelector('${selector}')
+          let element = iframeElement.contentDocument.querySelector('${selector}');
+          element.className = '';
           element.innerHTML = \`${value}\`;
-          var clickEvent = document.createEvent('KeyboardEvents');
-          clickEvent.initEvent ('keyup', true, true);
-          element.dispatchEvent (clickEvent);
+          var docEvent = document.createEvent('KeyboardEvents');
+          docEvent.initEvent ('keyup', true, true);
+          element.dispatchEvent (docEvent);
           return Promise.resolve('finish');
         });`
     });
@@ -57,16 +58,17 @@ describe('Test de Keydown Block Factory', () => {
       type: 'KEYUP',
       value: ` await ${frame}.evaluate( async function(){
           let element = document.querySelector('${selector}');
-          var clickEvent = document.createEvent('KeyboardEvents');
+          var docEvent = document.createEvent('KeyboardEvents');
           //If it isn't input element
           if(element.value == null){
+            element.className = '';
             element.innerHTML = \`${value}\`;
-            clickEvent.initEvent ('keyup', true, true);
-            element.dispatchEvent (clickEvent);
+            docEvent.initEvent ('keyup', true, true);
+            element.dispatchEvent (docEvent);
           } else {
             element.value = \`${value}\`;
-            clickEvent.initEvent('keydown', true, true);
-            element.dispatchEvent(clickEvent);
+            docEvent.initEvent('keydown', true, true);
+            element.dispatchEvent(docEvent);
           }
           return Promise.resolve('finish');
         });`
@@ -99,16 +101,17 @@ describe('Test de Keydown Block Factory', () => {
       type: 'KEYUP',
       value: ` await ${frame}.evaluate( async function(){
           let element = document.querySelector('${selector}');
-          var clickEvent = document.createEvent('KeyboardEvents');
+          var docEvent = document.createEvent('KeyboardEvents');
           //If it isn't input element
           if(element.value == null){
+            element.className = '';
             element.innerHTML = \`${value}\`;
-            clickEvent.initEvent ('keyup', true, true);
-            element.dispatchEvent (clickEvent);
+            docEvent.initEvent ('keyup', true, true);
+            element.dispatchEvent (docEvent);
           } else {
             element.value = \`${value}\`;
-            clickEvent.initEvent('keydown', true, true);
-            element.dispatchEvent(clickEvent);
+            docEvent.initEvent('keydown', true, true);
+            element.dispatchEvent(docEvent);
           }
           return Promise.resolve('finish');
         });`
