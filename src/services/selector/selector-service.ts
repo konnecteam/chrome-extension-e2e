@@ -39,7 +39,7 @@ export class SelectorService {
   private static _findElementInSavedDocument(element : HTMLElement) : string {
 
     if (!element.tagName) return '';
-  
+
     // Récupération du tagName
     let selector = element.tagName.toLowerCase();
 
