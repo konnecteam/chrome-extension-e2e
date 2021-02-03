@@ -9,6 +9,7 @@ import pptrActions from '../constants/pptr-actions';
 import { PollyService } from '../services/polly/polly-service';
 import { PollyFactory } from '../factory/polly/polly-factory';
 import packageJsonZip from '../constants/package-json-zip';
+import { XMLHttpRequestService } from '../services/xml-http-request/xml-http-request-service';
 /**
  * Background du Plugin qui permet de gérer le recording
  */
@@ -463,13 +464,21 @@ class RecordingController {
   private _getHARcontent(message : MessageModel) : void {
 
     // on vérifie si on a le résultat de la séquence et on affecte à polly
-    if (message.result) {
+    if (message.resultURL) {
       this._pollyService.id = message.recordingId;
-      this._pollyService.har = message.result;
-    }
 
-    // On a reçus toute les requêtes
-    this._isResult = true;
+      const xhr = new XMLHttpRequest();
+      XMLHttpRequestService.executeRequest(xhr, message.resultURL, () => {
+        // On a reçus toutes les requêtes
+        this._isResult = true;
+        // on récupère le fichier har
+        if (xhr.status === 200) {
+          this._pollyService.har = xhr.response;
+        }
+        // On supprime l'accès à l'url du fichier har
+        URL.revokeObjectURL(message.resultURL);
+      });
+    }
 
     if (this._badgeState === '1' || this._badgeState === '') {
       ChromeService.removeOnMessageListener(this._boundedMessageHandler);

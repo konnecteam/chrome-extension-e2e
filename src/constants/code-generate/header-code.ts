@@ -37,7 +37,6 @@ function manageUrl(urlM) {
 
 function manageTokenFind(currentToken) {
 
-  //console.log(match);
   //we search token
   let token = "";
   for (var c = 0; c < currentToken.length; c++) {

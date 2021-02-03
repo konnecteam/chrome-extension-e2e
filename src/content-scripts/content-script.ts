@@ -1,3 +1,4 @@
+import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
 import  elementsTagName  from '../constants/elements-tagName';
 import { EventModel } from './../models/event-model';
@@ -291,18 +292,6 @@ class EventRecorder {
 
           child.addEventListener('change', boundedRecordEvent, false);
         }
-
-        /* Si on a une balise style aurelia-hide, on l'a supprime
-           car elle apparait à cause l'injection du scripts
-        */
-        if (child.tagName === 'STYLE' && child.parentElement.tagName === 'BODY') {
-
-          if (child.textContent === '.aurelia-hide { display:none !important; }') {
-
-            child.remove();
-          }
-        }
-
       }
     }
 
@@ -351,12 +340,13 @@ class EventRecorder {
 
     // On demande à récupérer le har
     if (event?.data.action === PollyService.GOT_HAR_ACTION) {
+      const data = new File([event.data.payload.result], 'har.json', { type: 'text/json;charset=utf-8' });
 
       // On diffuse le message
       ChromeService.sendMessage({
         control : 'get-result',
         recordingId : event.data.payload.recordingId,
-        result : event.data.payload.result
+        resultURL : URLService.createURLObject(data)
       });
     }
   }

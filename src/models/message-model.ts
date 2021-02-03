@@ -19,8 +19,8 @@ export class MessageModel {
     height : number
   };
 
-  /** Résultat des requêtes de PollyJS */
-  public result? : any;
+  /** URL du résultat des requêtes de PollyJS */
+  public resultURL? : any;
 
   /** Identifiant de l'enregistrement génère via PollyJs */
   public recordingId? : string;
