@@ -4,7 +4,6 @@ import { FileDropZoneComponent } from './../components/file-drop-zone-component'
 import { KSelectComponent } from './../components/k-select-component';
 import { KmSwitchComponent } from './../components/km-switch- component';
 import { KListComponent } from '../components/k-list-component';
-import { InputCalendarComponent } from '../components/input-calendar-component';
 import 'jest';
 import { FileService } from '../../services/file/file-service';
 
@@ -93,22 +92,6 @@ describe('Test de click event component', () => {
         previousElement
       )
     ).toEqual(KListComponent.isKList(element as HTMLElement, previousElement));
-
-  });
-
-  test('Determiner click d\'un InputCalendarComponent', async () => {
-    // On init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-input-date.html');
-
-    const element = document.querySelector('[data-value="2020/10/26"]');
-
-    // on doit trouver un component input calendar
-    expect(
-      ClickEventComponents.determinateClickComponent(
-        element as HTMLElement,
-        null
-      )
-    ).toEqual(InputCalendarComponent.isInputCalendar(element as HTMLElement));
 
   });
 });

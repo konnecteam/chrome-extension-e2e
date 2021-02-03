@@ -9,7 +9,6 @@ import * as path from 'path';
 import 'jest';
 import { KSelectComponent } from '../../components/components/k-select-component';
 import { KListComponent } from '../../components/components/k-list-component';
-import { InputCalendarComponent } from '../../components/components/input-calendar-component';
 import { FileService } from '../../services/file/file-service';
 
 /**
@@ -188,30 +187,6 @@ describe('Test de event message builder factory', () => {
     )
     .toEqual(KListComponent.
       editKlistMessage(eventModel, component)
-    );
-  });
-
-  test('Test de DATECALENDAR component message', async () => {
-    // On init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-input-date.html');
-
-    const element = document.querySelector('[data-value="2020/10/26"]');
-
-    const component = InputCalendarComponent.isInputCalendar(element as HTMLElement);
-
-    const event : EventModel =  {
-      action : '',
-    };
-    // On doit trouver un event model d'input calendar
-    expect(
-      EventMessageBuilderFactory.buildMessageEvent(
-        component,
-        event,
-        null
-      )
-    )
-    .toEqual(InputCalendarComponent.
-      editDateMessage(event, component)
     );
   });
 

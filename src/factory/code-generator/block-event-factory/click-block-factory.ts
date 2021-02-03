@@ -59,12 +59,6 @@ export class ClickBlockFactory {
         return this.buildClickKListItem(
           selector, scrollElement, scrollXElement, scrollYElement
         );
-      // Si c'est un click sur un input calendar
-      case ActionEvents.CLICK_INPUT_CALENDAR :
-        return this.buildClickInInputCalendar(selector, value, calendarHeader, calendarView);
-      // Si c'est un click sur le calendar de l'input date
-      case ActionEvents.CLICK_DATE_ELEMENT :
-        return this.buildClickInDateElement(selector, dateSelector);
     }
   }
 
@@ -248,106 +242,6 @@ export class ClickBlockFactory {
         value: `${this.options.customLineAfterClick}`
       });
     }
-    return block;
-  }
-
-  /**
-   * Génère le block d'un click sur un élément date
-   */
-  public static buildClickInDateElement(selector : string, dateSelector : string) : Block {
-    const block = new Block(this.frameId);
-
-    if (this.options.waitForSelectorOnClick) {
-
-      block.addLine({
-        type: domEventsToRecord.CLICK,
-        value: `await ${this.frame}.waitForSelector('${selector}');`
-      });
-    }
-
-    block.addLine({
-      type: domEventsToRecord.CLICK,
-      value: ` await ${this.frame}.evaluate( async function(){
-      document.querySelector('${dateSelector}').au.date.viewModel.min = null;
-      document.querySelector('${dateSelector}').au.date.viewModel.max = null;
-      document.querySelector('${selector}').click();
-      return Promise.resolve('finish');
-    });`
-    });
-
-    if (this.options.customLineAfterClick) {
-
-      block.addLine({
-        type: domEventsToRecord.CLICK,
-        value: `${this.options.customLineAfterClick}`
-      });
-    }
-
-    return block;
-  }
-
-  /**
-   * Permet de créér le block du click input calendar
-   */
-  public static buildClickInInputCalendar(selector : string, value : string,
-    calendarHeaderSelector : string, calendarViewSelector : string) : Block {
-
-    const block = new Block(this.frameId);
-
-    block.addLine({
-      type: domEventsToRecord.CLICK,
-      value: ` await ${this.frame}.evaluate( async function() {
-      let calendarHeader = document.querySelector('${calendarHeaderSelector}');
-      let calendarView = document.querySelector('${calendarViewSelector}');
-      let valueSelected = document.querySelector('td[aria-selected=true]');
-
-      if(valueSelected) {
-
-        let currentValue = valueSelected.querySelector('a').getAttribute('data-value').split('/');
-        let currentDate = new Date(currentValue[0], currentValue[1], currentValue[2]);
-        let ourValue = '${value}'.split('/');
-        let ourDate = new Date(ourValue[0],ourValue[1], ourValue[2]);
-
-        if (calendarView.querySelector('a[data-value="${value}"]')) {
-          calendarView.querySelector('a[data-value="${value}"]').click();
-        }
-
-        let changePage = '';
-        if(currentDate > ourDate) {
-          changePage = 'Previous';
-        }
-        if(currentDate < ourDate) {
-          changePage = 'Next';
-        }
-
-        if(changePage !== '') {
-
-          let buttonChangePage = calendarHeader.querySelector('a[aria-label=\'+changePage+\']');
-
-          while(buttonChangePage && buttonChangePage.getAttribute('aria-disabled') === 'false'
-            && !calendarView.querySelector('a[data-value="${value}"]')) {
-
-            buttonChangePage.click();
-          }
-        }
-
-        if (calendarView.querySelector('a[data-value="${value}"]')) {
-          calendarView.querySelector('a[data-value="${value}"]').click();
-        }
-      }
-
-      return Promise.resolve('finish');
-    });`
-    });
-
-    if (this.options.customLineAfterClick) {
-
-      block.addLine({
-        type: domEventsToRecord.CLICK,
-        value: `${this.options.customLineAfterClick}`
-      });
-    }
-
     return block;
   }
 }

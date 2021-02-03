@@ -1,4 +1,3 @@
-import { InputCalendarComponent } from '../components/input-calendar-component';
 import { KmSwitchComponent } from '../components/km-switch- component';
 import { KSelectComponent } from '../components/k-select-component';
 import { ComponentModel } from './../../models/component-model';
@@ -17,7 +16,6 @@ export class ClickEventComponents {
 
     return FileDropZoneComponent.isFileDropZone(element) ||
     KSelectComponent.isKSelect(element) || KmSwitchComponent.isKmSwitch(element) ||
-    KListComponent.isKList(element, previousElement)
-    || InputCalendarComponent.isInputCalendar(element);
+    KListComponent.isKList(element, previousElement);
   }
 }

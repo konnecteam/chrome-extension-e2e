@@ -1,6 +1,5 @@
 import { RadioGroupComponent } from './../../components/components/radio-group-component';
 import { CheckboxComponent } from './../../components/components/checkbox-component';
-import { InputCalendarComponent } from '../../components/components/input-calendar-component';
 import { IframeComponent } from '../../components/components/iframe-component';
 import { KmSwitchComponent } from '../../components/components/km-switch- component';
 import { KSelectComponent } from '../../components/components/k-select-component';
@@ -53,10 +52,6 @@ export class EventMessageBuilderFactory {
       // Si c'est une konnect liste
       case componentName.KLIST :
         newMessage = KListComponent.editKlistMessage(event, component);
-        break;
-      // Si c'est un input calendar
-      case componentName.DATECALENDAR :
-        newMessage = InputCalendarComponent.editDateMessage(event, component);
         break;
       // Si c'est un checkbox
       case componentName.CHECKBOX :

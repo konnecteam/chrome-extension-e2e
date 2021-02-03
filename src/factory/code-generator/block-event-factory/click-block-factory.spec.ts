@@ -16,9 +16,6 @@ const options = JSON.parse(JSON.stringify(defaults));
 const scrollElement = '#idSrollElement';
 const scrollXElement = 500;
 const scrollYElement = 250;
-const dateSelector = '#idDate';
-const calendarHeaderSelector = '#idHeader';
-const calendarViewSelector =  '#idView';
 
 /**
  * Génère le line block d'un click
@@ -153,70 +150,6 @@ function clickKListItemLineBlock() : LineBlockModel {
         e.click();
         return Promise.resolve('finish');
       });`
-  };
-}
-
-/**
- * Click sur l'élément date
- */
-function clickInDateElementLineBlock() : LineBlockModel {
-  return {
-    type: domEventsToRecord.CLICK,
-    value: ` await ${ClickBlockFactory.frame}.evaluate( async function(){
-      document.querySelector('${dateSelector}').au.date.viewModel.min = null;
-      document.querySelector('${dateSelector}').au.date.viewModel.max = null;
-      document.querySelector('${selector}').click();
-      return Promise.resolve('finish');
-    });`
-  };
-}
-
-/** click sur un input date */
-function clickInInputCalendarLineModel() : LineBlockModel {
-  return {
-    type: domEventsToRecord.CLICK,
-    value: ` await ${ClickBlockFactory.frame}.evaluate( async function() {
-      let calendarHeader = document.querySelector('${calendarHeaderSelector}');
-      let calendarView = document.querySelector('${calendarViewSelector}');
-      let valueSelected = document.querySelector('td[aria-selected=true]');
-
-      if(valueSelected) {
-
-        let currentValue = valueSelected.querySelector('a').getAttribute('data-value').split('/');
-        let currentDate = new Date(currentValue[0], currentValue[1], currentValue[2]);
-        let ourValue = '${value}'.split('/');
-        let ourDate = new Date(ourValue[0],ourValue[1], ourValue[2]);
-
-        if (calendarView.querySelector('a[data-value="${value}"]')) {
-          calendarView.querySelector('a[data-value="${value}"]').click();
-        }
-
-        let changePage = '';
-        if(currentDate > ourDate) {
-          changePage = 'Previous';
-        }
-        if(currentDate < ourDate) {
-          changePage = 'Next';
-        }
-
-        if(changePage !== '') {
-
-          let buttonChangePage = calendarHeader.querySelector('a[aria-label=\'+changePage+\']');
-
-          while(buttonChangePage && buttonChangePage.getAttribute('aria-disabled') === 'false'
-            && !calendarView.querySelector('a[data-value="${value}"]')) {
-
-            buttonChangePage.click();
-          }
-        }
-
-        if (calendarView.querySelector('a[data-value="${value}"]')) {
-          calendarView.querySelector('a[data-value="${value}"]').click();
-        }
-      }
-
-      return Promise.resolve('finish');
-    });`
   };
 }
 
@@ -494,106 +427,6 @@ describe('Test de Click Block Factory', () => {
         exceptedBlock
       );
     });
-
-    test('Test d\'un ClickInDateElement avec option waitForSelectorOnClick' , () => {
-      options.waitForSelectorOnClick = true;
-      options.customLineAfterClick = '';
-      const exceptedBlock = new Block(ClickBlockFactory.frameId);
-
-      // waitForSelector
-      exceptedBlock.addLine(waitForSelectorOnClickSelectorLineBlock());
-      // Click date element
-      exceptedBlock.addLine(clickInDateElementLineBlock());
-
-      expect(
-        ClickBlockFactory.buildClickInDateElement(
-          selector,
-          dateSelector
-        )
-      ).toEqual(
-        exceptedBlock
-      );
-    });
-
-    test('Test d\'un ClickInDateElement sans option waitForSelectorOnClick' , () => {
-      options.waitForSelectorOnClick = false;
-
-      const exceptedBlock = new Block(ClickBlockFactory.frameId);
-
-      // Click date element
-      exceptedBlock.addLine(clickInDateElementLineBlock());
-
-      expect(
-        ClickBlockFactory.buildClickInDateElement(
-          selector,
-          dateSelector
-        )
-      ).toEqual(
-        exceptedBlock
-      );
-    });
-
-    test('Test d\'un ClickInDateElement avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
-      options.waitForSelectorOnClick = true;
-      options.customLineAfterClick = 'ligne custom';
-      const exceptedBlock = new Block(ClickBlockFactory.frameId);
-
-      // waitForSelector
-      exceptedBlock.addLine(waitForSelectorOnClickSelectorLineBlock());
-      // Click date element
-      exceptedBlock.addLine(clickInDateElementLineBlock());
-      // Custom line
-      exceptedBlock.addLine(customeLineLineBlock());
-
-      expect(
-        ClickBlockFactory.buildClickInDateElement(
-          selector,
-          dateSelector
-        )
-      ).toEqual(
-        exceptedBlock
-      );
-    });
-
-    test('Test d\'un clickInInputCalendar' , () => {
-      options.customLineAfterClick = '';
-      const exceptedBlock = new Block(ClickBlockFactory.frameId);
-      // Click date element
-      exceptedBlock.addLine(clickInInputCalendarLineModel());
-
-      expect(
-        ClickBlockFactory.buildClickInInputCalendar(
-          selector,
-          value,
-          calendarHeaderSelector,
-          calendarViewSelector
-        )
-      ).toEqual(
-        exceptedBlock
-      );
-    });
-
-    test('Test d\'un clickInInputCalendar avec option waitForSelectorOnClick et customLineAfterClick ' , () => {
-      options.waitForSelectorOnClick = true;
-      options.customLineAfterClick = 'ligne custom';
-      const exceptedBlock = new Block(ClickBlockFactory.frameId);
-
-      // Click date element
-      exceptedBlock.addLine(clickInInputCalendarLineModel());
-      // Custom line
-      exceptedBlock.addLine(customeLineLineBlock());
-
-      expect(
-        ClickBlockFactory.buildClickInInputCalendar(
-          selector,
-          value,
-          calendarHeaderSelector,
-          calendarViewSelector
-        )
-      ).toEqual(
-        exceptedBlock
-      );
-    });
   });
 
   describe('Test de generate', () => {
@@ -708,53 +541,5 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    test('Test de generateBlock pour un click sur un input calendar ', () => {
-      const eventModel = {
-        selector,
-        value,
-        calendarHeader : calendarHeaderSelector,
-        calendarView : calendarViewSelector,
-        action : actionEvents.CLICK_INPUT_CALENDAR
-      };
-
-      expect(
-        ClickBlockFactory.generateBlock(
-          eventModel,
-          ClickBlockFactory.frameId,
-          ClickBlockFactory.frame,
-          defaults
-        )
-      ).toEqual(
-        ClickBlockFactory.buildClickInInputCalendar(
-          selector,
-          value,
-          calendarHeaderSelector,
-          calendarViewSelector
-        )
-      );
-    });
-
-    test('Test de generateBlock pour un click sur un date element ', () => {
-      const eventModel = {
-        selector,
-        dateSelector,
-        action : actionEvents.CLICK_DATE_ELEMENT
-      };
-
-      expect(
-        ClickBlockFactory.generateBlock(
-          eventModel,
-          ClickBlockFactory.frameId,
-          ClickBlockFactory.frame,
-          defaults
-        )
-      ).toEqual(
-        ClickBlockFactory.buildClickInDateElement(
-          selector,
-          dateSelector
-        )
-      );
-    });
   });
-
 });
