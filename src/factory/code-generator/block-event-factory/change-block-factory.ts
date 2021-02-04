@@ -76,7 +76,7 @@ export class ChangeBlockFactory {
       type: domEventsToRecord.CHANGE,
       value: `await ${this.frame}.evaluate( async function(){
        let input = document.querySelector('${selector}');
-       input.value = "${value}";
+       input.value = '${value}';
        input.dispatchEvent(new Event('blur'));
        return Promise.resolve('finish');
      })`
@@ -90,7 +90,7 @@ export class ChangeBlockFactory {
   public static buildSelectChange(selector : string, value : string) : Block {
     return new Block(this.frameId, {
       type: domEventsToRecord.CHANGE,
-      value: `await ${this.frame}.select('${selector}', '${value}');`
+      value: `await ${this.frame}.select('${selector}', \`${value}\`);`
     });
   }
 
@@ -98,10 +98,11 @@ export class ChangeBlockFactory {
   * Génère un change de valeur
   */
   public static buildChange(selector : string, value : string) : Block {
-   // we replace: \n  by \\r\\n for exportation script
+   // On remplace : \n par \\r\\n pour l'exportation du script
     return new Block(this.frameId, {
       type: domEventsToRecord.CHANGE,
-      value: `await ${this.frame}.evaluate( () => document.querySelector('${selector}').value = "");\n await ${this.frame}.type('${selector}', '${value.replace(/\n/g, '\\r\\n')}');`
+      value: `await ${this.frame}.evaluate( () => document.querySelector('${selector}').value = "");
+      await ${this.frame}.type('${selector}', \`${value.replace(/\n/g, '\\r\\n')}\`);`
     });
   }
 

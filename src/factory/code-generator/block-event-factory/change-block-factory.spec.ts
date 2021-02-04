@@ -9,7 +9,7 @@ import elementsTagName from '../../../constants/elements-tagName';
 /** selecteur de l'élément */
 const selector = '#id';
 /** valeur de l'élément */
-const value = 'testValue';
+const value = `testValue`;
 
 describe('Test de Change Block Factory', () => {
 
@@ -36,7 +36,7 @@ describe('Test de Change Block Factory', () => {
       type: domEventsToRecord.CHANGE,
       value: `await ${ChangeBlockFactory.frame}.evaluate( async function(){
        let input = document.querySelector('${selector}');
-       input.value = "${value}";
+       input.value = '${value}';
        input.dispatchEvent(new Event('blur'));
        return Promise.resolve('finish');
      })`
@@ -56,7 +56,7 @@ describe('Test de Change Block Factory', () => {
     const exceptedBlock = new Block(ChangeBlockFactory.frameId);
     exceptedBlock.addLine({
       type: domEventsToRecord.CHANGE,
-      value: `await ${ChangeBlockFactory.frame}.select('${selector}', '${value}');`
+      value: `await ${ChangeBlockFactory.frame}.select('${selector}', \`${value}\`);`
     });
 
     const result = ChangeBlockFactory.buildSelectChange(
@@ -72,7 +72,8 @@ describe('Test de Change Block Factory', () => {
     const exceptedBlock = new Block(ChangeBlockFactory.frameId);
     exceptedBlock.addLine({
       type: domEventsToRecord.CHANGE,
-      value: `await ${ChangeBlockFactory.frame}.evaluate( () => document.querySelector('${selector}').value = "");\n await ${ChangeBlockFactory.frame}.type('${selector}', '${value}');`
+      value: `await ${ChangeBlockFactory.frame}.evaluate( () => document.querySelector('${selector}').value = "");
+      await ${ChangeBlockFactory.frame}.type('${selector}', \`${value}\`);`
     });
 
     const result = ChangeBlockFactory.buildChange(
