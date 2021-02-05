@@ -94,7 +94,7 @@
           if(request.valueLoad){
             this.loaderValue = request.valueLoad;
             if(this.loaderValue === 100){
-              this.isExport =false;
+              this.isExport = false;
             }
           }
       },
@@ -141,8 +141,15 @@
         })
       },
       restart () {
-        this.cleanUp()
-        this.bus.postMessage({ action: 'cleanUp' })
+        // si on a remove ou si on reload la page alors on peut restart le programme
+        this.$chrome.storage.local.get(['isRemovedListener', 'loadingPage'], ({ isRemovedListener, loadingPage }) => {
+          if(isRemovedListener || loadingPage) {
+            this.cleanUp()
+            this.bus.postMessage({ action: 'cleanUp' })
+          } else {
+            alert('Wait that plugin stop recording')
+          }
+        });
       },
       cleanUp () {
         this.recording = this.liveEvents = []

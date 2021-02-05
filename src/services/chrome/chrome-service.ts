@@ -102,6 +102,21 @@ export class ChromeService {
   }
 
   /**
+   * Permet d'envoyer des messages au content-script pour qu'il les envoie à PollyRecorder
+   * @param message
+   */
+  public static queryToContentScript(message : string) : void {
+    ChromeService.query({
+      currentWindow: true,
+      active: true
+    }, tabs => {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        control : message
+      });
+    });
+  }
+
+  /**
    * Permet de télécharger un fichier
    */
   public static download(content : File, filename : string) : void {

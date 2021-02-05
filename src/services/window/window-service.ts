@@ -9,27 +9,23 @@ export class WindowService {
    * Récupère l'url courant
    */
   public static getCurrentUrl(message : any) : void {
-    if (message && message.hasOwnProperty('control') && message.control === 'get-current-url') {
-      ChromeService.sendMessage({
-        control : message.control,
-        frameUrl : window.location.href
-      });
-    }
+    ChromeService.sendMessage({
+      control: message.control,
+      frameUrl: window.location.href
+    });
   }
 
   /**
    * Récupère la taille de l'écran courant
    */
   public static getViewPortSize(message : any) : void {
-    if (message && message.hasOwnProperty('control') && message.control === 'get-viewport-size') {
-      ChromeService.sendMessage({
-        control: message.control,
-        coordinates: {
-          width: window.innerWidth,
-          height: window.innerHeight
-        }
-      });
-    }
+    ChromeService.sendMessage({
+      control: message.control,
+      coordinates: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
+    });
   }
 
   /**
