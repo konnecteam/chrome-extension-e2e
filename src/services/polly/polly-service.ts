@@ -11,6 +11,11 @@ export class PollyService {
   /** GOT_HAR event */
   public static readonly GOT_HAR_ACTION = 'GOT_HAR';
 
+  /** Pause/Unpause event */
+  public static readonly DO_PAUSE = 'do-pause';
+
+  public static readonly DO_UNPAUSE = 'do-unpause';
+
   /** Path du script à injecter */
   public static readonly POLLY_SCRIPT_PATH = './polly-build/polly.js';
 

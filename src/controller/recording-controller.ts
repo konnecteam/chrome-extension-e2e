@@ -216,6 +216,7 @@ class RecordingController {
     this._badgeState = 'rec';
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = false;
+    ChromeService.queryToContentScript('do-unpause');
   }
 
   /**
@@ -226,6 +227,7 @@ class RecordingController {
     this._badgeState = '❚❚';
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = true;
+    ChromeService.queryToContentScript('do-pause');
   }
 
   /**
@@ -262,14 +264,7 @@ class RecordingController {
     StorageService.setData({ recording : this._recording });
 
     // 5 - On récupère le résultat
-    ChromeService.query({
-      currentWindow: true,
-      active: true
-    }, tabs => {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        control : 'get-result'
-      });
-    });
+    ChromeService.queryToContentScript('get-result');
   }
 
   /**
@@ -277,7 +272,15 @@ class RecordingController {
    */
   private _start() : void {
 
-    // 1 - On clean les data
+    // 1 - On clean les data et remove le message listerner
+    /**
+     * Si l'utilisateur à reload alors
+     * on n'a pas les données de pollyJS
+     * donc on remove le listener car il n'a pas été remove
+     */
+    if (this._pollyService.id === '') {
+      ChromeService.removeOnMessageListener(this._boundedMessageHandler);
+    }
     this._zipContent = null;
     this._isResult = false;
     this._fileService.clearList();
@@ -288,7 +291,12 @@ class RecordingController {
     chrome.browserAction.setBadgeText({ text : '' });
 
     // 3 - Suppression du recording en local storage
+    // On met isRemovedListener à false car on démarre le record
     StorageService.remove('recording');
+
+    StorageService.setData({
+      isRemovedListener: false
+    });
 
     // 4 - On récupère le contenu du fichier fake-timer-service build
     this._getContentFakeTimeScript();
@@ -482,6 +490,10 @@ class RecordingController {
 
     if (this._badgeState === '1' || this._badgeState === '') {
       ChromeService.removeOnMessageListener(this._boundedMessageHandler);
+      // On stock que l'on a supprimé le listener
+      StorageService.setData({
+        isRemovedListener: true
+      });
     }
   }
 

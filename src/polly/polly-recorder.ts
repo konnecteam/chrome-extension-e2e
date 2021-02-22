@@ -25,6 +25,10 @@ export class PollyRecorder {
   /** GOT_HAR event pour communiquer avec content-script */
   public static readonly GOT_HAR = 'GOT_HAR';
 
+  /** Event pour communiquer avec le content-script */
+  public static readonly DO_PAUSE = 'do-pause';
+  public static readonly DO_UNPAUSE = 'do-unpause';
+
   /** Requête qui ne sont pas traçables à partir de Performance  */
   private static readonly _requestNotRecorded = [
     '',
@@ -52,6 +56,7 @@ export class PollyRecorder {
   /** Id de l'enregistrement de Polly */
   public recordingId : string;
 
+  private _paused = false;
   constructor() {
 
     this.requestRecorded = [];
@@ -191,18 +196,26 @@ export class PollyRecorder {
   /**
    * On met en pause le record
    */
-  private _pause() : void {
+  public pause() : void {
     this._polly.pause();
+    this._paused = true;
   }
 
 
   /**
-   * On play le recordS
+   * On play le record
    */
-  private _unpause() : void {
+  public unpause() : void {
     this._polly.play();
+    this._paused = false;
   }
 
+  /**
+   * Permet de savoir si on est en pause
+   */
+  public isPaused() : boolean {
+    return this._paused;
+  }
 
   /**
    * On stop le record
@@ -271,4 +284,14 @@ window.addEventListener(PollyRecorder.GET_HAR, function getHARResult(event) {
     const resulRecord = {result: har, recordingId: id };
     window.postMessage({action: PollyRecorder.GOT_HAR, payload: resulRecord}, (event as any).origin);
   });
+}, false);
+
+window.addEventListener(PollyRecorder.DO_PAUSE, function doPause() {
+  const polly = ((window as any).polly as PollyRecorder);
+  polly.pause();
+}, false);
+
+window.addEventListener(PollyRecorder.DO_UNPAUSE, function doUnPause() {
+  const polly = ((window as any).polly as PollyRecorder) ;
+  polly.unpause();
 }, false);

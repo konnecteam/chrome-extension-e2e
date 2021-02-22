@@ -1,6 +1,6 @@
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
-import  elementsTagName  from '../constants/elements-tagName';
+import elementsTagName from '../constants/elements-tagName';
 import { EventModel } from './../models/event-model';
 import { KeyDownService } from '../services/key-down/key-down-service';
 import { StorageService } from '../services/storage/storage-service';
@@ -44,8 +44,11 @@ class EventRecorder {
   private _previousSelector = null;
 
   /** Contient les informations de la dernière K list détéctée */
-  private _previousKList : { selector : string; typeList :
-     string; element : Element; };
+  private _previousKList : {
+    selector : string;
+    typeList : string;
+    element : Element;
+  };
 
   /** Time de départ d'un mousesdown */
   private _startMouseDown : number;
@@ -60,7 +63,7 @@ class EventRecorder {
     this._events = Object.values(eventsToRecord);
 
     // Enregistre les informations avant un click d'un item de list
-    this._previousKList = {selector: '', typeList: '', element: null};
+    this._previousKList = { selector : '', typeList : '', element : null };
     this._init();
   }
 
@@ -79,7 +82,11 @@ class EventRecorder {
 
     // écoute de l'évènement before unload
     window.onbeforeunload = () => {
-      WindowService.dispatchEvent(new CustomEvent(PollyService.GET_HAR_ACTION));
+      // On set que le page reload
+      StorageService.setData({
+        loadingPage: true
+      });
+      this._deleteAllListeners(this._events);
     };
 
     // écoute du state change pour cloner de nouveau le body
@@ -110,6 +117,15 @@ class EventRecorder {
    */
   public start() {
 
+    /**
+     * Quand on start,
+     * On met loadingPage à flase
+     * car on n'a pas reload
+     * et il faut le définir
+     */
+    StorageService.setData({
+      loadingPage: false
+    });
     // Récupération des options
     StorageService.get(['options'], data => {
 
@@ -124,24 +140,45 @@ class EventRecorder {
       // Ajout d'un listener afin d'écouter les messages du background
       if (!(window.document as any).pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
 
-        const boundedGetCurrentUrl = WindowService.getCurrentUrl.bind(this);
-        const boundedGetViewPortSize = WindowService.getViewPortSize.bind(this);
-        const boundedGetResult = this._getResult.bind(this);
-
-        ChromeService.addOnMessageListener(boundedGetCurrentUrl);
-        ChromeService.addOnMessageListener(boundedGetViewPortSize);
-        ChromeService.addOnMessageListener(boundedGetResult);
-
+        ChromeService.addOnMessageListener(this._messageControl.bind(this));
         (window as any).document.pptRecorderAddedControlListeners = true;
         window.addEventListener('message', this._sendPollyResult.bind(this), false);
       }
 
       // On observe les changement et on ajoute un listener sur les inputs
       (window as any).observer = new MutationObserver(this._listenerObserver);
-      (window as any).observer.observe(document, {childList: true, subtree: true});
+      (window as any).observer.observe(document, { childList: true, subtree: true });
 
       ChromeService.sendMessage({ control: 'event-recorder-started' });
     });
+  }
+
+  /**
+   * Permet de rediriger les messages dans la bonne méthode
+   * @param message
+   */
+  private _messageControl(message : any) : void {
+
+    if (message && message.hasOwnProperty('control')) {
+
+      switch (message.control) {
+        case 'get-current-url':
+          WindowService.getCurrentUrl(message);
+          break;
+        case 'get-viewport-size':
+          WindowService.getViewPortSize(message);
+          break;
+        case 'get-result':
+          this._getResult();
+          break;
+        case PollyService.DO_PAUSE:
+          this._doPause();
+          break;
+        case PollyService.DO_UNPAUSE:
+          this._doUnPause();
+          break;
+      }
+    }
   }
 
   /**
@@ -311,6 +348,20 @@ class EventRecorder {
   }
 
   /**
+   * Supprime les listeners de la page
+   */
+  private _deleteAllListeners(events) : void {
+    const boundedRecordEvent = this._recordEvent.bind(this);
+
+    events.forEach(type => {
+      window.removeEventListener(type, boundedRecordEvent, true);
+    });
+
+    ChromeService.removeOnMessageListener(this._messageControl.bind(this));
+    window.removeEventListener('message', this._sendPollyResult.bind(this), false);
+  }
+
+  /**
    * Mise à jour des options
    */
   private _updateOptions(options : {[key : string] : any}) : void {
@@ -354,19 +405,34 @@ class EventRecorder {
   /**
    * Récupère les résultats de pollyJS
    */
-  private _getResult(message) : void {
-    if (message && message.hasOwnProperty('control') && message.control === 'get-result') {
-      WindowService.dispatchEvent(
-        new CustomEvent(PollyService.GET_HAR_ACTION)
-      );
-    }
+  private _getResult() : void {
+    WindowService.dispatchEvent(
+      new CustomEvent(PollyService.GET_HAR_ACTION)
+    );
+    /* Si on récupère le résultat de PollyJS c'est qu'on a terminé
+     * donc on peut delete les listeners
+     */
+    this._deleteAllListeners(this._events);
+  }
+
+  /**
+   * Envoi un event à Polly pour mettre le record en pause
+   */
+  private _doPause() : void {
+    WindowService.dispatchEvent(
+      new CustomEvent(PollyService.DO_PAUSE)
+    );
+  }
+
+  /**
+   * Envoi un event à Polly pour reprendre l'enregistrement
+   */
+  private _doUnPause() : void {
+    WindowService.dispatchEvent(
+      new CustomEvent(PollyService.DO_UNPAUSE)
+    );
   }
 }
 
 (window as any).eventRecorder = new EventRecorder();
 (window as any).eventRecorder.start();
-
-window.onbeforeunload = function() {
-  const event = new CustomEvent(PollyService.GET_HAR_ACTION);
-  window.dispatchEvent(event);
-};
