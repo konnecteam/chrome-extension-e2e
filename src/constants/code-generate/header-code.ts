@@ -1,3 +1,4 @@
+import controlMSG from '../../constants/control-message';
 /**
  * Constantes du header du scénario
  */
@@ -111,12 +112,12 @@ page.on('load', async () => {
   }, fakeTimeScriptContent)
 
   await page.evaluate(() => {
-    window.addEventListener('SetupReady', function() {
-      window.dispatchEvent(new CustomEvent('PollyReady'));
+    window.addEventListener('${controlMSG.SETUP_READY_EVENT}', function() {
+      window.dispatchEvent(new CustomEvent('${controlMSG.POLLY_READY_EVENT}'));
     } , false);
-    let event = new CustomEvent('PollyReady');
+    let event = new CustomEvent('${controlMSG.POLLY_READY_EVENT}');
     window.dispatchEvent(event);
-   })
+  })
 }); \n`,
 
   wrappedHeader : `(async () => {
@@ -134,12 +135,12 @@ page.on('load', async () => {
     }, fakeTimeScriptContent)
 
     await page.evaluate(() => {
-      window.addEventListener('SetupReady', function() {
-        window.dispatchEvent(new CustomEvent('PollyReady'));
+      window.addEventListener('${controlMSG.SETUP_READY_EVENT}', function() {
+        window.dispatchEvent(new CustomEvent('${controlMSG.POLLY_READY_EVENT}'));
       } , false);
-      let event = new CustomEvent('PollyReady');
+      let event = new CustomEvent('${controlMSG.POLLY_READY_EVENT}');
       window.dispatchEvent(event);
-     })
+    })
   });\n`,
 
   listenerPage : `   await page.setRequestInterception(true);
@@ -237,10 +238,10 @@ page.on('load', async () => {
     }, fakeTimeScriptContent)
 
     await page.evaluate(() => {
-      window.addEventListener('SetupReady', function() {
-        window.dispatchEvent(new CustomEvent('PollyReady'));
+      window.addEventListener('${controlMSG.SETUP_READY_EVENT}', function() {
+        window.dispatchEvent(new CustomEvent('${controlMSG.POLLY_READY_EVENT}'));
       } , false);
-      let event = new CustomEvent('PollyReady');
+      let event = new CustomEvent('${controlMSG.POLLY_READY_EVENT}');
       window.dispatchEvent(event);
     })
   });

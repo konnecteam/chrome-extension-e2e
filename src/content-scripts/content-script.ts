@@ -10,6 +10,7 @@ import { WindowService } from '../services/window/window-service';
 import { PollyService } from '../services/polly/polly-service';
 import { ComponentManager } from '../manager/component-manager';
 import { EventMessageBuilderFactory } from '../factory/message-builder/event-message-builder-factory';
+import controlMSG from '../constants/control-message';
 
 /**
  * Enregistre les intéractions de l'utilisateur avec la page
@@ -137,7 +138,7 @@ class EventRecorder {
         this._init();
       } else {
         // On send au statup condig que PollyJS est prêt et qu'il peut donc charger les modules
-        const event = new CustomEvent('PollyReady');
+        const event = new CustomEvent(controlMSG.POLLY_READY_EVENT);
         WindowService.dispatchEvent(event);
       }
 
@@ -150,7 +151,7 @@ class EventRecorder {
       (window as any).observer = new MutationObserver(this._listenerObserver);
       (window as any).observer.observe(document, { childList: true, subtree: true });
 
-      ChromeService.sendMessage({ control: 'event-recorder-started' });
+      ChromeService.sendMessage({ control: controlMSG.EVENT_RECORDER_STARTED_EVENT });
     });
   }
 
@@ -163,19 +164,19 @@ class EventRecorder {
     if (message && message.hasOwnProperty('control')) {
 
       switch (message.control) {
-        case 'get-current-url':
+        case controlMSG.GET_CURRENT_URL_EVENT:
           WindowService.getCurrentUrl(message);
           break;
-        case 'get-viewport-size':
+        case controlMSG.GET_VIEWPORT_SIZE_EVENT:
           WindowService.getViewPortSize(message);
           break;
-        case 'get-result':
+        case controlMSG.GET_RESULT_EVENT:
           this._getResult();
           break;
-        case PollyService.PAUSE_EVENT:
+        case controlMSG.PAUSE_EVENT:
           this._doPause();
           break;
-        case PollyService.UNPAUSE_EVENT:
+        case controlMSG.UNPAUSE_EVENT:
           this._doUnPause();
           break;
       }
@@ -417,11 +418,11 @@ class EventRecorder {
   private _sendPollyResult(event) : void {
 
     // On demande à récupérer le har
-    if (event?.data.action === PollyService.GOT_HAR_EVENT) {
+    if (event?.data.action === controlMSG.GOT_HAR_EVENT) {
       const data = new File([event.data.payload.result], 'har.json', { type: 'text/json;charset=utf-8' });
       // On diffuse le message
       ChromeService.sendMessage({
-        control : 'get-result',
+        control : controlMSG.GET_RESULT_EVENT,
         recordingId : event.data.payload.recordingId,
         resultURL : URLService.createURLObject(data)
       });
@@ -437,7 +438,7 @@ class EventRecorder {
    */
   private _getResult() : void {
     WindowService.dispatchEvent(
-      new CustomEvent(PollyService.GET_HAR_EVENT)
+      new CustomEvent(controlMSG.GET_HAR_EVENT)
     );
 
   }
@@ -447,7 +448,7 @@ class EventRecorder {
    */
   private _doPause() : void {
     WindowService.dispatchEvent(
-      new CustomEvent(PollyService.PAUSE_EVENT)
+      new CustomEvent(controlMSG.PAUSE_EVENT)
     );
   }
 
@@ -456,7 +457,7 @@ class EventRecorder {
    */
   private _doUnPause() : void {
     WindowService.dispatchEvent(
-      new CustomEvent(PollyService.UNPAUSE_EVENT)
+      new CustomEvent(controlMSG.UNPAUSE_EVENT)
     );
   }
 }

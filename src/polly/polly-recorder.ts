@@ -3,6 +3,7 @@ import { Polly } from '@pollyjs/core';
 import * as  FetchAdapter from '@pollyjs/adapter-fetch';
 import * as XHRAdapter from '@pollyjs/adapter-xhr';
 import inMemoryPersister from '../lib/persister/polly/in-memory-persister';
+import controlMSG from '../constants/control-message';
 
 // On prrécise à polly les adapter et persister utilisés
 Polly.register(XHRAdapter);
@@ -19,16 +20,6 @@ export class PollyRecorder {
 
   /** Initiateur de requête Fetch */
   public static readonly FETCH = 'fetch';
-
-  /** GET_HAR event pour communiquer avec content-script */
-  public static readonly GET_HAR_EVENT = 'GET_HAR';
-
-  /** GOT_HAR event pour communiquer avec content-script */
-  public static readonly GOT_HAR_EVENT = 'GOT_HAR';
-
-  /** Event pour communiquer avec le content-script */
-  public static readonly PAUSE_EVENT = 'do-pause';
-  public static readonly UNPAUSE_EVENT = 'do-unpause';
 
   /** Requête qui ne sont pas traçables à partir de Performance  */
   private static readonly _requestNotRecorded = [
@@ -92,7 +83,7 @@ export class PollyRecorder {
     this._fetchRequest(window.location.pathname);
 
     // le Statup config nous dit quand il a exporté les modules
-    WindowService.addEventListener('SetupReady', this._dispatchPollyReadyEvent, false);
+    WindowService.addEventListener(controlMSG.SETUP_READY_EVENT, this._dispatchPollyReadyEvent, false);
 
     this._dispatchPollyReadyEvent();
 
@@ -134,7 +125,7 @@ export class PollyRecorder {
    * Dispatch l'event PollyReady  au statupconfig pour qu'il exporte les modules
    */
   private _dispatchPollyReadyEvent() {
-    WindowService.dispatchEvent(new CustomEvent('PollyReady'));
+    WindowService.dispatchEvent(new CustomEvent(controlMSG.POLLY_READY_EVENT));
   }
 
   /**
@@ -330,7 +321,7 @@ export class PollyRecorder {
       const har = this._getResult(this.recordingId);
       const id = this.recordingId;
       const resulRecord = {result: har, recordingId: id };
-      window.postMessage({action: PollyRecorder.GOT_HAR_EVENT, payload: resulRecord}, event.origin);
+      window.postMessage({action: controlMSG.GOT_HAR_EVENT, payload: resulRecord}, event.origin);
       this._removeAllListener();
       PollyRecorder.observer.disconnect();
     });
@@ -340,18 +331,18 @@ export class PollyRecorder {
    * Ajout de tous les listeners d'event entre le polly recorder et le content script
    */
   private _addAllListener() : void {
-    WindowService.addEventListener(PollyRecorder.GET_HAR_EVENT, this._boundedGetHARResult, false);
-    WindowService.addEventListener(PollyRecorder.PAUSE_EVENT, this._boundedPause, false);
-    WindowService.addEventListener(PollyRecorder.UNPAUSE_EVENT, this._boundedUnpause, false);
+    WindowService.addEventListener(controlMSG.GET_HAR_EVENT, this._boundedGetHARResult, false);
+    WindowService.addEventListener(controlMSG.PAUSE_EVENT, this._boundedPause, false);
+    WindowService.addEventListener(controlMSG.UNPAUSE_EVENT, this._boundedUnpause, false);
   }
 
   /**
    * Remove de tous les listeners entre polly recorder et le content script
    */
   private _removeAllListener() : void {
-    WindowService.removeEventListener(PollyRecorder.GET_HAR_EVENT, this._boundedGetHARResult, false);
-    WindowService.removeEventListener(PollyRecorder.PAUSE_EVENT, this._boundedPause, false);
-    WindowService.removeEventListener(PollyRecorder.UNPAUSE_EVENT, this._boundedUnpause, false);
+    WindowService.removeEventListener(controlMSG.GET_HAR_EVENT, this._boundedGetHARResult, false);
+    WindowService.removeEventListener(controlMSG.PAUSE_EVENT, this._boundedPause, false);
+    WindowService.removeEventListener(controlMSG.UNPAUSE_EVENT, this._boundedUnpause, false);
   }
 }
 

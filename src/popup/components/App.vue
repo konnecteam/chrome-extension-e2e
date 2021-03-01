@@ -48,6 +48,7 @@
   import RecordingTab from "./RecordingTab.vue"
   import ResultsTab from "./ResultsTab.vue";
   import HelpTab from "./HelpTab.vue";
+  import controlAction from '../../constants/control-actions'
   import Vue from 'vue';
   
   export default {
@@ -109,10 +110,10 @@
       },
       togglePause () {
         if (this.isPaused) {
-          this.bus.postMessage({ action: 'unpause' })
+          this.bus.postMessage({ action: controlAction.UNPAUSE })
           this.isPaused = false
         } else {
-          this.bus.postMessage({ action: 'pause' })
+          this.bus.postMessage({ action: controlAction.PAUSE })
           this.isPaused = true
         }
         this.storeState()
@@ -122,11 +123,11 @@
         // On récupère la date au moment de commencer le record
         this.$chrome.storage.local.set({dateTimeStart : new Date().getTime()})
         console.debug('start recorder')
-        this.bus.postMessage({ action: 'start' })
+        this.bus.postMessage({ action: controlAction.START })
       },
       stop () {
         console.debug('stop recorder')
-        this.bus.postMessage({ action: 'stop' })
+        this.bus.postMessage({ action: controlAction.STOP })
         this.$chrome.storage.local.get(['recording', 'options'], ({ recording, options }) => {
           console.debug('loaded recording', recording)
           console.debug('loaded options', options)
@@ -145,7 +146,7 @@
         this.$chrome.storage.local.get(['isRemovedListener', 'loadingPage'], ({ isRemovedListener, loadingPage }) => {
           if(isRemovedListener || loadingPage) {
             this.cleanUp()
-            this.bus.postMessage({ action: 'cleanUp' })
+            this.bus.postMessage({ action: controlAction.CLEAN })
           } else {
             alert('We must waiting for recording to be stopped before restart process')
           }
@@ -198,7 +199,7 @@
       },
        //Export Script
       exportScript () {
-        this.bus.postMessage({ action: 'exportScript' });
+        this.bus.postMessage({ action: controlAction.EXPORT_SCRIPT });
         //exported is started
         this.isExport=true;
       }

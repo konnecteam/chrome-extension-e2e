@@ -3,19 +3,6 @@
  */
 export class PollyService {
 
-  // Event entre content-script et le script injecté
-
-  /** GET_HAR event */
-  public static readonly GET_HAR_EVENT = 'GET_HAR';
-
-  /** GOT_HAR event */
-  public static readonly GOT_HAR_EVENT = 'GOT_HAR';
-
-  /** Pause/Unpause event */
-  public static readonly PAUSE_EVENT = 'do-pause';
-
-  public static readonly UNPAUSE_EVENT = 'do-unpause';
-
   /** Path du script à injecter */
   public static readonly POLLY_SCRIPT_PATH = './polly-build/polly.js';
 

@@ -10,6 +10,8 @@ import { PollyService } from '../services/polly/polly-service';
 import { PollyFactory } from '../factory/polly/polly-factory';
 import packageJsonZip from '../constants/package-json-zip';
 import { XMLHttpRequestService } from '../services/xml-http-request/xml-http-request-service';
+import controlActions from '../constants/control-actions';
+import controlMSG from '../constants/control-message';
 /**
  * Background du Plugin qui permet de gérer le recording
  */
@@ -104,12 +106,12 @@ class RecordingController {
   public boot() {
     (chrome.extension as any).onConnect.addListener(port => {
       port.onMessage.addListener(msg => {
-        if (msg.action && msg.action === 'start') this._start();
-        if (msg.action && msg.action === 'stop') this._stop();
-        if (msg.action && msg.action === 'cleanUp') this._cleanUp();
-        if (msg.action && msg.action === 'pause') this._pause();
-        if (msg.action && msg.action === 'unpause') this._unPause();
-        if (msg.action && msg.action === 'exportScript') this._exportScriptAsync();
+        if (msg.action && msg.action === controlActions.START) this._start();
+        if (msg.action && msg.action === controlActions.STOP) this._stop();
+        if (msg.action && msg.action === controlActions.CLEAN) this._cleanUp();
+        if (msg.action && msg.action === controlActions.PAUSE) this._pause();
+        if (msg.action && msg.action === controlActions.UNPAUSE) this._unPause();
+        if (msg.action && msg.action === controlActions.EXPORT_SCRIPT) this._exportScriptAsync();
       });
     });
   }
@@ -219,7 +221,7 @@ class RecordingController {
     this._badgeState = 'rec';
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = false;
-    ChromeService.queryToContentscriptEvent('do-unpause');
+    ChromeService.queryToContentscriptEvent(controlMSG.UNPAUSE_EVENT);
   }
 
   /**
@@ -230,7 +232,7 @@ class RecordingController {
     this._badgeState = '❚❚';
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = true;
-    ChromeService.queryToContentscriptEvent('do-pause');
+    ChromeService.queryToContentscriptEvent(controlMSG.PAUSE_EVENT);
   }
 
   /**
@@ -267,7 +269,7 @@ class RecordingController {
     StorageService.setData({ recording : this._recording });
 
     // 5 - On récupère le résultat
-    ChromeService.queryToContentscriptEvent('get-result');
+    ChromeService.queryToContentscriptEvent(controlMSG.GET_RESULT_EVENT);
 
     // 6 - Si on record pas les requête on peut mettre à true isRemovedListener
     if (!this._recordHttpRequest) {
@@ -332,12 +334,12 @@ class RecordingController {
 
         // Récupération le viewport
         chrome.tabs.sendMessage(tabs[0].id, {
-          control: 'get-viewport-size'
+          control: controlMSG.GET_VIEWPORT_SIZE_EVENT
         });
 
         // Récupératio de l'url
         chrome.tabs.sendMessage(tabs[0].id, {
-          control: 'get-current-url'
+          control: controlMSG.GET_CURRENT_URL_EVENT
         });
       });
 
@@ -464,11 +466,11 @@ class RecordingController {
    * Permet de gérer les messages de "type" contrôle
    */
   private _handleControlMessage(message : MessageModel) : void {
-    if (message.control === 'event-recorder-started') ChromeService.setBadgeText(this._badgeState);
-    if (message.control === 'get-viewport-size') this._recordCurrentViewportSizeAsync(message.coordinates);
-    if (message.control === 'get-current-url') this._recordCurrentUrlAsync(message.frameUrl);
-    if (message.control === 'get-result') this._getHARcontent(message);
-    if (message.control === 'get-newFile') this._recordNewFile(message);
+    if (message.control === controlMSG.EVENT_RECORDER_STARTED_EVENT) ChromeService.setBadgeText(this._badgeState);
+    if (message.control === controlMSG.GET_VIEWPORT_SIZE_EVENT) this._recordCurrentViewportSizeAsync(message.coordinates);
+    if (message.control === controlMSG.GET_CURRENT_URL_EVENT) this._recordCurrentUrlAsync(message.frameUrl);
+    if (message.control === controlMSG.GET_RESULT_EVENT) this._getHARcontent(message);
+    if (message.control === controlMSG.GET_NEW_FILE_EVENT) this._recordNewFile(message);
   }
 
   /**
