@@ -1,3 +1,4 @@
+import { WindowService } from './../services/window/window-service';
 import { Polly } from '@pollyjs/core';
 import * as  FetchAdapter from '@pollyjs/adapter-fetch';
 import * as XHRAdapter from '@pollyjs/adapter-xhr';
@@ -56,8 +57,25 @@ export class PollyRecorder {
   /** Id de l'enregistrement de Polly */
   public recordingId : string;
 
+  /** Permet de savoir si le record est en pause */
   private _paused = false;
+
+  /** Permet d'observer les entrées des requêtes */
+  public static observer : PerformanceObserver;
+
+  /** bind des fonction pour les listeners des messages entre le content script
+   * et le Polly Recorder
+   */
+  private _boundedGetHARResult : () => void = null;
+  private _boundedPause : () => void = null;
+  private _boundedUnpause : () => void = null;
+
   constructor() {
+
+
+    this._boundedGetHARResult = this._getHARResult.bind(this);
+    this._boundedPause = this._pause.bind(this);
+    this._boundedUnpause = this._unpause.bind(this);
 
     this.requestRecorded = [];
     this._listPromise = [];
@@ -67,29 +85,37 @@ export class PollyRecorder {
     this._start();
 
     // On send au statup condig que PollyJS est prêt et qu'il peut donc charger les modules
-    const event = new CustomEvent('PollyReady');
-    window.dispatchEvent(event);
+    this._dispatchPollyReadyEvent();
 
     // On enregistre des requêtes que l'on a pas
     this._fetchRequest('favicon.ico');
     this._fetchRequest(window.location.pathname);
 
     // le Statup config nous dit quand il a exporté les modules
-    window.addEventListener('SetupReady', function() {
-      window.dispatchEvent(new CustomEvent('PollyReady'));
-    } , false);
-    window.dispatchEvent(event);
+    WindowService.addEventListener('SetupReady', this._dispatchPollyReadyEvent, false);
 
-    const observer = new PerformanceObserver(list => {
+    this._dispatchPollyReadyEvent();
+
+    this._addAllListener();
+
+    PollyRecorder.observer = new PerformanceObserver(list => {
       list.getEntries().forEach(entry => {
-        /* Si la requêtes n'est pas initiée par un fetch ou xmlhttprequest,
-           Polly ne la détécte pas donc on fetch pour qu'il l'enregistre
+        /* Si la requêtes n'est pas initiée par un fetch ou xmlhttprequest et
+          que l'enregistrement n'est pas en pause,
+          Polly ne la détécte pas donc on fetch pour qu'il l'enregistre
         */
         if ((entry as PerformanceResourceTiming).initiatorType !== PollyRecorder.FETCH
         && (entry as PerformanceNavigationTiming).initiatorType !== PollyRecorder.XMLHTTREQUEST
+        && !this._paused
       ) {
 
-          fetch(entry.name);
+          fetch(entry.name)
+          .then(() => {
+            Promise.resolve('ok');
+          })
+          .catch(err => {
+            Promise.reject(err);
+          });
           this.requestRecorded.push(entry.name);
 
           //Pour les items du lazy loading à cause d'un item qui veut se charger mais qui ne devrait pas
@@ -101,7 +127,14 @@ export class PollyRecorder {
       });
     });
 
-    observer.observe({entryTypes: ['resource', 'mark', 'measure']});
+    PollyRecorder.observer.observe({entryTypes: ['resource', 'mark', 'measure']});
+  }
+
+  /**
+   * Dispatch l'event PollyReady  au statupconfig pour qu'il exporte les modules
+   */
+  private _dispatchPollyReadyEvent() {
+    WindowService.dispatchEvent(new CustomEvent('PollyReady'));
   }
 
   /**
@@ -138,7 +171,11 @@ export class PollyRecorder {
 
           if (!this.requestRecorded.includes(builtLink)) {
 
-            fetch(builtLink);
+            fetch(builtLink)
+            .then(() => {
+              Promise.resolve('ok');
+            })
+            .catch(err => Promise.reject(err));
             this.requestRecorded.push(builtLink);
           }
         }
@@ -196,16 +233,16 @@ export class PollyRecorder {
   /**
    * On met en pause le record
    */
-  public pause() : void {
+  private _pause() : void {
     this._polly.pause();
     this._paused = true;
   }
 
 
   /**
-   * On play le record
+   * On unpause le record
    */
-  public unpause() : void {
+  private _unpause() : void {
     this._polly.play();
     this._paused = false;
   }
@@ -220,7 +257,7 @@ export class PollyRecorder {
   /**
    * On stop le record
    */
-  public async stop() : Promise<void> {
+  private async _stop() : Promise<void> {
 
     const listRequest = window.performance.getEntries();
     let currentReq = null;
@@ -232,9 +269,16 @@ export class PollyRecorder {
       if (currentReq.initiatorType !== PollyRecorder.XMLHTTREQUEST &&
          currentReq.initiatorType !== PollyRecorder.FETCH &&
           !this.requestRecorded.includes(currentReq.name)
+          && !this._paused
       ) {
 
-        this._listPromise.push(fetch(currentReq.name));
+        this._listPromise.push(
+          fetch(currentReq.name)
+          .then(() => {
+            Promise.resolve('ok');
+          })
+          .catch(err => Promise.reject(err))
+        );
       }
     }
     // Requête qu'on doit fech car on ne les a pas fetch
@@ -250,7 +294,7 @@ export class PollyRecorder {
   /**
    * Récupère le resultat de PollyJS
    */
-  public getResult(id : string) : string {
+  private _getResult(id : string) : string {
     const result = this._polly.persister.findRecording(id);
 
     if (result) return JSON.stringify(result);
@@ -264,34 +308,51 @@ export class PollyRecorder {
   private _fetchRequest(request : string) {
     const requestTofetch = window.location.protocol + '//' + window.location.host + '/' + request;
 
-    if (!this.requestRecorded.includes(requestTofetch)) {
+    if (!this.requestRecorded.includes(requestTofetch) && !this._paused) {
 
-      this._listPromise.push(fetch(requestTofetch));
+      this._listPromise.push(
+        fetch(requestTofetch)
+        .then(() => {
+          Promise.resolve('ok');
+        })
+        .catch(err => Promise.reject(err))
+      );
     }
+  }
+
+  /**
+   * Fonction exécuté lors de la reception de l'event
+   * qui permet de récuperer le résultat de polly
+   * @param event
+   */
+  private _getHARResult(event) : void {
+    this._stop().then(() => {
+      const har = this._getResult(this.recordingId);
+      const id = this.recordingId;
+      const resulRecord = {result: har, recordingId: id };
+      window.postMessage({action: PollyRecorder.GOT_HAR, payload: resulRecord}, event.origin);
+      this._removeAllListener();
+      PollyRecorder.observer.disconnect();
+    });
+  }
+
+  /**
+   * Ajout de tous les listeners d'event entre le polly recorder et le content script
+   */
+  private _addAllListener() : void {
+    WindowService.addEventListener(PollyRecorder.GET_HAR, this._boundedGetHARResult, false);
+    WindowService.addEventListener(PollyRecorder.DO_PAUSE, this._boundedPause, false);
+    WindowService.addEventListener(PollyRecorder.DO_UNPAUSE, this._boundedUnpause, false);
+  }
+
+  /**
+   * Remove de tous les listeners entre polly recorder et le content script
+   */
+  private _removeAllListener() : void {
+    WindowService.removeEventListener(PollyRecorder.GET_HAR, this._boundedGetHARResult, false);
+    WindowService.removeEventListener(PollyRecorder.DO_PAUSE, this._boundedPause, false);
+    WindowService.removeEventListener(PollyRecorder.DO_UNPAUSE, this._boundedUnpause, false);
   }
 }
 
 (window as any).polly = new PollyRecorder();
-
-// Envoie le résulat au content script
-window.addEventListener(PollyRecorder.GET_HAR, function getHARResult(event) {
-  const polly = ((window as any).polly as PollyRecorder) ;
-
-  polly.stop().then(function() {
-
-    const har = polly.getResult(polly.recordingId);
-    const id = polly.recordingId;
-    const resulRecord = {result: har, recordingId: id };
-    window.postMessage({action: PollyRecorder.GOT_HAR, payload: resulRecord}, (event as any).origin);
-  });
-}, false);
-
-window.addEventListener(PollyRecorder.DO_PAUSE, function doPause() {
-  const polly = ((window as any).polly as PollyRecorder);
-  polly.pause();
-}, false);
-
-window.addEventListener(PollyRecorder.DO_UNPAUSE, function doUnPause() {
-  const polly = ((window as any).polly as PollyRecorder) ;
-  polly.unpause();
-}, false);

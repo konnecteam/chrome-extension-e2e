@@ -62,6 +62,9 @@ class RecordingController {
   /** Permet de savoir si on a déjà récupéré le résultat */
   private _isResult : boolean = false;
 
+  /** Permet de savoir si il faut record les requêtes http */
+  private _recordHttpRequest : boolean = false;
+
   // Services
   /** Permet de faire la gestion du fichier zip que l'on va exporter  */
   private _zipService : ZipService;
@@ -116,15 +119,14 @@ class RecordingController {
    */
   private async _exportScriptAsync() : Promise<void> {
 
-    // 1 - On vérifie que la requête est bien récupérer
-    if (!this._isResult) {
+    // 1 - On vérifie que la requête est bien récupérer et l'option de record des requêtes à true
+    if (!this._isResult && this._recordHttpRequest) {
       alert('We haven\'t finish to get result, wait few seconds');
       return;
     }
 
     // 2 - On vérifie que le contenu du zip n'est pas vide
     if (this._zipContent) {
-
       // Mise à jour de la barre de progression
       ChromeService.sendMessage({
         valueLoad: 100
@@ -165,19 +167,20 @@ class RecordingController {
         valueLoad: 35
       });
 
-      const recording = PollyFactory.buildResultObject();
+      if (this._recordHttpRequest) {
+        const recording = PollyFactory.buildResultObject();
 
-      // changement de la barre de progression
-      ChromeService.sendMessage({
-        valueLoad: 65
-      });
-
-      // Ajoute le recording dans le zip
-      this._zipService.addFileInFolder(
-        `recordings/${recording.folderName}/recording.har`,
-        new File([recording.har],
-        'recording.har'
-      ));
+        // changement de la barre de progression
+        ChromeService.sendMessage({
+          valueLoad: 65
+        });
+        // Ajoute le recording dans le zip
+        this._zipService.addFileInFolder(
+          `recordings/${recording.folderName}/recording.har`,
+          new File([recording.har],
+          'recording.har'
+        ));
+      }
 
       // changement de la barre de progression
       ChromeService.sendMessage({
@@ -265,6 +268,16 @@ class RecordingController {
 
     // 5 - On récupère le résultat
     ChromeService.queryToContentScript('get-result');
+
+    // 6 - Si on record pas les requête on peut mettre à true isRemovedListener
+    if (!this._recordHttpRequest) {
+
+      if (!this._recordHttpRequest) {
+        StorageService.setData({
+          isRemovedListener: true
+        });
+      }
+    }
   }
 
   /**
@@ -285,7 +298,9 @@ class RecordingController {
     this._isResult = false;
     this._fileService.clearList();
     this._recording = [];
+    this._zipService.resetZip();
     this._pollyService.flush();
+    this._isPaused = false;
 
     // 2 - Set du badge texte
     chrome.browserAction.setBadgeText({ text : '' });
@@ -339,6 +354,11 @@ class RecordingController {
       ChromeService.setIcon('../assets/images/icon-green.png');
       ChromeService.setBadgeText(this._badgeState);
       ChromeService.setBadgeBackgroundColor('#FF0000');
+
+      // On récupère l'option des requêtes http
+      StorageService.get(['options'], data => {
+        this._recordHttpRequest = data.options.code.recordHttpRequest;
+      });
     });
   }
 
@@ -348,7 +368,7 @@ class RecordingController {
   private _getContentFakeTimeScript() : void {
     /* Pour lire un fichier dans un plugin chrome
        il faut qu'il soit accessible et
-       il faut fetch l'url pour récupéré le résultat
+       il faut fetch l'url pour récupérer le résultat
     */
     fetch(ChromeService.getUrl(RecordingController._FAKE_TIME_SCRIPT))
     .then(response => response.text())
@@ -504,7 +524,8 @@ class RecordingController {
   private _recordNewFile(message : MessageModel) : void {
 
     // on vérifie que le fichier uploadé à bien un nom et un contenu
-    if (message.filename && message.content) {
+    // et que le record n'est pas en pause
+    if (message.filename && message.content && !this._isPaused) {
       this._fileService.addfile(message.filename, message.content);
     }
   }

@@ -40,6 +40,18 @@ class EventRecorder {
   /** Savoir si on traite un event */
   private _isRecordTreated : boolean;
 
+  /** Fonction qui permet d'écouter les events */
+  private _boundedRecordEvent : () => void = null;
+
+  /** Fonction qui permet d'ecouter l'event onbeforeunload */
+  private _boundedOnBeforeUnload : () => void = null;
+
+  /** Fonction qui permet d'ecouter l'event du PollyRecorder */
+  private _boundedSendPollyResult : () => void = null;
+
+  /** Fonction qui permet d'ecouter les messages du RecordingController */
+  private _boundedMessageControl : () => void = null;
+
   /** Selecteur de l'élément de l'event précédant */
   private _previousSelector = null;
 
@@ -64,7 +76,6 @@ class EventRecorder {
 
     // Enregistre les informations avant un click d'un item de list
     this._previousKList = { selector : '', typeList : '', element : null };
-    this._init();
   }
 
   /**
@@ -74,21 +85,10 @@ class EventRecorder {
 
     // Le document est totalement chargé ?
     if (document.readyState === 'complete') {
-
       // On inject le script et on clone le body courant
       this.injectScript();
       (window as any).saveBody = document.cloneNode(true);
     }
-
-    // écoute de l'évènement before unload
-    window.onbeforeunload = () => {
-      // On set que le page reload
-      StorageService.setData({
-        loadingPage: true
-      });
-      this._deleteAllListeners(this._events);
-    };
-
     // écoute du state change pour cloner de nouveau le body
     document.onreadystatechange = () => {
       if (document.readyState === 'interactive') {
@@ -132,17 +132,18 @@ class EventRecorder {
       // Mise à jour des options
       this._updateOptions(data.options);
 
-      if (!(window as any).pptRecorderAddedControlListeners) {
-        this._addAllListeners(this._events);
-        (window as any).pptRecorderAddedControlListeners = true;
+      // Si On record les requests on initialise et inject le script polly
+      if (data.options.code.recordHttpRequest) {
+        this._init();
+      } else {
+        // On send au statup condig que PollyJS est prêt et qu'il peut donc charger les modules
+        const event = new CustomEvent('PollyReady');
+        WindowService.dispatchEvent(event);
       }
 
       // Ajout d'un listener afin d'écouter les messages du background
       if (!(window.document as any).pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
-
-        ChromeService.addOnMessageListener(this._messageControl.bind(this));
-        (window as any).document.pptRecorderAddedControlListeners = true;
-        window.addEventListener('message', this._sendPollyResult.bind(this), false);
+        this._addAllListeners(this._events);
       }
 
       // On observe les changement et on ajoute un listener sur les inputs
@@ -340,27 +341,53 @@ class EventRecorder {
    *
    */
   private _addAllListeners(events) : void {
-    const boundedRecordEvent = this._recordEvent.bind(this);
 
+    (window as any).document.pptRecorderAddedControlListeners = true;
+
+    this._boundedMessageControl = this._messageControl.bind(this);
+    ChromeService.addOnMessageListener(this._boundedMessageControl);
+
+    this._boundedSendPollyResult = this._sendPollyResult.bind(this);
+    WindowService.addEventListener('message', this._boundedSendPollyResult, false);
+
+
+    // écoute de l'évènement before unload
+    this._boundedOnBeforeUnload = this._onBeforeUnload.bind(this);
+    WindowService.addEventListener('beforeunload', this._boundedOnBeforeUnload);
+
+    this._boundedRecordEvent = this._recordEvent.bind(this);
     events.forEach(type => {
-      window.addEventListener(type, boundedRecordEvent, true);
+      WindowService.addEventListener(type, this._boundedRecordEvent, true);
     });
   }
 
   /**
    * Supprime les listeners de la page
    */
-  private _deleteAllListeners(events) : void {
-    const boundedRecordEvent = this._recordEvent.bind(this);
+  private _deleteAllListeners() : void {
 
-    events.forEach(type => {
-      window.removeEventListener(type, boundedRecordEvent, true);
+    this._events.forEach(type => {
+      WindowService.removeEventListener(type, this._boundedRecordEvent, true);
     });
 
-    ChromeService.removeOnMessageListener(this._messageControl.bind(this));
-    window.removeEventListener('message', this._sendPollyResult.bind(this), false);
+    ChromeService.removeOnMessageListener(this._boundedMessageControl);
+    WindowService.removeEventListener('message', this._boundedSendPollyResult, false);
+    WindowService.removeEventListener('beforeunload', this._boundedOnBeforeUnload);
+    (window as any).document.pptRecorderAddedControlListeners = false;
+
   }
 
+  /**
+   * Onbefore unload action
+   */
+  private _onBeforeUnload() {
+    // On set que le page reload
+    StorageService.setData({
+      loadingPage: true
+    });
+    this._getResult();
+    this._deleteAllListeners();
+  }
   /**
    * Mise à jour des options
    */
@@ -392,7 +419,6 @@ class EventRecorder {
     // On demande à récupérer le har
     if (event?.data.action === PollyService.GOT_HAR_ACTION) {
       const data = new File([event.data.payload.result], 'har.json', { type: 'text/json;charset=utf-8' });
-
       // On diffuse le message
       ChromeService.sendMessage({
         control : 'get-result',
@@ -400,6 +426,10 @@ class EventRecorder {
         resultURL : URLService.createURLObject(data)
       });
     }
+    /* Si on récupère le résultat de PollyJS c'est qu'on a terminé
+     * donc on peut delete les listeners
+     */
+    this._deleteAllListeners();
   }
 
   /**
@@ -409,10 +439,7 @@ class EventRecorder {
     WindowService.dispatchEvent(
       new CustomEvent(PollyService.GET_HAR_ACTION)
     );
-    /* Si on récupère le résultat de PollyJS c'est qu'on a terminé
-     * donc on peut delete les listeners
-     */
-    this._deleteAllListeners(this._events);
+
   }
 
   /**

@@ -40,4 +40,8 @@ export class ZipService {
       type : 'nodebuffer'
     });
   }
+
+  public resetZip() : void {
+    this._zip = new JSZip();
+  }
 }

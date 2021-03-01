@@ -8,7 +8,7 @@ export class SelectorService {
 
   /** Id à ignorer */
   private static readonly _idToIgnoreReg  = new RegExp('([A-Za-z0-9]+-){4}', 'g');
-  private static readonly _idToIgnore = ['formv', 'kdp', 'mv'];
+  private static readonly _idToIgnore = ['formv', 'kdp', 'mv', 'tabs'];
 
   /**
    * Récupère un élément html

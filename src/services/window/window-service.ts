@@ -54,7 +54,14 @@ export class WindowService {
   /**
    * Ajout d'un listener sur un event
    */
-  public static addEventListener(event : string, callback : () => void, options? : boolean | AddEventListenerOptions) : void {
+  public static addEventListener(event : string, callback : (event?) => void, options? : boolean | AddEventListenerOptions) : void {
     window.addEventListener(event, callback, options);
+  }
+
+  /**
+   * Supprime un listener sur un event
+   */
+  public static removeEventListener(event : string, callback : (event?) => void, options? : boolean | AddEventListenerOptions) : void {
+    window.removeEventListener(event, callback, options);
   }
 }
