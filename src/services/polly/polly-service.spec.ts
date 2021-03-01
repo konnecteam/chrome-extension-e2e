@@ -11,10 +11,10 @@ describe('Test de Polly Service', () => {
   test('Test du reset des attributs du service', () => {
     const resultExcepted = { har : '', id : ''};
 
-    pollyService.har = 'testHAR';
-    pollyService.id = 'ID';
+    pollyService.record.har = 'testHAR';
+    pollyService.record.id = 'ID';
     pollyService.flush();
 
-    expect({har : pollyService.har, id : pollyService.id}).toEqual(resultExcepted);
+    expect({har : pollyService.record.har, id : pollyService.record.id}).toEqual(resultExcepted);
   });
 });

@@ -219,7 +219,7 @@ class RecordingController {
     this._badgeState = 'rec';
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = false;
-    ChromeService.queryToContentScript('do-unpause');
+    ChromeService.queryToContentscriptEvent('do-unpause');
   }
 
   /**
@@ -230,7 +230,7 @@ class RecordingController {
     this._badgeState = '❚❚';
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = true;
-    ChromeService.queryToContentScript('do-pause');
+    ChromeService.queryToContentscriptEvent('do-pause');
   }
 
   /**
@@ -267,7 +267,7 @@ class RecordingController {
     StorageService.setData({ recording : this._recording });
 
     // 5 - On récupère le résultat
-    ChromeService.queryToContentScript('get-result');
+    ChromeService.queryToContentscriptEvent('get-result');
 
     // 6 - Si on record pas les requête on peut mettre à true isRemovedListener
     if (!this._recordHttpRequest) {
@@ -291,7 +291,7 @@ class RecordingController {
      * on n'a pas les données de pollyJS
      * donc on remove le listener car il n'a pas été remove
      */
-    if (this._pollyService.id === '') {
+    if (this._pollyService.record.id === '') {
       ChromeService.removeOnMessageListener(this._boundedMessageHandler);
     }
     this._zipContent = null;
@@ -493,7 +493,7 @@ class RecordingController {
 
     // on vérifie si on a le résultat de la séquence et on affecte à polly
     if (message.resultURL) {
-      this._pollyService.id = message.recordingId;
+      this._pollyService.record.id = message.recordingId;
 
       const xhr = new XMLHttpRequest();
       XMLHttpRequestService.executeRequest(xhr, message.resultURL, () => {
@@ -501,7 +501,7 @@ class RecordingController {
         this._isResult = true;
         // on récupère le fichier har
         if (xhr.status === 200) {
-          this._pollyService.har = xhr.response;
+          this._pollyService.record.har = xhr.response;
         }
         // On supprime l'accès à l'url du fichier har
         URL.revokeObjectURL(message.resultURL);

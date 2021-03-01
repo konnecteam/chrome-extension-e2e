@@ -147,7 +147,7 @@
             this.cleanUp()
             this.bus.postMessage({ action: 'cleanUp' })
           } else {
-            alert('Wait that plugin stop recording')
+            alert('We must waiting for recording to be stopped before restart process')
           }
         });
       },

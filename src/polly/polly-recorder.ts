@@ -21,14 +21,14 @@ export class PollyRecorder {
   public static readonly FETCH = 'fetch';
 
   /** GET_HAR event pour communiquer avec content-script */
-  public static readonly GET_HAR = 'GET_HAR';
+  public static readonly GET_HAR_EVENT = 'GET_HAR';
 
   /** GOT_HAR event pour communiquer avec content-script */
-  public static readonly GOT_HAR = 'GOT_HAR';
+  public static readonly GOT_HAR_EVENT = 'GOT_HAR';
 
   /** Event pour communiquer avec le content-script */
-  public static readonly DO_PAUSE = 'do-pause';
-  public static readonly DO_UNPAUSE = 'do-unpause';
+  public static readonly PAUSE_EVENT = 'do-pause';
+  public static readonly UNPAUSE_EVENT = 'do-unpause';
 
   /** Requête qui ne sont pas traçables à partir de Performance  */
   private static readonly _requestNotRecorded = [
@@ -330,7 +330,7 @@ export class PollyRecorder {
       const har = this._getResult(this.recordingId);
       const id = this.recordingId;
       const resulRecord = {result: har, recordingId: id };
-      window.postMessage({action: PollyRecorder.GOT_HAR, payload: resulRecord}, event.origin);
+      window.postMessage({action: PollyRecorder.GOT_HAR_EVENT, payload: resulRecord}, event.origin);
       this._removeAllListener();
       PollyRecorder.observer.disconnect();
     });
@@ -340,18 +340,18 @@ export class PollyRecorder {
    * Ajout de tous les listeners d'event entre le polly recorder et le content script
    */
   private _addAllListener() : void {
-    WindowService.addEventListener(PollyRecorder.GET_HAR, this._boundedGetHARResult, false);
-    WindowService.addEventListener(PollyRecorder.DO_PAUSE, this._boundedPause, false);
-    WindowService.addEventListener(PollyRecorder.DO_UNPAUSE, this._boundedUnpause, false);
+    WindowService.addEventListener(PollyRecorder.GET_HAR_EVENT, this._boundedGetHARResult, false);
+    WindowService.addEventListener(PollyRecorder.PAUSE_EVENT, this._boundedPause, false);
+    WindowService.addEventListener(PollyRecorder.UNPAUSE_EVENT, this._boundedUnpause, false);
   }
 
   /**
    * Remove de tous les listeners entre polly recorder et le content script
    */
   private _removeAllListener() : void {
-    WindowService.removeEventListener(PollyRecorder.GET_HAR, this._boundedGetHARResult, false);
-    WindowService.removeEventListener(PollyRecorder.DO_PAUSE, this._boundedPause, false);
-    WindowService.removeEventListener(PollyRecorder.DO_UNPAUSE, this._boundedUnpause, false);
+    WindowService.removeEventListener(PollyRecorder.GET_HAR_EVENT, this._boundedGetHARResult, false);
+    WindowService.removeEventListener(PollyRecorder.PAUSE_EVENT, this._boundedPause, false);
+    WindowService.removeEventListener(PollyRecorder.UNPAUSE_EVENT, this._boundedUnpause, false);
   }
 }
 

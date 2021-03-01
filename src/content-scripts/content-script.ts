@@ -172,10 +172,10 @@ class EventRecorder {
         case 'get-result':
           this._getResult();
           break;
-        case PollyService.DO_PAUSE:
+        case PollyService.PAUSE_EVENT:
           this._doPause();
           break;
-        case PollyService.DO_UNPAUSE:
+        case PollyService.UNPAUSE_EVENT:
           this._doUnPause();
           break;
       }
@@ -417,7 +417,7 @@ class EventRecorder {
   private _sendPollyResult(event) : void {
 
     // On demande à récupérer le har
-    if (event?.data.action === PollyService.GOT_HAR_ACTION) {
+    if (event?.data.action === PollyService.GOT_HAR_EVENT) {
       const data = new File([event.data.payload.result], 'har.json', { type: 'text/json;charset=utf-8' });
       // On diffuse le message
       ChromeService.sendMessage({
@@ -437,7 +437,7 @@ class EventRecorder {
    */
   private _getResult() : void {
     WindowService.dispatchEvent(
-      new CustomEvent(PollyService.GET_HAR_ACTION)
+      new CustomEvent(PollyService.GET_HAR_EVENT)
     );
 
   }
@@ -447,7 +447,7 @@ class EventRecorder {
    */
   private _doPause() : void {
     WindowService.dispatchEvent(
-      new CustomEvent(PollyService.DO_PAUSE)
+      new CustomEvent(PollyService.PAUSE_EVENT)
     );
   }
 
@@ -456,7 +456,7 @@ class EventRecorder {
    */
   private _doUnPause() : void {
     WindowService.dispatchEvent(
-      new CustomEvent(PollyService.DO_UNPAUSE)
+      new CustomEvent(PollyService.UNPAUSE_EVENT)
     );
   }
 }
