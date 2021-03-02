@@ -28,7 +28,7 @@ class RecordingController {
   private static readonly _TYPEDATA : string = 'base64';
 
   /** Path du script fake time buildé et qui se situe dans dist */
-  private static readonly _FAKE_TIME_SCRIPT : string = './scripts/fake-time-script.js';
+  private static readonly _FAKE_TIME_SCRIPT : string = './lib/script-to-inject/fake-time-script.js';
 
   // Modèle custom
   /** évenements récéptionnés */

@@ -1,6 +1,6 @@
 import 'jest';
 import { KeydownEventComponent } from './keydown-event-component';
-import { IframeComponent } from '../components/iframe-component';
+import { IframeComponent } from '../konnect/iframe-component';
 
 
 describe('Test de keydown event component', () => {

@@ -1,9 +1,9 @@
 import { ClickEventComponents} from './click-event-components';
 import * as path from 'path';
 import { FileDropZoneComponent } from './../components/file-drop-zone-component';
-import { KSelectComponent } from './../components/k-select-component';
-import { KmSwitchComponent } from './../components/km-switch- component';
-import { KListComponent } from '../components/k-list-component';
+import { KSelectComponent } from './../konnect/k-select-component';
+import { KmSwitchComponent } from './../konnect/km-switch- component';
+import { KListComponent } from '../konnect/k-list-component';
 import 'jest';
 import { FileService } from '../../services/file/file-service';
 

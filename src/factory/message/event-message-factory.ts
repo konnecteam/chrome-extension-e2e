@@ -1,15 +1,15 @@
-import { RadioGroupComponent } from '../../components/components/radio-group-component';
-import { CheckboxComponent } from '../../components/components/checkbox-component';
-import { IframeComponent } from '../../components/components/iframe-component';
-import { KmSwitchComponent } from '../../components/components/km-switch- component';
-import { KSelectComponent } from '../../components/components/k-select-component';
-import { InputNumericComponent } from '../../components/components/input-numeric-component';
+import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
+import { CheckboxComponent } from '../../components/konnect/checkbox-component';
+import { IframeComponent } from '../../components/konnect/iframe-component';
+import { KmSwitchComponent } from '../../components/konnect/km-switch- component';
+import { KSelectComponent } from '../../components/konnect/k-select-component';
+import { InputNumericComponent } from '../../components/konnect/input-numeric-component';
 import { InputFilesComponent } from '../../components/components/input-file-component';
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import  componentName from '../../constants/component-name';
 import { EventModel } from '../../models/event-model';
 import { ComponentModel } from '../../models/component-model';
-import { KListComponent } from '../../components/components/k-list-component';
+import { KListComponent } from '../../components/konnect/k-list-component';
 
 /**
  * Factory qui permet de générer le message EventModel pour le code generator

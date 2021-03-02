@@ -1,7 +1,7 @@
-import { RadioGroupComponent } from './../components/radio-group-component';
-import { CheckboxComponent } from './../components/checkbox-component';
+import { RadioGroupComponent } from './../konnect/radio-group-component';
+import { CheckboxComponent } from '../konnect/checkbox-component';
 import { InputFilesComponent } from './../components/input-file-component';
-import { InputNumericComponent } from '../components/input-numeric-component';
+import { InputNumericComponent } from '../konnect/input-numeric-component';
 import { ComponentModel } from '../../models/component-model';
 /**
  * EventComponents qui permet de gérer les event de change

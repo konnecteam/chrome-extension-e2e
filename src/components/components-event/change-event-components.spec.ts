@@ -1,5 +1,5 @@
 import { InputFilesComponent } from './../components/input-file-component';
-import { InputNumericComponent } from '../components/input-numeric-component';
+import { InputNumericComponent } from '../konnect/input-numeric-component';
 import { ChangeEventComponents} from './change-event-components';
 import * as path from 'path';
 import 'jest';

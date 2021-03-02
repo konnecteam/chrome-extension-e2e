@@ -32,6 +32,6 @@
   },
   "web_accessible_resources": [
     "polly-build/polly.js",
-    "scripts/fake-time-script.js"
+    "lib/script-to-inject/fake-time-script.js"
   ]
 }

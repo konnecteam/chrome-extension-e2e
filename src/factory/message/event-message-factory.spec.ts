@@ -1,14 +1,14 @@
-import { RadioGroupComponent } from '../../components/components/radio-group-component';
-import { CheckboxComponent } from '../../components/components/checkbox-component';
-import { IframeComponent } from '../../components/components/iframe-component';
-import { InputNumericComponent } from '../../components/components/input-numeric-component';
+import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
+import { CheckboxComponent } from '../../components/konnect/checkbox-component';
+import { IframeComponent } from '../../components/konnect/iframe-component';
+import { InputNumericComponent } from '../../components/konnect/input-numeric-component';
 import { EventMessageFactory } from './event-message-factory';
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import { EventModel } from '../../models/event-model';
 import * as path from 'path';
 import 'jest';
-import { KSelectComponent } from '../../components/components/k-select-component';
-import { KListComponent } from '../../components/components/k-list-component';
+import { KSelectComponent } from '../../components/konnect/k-select-component';
+import { KListComponent } from '../../components/konnect/k-list-component';
 import { FileService } from '../../services/file/file-service';
 
 /**
