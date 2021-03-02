@@ -19,27 +19,20 @@ export class ComponentManager {
     previousElement : {selector : string, element : Element, typeList : string
   }) : ComponentModel {
 
-    let componentFinded : ComponentModel;
     // En fonction de l'événement déclancheur
     switch (event) {
       // Si c'est un click
       case domEventsToRecord.CLICK:
-        componentFinded = ClickEventComponents.determinateClickComponent(element, previousElement);
-        break;
+        return ClickEventComponents.determinateClickComponent(element, previousElement);
       // Si c'est un drop
       case domEventsToRecord.DROP:
-        componentFinded = DropEventComponents.determinateDropComponent(element);
-        break;
+        return DropEventComponents.determinateDropComponent(element);
       // Si c'est un change
       case domEventsToRecord.CHANGE:
-        componentFinded = ChangeEventComponents.determinateChangeComponent(element);
-        break;
+        return ChangeEventComponents.determinateChangeComponent(element);
       // Si c'est un keydown
       case domEventsToRecord.KEYDOWN:
-        componentFinded = KeydownEventComponent.determinateKeydownComponent(element);
-        break;
+        return KeydownEventComponent.determinateKeydownComponent(element);
     }
-
-    return componentFinded;
   }
 }

@@ -10,7 +10,7 @@ import { EventModel } from '../models/event-model';
 import { Block } from './block';
 import 'jest';
 import CodeGenerator from './code-generator';
-import { ObjectComparatorService } from '../services/object-comparator/object-comparator-service';
+import { ObjectService } from '../services/object/object-service';
 
 /** Frame dans laquelle on se situe */
 const frameId = 0;
@@ -71,7 +71,7 @@ function createScenario(options : OptionModel) {
 
     if (block) {
 
-      if (options.customLinesBeforeEvent && !ObjectComparatorService.isValueInObject(pptrActions, currentEvent.action)) {
+      if (options.customLinesBeforeEvent && !ObjectService.isValueInObject(pptrActions, currentEvent.action)) {
         listBlock.push(ScenarioFactory.generateCustomLine(frameId, options.customLinesBeforeEvent));
       }
 

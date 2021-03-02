@@ -1,4 +1,4 @@
-import { ObjectComparatorService } from './object-comparator-service';
+import { ObjectService } from './object-service';
 import 'jest';
 
 describe('Test de Object Comparator Service', () => {
@@ -7,7 +7,7 @@ describe('Test de Object Comparator Service', () => {
 
     const object = { a: 'valueA', b: 'valueB'};
     expect(
-      ObjectComparatorService.isValueInObject(object, 'valueA')
+      ObjectService.isValueInObject(object, 'valueA')
     ).toBeTruthy();
   });
 
@@ -15,7 +15,7 @@ describe('Test de Object Comparator Service', () => {
 
     const object = { a: 'valueA', b: 'valueB'};
     expect(
-      ObjectComparatorService.isValueInObject(object, 'v')
+      ObjectService.isValueInObject(object, 'v')
     ).toBeFalsy();
   });
 
@@ -24,7 +24,7 @@ describe('Test de Object Comparator Service', () => {
     const value = 'mv64';
     const tab = ['test', 'mv'];
     expect(
-      ObjectComparatorService.isStringStartInTab(value, tab)
+      ObjectService.isStringStartInTab(value, tab)
     ).toBeTruthy();
   });
 
@@ -33,7 +33,7 @@ describe('Test de Object Comparator Service', () => {
     const value = 'no';
     const tab = ['test', 'mv'];
     expect(
-      ObjectComparatorService.isStringStartInTab(value, tab)
+      ObjectService.isStringStartInTab(value, tab)
     ).toBeFalsy();
   });
 });

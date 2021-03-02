@@ -1,8 +1,8 @@
-import { RadioGroupComponent } from './../../components/components/radio-group-component';
-import { CheckboxComponent } from './../../components/components/checkbox-component';
+import { RadioGroupComponent } from '../../components/components/radio-group-component';
+import { CheckboxComponent } from '../../components/components/checkbox-component';
 import { IframeComponent } from '../../components/components/iframe-component';
 import { InputNumericComponent } from '../../components/components/input-numeric-component';
-import { EventMessageBuilderFactory } from './event-message-builder-factory';
+import { EventMessageFactory } from './event-message-factory';
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import { EventModel } from '../../models/event-model';
 import * as path from 'path';
@@ -35,7 +35,7 @@ describe('Test de event message builder factory', () => {
 
     // On doit trouver un event model de file drop zone
     expect(
-      EventMessageBuilderFactory.buildMessageEvent(
+      EventMessageFactory.buildMessageEvent(
         component,
         eventCatched,
         null
@@ -57,7 +57,7 @@ describe('Test de event message builder factory', () => {
     const component = FileDropZoneComponent.isFileDropZone(element as HTMLElement);
 
     expect(
-      EventMessageBuilderFactory.buildMessageEvent(
+      EventMessageFactory.buildMessageEvent(
         component,
         eventCatched,
         null
@@ -81,7 +81,7 @@ describe('Test de event message builder factory', () => {
 
     // On doit trouver un event model d'input numeric
     expect(
-      EventMessageBuilderFactory.buildMessageEvent(
+      EventMessageFactory.buildMessageEvent(
         component,
         event,
         null
@@ -104,7 +104,7 @@ describe('Test de event message builder factory', () => {
     // On doit trouver un event model de k select
 
     expect(
-      EventMessageBuilderFactory.buildMessageEvent(
+      EventMessageFactory.buildMessageEvent(
         component,
         event,
         null
@@ -138,7 +138,7 @@ describe('Test de event message builder factory', () => {
 
     // On doit trouver un event model d'iframe
     expect(
-      EventMessageBuilderFactory.buildMessageEvent(
+      EventMessageFactory.buildMessageEvent(
         component,
         event,
         null
@@ -179,7 +179,7 @@ describe('Test de event message builder factory', () => {
     );
     // On doit trouver un event model de klist
     expect(
-      EventMessageBuilderFactory.buildMessageEvent(
+      EventMessageFactory.buildMessageEvent(
         component,
         eventModel,
         null
@@ -203,7 +203,7 @@ describe('Test de event message builder factory', () => {
     };
     // On doit trouver un event model d'input calendar
     expect(
-      EventMessageBuilderFactory.buildMessageEvent(
+      EventMessageFactory.buildMessageEvent(
         component,
         event,
         null
@@ -227,7 +227,7 @@ describe('Test de event message builder factory', () => {
     };
     // On doit trouver un event model d'input calendar
     expect(
-      EventMessageBuilderFactory.buildMessageEvent(
+      EventMessageFactory.buildMessageEvent(
         component,
         event,
         null

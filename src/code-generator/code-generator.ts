@@ -1,4 +1,4 @@
-import { ObjectComparatorService } from './../services/object-comparator/object-comparator-service';
+import { ObjectService } from '../services/object/object-service';
 import { default as pptrActions} from '../constants/pptr-actions';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { EventModel } from './../models/event-model';
@@ -95,7 +95,7 @@ export default class CodeGenerator {
            Alors on rajoute la ligne customisé
         */
         if (this._options.customLinesBeforeEvent &&
-          !ObjectComparatorService.isValueInObject(pptrActions, currentEvent.action)) {
+          !ObjectService.isValueInObject(pptrActions, currentEvent.action)) {
 
           this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLinesBeforeEvent));
         }

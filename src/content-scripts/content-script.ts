@@ -10,7 +10,7 @@ import { ChromeService } from '../services/chrome/chrome-service';
 import { WindowService } from '../services/window/window-service';
 import { PollyService } from '../services/polly/polly-service';
 import { ComponentManager } from '../manager/component-manager';
-import { EventMessageBuilderFactory } from '../factory/message-builder/event-message-builder-factory';
+import { EventMessageFactory } from '../factory/message/event-message-factory';
 import controlMSG from '../constants/control-message';
 
 /**
@@ -291,7 +291,7 @@ class EventRecorder {
 
     // Si on a un component on edit le message de l'event
     if (component) {
-      message = EventMessageBuilderFactory.buildMessageEvent(component, message, filesUpload);
+      message = EventMessageFactory.buildMessageEvent(component, message, filesUpload);
     }
     // On vérifie si on a eu des keydown ou si on a fini les keydown et dans ce cas on modifie le message car c'est un listkeydown
     this._keyDownService.handleEvent(message, e.target);

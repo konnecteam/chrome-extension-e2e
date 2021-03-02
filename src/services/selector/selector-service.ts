@@ -1,4 +1,4 @@
-import { ObjectComparatorService } from './../object-comparator/object-comparator-service';
+import { ObjectService } from '../object/object-service';
 import finder from '@medv/finder';
 
 /**
@@ -17,7 +17,7 @@ export class SelectorService {
 
     // Gestion de l'id
     if (element.id  && !this._idToIgnoreReg.test(element.id)
-    && !ObjectComparatorService.isStringStartInTab(element.id, this._idToIgnore) ) {
+    && !ObjectService.isStringStartInTab(element.id, this._idToIgnore) ) {
 
       return '#' + element.id.split(':').join('\\:');
     }
@@ -72,7 +72,7 @@ export class SelectorService {
       element, {
         root : document.body,
         className: name => false, tagName: name => true ,
-        idName: name => !ObjectComparatorService.isStringStartInTab(name, this._idToIgnore)
+        idName: name => !ObjectService.isStringStartInTab(name, this._idToIgnore)
          && !name.match(this._idToIgnoreReg) && !this._idToIgnoreReg.test(name),
         seedMinLength : 7,
         optimizedMinLength : 12,

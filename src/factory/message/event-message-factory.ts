@@ -1,5 +1,5 @@
-import { RadioGroupComponent } from './../../components/components/radio-group-component';
-import { CheckboxComponent } from './../../components/components/checkbox-component';
+import { RadioGroupComponent } from '../../components/components/radio-group-component';
+import { CheckboxComponent } from '../../components/components/checkbox-component';
 import { IframeComponent } from '../../components/components/iframe-component';
 import { KmSwitchComponent } from '../../components/components/km-switch- component';
 import { KSelectComponent } from '../../components/components/k-select-component';
@@ -14,7 +14,7 @@ import { KListComponent } from '../../components/components/k-list-component';
 /**
  * Factory qui permet de générer le message EventModel pour le code generator
  */
-export class EventMessageBuilderFactory {
+export class EventMessageFactory {
 
   // Créér un EventModel en fonction des paramètre donné
   public static buildMessageEvent (component : ComponentModel, event : EventModel, filesUpload : FileList) : EventModel {

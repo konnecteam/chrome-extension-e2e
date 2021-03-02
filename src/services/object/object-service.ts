@@ -1,7 +1,7 @@
 /**
  * Service qui permet de comparer des objets
  */
-export class ObjectComparatorService {
+export class ObjectService {
 
   /**
    * Vérifie si object contient la value
