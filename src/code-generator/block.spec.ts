@@ -1,12 +1,12 @@
 
-import { LineBlockModel } from '../models/line-block-model';
+import { ILineBlockModel } from '../models/i-line-block-model';
 import { Block } from './block';
 import 'jest';
 
 describe('Test de la classe Block', function () {
 
   test('Test récupération des lignes', function () {
-    const lineModelResult : LineBlockModel[] = [
+    const lineModelResult : ILineBlockModel[] = [
       {frameId: 0, type: 'click', value: 'ligne1' },
     ];
     const block = new Block(
@@ -16,7 +16,7 @@ describe('Test de la classe Block', function () {
   });
 
   test('Test ajout de ligne au top du block', function () {
-    const lineModelResult : LineBlockModel[] = [
+    const lineModelResult : ILineBlockModel[] = [
       {frameId: 0, type: 'click', value: 'ligne1' },
       {frameId: 0, type: 'change', value: 'ligne2' },
     ];
@@ -30,7 +30,7 @@ describe('Test de la classe Block', function () {
   });
 
   test('Test ajout de ligne à la suteste dans un block', function () {
-    const lineModelResult : LineBlockModel[] = [
+    const lineModelResult : ILineBlockModel[] = [
       {frameId: 0, type: 'click', value: 'ligne1' },
       {frameId: 0, type: 'change', value: 'ligne2' },
     ];

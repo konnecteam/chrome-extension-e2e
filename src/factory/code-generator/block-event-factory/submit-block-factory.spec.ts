@@ -31,13 +31,13 @@ describe('Test de Submit Block Factory', () => {
   });
 
   test('généré un block pour submit dans un formulaire', () => {
-    const eventModel = {
+    const IEventModel = {
       tagName : elementsTagName.FORM.toUpperCase(),
       action : actionEvents.SUBMIT
     };
 
     expect(
-      SubmitBlockFactory.generateBlock(eventModel, frameId, frame, defaults )
+      SubmitBlockFactory.generateBlock(IEventModel, frameId, frame, defaults )
     ).toEqual(
       SubmitBlockFactory.buildSubmit()
     );

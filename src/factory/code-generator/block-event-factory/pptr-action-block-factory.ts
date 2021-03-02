@@ -1,5 +1,5 @@
-import { EventModel } from '../../../models/event-model';
-import { OptionModel } from '../../../models/options-model';
+import { IEventModel } from '../../../models/i-event-model';
+import { IOptionModel } from '../../../models/i-options-model';
 import { Block } from '../../../code-generator/block';
 import pptrActions from '../../../constants/pptr-actions';
 
@@ -11,7 +11,7 @@ export class PPtrActionBlockFactory {
   // les attributs sont utilisés pour éviter de les passer aux méthodes
 
   /** Options du plugin */
-  public static options : OptionModel;
+  public static options : IOptionModel;
 
   /** Id de la frame */
   public static frameId : number;
@@ -22,7 +22,7 @@ export class PPtrActionBlockFactory {
   /**
    * Génère le block lié à une action pupeteer
    */
-  public static generateBlock(event : EventModel, frameId : number, frame : string, options : OptionModel) : Block {
+  public static generateBlock(event : IEventModel, frameId : number, frame : string, options : IOptionModel) : Block {
 
     const { action, value} = event;
 

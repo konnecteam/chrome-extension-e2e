@@ -105,7 +105,7 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de generateBlock pour un change input numeric', () => {
     // Attributs utilisés pour générer le block
-    const eventModel = {
+    const IEventModel = {
       selector,
       value,
       selectorFocus: '#input',
@@ -114,7 +114,7 @@ describe('Test de Change Block Factory', () => {
 
     expect(
       ChangeBlockFactory.generateBlock(
-        eventModel,
+        IEventModel,
         ChangeBlockFactory.frameId,
         ChangeBlockFactory.frame,
         defaults
@@ -131,7 +131,7 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de generateBlock pour un change simple', () => {
     // Attributs utilisés pour générer le block
-    const eventModel = {
+    const IEventModel = {
       selector,
       value,
       action : actionEvents.CHANGE
@@ -139,7 +139,7 @@ describe('Test de Change Block Factory', () => {
 
     expect(
       ChangeBlockFactory.generateBlock(
-        eventModel,
+        IEventModel,
         ChangeBlockFactory.frameId,
         ChangeBlockFactory.frame,
         defaults
@@ -154,7 +154,7 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de generateBlock pour un select change', () => {
     // Attributs utilisés pour générer le block
-    const eventModel = {
+    const IEventModel = {
       selector,
       value,
       action : actionEvents.CHANGE,
@@ -163,7 +163,7 @@ describe('Test de Change Block Factory', () => {
 
     expect(
       ChangeBlockFactory.generateBlock(
-        eventModel,
+        IEventModel,
         ChangeBlockFactory.frameId,
         ChangeBlockFactory.frame,
         defaults
@@ -180,7 +180,7 @@ describe('Test de Change Block Factory', () => {
   test('Test de generateBlock pour un input file', () => {
     // Attributs utilisés pour générer le block
     const files = 'test.txt';
-    const eventModel = {
+    const IEventModel = {
       selector,
       value,
       action : actionEvents.CHANGE,
@@ -189,7 +189,7 @@ describe('Test de Change Block Factory', () => {
 
     expect(
       ChangeBlockFactory.generateBlock(
-        eventModel,
+        IEventModel,
         ChangeBlockFactory.frameId,
         ChangeBlockFactory.frame,
         defaults

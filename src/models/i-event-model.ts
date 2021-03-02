@@ -1,7 +1,7 @@
 /**
  * Model représentant un Event
  */
-export class EventModel {
+export class IEventModel {
 
   /** Action de l'événement */
   public action? : string;

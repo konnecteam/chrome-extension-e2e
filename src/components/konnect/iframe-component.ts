@@ -1,6 +1,6 @@
-import { EventModel } from '../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import componentName from '../../constants/component-name';
-import { ComponentModel } from '../../models/component-model';
+import { IComponentModel } from '../../models/i-component-model';
 import { SelectorService } from '../../services/selector/selector-service';
 import { ElementFinderService } from '../../services/finder/element-finder-service';
 
@@ -12,7 +12,7 @@ export class IframeComponent {
   /**
    * Verifie si c'est une frame
    */
-  public static isIframe(element : HTMLElement) : ComponentModel {
+  public static isIframe(element : HTMLElement) : IComponentModel {
 
     const iframeElement = this._isInIframeElement(element);
     // Si c'est un iframe on retourne le composant associé
@@ -38,7 +38,7 @@ export class IframeComponent {
   /**
    * Modifier l'event et retourne les modifications liées à l'iframe
    */
-  public static editIframeMessage(event : EventModel, component : ComponentModel) : EventModel {
+  public static editIframeMessage(event : IEventModel, component : IComponentModel) : IEventModel {
 
     event.iframe = SelectorService.find(component.element);
     return event;

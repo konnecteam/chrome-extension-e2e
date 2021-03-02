@@ -2,7 +2,7 @@ import { FileDropZoneComponent } from './file-drop-zone-component';
 import 'jest';
 import * as path from 'path';
 import componentName from '../../constants/component-name';
-import { EventModel } from '../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -45,7 +45,7 @@ describe('Test de File DopZone Component', () => {
 
   test('Test de editFileDropZoneMessage', () => {
     // On créé un event model qui contient les infos dont on a besoin
-    const eventCatched : EventModel = {
+    const eventCatched : IEventModel = {
       files : 'text.txt'
     };
 
@@ -58,7 +58,7 @@ describe('Test de File DopZone Component', () => {
 
   test('Test de editFileDropZoneMessage sans files', () => {
 
-    const eventCatched : EventModel = {
+    const eventCatched : IEventModel = {
       selector : 'test',
       files : 'text.txt'
     };
@@ -72,7 +72,7 @@ describe('Test de File DopZone Component', () => {
 
   test('Test de editFileDropZoneButtonMessage sans files', () => {
 
-    const eventCatched : EventModel = {
+    const eventCatched : IEventModel = {
       files : 'text.txt'
     };
 

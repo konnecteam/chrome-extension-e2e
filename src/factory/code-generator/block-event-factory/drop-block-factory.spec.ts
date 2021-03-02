@@ -24,22 +24,22 @@ describe('Test de Drop Block Factory', () => {
   });
 
   test('Généré un Drop Block', () => {
-    const eventModel  = {
+    const IEventModel  = {
       action : actionEvents.DROP_DROPZONE,
       selector: '#test',
       files : 'text.txt'
     };
 
     // On rajoute d'abord la partie du click du file dropzone
-    const exceptedResult = ClickBlockFactory.buildclickFileDropZone(eventModel.selector);
+    const exceptedResult = ClickBlockFactory.buildclickFileDropZone(IEventModel.selector);
     // On rajoute la partie acceptation du fichier
-    const chooserFile = ChangeBlockFactory.buildAcceptUploadFileChange(eventModel.selector, eventModel.files);
+    const chooserFile = ChangeBlockFactory.buildAcceptUploadFileChange(IEventModel.selector, IEventModel.files);
 
     exceptedResult.addLine(chooserFile.getLines()[0]);
 
     expect(
       DropBlockFactory.generateBlock(
-        eventModel,
+        IEventModel,
         frameId,
         frame,
         defaults

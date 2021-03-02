@@ -1,7 +1,7 @@
 /**
  * Model représentant un composant
  */
-export class ComponentModel {
+export class IComponentModel {
 
   /** Nom du composant */
   public component : string;

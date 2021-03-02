@@ -1,4 +1,4 @@
-import { MessageModel } from './../models/message-model';
+import { IMessageModel } from '../models/i-message-model';
 import { defaults } from './../constants/default-options';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
 import 'jest';
@@ -17,7 +17,7 @@ let buildDir;
  * Permet de lancer un dispatch event sur la window
  * @param event
  */
-async function dispatchEvent(event : string, message : MessageModel) : Promise<void> {
+async function dispatchEvent(event : string, message : IMessageModel) : Promise<void> {
   return await page.evaluate(function (ev) {
     const customEvent = new CustomEvent(ev.event);
     Object.assign(customEvent, ev.message);

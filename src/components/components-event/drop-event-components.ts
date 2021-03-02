@@ -1,4 +1,4 @@
-import { ComponentModel } from './../../models/component-model';
+import { IComponentModel } from '../../models/i-component-model';
 import { FileDropZoneComponent } from '../components/file-drop-zone-component';
 
 /**
@@ -9,7 +9,7 @@ export class DropEventComponents {
   /**
    * Détermine sur quel composant il y a eu un drop
    */
-  public static determinateDropComponent(element : HTMLElement) : ComponentModel {
+  public static determinateDropComponent(element : HTMLElement) : IComponentModel {
 
     return FileDropZoneComponent.isFileDropZone(element);
   }

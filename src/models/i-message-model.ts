@@ -1,7 +1,7 @@
 /**
  * Model représentant les messages de communication entre background et content-script
  */
-export class MessageModel {
+export class IMessageModel {
 
   /** Label identifiant l'événement */
   public control? : string;

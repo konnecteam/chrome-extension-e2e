@@ -1,9 +1,9 @@
 import { ObjectService } from '../services/object/object-service';
 import { default as pptrActions} from '../constants/pptr-actions';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
-import { EventModel } from './../models/event-model';
+import { IEventModel } from '../models/i-event-model';
 import { Block } from './block';
-import { OptionModel } from './../models/options-model';
+import { IOptionModel } from '../models/i-options-model';
 import { defaults } from '../constants/default-options';
 import { FooterFactory } from '../factory/code-generator/footer-factory';
 import { HeaderFactory } from '../factory/code-generator/header-factory';
@@ -15,7 +15,7 @@ import { HeaderFactory } from '../factory/code-generator/header-factory';
 export default class CodeGenerator {
 
   /** Options du plugin */
-  private _options : OptionModel;
+  private _options : IOptionModel;
 
   /** Liste des Block du scénario */
   private _blocks : Block[];
@@ -38,12 +38,12 @@ export default class CodeGenerator {
   /** Dernière position du scroll horizontale */
   private _lastScrollX =  0;
 
-  constructor(options : OptionModel ) {
+  constructor(options : IOptionModel ) {
     this._options = Object.assign(defaults, options);
     this._blocks = [];
   }
 
-  public generate(events : EventModel[]) : string {
+  public generate(events : IEventModel[]) : string {
     return HeaderFactory.getHeader(
       this._options.recordHttpRequest,
       this._options.wrapAsync,
@@ -57,7 +57,7 @@ export default class CodeGenerator {
   /**
    * On génère le code à partir des events enregistrés
    */
-  private _parseEvents(events : EventModel[]) : string {
+  private _parseEvents(events : IEventModel[]) : string {
 
     let result = '';
 

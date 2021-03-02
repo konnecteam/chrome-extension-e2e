@@ -1,6 +1,6 @@
 import { InputFilesComponent } from './input-file-component';
 import 'jest';
-import { EventModel } from '../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 
 describe('Test de input file Component', () => {
 
@@ -28,7 +28,7 @@ describe('Test de input file Component', () => {
 
     const element  = document.getElementById('inFile') as HTMLInputElement;
 
-    const event : EventModel = {
+    const event : IEventModel = {
       selector : '#id'
     };
 

@@ -1,7 +1,7 @@
 import elementsTagName  from '../../constants/elements-tagName';
-import { ComponentModel } from '../../models/component-model';
+import { IComponentModel } from '../../models/i-component-model';
 import { ElementFinderService } from '../../services/finder/element-finder-service';
-import { EventModel } from '../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import actionEvents from '../../constants/action-events';
 import componentName from '../../constants/component-name';
 
@@ -20,7 +20,7 @@ export class KSelectComponent {
   /**
    * Verifie si l'element est un k select et retourne le composant associé
    */
-  public static isKSelect(element : HTMLElement) : ComponentModel {
+  public static isKSelect(element : HTMLElement) : IComponentModel {
 
     // Si c'est un k select qui se situe dans input numeric
     if (this._isNumericElement(element) && this._isKSelectElement(element)) {
@@ -51,7 +51,7 @@ export class KSelectComponent {
   /**
    * Edit le message pour les k select
    */
-  public static editKSelectMessage(event : EventModel) : EventModel {
+  public static editKSelectMessage(event : IEventModel) : IEventModel {
     event.action = actionEvents.CLICKMOUSE_INPUTNUMERIC;
     return event;
   }

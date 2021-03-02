@@ -3,10 +3,10 @@ import domEventsToRecord from '../constants/dom-events-to-record';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { FooterFactory } from '../factory/code-generator/footer-factory';
 import { HeaderFactory } from '../factory/code-generator/header-factory';
-import { OptionModel } from '../models/options-model';
+import { IOptionModel } from '../models/i-options-model';
 import  pptrActions  from '../constants/pptr-actions';
 import  actionEvents from '../constants/action-events';
-import { EventModel } from '../models/event-model';
+import { IEventModel } from '../models/i-event-model';
 import { Block } from './block';
 import 'jest';
 import CodeGenerator from './code-generator';
@@ -16,7 +16,7 @@ import { ObjectService } from '../services/object/object-service';
 const frameId = 0;
 
 /** Le tableau qui va contenir les events à parser */
-let listEventModel : EventModel[] = [];
+let listIEventModel : IEventModel[] = [];
 
 /** Nom de la frame */
 const frame = 'page';
@@ -50,7 +50,7 @@ function blocksToString(listBlock : Block[], wrapAsync : boolean) {
  * Créer un scénario à partir des options
  * @param options
  */
-function createScenario(options : OptionModel) {
+function createScenario(options : IOptionModel) {
   // Header du scénario
   let scenarioExcepted = HeaderFactory.getHeader(
     options.recordHttpRequest,
@@ -61,7 +61,7 @@ function createScenario(options : OptionModel) {
 
   const listBlock = [];
   // Scénario
-  for (const currentEvent of listEventModel) {
+  for (const currentEvent of listIEventModel) {
     const block = ScenarioFactory.parseEvent(
       currentEvent,
       frameId,
@@ -104,15 +104,15 @@ describe('Test de Code Generator', () => {
 
   beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
-    listEventModel.push(
+    listIEventModel.push(
       {typeEvent: pptrActions.pptr , action: pptrActions.GOTO, value: 'localhost'}
     );
 
-    listEventModel.push(
+    listIEventModel.push(
       {typeEvent: domEventsToRecord.CLICK, action: actionEvents.BASIC_CLICK, selector: '#idInput'}
     );
 
-    listEventModel.push(
+    listIEventModel.push(
       {typeEvent: domEventsToRecord.CHANGE, action: actionEvents.CHANGE, selector: '#idInput', value: 'change de value input'}
     );
   });
@@ -128,7 +128,7 @@ describe('Test de Code Generator', () => {
   test('Test avec les options par défauts', () => {
 
     expect(
-      new CodeGenerator(optionsDefault).generate(listEventModel))
+      new CodeGenerator(optionsDefault).generate(listIEventModel))
       .toEqual(
       createScenario(optionsDefault)
     );
@@ -140,7 +140,7 @@ describe('Test de Code Generator', () => {
     options.customLineAfterClick = 'ligne custom 2';
 
     expect(
-      new CodeGenerator(options).generate(listEventModel))
+      new CodeGenerator(options).generate(listIEventModel))
       .toEqual(
       createScenario(options)
     );
@@ -151,7 +151,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.customLinesBeforeEvent = 'line before event';
     expect(
-      new CodeGenerator(options).generate(listEventModel))
+      new CodeGenerator(options).generate(listIEventModel))
       .toEqual(
       createScenario(options)
     );
@@ -162,7 +162,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.recordHttpRequest = true;
     expect(
-      new CodeGenerator(options).generate(listEventModel))
+      new CodeGenerator(options).generate(listIEventModel))
       .toEqual(
       createScenario(options)
     );
@@ -173,7 +173,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.recordHttpRequest = false;
     expect(
-      new CodeGenerator(options).generate(listEventModel))
+      new CodeGenerator(options).generate(listIEventModel))
       .toEqual(
       createScenario(options)
     );
@@ -184,7 +184,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.wrapAsync = true;
     expect(
-      new CodeGenerator(options).generate(listEventModel))
+      new CodeGenerator(options).generate(listIEventModel))
       .toEqual(
       createScenario(options)
     );
@@ -195,7 +195,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.wrapAsync = false;
     expect(
-      new CodeGenerator(options).generate(listEventModel))
+      new CodeGenerator(options).generate(listIEventModel))
       .toEqual(
       createScenario(options)
     );
@@ -204,10 +204,10 @@ describe('Test de Code Generator', () => {
   test('Test avec un event', () => {
 
     // On garde que le premier event
-    listEventModel = listEventModel.splice(0, 1);
+    listIEventModel = listIEventModel.splice(0, 1);
 
     expect(
-      new CodeGenerator(optionsDefault).generate(listEventModel))
+      new CodeGenerator(optionsDefault).generate(listIEventModel))
       .toEqual(
       createScenario(optionsDefault)
     );
@@ -215,9 +215,9 @@ describe('Test de Code Generator', () => {
 
   test('Test avec une liste d\'event vide', () => {
 
-    listEventModel = [];
+    listIEventModel = [];
     expect(
-      new CodeGenerator(optionsDefault).generate(listEventModel))
+      new CodeGenerator(optionsDefault).generate(listIEventModel))
       .toEqual(
       createScenario(optionsDefault)
     );

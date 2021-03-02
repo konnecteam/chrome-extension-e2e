@@ -1,9 +1,9 @@
 import { KListComponent } from './k-list-component';
 import 'jest';
 import * as path from 'path';
-import { ComponentModel } from 'models/component-model';
+import { IComponentModel } from 'models/i-component-model';
 import componentName from '../../constants/component-name';
-import { EventModel } from '../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -83,12 +83,12 @@ describe('Test de k list Component', () => {
       element: document.querySelector(previousSelector)
     };
 
-    const eventModel : EventModel = {
+    const eventModel : IEventModel = {
       selector : elementSelector
     };
 
     // On est dans un component Dropdown liste
-    const component : ComponentModel = {
+    const component : IComponentModel = {
       component : componentName.KLIST,
       element: element as HTMLElement,
       previousSelector,
@@ -113,11 +113,11 @@ describe('Test de k list Component', () => {
       element: document.querySelector(elementSelector)
     };
 
-    const eventModel : EventModel = {
+    const eventModel : IEventModel = {
       selector : elementSelector
     };
 
-    const component : ComponentModel = {
+    const component : IComponentModel = {
       component : componentName.KLIST,
       element: element as HTMLElement,
       previousSelector: elementSelector,

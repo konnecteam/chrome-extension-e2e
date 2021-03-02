@@ -1,6 +1,6 @@
 import { KeydownEventComponent } from '../components/components-event/keydown-event-component';
 import { ClickEventComponents } from '../components/components-event/click-event-components';
-import { ComponentModel } from './../models/component-model';
+import { IComponentModel } from '../models/i-component-model';
 import domEventsToRecord from '../constants/dom-events-to-record';
 import { DropEventComponents } from '../components/components-event/drop-event-components';
 import { ChangeEventComponents } from '../components/components-event/change-event-components';
@@ -17,7 +17,7 @@ export class ComponentManager {
     event : string,
     element : HTMLElement,
     previousElement : {selector : string, element : Element, typeList : string
-  }) : ComponentModel {
+  }) : IComponentModel {
 
     // En fonction de l'événement déclancheur
     switch (event) {

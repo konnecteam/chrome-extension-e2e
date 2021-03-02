@@ -6,7 +6,7 @@ import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as path from 'path';
 import * as chrome from 'sinon-chrome';
-import { MessageModel } from '../models/message-model';
+import { IMessageModel } from '../models/i-message-model';
 
 let server;
 let browser;
@@ -38,7 +38,7 @@ async function isBackgroundReady() : Promise<string> {
  * Permet de lancer un dispatch event sur la window
  * @param event
  */
-async function dispatchEvent(event : string, message : MessageModel) : Promise<void> {
+async function dispatchEvent(event : string, message : IMessageModel) : Promise<void> {
   return page.evaluate(function (ev) {
     const customEvent = new CustomEvent(ev.event);
     Object.assign(customEvent, ev.message);

@@ -1,6 +1,6 @@
 import { SelectorService } from '../../services/selector/selector-service';
-import { EventModel } from '../../models/event-model';
-import { ComponentModel } from '../../models/component-model';
+import { IEventModel } from '../../models/i-event-model';
+import { IComponentModel } from '../../models/i-component-model';
 import elementsTagName from '../../constants/elements-tagName';
 import { ElementFinderService } from '../../services/finder/element-finder-service';
 import componentName from '../../constants/component-name';
@@ -60,7 +60,7 @@ export class KmSwitchComponent {
   /**
    * Verifie si l'élément est un km switch
    */
-  public static isKmSwitch(element : HTMLElement) : ComponentModel {
+  public static isKmSwitch(element : HTMLElement) : IComponentModel {
     const elementFind = this._isKmSwitchElement(element);
 
     if (elementFind) {
@@ -72,7 +72,7 @@ export class KmSwitchComponent {
   /**
    * Modifie l'event message pour km switch
    */
-  public static editKmSwitchMessage(event : EventModel, component : ComponentModel) : EventModel {
+  public static editKmSwitchMessage(event : IEventModel, component : IComponentModel) : IEventModel {
 
     event.selector = SelectorService.find(component.element);
     event.action = actionEvents.CLICKMOUSE;

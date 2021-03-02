@@ -3,7 +3,7 @@ import 'jest';
 import HeaderCode from '../../constants/code-generate/header-code';
 import { RegExpFactory } from '../../factory/regexp/regexp-factory';
 
-/** Attributs d'un OptionModel */
+/** Attributs d'un IOptionModel */
 let recordHttpRequest : boolean;
 let wrapAsync : boolean;
 let headless : boolean;

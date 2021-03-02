@@ -1,7 +1,7 @@
 import { SelectorService } from './../../services/selector/selector-service';
-import { EventModel } from './../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import componentName from '../../constants/component-name';
-import { ComponentModel } from '../../models/component-model';
+import { IComponentModel } from '../../models/i-component-model';
 import elementsTagName from '../../constants/elements-tagName';
 import { ElementFinderService } from '../../services/finder/element-finder-service';
 import actionEvents from '../../constants/action-events';
@@ -40,7 +40,7 @@ export class KListComponent {
   public static isKList(
     element : HTMLElement,
     previousElement : { selector : string; typeList : string; element : Element; }
-    ) : ComponentModel {
+    ) : IComponentModel {
 
     // On récupère l'élement correspondant à la liste
     const dropdownElement : Element = this._findListComponent(element, this._DROPDOWN_LIST_TAGNAME);
@@ -93,7 +93,7 @@ export class KListComponent {
    * @param element
    * @param previousElement
    */
-  private static _getKListComponent(element : HTMLElement, previousElement : {selector : string, element : Element, typeList : string }) : ComponentModel {
+  private static _getKListComponent(element : HTMLElement, previousElement : {selector : string, element : Element, typeList : string }) : IComponentModel {
     return {
       component : componentName.KLIST,
       element,
@@ -145,7 +145,7 @@ export class KListComponent {
    * @param event
    * @param component
    */
-  public static editKlistMessage(event : EventModel, component : ComponentModel) : EventModel {
+  public static editKlistMessage(event : IEventModel, component : IComponentModel) : IEventModel {
 
     // Si click list item
     if (this._isInUlElement(component.element)) {

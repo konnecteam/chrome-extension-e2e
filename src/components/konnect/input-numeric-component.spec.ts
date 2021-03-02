@@ -1,9 +1,9 @@
 import { InputNumericComponent } from './input-numeric-component';
 import 'jest';
 import * as path from 'path';
-import { ComponentModel } from 'models/component-model';
+import { IComponentModel } from 'models/i-component-model';
 import componentName from '../../constants/component-name';
-import { EventModel } from '../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -35,12 +35,12 @@ describe('Test de Input numeric Component', () => {
 
     const element = document.querySelector('numeric > div > span > span > input\:nth-child(2)');
 
-    const event : EventModel = {
+    const event : IEventModel = {
       selector : '#id'
     };
 
     // On créé un component pour pouvoir tester
-    const component : ComponentModel = {
+    const component : IComponentModel = {
 
       component : 'component',
       element : element as HTMLElement

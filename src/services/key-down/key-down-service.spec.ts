@@ -1,4 +1,4 @@
-import { EventModel } from './../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import 'jest';
 import * as chrome from 'sinon-chrome';
 import { KeyDownService } from './key-down-service';
@@ -30,7 +30,7 @@ describe('Test de Keydown Service', () => {
     messageSend  = '';
     const element = document.getElementById('txtArea');
 
-    const msg : EventModel = {
+    const msg : IEventModel = {
       selector: '.txtArea',
       tagName: 'textarea',
       action: 'keydown',
@@ -53,7 +53,7 @@ describe('Test de Keydown Service', () => {
     messageSend = '';
     const element = document.getElementById('input');
 
-    const msg : EventModel = {
+    const msg : IEventModel = {
       selector: '.input',
       tagName: 'input',
       action: 'change',
@@ -79,7 +79,7 @@ describe('Test de Keydown Service', () => {
     messageSend = '';
     const element = document.getElementById('input');
 
-    const msg : EventModel = {
+    const msg : IEventModel = {
       selector: '.input',
       tagName: 'input',
       action: 'keydown',

@@ -1,8 +1,8 @@
 import { ElementFinderService } from '../../services/finder/element-finder-service';
 import componentName from '../../constants/component-name';
-import { ComponentModel } from '../../models/component-model';
+import { IComponentModel } from '../../models/i-component-model';
 import elementsTagName from '../../constants/elements-tagName';
-import { EventModel } from '../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import actionEvents from '../../constants/action-events';
 
 /**
@@ -14,7 +14,7 @@ export class RadioGroupComponent {
    * Verifie si c'est un RadioGroup et retourne le component associé
    * @param element
    */
-  public static isRadioGroupComponent(element : HTMLElement) : ComponentModel {
+  public static isRadioGroupComponent(element : HTMLElement) : IComponentModel {
 
     if (ElementFinderService.findParentElementWithTagName(
       element,
@@ -31,7 +31,7 @@ export class RadioGroupComponent {
   /**
    * Modification de l'event pour un RadioGroup
    */
-  public static editRadioGroupMessage(event : EventModel) : EventModel {
+  public static editRadioGroupMessage(event : IEventModel) : IEventModel {
     event.action = actionEvents.BASIC_CLICK;
     return event;
   }

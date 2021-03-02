@@ -1,6 +1,6 @@
 import { Block } from '../../../code-generator/block';
-import { EventModel } from '../../../models/event-model';
-import { OptionModel } from '../../../models/options-model';
+import { IEventModel } from '../../../models/i-event-model';
+import { IOptionModel } from '../../../models/i-options-model';
 import ActionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 
@@ -12,7 +12,7 @@ export class KeydownBlockFactory {
   // les attributs sont utilisés pour éviter de les passer aux méthodes
 
     /** Options du plugin */
-  public static options : OptionModel;
+  public static options : IOptionModel;
 
   /** Id de la frame */
   public static frameId : number;
@@ -23,7 +23,7 @@ export class KeydownBlockFactory {
   /**
    * Génère un block de l'event keydown
    */
-  public static generateBlock(event : EventModel, frameId : number, frame : string, options : OptionModel) : Block {
+  public static generateBlock(event : IEventModel, frameId : number, frame : string, options : IOptionModel) : Block {
     const { action, selector, value, iframe } = event;
 
     this.options = options;

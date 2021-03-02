@@ -1,7 +1,7 @@
 /**
  * Model représentant une ligne du Block
  */
-export class LineBlockModel {
+export class ILineBlockModel {
 
   /** FrameId du block */
   public frameId? : number;

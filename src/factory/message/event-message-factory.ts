@@ -7,18 +7,18 @@ import { InputNumericComponent } from '../../components/konnect/input-numeric-co
 import { InputFilesComponent } from '../../components/components/input-file-component';
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import  componentName from '../../constants/component-name';
-import { EventModel } from '../../models/event-model';
-import { ComponentModel } from '../../models/component-model';
+import { IEventModel } from '../../models/i-event-model';
+import { IComponentModel } from '../../models/i-component-model';
 import { KListComponent } from '../../components/konnect/k-list-component';
 
 /**
- * Factory qui permet de générer le message EventModel pour le code generator
+ * Factory qui permet de générer le message IEventModel pour le code generator
  */
 export class EventMessageFactory {
 
-  // Créér un EventModel en fonction des paramètre donné
-  public static buildMessageEvent (component : ComponentModel, event : EventModel, filesUpload : FileList) : EventModel {
-    let newMessage : EventModel;
+  // Créér un IEventModel en fonction des paramètre donné
+  public static buildMessageEvent (component : IComponentModel, event : IEventModel, filesUpload : FileList) : IEventModel {
+    let newMessage : IEventModel;
     switch (component.component) {
 
       // Si c'est un file drop zone component

@@ -7,7 +7,7 @@ import { ClickBlockFactory } from './block-event-factory/click-block-factory';
 import { defaults } from './../../constants/default-options';
 import actionEvents from '../../constants/action-events';
 import domEventsToRecord from '../../constants/dom-events-to-record';
-import { EventModel } from './../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import { Block } from '../../code-generator/block';
 import 'jest';
 import { ScenarioFactory } from './scenario-factory';
@@ -141,7 +141,7 @@ describe('Test de Scenario Factory', () => {
 
 
   test('Test de generate Click event', () => {
-    const eventModel : EventModel = {
+    const eventModel : IEventModel = {
       typeEvent : domEventsToRecord.CLICK,
       selector : '#id',
       action : actionEvents.BASIC_CLICK
@@ -156,7 +156,7 @@ describe('Test de Scenario Factory', () => {
 
 
   test('Test de generate Change event', () => {
-    const eventModel : EventModel = {
+    const eventModel : IEventModel = {
       typeEvent : domEventsToRecord.CHANGE,
       selector : '#id',
       action : actionEvents.CHANGE,
@@ -171,7 +171,7 @@ describe('Test de Scenario Factory', () => {
 
 
   test('Test de generate Drop event', () => {
-    const eventModel : EventModel = {
+    const eventModel : IEventModel = {
       typeEvent : domEventsToRecord.DROP,
       selector : '#id',
       action : actionEvents.DROP_DROPZONE,
@@ -186,7 +186,7 @@ describe('Test de Scenario Factory', () => {
   });
 
   test('Test de generate Submit event', () => {
-    const eventModel : EventModel = {
+    const eventModel : IEventModel = {
       typeEvent : domEventsToRecord.SUBMIT,
       selector : '#id',
       action : actionEvents.SUBMIT
@@ -200,7 +200,7 @@ describe('Test de Scenario Factory', () => {
   });
 
   test('Test de generate Kedown event', () => {
-    const eventModel : EventModel = {
+    const eventModel : IEventModel = {
       typeEvent : domEventsToRecord.KEYDOWN,
       selector : '#id',
       action : actionEvents.LISTKEYDOWN,
@@ -216,7 +216,7 @@ describe('Test de Scenario Factory', () => {
   });
 
   test('Test de generate PPtr action event', () => {
-    const eventModel : EventModel = {
+    const eventModel : IEventModel = {
       typeEvent : pptrActions.pptr,
       selector : '#id',
       action : pptrActions.GOTO,

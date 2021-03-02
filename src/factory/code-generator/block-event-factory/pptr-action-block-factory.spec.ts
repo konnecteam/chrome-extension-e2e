@@ -89,38 +89,38 @@ describe('Test de Pptr Action Block Factory', () => {
 
   test('Test de generate d\'un GOTO ', () => {
 
-    const eventModel = {
+    const IEventModel = {
       action : pptrActions.GOTO,
       value : 'localhost'
     };
 
     expect(
-      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+      PPtrActionBlockFactory.generateBlock(IEventModel, frameId, frame, defaults)
     ).toEqual(
-      PPtrActionBlockFactory.buildGoto(eventModel.value)
+      PPtrActionBlockFactory.buildGoto(IEventModel.value)
     );
   });
 
   test('Test de generate d\'un ViewPort ', () => {
-    const eventModel = {
+    const IEventModel = {
       action : pptrActions.VIEWPORT,
       value : { width : 1920, height : 1080}
     };
 
     expect(
-      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+      PPtrActionBlockFactory.generateBlock(IEventModel, frameId, frame, defaults)
     ).toEqual(
-      PPtrActionBlockFactory.buildViewport(eventModel.value.width, eventModel.value.height)
+      PPtrActionBlockFactory.buildViewport(IEventModel.value.width, IEventModel.value.height)
     );
   });
 
   test('Test de generate d\'un WaitForNavigation ', () => {
-    const eventModel = {
+    const IEventModel = {
       action : pptrActions.NAVIGATION,
     };
 
     expect(
-      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+      PPtrActionBlockFactory.generateBlock(IEventModel, frameId, frame, defaults)
     ).toEqual(
       PPtrActionBlockFactory.buildWaitForNavigation()
     );

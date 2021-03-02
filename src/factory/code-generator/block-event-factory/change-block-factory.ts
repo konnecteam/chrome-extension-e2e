@@ -1,5 +1,5 @@
-import { EventModel } from '../../../models/event-model';
-import { OptionModel } from '../../../models/options-model';
+import { IEventModel } from '../../../models/i-event-model';
+import { IOptionModel } from '../../../models/i-options-model';
 import ActionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 import { Block } from '../../../code-generator/block';
@@ -13,7 +13,7 @@ export class ChangeBlockFactory {
   // les attributs sont utilisés pour éviter de les passer en paramètre méthodes
 
   /** Options du plugin */
-  public static options : OptionModel;
+  public static options : IOptionModel;
 
   /** Id de la frame */
   public static frameId : number;
@@ -23,10 +23,10 @@ export class ChangeBlockFactory {
 
   // Génère les blocks en fonction des paramètres données
   public static generateBlock(
-    event : EventModel,
+    event : IEventModel,
     frameId : number,
     frame : string,
-    options : OptionModel
+    options : IOptionModel
   ) : Block {
 
     const { action, selector, value, tagName, files, selectorFocus} = event;

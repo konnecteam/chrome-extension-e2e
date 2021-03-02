@@ -1,4 +1,4 @@
-import { LineBlockModel } from './../../../models/line-block-model';
+import { ILineBlockModel } from '../../../models/i-line-block-model';
 import { Block } from './../../../code-generator/block';
 import { defaults } from '../../../constants/default-options';
 import 'jest';
@@ -7,7 +7,7 @@ import actionEvents from '../../../constants/action-events';
 import { ClickBlockFactory } from './click-block-factory';
 
 /**
- * Attributs d'un EventModel
+ * Attributs d'un IEventModel
  */
 const selector = '#id';
 const value = 'testValue';
@@ -20,7 +20,7 @@ const scrollYElement = 250;
 /**
  * Génère le line block d'un click
  */
-function simpleClickLineBlock() : LineBlockModel {
+function simpleClickLineBlock() : ILineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: `await ${ClickBlockFactory.frame}.$eval('${selector}',  el=> el.click());`
@@ -30,7 +30,7 @@ function simpleClickLineBlock() : LineBlockModel {
 /**
  * Génère le line block d'un click sur une dropzone
  */
-function clickFileDropZoneLineModel() : LineBlockModel {
+function clickFileDropZoneLineModel() : ILineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: `  [fileChooser] = await Promise.all([
@@ -44,7 +44,7 @@ function clickFileDropZoneLineModel() : LineBlockModel {
 /**
  * Génère le line block d'un click sur une flêche de l'input numeric
  */
-function clickMouseInputNumericLineModel() : LineBlockModel {
+function clickMouseInputNumericLineModel() : ILineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: ` await ${ClickBlockFactory.frame}.evaluate( async function(){
@@ -68,7 +68,7 @@ function clickMouseInputNumericLineModel() : LineBlockModel {
 /**
  * Génère le line block d'un click mouse
  */
-function clickMouseLineModel() : LineBlockModel {
+function clickMouseLineModel() : ILineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: ` await ${ClickBlockFactory.frame}.evaluate( async function(){
@@ -86,7 +86,7 @@ function clickMouseLineModel() : LineBlockModel {
 /**
  * Génère le line block de la customLine
  */
-function customeLineLineBlock() : LineBlockModel {
+function customeLineLineBlock() : ILineBlockModel {
   return {
     type : domEventsToRecord.CLICK,
     value : options.customLineAfterClick
@@ -97,7 +97,7 @@ function customeLineLineBlock() : LineBlockModel {
  * Génère la ligne customisé avant chaque event
  * @param select
  */
-function customLineBeforeEvent(event : string) : LineBlockModel {
+function customLineBeforeEvent(event : string) : ILineBlockModel {
   return {
     type : event,
     value : options.customLinesBeforeEvent
@@ -107,28 +107,28 @@ function customLineBeforeEvent(event : string) : LineBlockModel {
  * Génère le line block d'un waitForSelector
  */
 
-function waitForSelectorOnClickLineBlock(select : string) : LineBlockModel {
+function waitForSelectorOnClickLineBlock(select : string) : ILineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: `await ${ClickBlockFactory.frame}.waitForSelector('${select}');`
   };
 }
 
-function waitForSelectorOnClickSelectorLineBlock() : LineBlockModel {
+function waitForSelectorOnClickSelectorLineBlock() : ILineBlockModel {
   return waitForSelectorOnClickLineBlock(selector);
 }
 
 /**
  * Génère le line block d'un waitForSelector sur scrollElement
  */
-function waitForSelectorOnClickScrollElementLineBlock() : LineBlockModel {
+function waitForSelectorOnClickScrollElementLineBlock() : ILineBlockModel {
   return waitForSelectorOnClickLineBlock(scrollElement);
 }
 
 /**
  * scroll pour le click sur un konnect liste
  */
-function scrollInKListItemLineBlock() : LineBlockModel {
+function scrollInKListItemLineBlock() : ILineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: ` await ${ClickBlockFactory.frame}.evaluate( async function(){
@@ -142,7 +142,7 @@ function scrollInKListItemLineBlock() : LineBlockModel {
 /**
  * Click sur l'item de konnect liste
  */
-function clickKListItemLineBlock() : LineBlockModel {
+function clickKListItemLineBlock() : ILineBlockModel {
   return {
     type: domEventsToRecord.CLICK,
     value: `await ${ClickBlockFactory.frame}.evaluate( async function(){
@@ -433,14 +433,14 @@ describe('Test de Click Block Factory', () => {
 
 
     test('Test de generateBlock pour un simple click', () => {
-      const eventModel = {
+      const IEventModel = {
         selector,
         action : actionEvents.BASIC_CLICK,
       };
 
       expect(
         ClickBlockFactory.generateBlock(
-          eventModel,
+          IEventModel,
           ClickBlockFactory.frameId,
           ClickBlockFactory.frame,
           defaults
@@ -453,14 +453,14 @@ describe('Test de Click Block Factory', () => {
     });
 
     test('Test de generateBlock pour un click sur un file drop zone', () => {
-      const eventModel = {
+      const IEventModel = {
         selector,
         action : actionEvents.CLICK_DROPZONE
       };
 
       expect(
         ClickBlockFactory.generateBlock(
-          eventModel,
+          IEventModel,
           ClickBlockFactory.frameId,
           ClickBlockFactory.frame,
           defaults
@@ -474,7 +474,7 @@ describe('Test de Click Block Factory', () => {
 
 
     test('Test de generateBlock pour un click sur les flêches d\'un input numeric', () => {
-      const eventModel = {
+      const IEventModel = {
         selector,
         durancyClick : time,
         action : actionEvents.CLICKMOUSE_INPUTNUMERIC
@@ -482,7 +482,7 @@ describe('Test de Click Block Factory', () => {
 
       expect(
         ClickBlockFactory.generateBlock(
-          eventModel,
+          IEventModel,
           ClickBlockFactory.frameId,
           ClickBlockFactory.frame,
           defaults
@@ -496,14 +496,14 @@ describe('Test de Click Block Factory', () => {
     });
 
     test('Test de generateBlock pour un click mouse', () => {
-      const eventModel = {
+      const IEventModel = {
         selector,
         action : actionEvents.CLICKMOUSE
       };
 
       expect(
         ClickBlockFactory.generateBlock(
-          eventModel,
+          IEventModel,
           ClickBlockFactory.frameId,
           ClickBlockFactory.frame,
           defaults
@@ -516,7 +516,7 @@ describe('Test de Click Block Factory', () => {
     });
 
     test('Test de generateBlock pour une liste à choix multiples', () => {
-      const eventModel = {
+      const IEventModel = {
         selector,
         scrollElement,
         scrollXElement,
@@ -526,7 +526,7 @@ describe('Test de Click Block Factory', () => {
 
       expect(
         ClickBlockFactory.generateBlock(
-          eventModel,
+          IEventModel,
           ClickBlockFactory.frameId,
           ClickBlockFactory.frame,
           defaults

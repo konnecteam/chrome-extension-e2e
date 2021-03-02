@@ -1,9 +1,9 @@
 import { KmSwitchComponent } from './km-switch- component';
 import 'jest';
 import * as path from 'path';
-import { ComponentModel } from 'models/component-model';
+import { IComponentModel } from 'models/i-component-model';
 import componentName from '../../constants/component-name';
-import { EventModel } from '../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -38,11 +38,11 @@ describe('Test de km switch Component', () => {
     const elementSelector = 'switch > div > span > span:nth-child(3) > span';
     const element = document.querySelector(elementSelector);
 
-    const eventModel : EventModel = {
+    const eventModel : IEventModel = {
       selector: '#id'
     };
 
-    const component : ComponentModel = {
+    const component : IComponentModel = {
       component : componentName.KMSWITCH,
       element : element as HTMLElement
     };

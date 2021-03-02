@@ -1,7 +1,7 @@
 /**
  * Model représentant les options de l'utilisateur
  */
-export class OptionModel {
+export class IOptionModel {
 
   /** Mettre le scénario dans une fonction async */
   public wrapAsync : boolean;

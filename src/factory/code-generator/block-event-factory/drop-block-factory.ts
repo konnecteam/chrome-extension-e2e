@@ -1,8 +1,8 @@
 import { ChangeBlockFactory } from './change-block-factory';
 import { ClickBlockFactory } from './click-block-factory';
 import { Block } from 'code-generator/block';
-import { EventModel } from '../../../models/event-model';
-import { OptionModel } from '../../../models/options-model';
+import { IEventModel } from '../../../models/i-event-model';
+import { IOptionModel } from '../../../models/i-options-model';
 import ActionEvents from '../../../constants/action-events';
 
 /**
@@ -10,7 +10,7 @@ import ActionEvents from '../../../constants/action-events';
  */
 export class DropBlockFactory {
 
-  public static generateBlock(event : EventModel, frameId : number, frame : string, options : OptionModel) : Block {
+  public static generateBlock(event : IEventModel, frameId : number, frame : string, options : IOptionModel) : Block {
     const { action, selector, files} = event;
 
     // Si l'action est un drop sur un file dropzone

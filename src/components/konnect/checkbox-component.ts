@@ -1,8 +1,8 @@
 import { ElementFinderService } from '../../services/finder/element-finder-service';
 import componentName from '../../constants/component-name';
-import { ComponentModel } from '../../models/component-model';
+import { IComponentModel } from '../../models/i-component-model';
 import elementsTagName from '../../constants/elements-tagName';
-import { EventModel } from '../../models/event-model';
+import { IEventModel } from '../../models/i-event-model';
 import actionEvents from '../../constants/action-events';
 
 /**
@@ -14,7 +14,7 @@ export class CheckboxComponent {
    * Verifie si c'est un checkbox et retourne le component associé
    * @param element
    */
-  public static isCheckboxComponent(element : HTMLElement) : ComponentModel {
+  public static isCheckboxComponent(element : HTMLElement) : IComponentModel {
 
     if (ElementFinderService.findParentElementWithTagName(
       element,
@@ -32,7 +32,7 @@ export class CheckboxComponent {
   /**
    * Modification de l'event pour un checkbox
    */
-  public static editCheckboxMessage(event : EventModel) : EventModel {
+  public static editCheckboxMessage(event : IEventModel) : IEventModel {
     event.action = actionEvents.BASIC_CLICK;
     return event;
   }

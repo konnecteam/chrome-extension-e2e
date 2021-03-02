@@ -1,4 +1,4 @@
-import { LineBlockModel } from './../models/line-block-model';
+import { ILineBlockModel } from '../models/i-line-block-model';
 
 /**
  * Un block est une partie du scenario que l'on va exporter
@@ -8,9 +8,9 @@ export class Block {
   /** Numéro de la frame */
   private _frameId : number;
   /** Ligne du Block */
-  private _lines : LineBlockModel[];
+  private _lines : ILineBlockModel[];
 
-  constructor(frameId? : number, line? : LineBlockModel) {
+  constructor(frameId? : number, line? : ILineBlockModel) {
     this._lines = [];
     this._frameId = frameId;
 
@@ -23,7 +23,7 @@ export class Block {
   /**
    * Ajout d'une ligne au début du tableau
    */
-  public addLineToTop(line : LineBlockModel) {
+  public addLineToTop(line : ILineBlockModel) {
     line.frameId = this._frameId;
     this._lines.unshift(line);
   }
@@ -31,7 +31,7 @@ export class Block {
   /**
    * Ajout d'une ligne
    */
-  public addLine(line : LineBlockModel) {
+  public addLine(line : ILineBlockModel) {
     line.frameId = this._frameId;
     this._lines.push(line);
   }
@@ -39,7 +39,7 @@ export class Block {
   /**
    * Récuperer toutes les lignes du block
    */
-  public getLines() : LineBlockModel[] {
+  public getLines() : ILineBlockModel[] {
     return this._lines;
   }
 }

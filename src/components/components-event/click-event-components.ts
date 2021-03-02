@@ -1,6 +1,6 @@
 import { KmSwitchComponent } from '../konnect/km-switch- component';
 import { KSelectComponent } from '../konnect/k-select-component';
-import { ComponentModel } from './../../models/component-model';
+import { IComponentModel } from '../../models/i-component-model';
 import { FileDropZoneComponent } from '../components/file-drop-zone-component';
 import { KListComponent } from '../konnect/k-list-component';
 
@@ -12,7 +12,7 @@ export class ClickEventComponents {
   /**
    * Permet de déterminer sur quel composant on a cliqué
    */
-  public static determinateClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : ComponentModel {
+  public static determinateClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : IComponentModel {
 
     return FileDropZoneComponent.isFileDropZone(element) ||
     KSelectComponent.isKSelect(element) || KmSwitchComponent.isKmSwitch(element) ||
