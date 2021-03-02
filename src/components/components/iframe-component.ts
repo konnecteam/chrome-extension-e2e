@@ -18,8 +18,9 @@ export class IframeComponent {
     // Si c'est un iframe on retourne le composant associé
     if (iframeElement) {
       return {component: componentName.IFRAME, element: iframeElement as HTMLElement};
+    } else {
+      return null;
     }
-    return null;
   }
 
   /**

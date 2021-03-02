@@ -21,45 +21,31 @@ export class FileDropZoneComponent {
    * Vérifie si l'élément est dans un file dropzone
    */
   public static isFileDropZone(element : HTMLElement) : ComponentModel {
-    let elementFind = this._isFileDropZoneElement(element);
+    const elementFileDropZone = ElementFinderService.findParentElementWithTagName(
+      element,
+      elementsTagName.FILEDROPZONE.toUpperCase(),
+       10
+    );
 
+    const elementButtonAdd = ElementFinderService.findParentElementWithTagNameAndValueAttribute(
+      element,
+      elementsTagName.LINK.toUpperCase(),
+      this._TITLE_ATTRIBUTE,
+      this._TITLE_ATTRIBUTE_VALUE,
+      2
+    );
     // Si c'est un file  dropzone
-    if (elementFind) {
+    if (elementFileDropZone) {
 
-      return {component : componentName.FILEDROPZONE , element: elementFind};
+      return {component : componentName.FILEDROPZONE , element: elementFileDropZone};
+
+    } else if (elementButtonAdd) {
+      // Si c'est un le bouton ajouter un fichier du file dropzone
+      return {component : componentName.FILEDROPZONEADD , element: elementButtonAdd};
+
+    } else {
+      return null;
     }
-
-    elementFind = this._isClickInAddFileButton(element);
-
-    // Si c'est un le bouton ajouter un fichier du file dropzone
-    if (elementFind) {
-
-      return {component : componentName.FILEDROPZONEADD , element: elementFind};
-    }
-
-    return null;
-  }
-
-  /**
-   * Vérifie si c'est un file dropzone et retourne l'HTMLElement
-   */
-  private static _isFileDropZoneElement(element : HTMLElement) : HTMLElement {
-
-    return ElementFinderService.findParentElementWithTagName(element,
-       elementsTagName.FILEDROPZONE.toUpperCase(),
-        10
-    );
-  }
-
-  /**
-   * Vérifie si l'élément est le bouton pour ajouter les fichiers
-   * et retourne l'HTMLElement
-   */
-  private static _isClickInAddFileButton(element : HTMLElement) : HTMLElement {
-
-    return ElementFinderService.findParentElementWithTagNameAndValueAttribute(
-      element, elementsTagName.LINK.toUpperCase(), this._TITLE_ATTRIBUTE, this._TITLE_ATTRIBUTE_VALUE, 2
-    );
   }
 
   /**

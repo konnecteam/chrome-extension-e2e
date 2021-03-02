@@ -12,8 +12,8 @@ import actionEvents from '../../constants/action-events';
 export class KListComponent {
 
   /** TagName des lists */
-  private static readonly  _DROPDOWNLISTTAGNAME = 'konnect-dropdownlist';
-  private static readonly _MULTIPLELISTTAGNAME = 'konnect-multiselect';
+  private static readonly  _DROPDOWN_LIST_TAGNAME = 'konnect-dropdownlist';
+  private static readonly _MULTIPLE_LIST_TAGNAME = 'konnect-multiselect';
 
   /** Attribut Role d'un HTMLElement */
   private static readonly  _ROLE = 'role';
@@ -43,13 +43,13 @@ export class KListComponent {
     ) : ComponentModel {
 
     // On récupère l'élement correspondant à la liste
-    const dropdownElement : Element = this._findListComponent(element, this._DROPDOWNLISTTAGNAME);
-    const multipleListElement : Element = this._findListComponent(element, this._MULTIPLELISTTAGNAME );
+    const dropdownElement : Element = this._findListComponent(element, this._DROPDOWN_LIST_TAGNAME);
+    const multipleListElement : Element = this._findListComponent(element, this._MULTIPLE_LIST_TAGNAME );
 
     // si c'est une dropdown
     if (dropdownElement) {
 
-      return this._kListComponent(
+      return this._getKListComponent(
         dropdownElement as HTMLElement,
         {
           selector : SelectorService.find(dropdownElement as HTMLElement),
@@ -62,7 +62,7 @@ export class KListComponent {
     // si c'est une mulitple
     if (multipleListElement) {
 
-      return this._kListComponent(
+      return this._getKListComponent(
         multipleListElement as HTMLElement,
         {
           selector : SelectorService.find(multipleListElement as HTMLElement),
@@ -78,12 +78,12 @@ export class KListComponent {
       const input = this._isClickInputKList(element);
 
       if (input) {
-        return this._kListComponent(input as HTMLElement, previousElement);
+        return this._getKListComponent(input as HTMLElement, previousElement);
       }
       // On vérifie si c'est un element ul
       const listUL = this._isInUlElement(element);
       if (listUL) {
-        return this._kListComponent(listUL, previousElement);
+        return this._getKListComponent(listUL, previousElement);
       }
     }
   }
@@ -93,7 +93,7 @@ export class KListComponent {
    * @param element
    * @param previousElement
    */
-  private static _kListComponent(element : HTMLElement, previousElement : {selector : string, element : Element, typeList : string }) : ComponentModel {
+  private static _getKListComponent(element : HTMLElement, previousElement : {selector : string, element : Element, typeList : string }) : ComponentModel {
     return {
       component : componentName.KLIST,
       element,
@@ -102,7 +102,7 @@ export class KListComponent {
   }
 
   /**
-   * Trouve l'element d'une liste si on a clické sur une liste
+   * Trouve l'element liste si on a clické sur une liste
    * @param element
    */
   private static _findListComponent(element : HTMLElement, listTagname : string) : Element {

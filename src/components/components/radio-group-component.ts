@@ -16,25 +16,16 @@ export class RadioGroupComponent {
    */
   public static isRadioGroupComponent(element : HTMLElement) : ComponentModel {
 
-    if (this._isRadioGroupElement(element)) {
+    if (ElementFinderService.findParentElementWithTagName(
+      element,
+      elementsTagName.RADIOGROUP.toUpperCase(),
+      5
+    )) {
 
       return { component: componentName.RADIOGROUP, element };
 
     }
     return null;
-  }
-
-  /**
-   * Permet de récupérer l'element RadioGroup
-   * @param element
-   */
-  private static _isRadioGroupElement(element : HTMLElement) : HTMLElement {
-
-    return ElementFinderService.findParentElementWithTagName(
-      element,
-      elementsTagName.RADIOGROUP.toUpperCase(),
-      5
-    );
   }
 
   /**

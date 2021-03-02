@@ -16,25 +16,17 @@ export class CheckboxComponent {
    */
   public static isCheckboxComponent(element : HTMLElement) : ComponentModel {
 
-    if (this._isCheckboxElement(element)) {
-
-      return { component: componentName.CHECKBOX, element };
-
-    }
-    return null;
-  }
-
-  /**
-   * Permet de récupérer l'element checkbox
-   * @param element
-   */
-  private static _isCheckboxElement(element : HTMLElement) : HTMLElement {
-
-    return ElementFinderService.findParentElementWithTagName(
+    if (ElementFinderService.findParentElementWithTagName(
       element,
       elementsTagName.CHECKBOX.toUpperCase(),
       5
-    );
+    )) {
+
+      return { component: componentName.CHECKBOX, element };
+
+    } else {
+      return null;
+    }
   }
 
   /**
