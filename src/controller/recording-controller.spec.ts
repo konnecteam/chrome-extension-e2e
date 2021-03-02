@@ -20,7 +20,7 @@ let buildDir;
  */
 async function getBadgeText() : Promise<string> {
 
-  return await page.evaluate(() => {
+  return page.evaluate(() => {
     return (window as any).badgeText;
   });
 }
@@ -29,7 +29,7 @@ async function getBadgeText() : Promise<string> {
  * Permet d'attendre que le content script soit prết pour enregistrer
  */
 async function isBackgroundReady() : Promise<string> {
-  return await page.evaluate(async () => {
+  return page.evaluate(async () => {
     return await (window as any).waitBackground;
   });
 }
@@ -39,7 +39,7 @@ async function isBackgroundReady() : Promise<string> {
  * @param event
  */
 async function dispatchEvent(event : string, message : MessageModel) : Promise<void> {
-  return await page.evaluate(function (ev) {
+  return page.evaluate(function (ev) {
     const customEvent = new CustomEvent(ev.event);
     Object.assign(customEvent, ev.message);
 
@@ -56,7 +56,7 @@ async function verfiyBadgeContent(action : string ) : Promise<string> {
   // Dispatch event
   await dispatchEvent('OnMessage', { action });
   // Récupérer l'état du badge
-  return await getBadgeText();
+  return getBadgeText();
 }
 
 // tslint:disable: no-identical-functions

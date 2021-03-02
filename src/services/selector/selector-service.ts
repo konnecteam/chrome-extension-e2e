@@ -7,17 +7,17 @@ import finder from '@medv/finder';
 export class SelectorService {
 
   /** Id à ignorer */
-  private static readonly _idToIgnoreReg  = new RegExp('([A-Za-z0-9]+-){4}', 'g');
-  private static readonly _idToIgnore = ['formv', 'kdp', 'mv', 'tabs'];
+  private static readonly _ID_TO_IGNORE_REG  = new RegExp('([A-Za-z0-9]+-){4}', 'g');
+  private static readonly _ID_TO_IGNORE = ['formv', 'kdp', 'mv', 'tabs'];
 
   /**
-   * Récupère un élément html
+   * Récupère le selector d'un élément html
    */
   public static find(element : HTMLElement) : string {
 
     // Gestion de l'id
-    if (element.id  && !this._idToIgnoreReg.test(element.id)
-    && !ObjectService.isStringStartInTab(element.id, this._idToIgnore) ) {
+    if (element.id  && !this._ID_TO_IGNORE_REG.test(element.id)
+    && !ObjectService.isStringStartInTab(element.id, this._ID_TO_IGNORE) ) {
 
       return '#' + element.id.split(':').join('\\:');
     }
@@ -25,18 +25,18 @@ export class SelectorService {
     try {
 
       // Si présent dans le dom on le récupère
-      return this._finder(document, element);
+      return this._finderSelector(document, element);
     } catch (e) {
 
       // Dans le cas contraire on vérifie dans la sauvegarde du dom
-      return this._findElementInSavedDocument(element);
+      return this._findSelectorElementInSavedDocument(element);
     }
   }
 
   /**
-   * Récupération d'un élément dans le dom sauvegardé
+   * Récupération du selector d'un élément dans le dom sauvegardé
    */
-  private static _findElementInSavedDocument(element : HTMLElement) : string {
+  private static _findSelectorElementInSavedDocument(element : HTMLElement) : string {
 
     if (!element.tagName) return '';
 
@@ -61,19 +61,19 @@ export class SelectorService {
       }
     }
 
-    return this._finder((window as any).saveBody, element);
+    return this._finderSelector((window as any).saveBody, element);
   }
 
   /**
    * Récupère le sélecteur unique d'un élément html
    */
-  private static _finder(document : Document, element : HTMLElement) : string {
+  private static _finderSelector(document : Document, element : HTMLElement) : string {
     return finder(
       element, {
         root : document.body,
         className: name => false, tagName: name => true ,
-        idName: name => !ObjectService.isStringStartInTab(name, this._idToIgnore)
-         && !name.match(this._idToIgnoreReg) && !this._idToIgnoreReg.test(name),
+        idName: name => !ObjectService.isStringStartInTab(name, this._ID_TO_IGNORE)
+         && !name.match(this._ID_TO_IGNORE_REG) && !this._ID_TO_IGNORE_REG.test(name),
         seedMinLength : 7,
         optimizedMinLength : 12,
         threshold : 1500,

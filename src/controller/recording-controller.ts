@@ -316,7 +316,7 @@ class RecordingController {
     });
 
     // 4 - On récupère le contenu du fichier fake-timer-service build
-    this._getContentFakeTimeScript();
+    this._getFakeTimeScriptContent();
 
     // 5 - Inject le script
     ChromeService.executeScript({
@@ -345,8 +345,8 @@ class RecordingController {
 
       this._boundedMessageHandler = this._handleMessage.bind(this);
       this._boundedNavigationHandler = this._handleNavigation.bind(this);
-      this._boundedWaitHandler = this._handle.bind(this, this._handleWait.bind(this));
-      this._boundedScriptHandler = this._handle.bind(this, this._handleScript.bind(this));
+      this._boundedWaitHandler = this._handleAction.bind(this, this._handleWait.bind(this));
+      this._boundedScriptHandler = this._handleAction.bind(this, this._injectScript.bind(this));
 
       ChromeService.addOnMessageListener(this._boundedMessageHandler);
       ChromeService.addOnCompletedListener(this._boundedNavigationHandler);
@@ -367,7 +367,7 @@ class RecordingController {
   /**
    * Permet de récupérer le contenu du fake time script buildé
    */
-  private _getContentFakeTimeScript() : void {
+  private _getFakeTimeScriptContent() : void {
     /* Pour lire un fichier dans un plugin chrome
        il faut qu'il soit accessible et
        il faut fetch l'url pour récupérer le résultat
@@ -393,7 +393,7 @@ class RecordingController {
   /**
    * Permet si la frame est la frame courante d'éffecuer le callback
    */
-  private _handle(callback : () => void, frameId = null) : void {
+  private _handleAction(callback : () => void, frameId = null) : void {
     if (frameId === 0) {
       if (callback) {
         callback();
@@ -407,13 +407,6 @@ class RecordingController {
   private _handleWait() {
     this._badgeState = 'wait';
     ChromeService.setBadgeText(this._badgeState);
-  }
-
-  /**
-   * Permet de gérer l'injection du script
-   */
-  private _handleScript() : void {
-    this._injectScript();
   }
 
   /**
@@ -466,11 +459,22 @@ class RecordingController {
    * Permet de gérer les messages de "type" contrôle
    */
   private _handleControlMessage(message : MessageModel) : void {
-    if (message.control === controlMSG.EVENT_RECORDER_STARTED_EVENT) ChromeService.setBadgeText(this._badgeState);
-    if (message.control === controlMSG.GET_VIEWPORT_SIZE_EVENT) this._recordCurrentViewportSizeAsync(message.coordinates);
-    if (message.control === controlMSG.GET_CURRENT_URL_EVENT) this._recordCurrentUrlAsync(message.frameUrl);
-    if (message.control === controlMSG.GET_RESULT_EVENT) this._getHARcontent(message);
-    if (message.control === controlMSG.GET_NEW_FILE_EVENT) this._recordNewFile(message);
+    switch (message.control) {
+      case controlMSG.EVENT_RECORDER_STARTED_EVENT :
+        ChromeService.setBadgeText(this._badgeState);
+        break;
+      case controlMSG.GET_VIEWPORT_SIZE_EVENT :
+        this._recordCurrentViewportSizeAsync(message.coordinates);
+        break;
+      case controlMSG.GET_CURRENT_URL_EVENT :
+        this._recordCurrentUrlAsync(message.frameUrl);
+        break;
+      case controlMSG.GET_RESULT_EVENT :
+        this._getHARcontent(message);
+        break;
+      case controlMSG.GET_NEW_FILE_EVENT :
+        this._recordNewFile(message);
+    }
   }
 
   /**
