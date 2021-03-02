@@ -29,8 +29,8 @@ export class ClickBlockFactory {
     options : OptionModel
   ) : Block {
 
-    const { action, selector, value, durancyClick, scrollElement,
-      scrollXElement, scrollYElement, calendarHeader, calendarView, dateSelector} = event;
+    const { action, selector, durancyClick, scrollElement,
+      scrollXElement, scrollYElement} = event;
 
     this.options = options;
     this.frameId = frameId;
@@ -42,15 +42,12 @@ export class ClickBlockFactory {
       // Si c'est un click basique
       case ActionEvents.BASIC_CLICK:
         return this.buildClick(selector);
-        break;
       // Si c'est un click sur un dropzone element
       case ActionEvents.CLICK_DROPZONE:
         return this.buildclickFileDropZone(selector);
-        break;
       // Si c'est un click sur les flêches de l'input numeric
       case ActionEvents.CLICKMOUSE_INPUTNUMERIC:
         return this.buildClickMouseInputNumeric(selector, durancyClick);
-        break;
       // Si c'est un click mouse (mousdown, mouseup)
       case ActionEvents.CLICKMOUSE :
         return this.buildClickMouse(selector);

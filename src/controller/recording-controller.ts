@@ -9,7 +9,7 @@ import pptrActions from '../constants/pptr-actions';
 import { PollyService } from '../services/polly/polly-service';
 import { PollyFactory } from '../factory/polly/polly-factory';
 import packageJsonZip from '../constants/package-json-zip';
-import { XMLHttpRequestService } from '../services/xml-http-request/xml-http-request-service';
+import { HttpService } from '../services/http/http-service';
 import controlActions from '../constants/control-actions';
 import controlMSG from '../constants/control-message';
 /**
@@ -498,7 +498,7 @@ class RecordingController {
       this._pollyService.record.id = message.recordingId;
 
       const xhr = new XMLHttpRequest();
-      XMLHttpRequestService.executeRequest(xhr, message.resultURL, () => {
+      HttpService.getRequest(xhr, message.resultURL, () => {
         // On a reçus toutes les requêtes
         this._isResult = true;
         // on récupère le fichier har

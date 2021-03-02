@@ -262,8 +262,7 @@ class EventRecorder {
     }
 
     // construction du message model: EventModel
-    let message : EventModel;
-    message = {
+    let message : EventModel = {
       selector: SelectorService.standardizeSelector(selector),
       comments,
       value: e.target.value,
@@ -274,7 +273,7 @@ class EventRecorder {
       keyCode: e.keyCode ? e.keyCode : null,
       href: e.target.href ? e.target.href : null,
       durancyClick: durationClick ? durationClick : 0,
-      coordinates: this._keyDownService.getCoordinates(e),
+      coordinates: this._keyDownService.getClickCoordinates(e),
       scrollY: window.pageYOffset,
       scrollX: window.pageXOffset
     };

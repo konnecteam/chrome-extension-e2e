@@ -36,7 +36,7 @@ export class KeyDownService {
   public handleEvent(msg : EventModel, element : HTMLElement) : void {
     // On vérifie que l'event est un keydown et que ce n'est pas un input ou que c'est un input de liste
     if (msg.action === domEventsToRecord.KEYDOWN) {
-      if (!msg.value && element.tagName !== elementsTagName.INPUT.toUpperCase() ||  this._verifyIsinputList(element)) {
+      if (!msg.value && element.tagName !== elementsTagName.INPUT.toUpperCase() ||  this._isInputList(element)) {
         // On récupère l'event
         this._handleKeyDownEvent(msg);
       }
@@ -110,7 +110,7 @@ export class KeyDownService {
   /**
    * Verifie si c'est un input de list
    */
-  private _verifyIsinputList(element : HTMLElement) : boolean {
+  private _isInputList(element : HTMLElement) : boolean {
     let listbox = '';
     // On verifié si c'est un input d'une dropdown list
     listbox = element.getAttribute('aria-owns');
@@ -127,7 +127,7 @@ export class KeyDownService {
   /**
    * Récupère les évènements liés au clic de la souris
    */
-  public getCoordinates(evt) {
+  public getClickCoordinates(evt) {
     const eventsWithCoordinates = {
       mouseup: true,
       mousedown: true,

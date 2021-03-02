@@ -33,9 +33,6 @@ export class PollyRecorder {
     'node_modules/konnect-web-theme/dist/font-awesome5/webfonts/fa-regular-400.ttf',
   ];
 
-  /** Regex pour déterminer si on a une requête pour les produits */
-  public static readonly regexAutorouteRequest = new RegExp(/autoroute\/obj\/+\d/g);
-
   /** Liste des requêtes enreigstrées */
   public requestRecorded : string[];
 
@@ -110,7 +107,7 @@ export class PollyRecorder {
           this.requestRecorded.push(entry.name);
 
           //Pour les items du lazy loading à cause d'un item qui veut se charger mais qui ne devrait pas
-          if ((entry.name.includes('picture/obj') || PollyRecorder.regexAutorouteRequest.test(entry.name)) && entry.name ) {
+          if ((entry.name.includes('picture/obj') || new RegExp(/autoroute\/obj\/+\d/g).test(entry.name)) && entry.name ) {
 
             this._fetchProductCatalogRequest(entry.name);
           }

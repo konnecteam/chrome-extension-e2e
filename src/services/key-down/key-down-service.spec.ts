@@ -107,7 +107,7 @@ describe('Test de Keydown Service', () => {
       clientY : 30
     };
 
-    expect(keyDownService.getCoordinates(event)
+    expect(keyDownService.getClickCoordinates(event)
     ).toEqual({ x : event.clientX, y : event.clientY});
   });
 
@@ -116,7 +116,7 @@ describe('Test de Keydown Service', () => {
       type : 'click'
     };
 
-    expect(keyDownService.getCoordinates(event)
+    expect(keyDownService.getClickCoordinates(event)
     ).toBeNull();
   });
 
