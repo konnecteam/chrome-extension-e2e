@@ -1,3 +1,4 @@
+import { MessageModel } from './../models/message-model';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
 import elementsTagName from '../constants/elements-tagName';
@@ -159,7 +160,7 @@ class EventRecorder {
    * Permet de rediriger les messages dans la bonne méthode
    * @param message
    */
-  private _messageControl(message : any) : void {
+  private _messageControl(message : MessageModel) : void {
 
     if (message && message.hasOwnProperty('control')) {
 
@@ -304,7 +305,7 @@ class EventRecorder {
   /**
    * Observer des listener
    */
-  private async _listenerObserver(mutationList) {
+  private async _listenerObserver(mutationList : any[]) {
     // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
     while (!(window as any).eventRecorder._isRecordTreated) {
       await new Promise(resolve => setTimeout(resolve, 500));

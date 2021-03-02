@@ -1,3 +1,4 @@
+import { MessageModel } from './../../models/message-model';
 import { ChromeService } from '../../services/chrome/chrome-service';
 
 /**
@@ -8,7 +9,7 @@ export class WindowService {
   /**
    * Récupère l'url courant
    */
-  public static getCurrentUrl(message : any) : void {
+  public static getCurrentUrl(message : MessageModel) : void {
     ChromeService.sendMessage({
       control: message.control,
       frameUrl: window.location.href
@@ -18,7 +19,7 @@ export class WindowService {
   /**
    * Récupère la taille de l'écran courant
    */
-  public static getViewPortSize(message : any) : void {
+  public static getViewPortSize(message : MessageModel) : void {
     ChromeService.sendMessage({
       control: message.control,
       coordinates: {
@@ -31,7 +32,7 @@ export class WindowService {
   /**
    * Permet de faire un reload de la page
    */
-  public static reload(message : any, callback? : () => void) : void {
+  public static reload(message : MessageModel, callback? : () => void) : void {
 
     if (message && message.hasOwnProperty('control') && message.control === 'reload-page') {
 
