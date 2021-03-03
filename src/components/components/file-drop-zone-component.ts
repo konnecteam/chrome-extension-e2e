@@ -1,7 +1,7 @@
 import { FileService } from './../../services/file/file-service';
 import { IEventModel } from '../../models/i-event-model';
 import { IComponentModel } from '../../models/i-component-model';
-import { ElementFinderService } from '../../services/finder/element-finder-service';
+import { ElementService } from '../../services/element/element-service';
 import elementsTagName from '../../constants/elements-tagName';
 import componentName from '../../constants/component-name';
 import actionEvents from '../../constants/action-events';
@@ -21,18 +21,16 @@ export class FileDropZoneComponent {
    * Vérifie si l'élément est dans un file dropzone
    */
   public static isFileDropZone(element : HTMLElement) : IComponentModel {
-    const elementFileDropZone = ElementFinderService.findParentElementWithTagName(
+    const elementFileDropZone = ElementService.findParentElementWithTagName(
       element,
-      elementsTagName.FILEDROPZONE.toUpperCase(),
-       10
+      elementsTagName.FILEDROPZONE.toUpperCase()
     );
 
-    const elementButtonAdd = ElementFinderService.findParentElementWithTagNameAndValueAttribute(
+    const elementButtonAdd = ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
       elementsTagName.LINK.toUpperCase(),
       this._TITLE_ATTRIBUTE,
-      this._TITLE_ATTRIBUTE_VALUE,
-      2
+      this._TITLE_ATTRIBUTE_VALUE
     );
     // Si c'est un file  dropzone
     if (elementFileDropZone) {

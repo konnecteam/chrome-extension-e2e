@@ -1,6 +1,6 @@
 import elementsTagName  from '../../constants/elements-tagName';
 import { IComponentModel } from '../../models/i-component-model';
-import { ElementFinderService } from '../../services/finder/element-finder-service';
+import { ElementService } from '../../services/element/element-service';
 import { IEventModel } from '../../models/i-event-model';
 import actionEvents from '../../constants/action-events';
 import componentName from '../../constants/component-name';
@@ -23,29 +23,12 @@ export class KSelectComponent {
   public static isKSelect(element : HTMLElement) : IComponentModel {
 
     // Si c'est un k select qui se situe dans input numeric
-    if (this._isNumericElement(element) && this._isKSelectElement(element)) {
+    if (ElementService.isNumericElement(element) &&
+     ElementService.isKSelectElement(element)) {
       return { component: componentName.KSELECT, element };
+    } else {
+      return null;
     }
-
-    return null;
-  }
-
-  /**
-   * Vérfiie si c'est un k select element
-   */
-  private static _isKSelectElement(element) : Element {
-
-    return ElementFinderService.findParentElementWithTagNameAndValueAttribute(
-      element, elementsTagName.SPAN.toUpperCase(), this._CLASS, this._K_SELECT_CLASSNAME, 5
-    );
-  }
-
-  /**
-   * Verifie si il est dans un numeric element
-   */
-  private static _isNumericElement(element) : Element {
-
-    return ElementFinderService.findParentElementWithTagName(element, elementsTagName.NUMERIC.toUpperCase(), 8);
   }
 
   /**

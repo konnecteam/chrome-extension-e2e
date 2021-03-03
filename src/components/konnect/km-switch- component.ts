@@ -2,7 +2,7 @@ import { SelectorService } from '../../services/selector/selector-service';
 import { IEventModel } from '../../models/i-event-model';
 import { IComponentModel } from '../../models/i-component-model';
 import elementsTagName from '../../constants/elements-tagName';
-import { ElementFinderService } from '../../services/finder/element-finder-service';
+import { ElementService } from '../../services/element/element-service';
 import componentName from '../../constants/component-name';
 import actionEvents from '../../constants/action-events';
 
@@ -26,47 +26,14 @@ export class KmSwitchComponent {
   /**
    * Verifie si l'élément est un km switch
    */
-  private static _isKmSwitchElement(element : HTMLElement) : Element {
-
-    if (ElementFinderService.findParentElementWithTagNameAndValueAttribute(
-      element, elementsTagName.SPAN.toUpperCase(), this._CLASS, this._KMSWITCH_HANDLE, 1
-    )) {
-
-      return element;
-    }
-
-    return this._findKmSwitchElement(element);
-  }
-
-  /**
-   * Trouve le km switch si le click est tout proche de lui
-   */
-  private static _findKmSwitchElement(element : HTMLElement) : Element {
-
-    const parentElement = element.parentElement;
-    if (ElementFinderService.findParentElementWithTagNameAndValueAttribute(
-      parentElement, elementsTagName.SPAN.toUpperCase(), this._CLASS, this._KMSWITCH, 1
-    )) {
-
-      const container = ElementFinderService.findElementChildWithSelector(parentElement, `.${this._KMSWITCH_CONTAINER}`);
-      if (container) {
-
-        return ElementFinderService.findElementChildWithSelector(container as HTMLElement, `.${this._KMSWITCH_HANDLE}`);
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Verifie si l'élément est un km switch
-   */
   public static isKmSwitch(element : HTMLElement) : IComponentModel {
-    const elementFind = this._isKmSwitchElement(element);
+    const elementFind = ElementService.isKmSwitchElement(element, this._CLASS, this._KMSWITCH_HANDLE);
 
     if (elementFind) {
       return { component: componentName.KMSWITCH, element: elementFind as HTMLElement };
+    } else {
+      return null;
     }
-    return null;
   }
 
   /**

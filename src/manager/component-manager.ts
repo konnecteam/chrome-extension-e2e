@@ -1,9 +1,6 @@
-import { KeydownEventComponent } from '../components/components-event/keydown-event-component';
-import { ClickEventComponents } from '../components/components-event/click-event-components';
+import { ElementService } from './../services/element/element-service';
 import { IComponentModel } from '../models/i-component-model';
 import domEventsToRecord from '../constants/dom-events-to-record';
-import { DropEventComponents } from '../components/components-event/drop-event-components';
-import { ChangeEventComponents } from '../components/components-event/change-event-components';
 
 /**
  * Manager qui fait la gestions des composants
@@ -23,16 +20,16 @@ export class ComponentManager {
     switch (event) {
       // Si c'est un click
       case domEventsToRecord.CLICK:
-        return ClickEventComponents.determinateClickComponent(element, previousElement);
+        return ElementService.determinateClickComponent(element, previousElement);
       // Si c'est un drop
       case domEventsToRecord.DROP:
-        return DropEventComponents.determinateDropComponent(element);
+        return ElementService.determinateDropComponent(element);
       // Si c'est un change
       case domEventsToRecord.CHANGE:
-        return ChangeEventComponents.determinateChangeComponent(element);
+        return ElementService.determinateChangeComponent(element);
       // Si c'est un keydown
       case domEventsToRecord.KEYDOWN:
-        return KeydownEventComponent.determinateKeydownComponent(element);
+        return ElementService.determinateKeydownComponent(element);
     }
   }
 }

@@ -1,8 +1,7 @@
 import { SelectorService } from '../../services/selector/selector-service';
 import  componentName  from '../../constants/component-name';
 import { IComponentModel } from '../../models/i-component-model';
-import { ElementFinderService } from '../../services/finder/element-finder-service';
-import elementsTagName from '../../constants/elements-tagName';
+import { ElementService } from '../../services/element/element-service';
 import actionEvents from '../../constants/action-events';
 import { IEventModel } from '../../models/i-event-model';
 
@@ -12,47 +11,20 @@ import { IEventModel } from '../../models/i-event-model';
  */
 export class InputNumericComponent {
 
-  /** Attribut title d'un HTMLELement */
-  private static readonly _TITLE = 'title';
-
   /**
    * Verifie si c'est un input numeric et retourne le component associé
    */
   public static isInputNumeric(element : HTMLElement) : IComponentModel  {
 
-    if (this._isNumericElement(element)) {
+    if (ElementService.isNumericElement(element)) {
 
-      const inputElement = this._isInputNumericElement(element);
+      const inputElement = ElementService.isInputNumericElement(element);
       if (inputElement) {
 
         return { component: componentName.INPUTNUMERIC, element : inputElement as HTMLElement };
       }
     }
     return null;
-  }
-
-  /**
-   * Verifie si c'est un input numeric et retourne le bon event
-   */
-  private static _isInputNumericElement(element : HTMLElement) : Element {
-
-    return ElementFinderService.findElementChildWithTagNameAndAttribute(
-      element.parentElement,
-      elementsTagName.INPUT.toUpperCase(),
-      this._TITLE
-    );
-  }
-
-  /**
-   * Verifie si c'est un input numeric element et retourne l'element
-   */
-  private static _isNumericElement(element : HTMLElement) : Element {
-
-    return ElementFinderService.findParentElementWithTagName(
-      element,
-      elementsTagName.NUMERIC.toUpperCase(),
-      5
-    );
   }
 
   /**

@@ -1,10 +1,7 @@
-import { DropEventComponents } from './../components/components-event/drop-event-components';
+import { ElementService } from './../services/element/element-service';
 import { ComponentManager } from './component-manager';
-import { ClickEventComponents } from '../components/components-event/click-event-components';
 import * as path from 'path';
 import domEventsToRecord from '../constants/dom-events-to-record';
-import { ChangeEventComponents } from '../components/components-event/change-event-components';
-import { KeydownEventComponent } from '../components/components-event/keydown-event-component';
 import 'jest';
 import { FileService } from '../services/file/file-service';
 
@@ -36,7 +33,7 @@ describe('Test du Component Manager' , () => {
         null
         )
     ).toEqual(
-      ClickEventComponents.determinateClickComponent(
+      ElementService.determinateClickComponent(
       element as HTMLElement,
       null
     ));
@@ -55,7 +52,7 @@ describe('Test du Component Manager' , () => {
         null
         )
     ).toEqual(
-      DropEventComponents.determinateDropComponent(element as HTMLElement));
+      ElementService.determinateDropComponent(element as HTMLElement));
   });
 
   test('Determiner component à partir d\'un change', async () => {
@@ -70,7 +67,7 @@ describe('Test du Component Manager' , () => {
         element as HTMLElement,
         null
       )
-    ).toEqual(ChangeEventComponents.determinateChangeComponent(element as HTMLElement)
+    ).toEqual(ElementService.determinateChangeComponent(element as HTMLElement)
     );
   });
 
@@ -94,7 +91,7 @@ describe('Test du Component Manager' , () => {
         element,
         null
       )
-    ).toEqual(KeydownEventComponent.determinateKeydownComponent(element));
+    ).toEqual(ElementService.determinateKeydownComponent(element));
   });
 
 });

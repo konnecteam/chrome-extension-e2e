@@ -1,4 +1,4 @@
-import { ElementFinderService } from '../../services/finder/element-finder-service';
+import { ElementService } from '../../services/element/element-service';
 import componentName from '../../constants/component-name';
 import { IComponentModel } from '../../models/i-component-model';
 import elementsTagName from '../../constants/elements-tagName';
@@ -16,10 +16,9 @@ export class RadioGroupComponent {
    */
   public static isRadioGroupComponent(element : HTMLElement) : IComponentModel {
 
-    if (ElementFinderService.findParentElementWithTagName(
+    if (ElementService.findParentElementWithTagName(
       element,
-      elementsTagName.RADIOGROUP.toUpperCase(),
-      5
+      elementsTagName.RADIOGROUP.toUpperCase()
     )) {
 
       return { component: componentName.RADIOGROUP, element };

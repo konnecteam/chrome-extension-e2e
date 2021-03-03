@@ -3,29 +3,13 @@ import { IEventModel } from '../../models/i-event-model';
 import componentName from '../../constants/component-name';
 import { IComponentModel } from '../../models/i-component-model';
 import elementsTagName from '../../constants/elements-tagName';
-import { ElementFinderService } from '../../services/finder/element-finder-service';
+import { ElementService } from '../../services/element/element-service';
 import actionEvents from '../../constants/action-events';
 
 /**
  * Composant qui permet de gérer les konnect list
  */
 export class KListComponent {
-
-  /** TagName des lists */
-  private static readonly  _DROPDOWN_LIST_TAGNAME = 'konnect-dropdownlist';
-  private static readonly _MULTIPLE_LIST_TAGNAME = 'konnect-multiselect';
-
-  /** Attribut Role d'un HTMLElement */
-  private static readonly  _ROLE = 'role';
-
-  /** Valeur de l'attribut role */
-  private static readonly _ROLE_VALUE = 'listbox';
-
-  /** Id d'un HTMLElement */
-  private static readonly _ID = 'ID';
-
-  /** Valeur de l'id */
-  private static readonly _ID_LIST_VALUE = 'kdp';
 
   /** Types de liste */
   private static readonly _DROPDOWN = 'Dropdown';
@@ -43,8 +27,8 @@ export class KListComponent {
     ) : IComponentModel {
 
     // On récupère l'élement correspondant à la liste
-    const dropdownElement : Element = this._findListComponent(element, this._DROPDOWN_LIST_TAGNAME);
-    const multipleListElement : Element = this._findListComponent(element, this._MULTIPLE_LIST_TAGNAME );
+    const dropdownElement : Element = ElementService.findListComponent(element, elementsTagName.KONNECT_DROPDOWNLIST);
+    const multipleListElement : Element = ElementService.findListComponent(element, elementsTagName.MULTIPLE_LIST_TAGNAME );
 
     // si c'est une dropdown
     if (dropdownElement) {
@@ -75,13 +59,13 @@ export class KListComponent {
     // Si on a déjà cliqué sur une liste alors on peut acceder aux éléments qu'elle contient
     if (previousElement && (previousElement.typeList === this._DROPDOWN || previousElement.typeList === this._MULTIPLESELECT)) {
       // On vérifie si c'est un input
-      const input = this._isClickInputKList(element);
+      const input = ElementService.isInputKList(element);
 
       if (input) {
         return this._getKListComponent(input as HTMLElement, previousElement);
       }
       // On vérifie si c'est un element ul
-      const listUL = this._isInUlElement(element);
+      const listUL = ElementService.isUlListElement(element);
       if (listUL) {
         return this._getKListComponent(listUL, previousElement);
       }
@@ -102,45 +86,6 @@ export class KListComponent {
   }
 
   /**
-   * Trouve l'element liste si on a clické sur une liste
-   * @param element
-   */
-  private static _findListComponent(element : HTMLElement, listTagname : string) : Element {
-
-    return ElementFinderService.findParentElementWithTagName(
-      element, listTagname.toUpperCase(), 8
-    );
-  }
-
-  /**
-   * Vérifie si on a cliqué sur un item de la liste
-   */
-  private static _isInUlElement(element : HTMLElement) : HTMLElement {
-
-    return ElementFinderService.findParentElementWithTagNameAndValueAttribute(
-      element,
-      elementsTagName.LIST_ELEMENT.toUpperCase(),
-      this._ID,
-      this._ID_LIST_VALUE,
-      15
-    );
-  }
-
-  /**
-   * Vérifie si on a cliqué sur l'input d'une liste
-   */
-  private static _isClickInputKList(element : HTMLElement) : Element {
-
-    return ElementFinderService.findParentElementWithTagNameAndValueAttribute(
-      element,
-      elementsTagName.INPUT.toUpperCase(),
-      this._ROLE,
-      this._ROLE_VALUE,
-      2
-    );
-  }
-
-  /**
    * On modifie l'event model en fonction de l'action voulue
    * @param event
    * @param component
@@ -148,7 +93,7 @@ export class KListComponent {
   public static editKlistMessage(event : IEventModel, component : IComponentModel) : IEventModel {
 
     // Si click list item
-    if (this._isInUlElement(component.element)) {
+    if (ElementService.isUlListElement(component.element)) {
 
       event.action = actionEvents.CLICK_ITEMLIST;
       event.scrollElement = SelectorService.find(component.element);
@@ -163,7 +108,7 @@ export class KListComponent {
      * alors on vérifie si c'est une multiselect car
      * pour l'ouvir il faut faire un click mouse
     */
-    if (this._isClickInputKList(component.element) || component.previousElement.typeList === 'Multiselect') {
+    if (ElementService.isInputKList(component.element) || component.previousElement.typeList === this._MULTIPLESELECT) {
       event.action = actionEvents.CLICKMOUSE;
       return event;
     }
