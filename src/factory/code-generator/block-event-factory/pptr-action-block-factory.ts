@@ -34,16 +34,13 @@ export class PPtrActionBlockFactory {
       // Si l'action est un goto
       case pptrActions.GOTO:
         return this.buildGoto(value);
-        break;
       // Si l'action est la récupération du viewport
       case pptrActions.VIEWPORT:
         return this.buildViewport(
           value.width, value.height);
-        break;
       // Si l'action est une navigation
       case pptrActions.NAVIGATION:
         return this.buildWaitForNavigation();
-        break;
     }
   }
 
@@ -78,6 +75,7 @@ export class PPtrActionBlockFactory {
       value: `await ${this.frame}.setViewport({ width: ${width}, height: ${height} });`
     });
   }
+
   /**
    * Génère le block de navigation
    */

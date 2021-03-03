@@ -14,7 +14,7 @@ import { InputNumericComponent } from '../../components/konnect/input-numeric-co
  * Permet de changer le contenu du body
  * @param pathDoc
  */
-async function changeBodyDocument(pathDoc : string) {
+async function changeBodyDocumentAsync(pathDoc : string) {
   const pathFile = path.join(__dirname, pathDoc );
 
   const content = await FileService.readFileAsync(pathFile);
@@ -122,7 +122,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
 describe('Test du determinate click event', () => {
   test('Determiner click d\'un FileDropZoneComponent', async () => {
     // on init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-filedropzone.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-filedropzone.html');
 
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
 
@@ -138,7 +138,7 @@ describe('Test du determinate click event', () => {
 
   test('Determiner click d\'un KSelectComponent', async () => {
     // on init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-k-select.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-k-select.html');
 
     const elementSelector = 'span > span > span > span\:nth-child(1) > span';
     const element = document.querySelector(elementSelector);
@@ -155,7 +155,7 @@ describe('Test du determinate click event', () => {
 
   test('Determiner click d\'un KmSwitchComponent', async () => {
     // on init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-km-switch.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-km-switch.html');
 
     const elementSelector = 'switch > div > span > span:nth-child(3) > span';
     const element = document.querySelector(elementSelector);
@@ -171,7 +171,7 @@ describe('Test du determinate click event', () => {
 
   test('Determiner click d\'un KListComponent', async () => {
     // on init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-k-list.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-k-list.html');
 
     const elementSelector = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
     const element = document.querySelector(elementSelector);
@@ -200,7 +200,7 @@ describe('Test de determinate drop event', () => {
 
   test('Determiner drop d\'un FileDropZoneComponent', async () => {
     // on init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-filedropzone.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-filedropzone.html');
 
     // On doit trouver un component file dropzone
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');

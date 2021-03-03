@@ -36,7 +36,7 @@ export class ZipService {
    * Generation du fichier zip
    */
   public async generateAsync() : Promise<any> {
-    return await this._zip.generateAsync({
+    return this._zip.generateAsync({
       type : 'nodebuffer'
     });
   }

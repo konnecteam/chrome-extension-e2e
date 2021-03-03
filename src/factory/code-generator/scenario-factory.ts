@@ -130,7 +130,7 @@ export class ScenarioFactory {
       // Si c'est une action pupeteer
       case pptrActions.pptr:
         return PPtrActionBlockFactory.generateBlock(event, frameId, frame, options);
+      default : return null;
     }
-    return null;
   }
 }

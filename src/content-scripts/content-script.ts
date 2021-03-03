@@ -149,7 +149,7 @@ class EventRecorder {
       }
 
       // On observe les changement et on ajoute un listener sur les inputs
-      (window as any).observer = new MutationObserver(this._listenerObserver);
+      (window as any).observer = new MutationObserver(this._listenerObserverAsync);
       (window as any).observer.observe(document, { childList: true, subtree: true });
 
       ChromeService.sendMessage({ control: controlMSG.EVENT_RECORDER_STARTED_EVENT });
@@ -304,7 +304,7 @@ class EventRecorder {
   /**
    * Observer des listener
    */
-  private async _listenerObserver(mutationList : any[]) {
+  private async _listenerObserverAsync(mutationList : any[]) {
     // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
     while (!(window as any).eventRecorder._isRecordTreated) {
       await new Promise(resolve => setTimeout(resolve, 500));

@@ -10,7 +10,7 @@ import { FileService } from '../services/file/file-service';
  * Permet de mettre à jour body
  * @param pathDoc
  */
-async function changeBodyDocument(pathDoc : string) {
+async function changeBodyDocumentAsync(pathDoc : string) {
   const pathFile = path.join(__dirname, pathDoc );
 
   const content = await FileService.readFileAsync(pathFile);
@@ -21,7 +21,7 @@ describe('Test du Component Manager' , () => {
 
   test('Determiner component à partir d\'un click', async () => {
     // On init le body
-    await changeBodyDocument('./../../static/test/dom/dom-filedropzone.html');
+    await changeBodyDocumentAsync('./../../static/test/dom/dom-filedropzone.html');
 
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
 
@@ -41,7 +41,7 @@ describe('Test du Component Manager' , () => {
 
   test('Determiner component à partir d\'un Drop', async () => {
     // On init le body
-    await changeBodyDocument('./../../static/test/dom/dom-filedropzone.html');
+    await changeBodyDocumentAsync('./../../static/test/dom/dom-filedropzone.html');
 
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
     // ON doit trouver un component model de file dropzone
@@ -57,7 +57,7 @@ describe('Test du Component Manager' , () => {
 
   test('Determiner component à partir d\'un change', async () => {
     // On init
-    await changeBodyDocument('./../../static/test/dom/dom-input-numeric.html');
+    await changeBodyDocumentAsync('./../../static/test/dom/dom-input-numeric.html');
 
     const element = document.querySelector('numeric > div > span > span > input\:nth-child(2)');
     // ON doit trouver un component model d'input numeric

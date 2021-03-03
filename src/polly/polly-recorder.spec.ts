@@ -13,9 +13,8 @@ let buildDir;
 /**
  * Permet d'attendre que le polly soit prết pour enregistrer
  */
-async function isPollyReady() : Promise<string> {
-  return await page.evaluate(async () => {
-    await (window as any).waitPolly;
+async function isPollyReadyAsync() : Promise<string> {
+  return page.evaluate(async () => {
     return (window as any).waitPolly;
   });
 }
@@ -23,16 +22,25 @@ async function isPollyReady() : Promise<string> {
 /**
  * Permet de récupérer Polly
  */
-async function getPollyID() : Promise<any> {
-  return await page.evaluate(() => {
+async function getPollyIDAsync() : Promise<any> {
+  return page.evaluate(() => {
     return (window as any).polly.recordingId;
   });
 }
 
-describe('Test de Polly recorder', function () {
+/**
+ * Permet de savoir si Polly est en pause
+ */
+async function isPausedPollyAsync() : Promise<any> {
+  return page.evaluate(() => {
+    return (window as any).polly.isPaused();
+  });
+}
+
+describe('Test de Polly recorder', () => {
 
   // Start test server
-  beforeAll(async function (done) {
+  beforeAll(async done => {
 
     await runBuild();
     buildDir = '../../../dist';
@@ -49,9 +57,9 @@ describe('Test de Polly recorder', function () {
     await page.evaluate(scriptText => {
 
       // Variable qui va permettre de savoir si polly est prêt
-      (window as any).waitPolly = new Promise(function(resolve, reject) {
+      (window as any).waitPolly = new Promise((resolve, reject) => {
         // On verifie si c'est fini toutes les 100Ms
-        const verif = setInterval(function () {
+        const verif = setInterval(() => {
           // si on est pas ready, on fait une pause
           if ((window as any).polly) {
             clearInterval(verif);
@@ -78,21 +86,54 @@ describe('Test de Polly recorder', function () {
   test('Test de création de polly', async () => {
 
     // On attend que polly soit prêt
-    await isPollyReady();
+    await isPollyReadyAsync();
     // On récupère l'id de polly
-    const polly = await getPollyID();
+    const polly = await getPollyIDAsync();
     expect(polly).toBeDefined();
+  });
+
+
+  test('Test de mise en pause de polly', async () => {
+
+    // On attend que polly soit prêt
+    await isPollyReadyAsync();
+
+    // On met en pause polly
+    await page.evaluate(async () => {
+      return (window as any).polly.pause();
+    });
+
+    // On récupère le résultat
+    const result = await isPausedPollyAsync();
+    // Polly est en pause
+    expect(result).toBeTruthy();
+  });
+
+  test('Test de reprise du record de polly', async () => {
+
+    // On attend que polly soit prêt
+    await isPollyReadyAsync();
+
+    // On met en pause polly
+    await page.evaluate(async () => {
+      return (window as any).polly.unpause();
+    });
+
+    // On récupère le résultat
+    const result = await isPausedPollyAsync();
+
+    // Polly n'est plus en pause
+    expect(result).toBeFalsy();
   });
 
   test('Test de récupération du résultat de polly', async () => {
 
     // On attend que polly soit prêt
-    await isPollyReady();
+    await isPollyReadyAsync();
 
     // On stop polly
     await page.evaluate(async () => {
-      await (window as any).polly.stop();
-      return Promise.resolve(true);
+      return (window as any).polly.stop();
     });
 
     // On récupère le résultat

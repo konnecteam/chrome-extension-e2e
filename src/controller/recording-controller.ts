@@ -106,12 +106,26 @@ class RecordingController {
   public boot() {
     (chrome.extension as any).onConnect.addListener(port => {
       port.onMessage.addListener(msg => {
-        if (msg.action && msg.action === controlActions.START) this._start();
-        if (msg.action && msg.action === controlActions.STOP) this._stop();
-        if (msg.action && msg.action === controlActions.CLEAN) this._cleanUp();
-        if (msg.action && msg.action === controlActions.PAUSE) this._pause();
-        if (msg.action && msg.action === controlActions.UNPAUSE) this._unPause();
-        if (msg.action && msg.action === controlActions.EXPORT_SCRIPT) this._exportScriptAsync();
+        switch (msg.action) {
+          case controlActions.START :
+            this._start();
+            break;
+          case controlActions.STOP :
+            this._stop();
+            break;
+          case controlActions.CLEAN:
+            this._cleanUp();
+            break;
+          case controlActions.PAUSE :
+            this._pause();
+            break;
+          case controlActions.UNPAUSE :
+            this._unPause();
+            break;
+          case controlActions.EXPORT_SCRIPT :
+            this._exportScriptAsync();
+            break;
+        }
       });
     });
   }

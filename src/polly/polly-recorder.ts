@@ -245,7 +245,7 @@ export class PollyRecorder {
   /**
    * On stop le record
    */
-  private async _stop() : Promise<void> {
+  private async _stopAsync() : Promise<void> {
 
     const listRequest = window.performance.getEntries();
     let currentReq = null;
@@ -314,7 +314,7 @@ export class PollyRecorder {
    * @param event
    */
   private _getHARResult(event) : void {
-    this._stop().then(() => {
+    this._stopAsync().then(() => {
       const har = this._getResult(this.recordingId);
       const id = this.recordingId;
       const resulRecord = {result: har, recordingId: id };

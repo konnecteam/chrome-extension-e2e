@@ -17,8 +17,8 @@ let buildDir;
  * Permet de lancer un dispatch event sur la window
  * @param event
  */
-async function dispatchEvent(event : string, message : IMessageModel) : Promise<void> {
-  return await page.evaluate(function (ev) {
+async function dispatchEventAsync(event : string, message : IMessageModel) : Promise<void> {
+  return page.evaluate(ev => {
     const customEvent = new CustomEvent(ev.event);
     Object.assign(customEvent, ev.message);
 
@@ -29,8 +29,8 @@ async function dispatchEvent(event : string, message : IMessageModel) : Promise<
 /**
  * Permet de récupérer la liste des events record
  */
-async function getEvensRecord() : Promise<any[]> {
-  return await page.evaluate(() => {
+async function getEvensRecordAsync() : Promise<any[]> {
+  return page.evaluate(() => {
     return (window as any).events;
   });
 }
@@ -38,16 +38,16 @@ async function getEvensRecord() : Promise<any[]> {
 /**
  * Permet d'attendre que le content script soit prết pour enregistrer
  */
-async function isContentScriptReady() : Promise<string> {
-  return await page.evaluate(async () => {
-    return await (window as any).waitRecordReady;
+async function isContentScriptReadyAsync() : Promise<string> {
+  return page.evaluate(async () => {
+    return (window as any).waitRecordReady;
   });
 }
 
 describe('Test Content script ', () => {
 
   // Start test server
-  beforeAll(async function (done) {
+  beforeAll(async done => {
 
     // On met un timeout car runbuild met plus de 2000ms
     await runBuild();
@@ -84,7 +84,7 @@ describe('Test Content script ', () => {
       // Variable qui va permettre de savoir si le content script est prêt
       (window as any).waitRecordReady = new Promise((resolve, reject) => {
         // On verifie si c'est fini toutes les 100Ms
-        const verif = setInterval(function () {
+        const verif = setInterval(() => {
           // si on est ready, on clear
           if ((window as any).recorderReady) {
             clearInterval(verif);
@@ -136,12 +136,12 @@ describe('Test Content script ', () => {
 
   test('Test de record d\'un click', async () => {
 
-    await isContentScriptReady();
+    await isContentScriptReadyAsync();
 
     await page.click('#inputText');
 
     // On récupère la liste d'event
-    const events = await getEvensRecord();
+    const events = await getEvensRecordAsync();
 
     // Le dernier event doit contenir le selecteur de l'input
     expect(events[events.length - 1].selector).toEqual('#inputText');
@@ -156,12 +156,12 @@ describe('Test Content script ', () => {
      * pour la récupération de l'url
      */
 
-    await isContentScriptReady();
+    await isContentScriptReadyAsync();
 
-    await dispatchEvent('OnMessage', { control: 'get-current-url' });
+    await dispatchEventAsync('OnMessage', { control: 'get-current-url' });
 
     // On récupère la liste des events
-    const events = await getEvensRecord();
+    const events = await getEvensRecordAsync();
     // Le dernier event doit avoir un un frameUrl
     expect(events[events.length - 1].frameUrl).toBeDefined();
 
@@ -175,12 +175,12 @@ describe('Test Content script ', () => {
      * du background
      * pour le viewport
      */
-    await isContentScriptReady();
+    await isContentScriptReadyAsync();
 
-    await dispatchEvent('OnMessage', { control: 'get-viewport-size' });
+    await dispatchEventAsync('OnMessage', { control: 'get-viewport-size' });
 
     // On récupère la liste des events
-    const events = await getEvensRecord();
+    const events = await getEvensRecordAsync();
     // Le dernier event doit avoir l'attribut coordinates non vide
     expect(events[events.length - 1].coordinates).toBeDefined();
 

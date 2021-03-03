@@ -11,12 +11,6 @@ import componentName from '../../constants/component-name';
  */
 export class KSelectComponent {
 
-  /** Class d'un composant KSelect  */
-  private static readonly _K_SELECT_CLASSNAME = 'k-select';
-
-  /** Attribut class d'un HTMLElement */
-  private static readonly _CLASS = 'class';
-
   /**
    * Verifie si l'element est un k select et retourne le composant associé
    */

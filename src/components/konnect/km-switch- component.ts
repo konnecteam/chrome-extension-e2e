@@ -11,23 +11,11 @@ import actionEvents from '../../constants/action-events';
  */
 export class KmSwitchComponent {
 
-  /** Contenu de la class d'un KmSwitch handle */
-  private static readonly _KMSWITCH_HANDLE = 'km-switch-handle';
-
-  /** Contenu de class d'un KmSwitch */
-  private static readonly _KMSWITCH = 'km-switch';
-
-  /** KmSwitch conteneur */
-  private static readonly _KMSWITCH_CONTAINER = 'km-switch-container';
-
-  /** Attribut class d'un HTMLElement */
-  private static readonly _CLASS = 'class';
-
   /**
    * Verifie si l'élément est un km switch
    */
   public static isKmSwitch(element : HTMLElement) : IComponentModel {
-    const elementFind = ElementService.isKmSwitchElement(element, this._CLASS, this._KMSWITCH_HANDLE);
+    const elementFind = ElementService.isKmSwitchElement(element);
 
     if (elementFind) {
       return { component: componentName.KMSWITCH, element: elementFind as HTMLElement };

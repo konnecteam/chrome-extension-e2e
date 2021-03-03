@@ -23,8 +23,9 @@ export class RadioGroupComponent {
 
       return { component: componentName.RADIOGROUP, element };
 
+    } else {
+      return null;
     }
-    return null;
   }
 
   /**

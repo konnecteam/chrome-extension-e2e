@@ -40,7 +40,6 @@ export class ChangeBlockFactory {
       case ActionEvents.CHANGE_INPUTNUMERIC:
         return this.buildChangeInputNumeric(selector, value,
           selectorFocus);
-        break;
       // Si c'est un change
       case ActionEvents.CHANGE:
 
@@ -56,7 +55,6 @@ export class ChangeBlockFactory {
           // Sinon c'est un input simple
           return this.buildChange(selector, value);
         }
-        break;
     }
   }
 

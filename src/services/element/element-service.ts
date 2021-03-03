@@ -262,7 +262,7 @@ export class ElementService {
   /**
    * Verifie si l'élément est un km switch
    */
-  public static isKmSwitchElement(element : HTMLElement, attribute : string , valueAttribute : string) : Element {
+  public static isKmSwitchElement(element : HTMLElement) : Element {
 
     if (ElementService.findParentElementWithTagNameAndValueAttribute(
       element, elementsTagName.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE

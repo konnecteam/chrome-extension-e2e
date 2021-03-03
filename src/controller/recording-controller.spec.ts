@@ -7,6 +7,7 @@ import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/
 import * as path from 'path';
 import * as chrome from 'sinon-chrome';
 import { IMessageModel } from '../models/i-message-model';
+import controlActions from '../constants/control-actions';
 
 let server;
 let browser;
@@ -18,7 +19,7 @@ let buildDir;
  * Récupère l'état du badge pour savoir
  * Si on est en pause, si on a commencé...
  */
-async function getBadgeText() : Promise<string> {
+async function getBadgeTextAsync() : Promise<string> {
 
   return page.evaluate(() => {
     return (window as any).badgeText;
@@ -28,9 +29,9 @@ async function getBadgeText() : Promise<string> {
 /**
  * Permet d'attendre que le content script soit prết pour enregistrer
  */
-async function isBackgroundReady() : Promise<string> {
+async function isBackgroundReadyAsync() : Promise<string> {
   return page.evaluate(async () => {
-    return await (window as any).waitBackground;
+    return (window as any).waitBackground;
   });
 }
 
@@ -38,11 +39,10 @@ async function isBackgroundReady() : Promise<string> {
  * Permet de lancer un dispatch event sur la window
  * @param event
  */
-async function dispatchEvent(event : string, message : IMessageModel) : Promise<void> {
-  return page.evaluate(function (ev) {
+async function dispatchEventAsync(event : string, message : IMessageModel) : Promise<void> {
+  return page.evaluate(ev => {
     const customEvent = new CustomEvent(ev.event);
     Object.assign(customEvent, ev.message);
-
     window.dispatchEvent(customEvent);
   }, { event, message });
 }
@@ -51,19 +51,19 @@ async function dispatchEvent(event : string, message : IMessageModel) : Promise<
  * Permet de verifie le contenu du badge
  * @param action
  */
-async function verfiyBadgeContent(action : string ) : Promise<string> {
-  await isBackgroundReady();
+async function verfiyBadgeContentAsync(action : string ) : Promise<string> {
+  await isBackgroundReadyAsync();
   // Dispatch event
-  await dispatchEvent('OnMessage', { action });
+  await dispatchEventAsync('OnMessage', { action });
   // Récupérer l'état du badge
-  return getBadgeText();
+  return getBadgeTextAsync();
 }
 
 // tslint:disable: no-identical-functions
-describe('Test de Recording Controller', function () {
+describe('Test de Recording Controller', () => {
 
   // Mise en place du serveur
-  beforeAll(async function (done) {
+  beforeAll(async done => {
 
     await runBuild();
     buildDir = '../../../dist';
@@ -85,7 +85,7 @@ describe('Test de Recording Controller', function () {
       // Variable qui va permettre de savoir si le backgournd est prêt
       (window as any).waitBackground = new Promise((resolve, reject) => {
         // On verifie si c'est fini toutes les 100Ms
-        const verif = setInterval(function () {
+        const verif = setInterval(() => {
           // si on est ready, on clear
           if ((window as any).recordingController) {
             clearInterval(verif);
@@ -133,13 +133,26 @@ describe('Test de Recording Controller', function () {
 
           // On adapte la méthode boot pour les tests
           window.addEventListener('OnMessage', (msg : any) => {
-
-            if (msg.action && msg.action === 'start') (window as any).recordingController._start();
-            if (msg.action && msg.action === 'stop') (window as any).recordingController._stop();
-            if (msg.action && msg.action === 'cleanUp') (window as any).recordingController._cleanUp();
-            if (msg.action && msg.action === 'pause') (window as any).recordingController._pause();
-            if (msg.action && msg.action === 'unpause') (window as any).recordingController._unPause();
-            if (msg.action && msg.action === 'exportScript') (window as any).recordingController._exportScriptAsync();
+            switch (msg.action) {
+              case browserOption.controlActions.START :
+                (window as any).recordingController._start();
+                break;
+              case browserOption.controlActions.STOP :
+                (window as any).recordingController._stop();
+                break;
+              case browserOption.controlActions.CLEAN:
+                (window as any).recordingController._cleanUp();
+                break;
+              case browserOption.controlActions.PAUSE :
+                (window as any).recordingController._pause();
+                break;
+              case browserOption.controlActions.UNPAUSE :
+                (window as any).recordingController._unPause();
+                break;
+              case browserOption.controlActions.EXPORT_SCRIPT :
+                (window as any).recordingController._exportScriptAsync();
+                break;
+            }
           });
         }
       };
@@ -173,7 +186,7 @@ describe('Test de Recording Controller', function () {
        * On overwite la méthode executeScript
        */
       (window as any).executeScript = false;
-      chrome.tabs.executeScript = function (any, callback) {
+      chrome.tabs.executeScript = (any, callback) => {
         (window as any).executeScript = true;
         callback();
       };
@@ -206,7 +219,7 @@ describe('Test de Recording Controller', function () {
         (window as any).ddlFile = true;
       };
 
-    }, { chrome, options: defaults });
+    }, { chrome, options: defaults, controlActions });
 
     // On ajoute le background dans la page
     await page.evaluate(scriptText => {
@@ -228,41 +241,41 @@ describe('Test de Recording Controller', function () {
 
   test('Test de start', async () => {
 
-    const badge = await verfiyBadgeContent('start');
+    const badge = await verfiyBadgeContentAsync(controlActions.START);
     // Verifier si il est égale à 'rec' car il n'y a pas d'event à save
     expect(badge).toEqual('rec');
   });
 
   test('Test de stop', async () => {
-    const badge = await verfiyBadgeContent('stop');
+    const badge = await verfiyBadgeContentAsync(controlActions.STOP);
     // Verifier si il est égale à '' car il n'y a pas d'event à save
     expect(badge).toEqual('');
   });
 
   test('Test de cleanUp', async () => {
 
-    const badge = await verfiyBadgeContent('cleanup');
+    const badge = await verfiyBadgeContentAsync(controlActions.CLEAN);
     // Verifier si il est égale à '' car il n'y a pas d'event à save
     expect(badge).toEqual('');
   });
 
   test('Test de pause', async () => {
 
-    const badge = await verfiyBadgeContent('pause');
+    const badge = await verfiyBadgeContentAsync(controlActions.PAUSE);
     // Verifier si il est égale à '❚❚' car on est en pause
     expect(badge).toEqual('❚❚');
   });
 
   test('Test de unpause', async () => {
 
-    const badge = await verfiyBadgeContent('unpause');
+    const badge = await verfiyBadgeContentAsync(controlActions.UNPAUSE);
     // Verifier si il est égale à 'rec' car on record
     expect(badge).toEqual('rec');
   });
 
   test('Test de exportScript', async () => {
 
-    await isBackgroundReady();
+    await isBackgroundReadyAsync();
 
     // On met result à true pour simuler la reception d'un résultat
     await page.evaluate(() => {
@@ -276,7 +289,7 @@ describe('Test de Recording Controller', function () {
       Promise.resolve('good');
     });
     // Dispatch event
-    await dispatchEvent('OnMessage', { action: 'exportScript' });
+    await dispatchEventAsync('OnMessage', { action: controlActions.EXPORT_SCRIPT });
 
     // On fait une pause pour laisser exportScript le temps de finir
     await page.waitFor(40);

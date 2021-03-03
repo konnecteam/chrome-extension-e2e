@@ -15,7 +15,7 @@ import { FileService } from '../../services/file/file-service';
  * Permet de changer le contenu du body
  * @param pathDoc
  */
-async function changeBodyDocument(pathDoc : string) {
+async function changeBodyDocumentAsync(pathDoc : string) {
   const pathFile = path.join(__dirname, pathDoc );
 
   const content = await FileService.readFileAsync(pathFile);
@@ -26,7 +26,7 @@ describe('Test de event message builder factory', () => {
 
   test('Test de FileDropZone component message', async () => {
     // On init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-filedropzone.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-filedropzone.html');
     const eventCatched : IEventModel = {
       files : 'text.txt'
     };
@@ -46,7 +46,7 @@ describe('Test de event message builder factory', () => {
 
   test('Test de FileDropZone add button component message', async () => {
     // On init
-    await changeBodyDocument('./../../../static/test/dom/dom-filedropzone.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-filedropzone.html');
 
     const eventCatched : IEventModel = {
       files : 'texte.txt'
@@ -69,7 +69,7 @@ describe('Test de event message builder factory', () => {
 
   test('Test de INPUT NUMERIC component message', async () => {
     // On init
-    await changeBodyDocument('./../../../static/test/dom/dom-input-numeric.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-input-numeric.html');
 
     const element = document.querySelector('numeric > div > span > span > input\:nth-child(2)');
 
@@ -93,7 +93,7 @@ describe('Test de event message builder factory', () => {
 
   test('Test de K select component message', async () => {
     // On init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-k-select.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-k-select.html');
 
     const elementSelector = 'span > span > span > span\:nth-child(1) > span';
     const element = document.querySelector(elementSelector);
@@ -153,7 +153,7 @@ describe('Test de event message builder factory', () => {
 
   test('Test de KLIST component message', async () => {
     // On doit trouver un event model de file drop zone
-    await changeBodyDocument('./../../../static/test/dom/dom-k-list.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-k-list.html');
 
     const elementSelector = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
     const element = document.querySelector(elementSelector);
@@ -192,7 +192,7 @@ describe('Test de event message builder factory', () => {
 
   test('Test de Checkbox component message', async () => {
     // On init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-checkbox.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-checkbox.html');
 
     const element = document.getElementById('ckb146');
 
@@ -216,7 +216,7 @@ describe('Test de event message builder factory', () => {
 
   test('Test de radio group component message', async () => {
     // On init le body
-    await changeBodyDocument('./../../../static/test/dom/dom-radio-group.html');
+    await changeBodyDocumentAsync('./../../../static/test/dom/dom-radio-group.html');
 
     const element = document.getElementById('rg168_0');
 
