@@ -1,9 +1,9 @@
 import { SelectorService } from '../../services/selector/selector-service';
 import  componentName  from '../../constants/component-name';
-import { IComponentModel } from '../../models/i-component-model';
+import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import actionEvents from '../../constants/action-events';
-import { IEventModel } from '../../models/i-event-model';
+import { IEvent } from '../../interfaces/i-event';
 
 
 /**
@@ -14,7 +14,7 @@ export class InputNumericComponent {
   /**
    * Verifie si c'est un input numeric et retourne le component associé
    */
-  public static isInputNumeric(element : HTMLElement) : IComponentModel  {
+  public static isInputNumeric(element : HTMLElement) : IComponent  {
 
     if (ElementService.isNumericElement(element)) {
 
@@ -30,7 +30,7 @@ export class InputNumericComponent {
   /**
    * Modification de l'event pour un input numeric
    */
-  public static editInputNumericMessage(event : IEventModel, component : IComponentModel) : IEventModel {
+  public static editInputNumericMessage(event : IEvent, component : IComponent) : IEvent {
 
     event.selectorFocus = SelectorService.find(component.element);
     event.action = actionEvents.CHANGE_INPUTNUMERIC;

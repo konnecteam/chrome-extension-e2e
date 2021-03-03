@@ -7,7 +7,7 @@ import { KListComponent } from '../../components/konnect/k-list-component';
 import { KSelectComponent } from '../../components/konnect/k-select-component';
 import { KmSwitchComponent } from '../../components/konnect/km-switch- component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
-import { IComponentModel } from '../../models/i-component-model';
+import { IComponent } from '../../interfaces/i-component';
 import elementsTagName from '../../constants/elements-tagName';
 import { SelectorService } from '../selector/selector-service';
 
@@ -297,7 +297,7 @@ export class ElementService {
   /**
    * Permet determiner sur quel élément est le change
    */
-  public static determinateChangeComponent(element : HTMLElement) : IComponentModel {
+  public static determinateChangeComponent(element : HTMLElement) : IComponent {
 
     return InputFilesComponent.isInputFile(element as HTMLInputElement) || InputNumericComponent.isInputNumeric(element)
     || CheckboxComponent.isCheckboxComponent(element) || RadioGroupComponent.isRadioGroupComponent(element);
@@ -306,7 +306,7 @@ export class ElementService {
   /**
    * Permet de déterminer sur quel composant on a cliqué
    */
-  public static determinateClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : IComponentModel {
+  public static determinateClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : IComponent {
 
     return FileDropZoneComponent.isFileDropZone(element) ||
     KSelectComponent.isKSelect(element) || KmSwitchComponent.isKmSwitch(element) ||
@@ -316,7 +316,7 @@ export class ElementService {
   /**
    * Détermine sur quel composant il y a eu un drop
    */
-  public static determinateDropComponent(element : HTMLElement) : IComponentModel {
+  public static determinateDropComponent(element : HTMLElement) : IComponent {
 
     return FileDropZoneComponent.isFileDropZone(element);
   }
@@ -325,7 +325,7 @@ export class ElementService {
   /**
    * Détermine sur quel composant il y a eu un keydown
    */
-  public static determinateKeydownComponent(element : HTMLElement) : IComponentModel {
+  public static determinateKeydownComponent(element : HTMLElement) : IComponent {
 
     return IframeComponent.isIframe(element);
   }

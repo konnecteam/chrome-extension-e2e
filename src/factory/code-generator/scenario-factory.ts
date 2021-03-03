@@ -4,9 +4,9 @@ import { DropBlockFactory } from './block-event-factory/drop-block-factory';
 import { ChangeBlockFactory } from './block-event-factory/change-block-factory';
 import domEventsToRecord from '../../constants/dom-events-to-record';
 import { ClickBlockFactory } from './block-event-factory/click-block-factory';
-import { IOptionModel } from '../../models/i-options-model';
+import { IOption } from '../../interfaces/i-options';
 import { Block } from '../../code-generator/block';
-import { IEventModel } from '../../models/i-event-model';
+import { IEvent } from '../../interfaces/i-event';
 import pptrActions from '../../constants/pptr-actions';
 import { PPtrActionBlockFactory } from './block-event-factory/pptr-action-block-factory';
 
@@ -107,7 +107,7 @@ export class ScenarioFactory {
   /**
    * Parser un événement en Block
    */
-  public static parseEvent(event : IEventModel, frameId : number, frame : string, options : IOptionModel) : Block {
+  public static parseEvent(event : IEvent, frameId : number, frame : string, options : IOption) : Block {
     // Pour chaque type d'event possible
     const { typeEvent } = event;
     // En fonction du typeEvent déclancheur

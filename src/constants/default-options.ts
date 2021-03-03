@@ -1,8 +1,8 @@
-import { IOptionModel } from 'models/i-options-model';
+import { IOption } from 'interfaces/i-options';
 /**
  * Constantes des valeurs des options par défauts
  */
-export const defaults : IOptionModel = {
+export const defaults : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,

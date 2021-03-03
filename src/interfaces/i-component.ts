@@ -1,19 +1,19 @@
 /**
- * Model représentant un composant
+ * Interface représentant un composant
  */
-export class IComponentModel {
+export interface IComponent {
 
   /** Nom du composant */
-  public component : string;
+  component : string;
 
   /** Element du composant */
-  public element : HTMLElement;
+  element : HTMLElement;
 
   /** Le sélécteur de l'event précédant */
-  public previousSelector? : string;
+  previousSelector? : string;
 
   /** Utile pour déterminer dans quel type de konnect liste on se situe */
-  public previousElement? : {
+  previousElement? : {
     selector : string,
     element : Element,
     typeList : string

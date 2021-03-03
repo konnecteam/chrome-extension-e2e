@@ -1,38 +1,38 @@
 /**
- * Model représentant les options de l'utilisateur
+ * Interface représentant les options de l'utilisateur
  */
-export class IOptionModel {
+export class IOption {
 
   /** Mettre le scénario dans une fonction async */
-  public wrapAsync : boolean;
+  wrapAsync : boolean;
 
   /** Affichage du scénario */
-  public headless : boolean;
+  headless : boolean;
 
   /** Mettre les waitForNavigation */
-  public waitForNavigation : boolean;
+  waitForNavigation : boolean;
 
   /** Faire un witForSelector après chaque click */
-  public waitForSelectorOnClick : boolean;
+  waitForSelectorOnClick : boolean;
 
   /** Mettre une ligne entre chaque block */
-  public blankLinesBetweenBlocks : boolean;
+  blankLinesBetweenBlocks : boolean;
 
   /** Utiliser une regex pour les custom attributes */
-  public useRegexForDataAttribute : boolean;
+  useRegexForDataAttribute : boolean;
 
   /** Prendre en compte les requêtes http */
-  public recordHttpRequest : boolean;
+  recordHttpRequest : boolean;
 
   /** Regex des data attributes */
-  public dataAttribute : string;
+  dataAttribute : string;
 
   /** Ligne à écrire après chaque click */
-  public customLineAfterClick : string;
+  customLineAfterClick : string;
 
   /** regex pour filtrer les requêtes http */
-  public regexHTTPrequest : string;
+  regexHTTPrequest : string;
 
   /** Ligne customisée à rajouter avant le block d'un event */
-  public customLinesBeforeEvent : string;
+  customLinesBeforeEvent : string;
 }

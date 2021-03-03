@@ -1,45 +1,45 @@
 /**
- * Model représentant les messages de communication entre background et content-script
+ * Interface représentant les messages de communication entre background et content-script
  */
-export class IMessageModel {
+export class IMessage {
 
   /** Label identifiant l'événement */
-  public control? : string;
+  control? : string;
 
 
   /** Identifiant de la frame actuelle */
-  public frameId? : number;
+  frameId? : number;
 
   /** Url de la frame actuelle */
-  public frameUrl? : string;
+  frameUrl? : string;
 
   /** Taille de l'écran */
-  public coordinates? : {
+  coordinates? : {
     width : number,
     height : number
   };
 
   /** URL du résultat des requêtes de PollyJS */
-  public resultURL? : any;
+  resultURL? : any;
 
   /** Identifiant de l'enregistrement génère via PollyJs */
-  public recordingId? : string;
+  recordingId? : string;
 
   /** Sélécteur de l'élément */
-  public selector? : string;
+  selector? : string;
 
   /** Valeur du sélécteur */
-  public value? : any;
+  value? : any;
 
   /** Action à effectuer */
-  public action? : string;
+  action? : string;
 
   /** Nom d'un fichier  */
-  public filename? : string;
+  filename? : string;
 
   /** Contenu du fichier */
-  public content? : string;
+  content? : string;
 
   /** Type de l'événement */
-  public typeEvent? : string;
+  typeEvent? : string;
 }

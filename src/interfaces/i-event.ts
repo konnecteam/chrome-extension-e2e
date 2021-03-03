@@ -1,90 +1,90 @@
 /**
- * Model représentant un Event
+ * Interface représentant un Event
  */
-export class IEventModel {
+export interface IEvent {
 
   /** Action de l'événement */
-  public action? : string;
+  action? : string;
 
   /** Type d'event */
-  public typeEvent? : string;
+  typeEvent? : string;
 
   /** Selector de l'élément concerné */
-  public selector? : string;
+  selector? : string;
 
   /** Valeur de l'événement */
-  public value? : any;
+  value? : any;
 
   /** Href de l'event */
-  public href? : string;
+  href? : string;
 
   /** Keycode détécté */
-  public keyCode? : number;
+  keyCode? : number;
 
   /** Touche surlaquelle l'user a cliqué */
-  public key? : string;
+  key? : string;
 
   /** Tagname de l'element */
-  public tagName? : string;
+  tagName? : string;
 
   /** Id de la frame */
-  public frameId? : number;
+  frameId? : number;
 
   /** Url de la frame */
-  public frameUrl? : string;
+  frameUrl? : string;
 
   /** commentaires */
-  public comments? : string;
+  comments? : string;
 
   /** Position du scroll horizontal */
-  public scrollY? : number;
+  scrollY? : number;
 
   /** Position du scroll vertical */
-  public scrollX? : number;
+  scrollX? : number;
 
   /** Index de l'élément d'une liste déroulante */
-  public listItemIndex? : string;
+  listItemIndex? : string;
 
   /** Sélécteur de la liste déroulante */
-  public sourceSelector? : string;
+  sourceSelector? : string;
 
   /** Sélécteur de l'iframe */
-  public iframe? : string;
+  iframe? : string;
 
   /** Durée d'un click */
-  public durancyClick? : number;
+  durancyClick? : number;
 
   /** Liste des noms de fichiers à uplaoder séparés par des ';' */
-  public files? : string;
+  files? : string;
 
   /** Sélécteur de l'input à focus pour l'input numeric */
-  public selectorFocus? : string;
+  selectorFocus? : string;
 
   /** Coordonées */
-  public coordinates? : {x : number, y : number};
+  coordinates? : {x : number, y : number};
 
   /** Height de la page */
-  public height? : number;
+  height? : number;
 
   /** Width de la page */
-  public width? : number;
+  width? : number;
 
   /** Sélécteur d'un élément à faire scroller */
-  public scrollElement? : string;
+  scrollElement? : string;
 
   /** Scroll horizontal de l'élément à faire scroller */
-  public scrollYElement? : number;
+  scrollYElement? : number;
 
   /** Scroll Verticale de l'élément à faire scroll */
-  public scrollXElement? : number;
+  scrollXElement? : number;
 
   /** Sélecteur de header du calendar */
-  public calendarHeader? : string;
+  calendarHeader? : string;
 
   /** Sélécteur de la view du calendar */
-  public calendarView? : string;
+  calendarView? : string;
 
   /** Sélecteur de l'élément date */
-  public dateSelector? : string;
+  dateSelector? : string;
 
 }

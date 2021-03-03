@@ -4,7 +4,7 @@ import { defaults as code } from '../constants/default-options';
 import { ZipService } from '../services/zip/zip-service';
 import { FileService } from '../services/file/file-service';
 import { ChromeService } from '../services/chrome/chrome-service';
-import { IMessageModel } from '../models/i-message-model';
+import { IMessage } from '../interfaces/i-message';
 import pptrActions from '../constants/pptr-actions';
 import { PollyService } from '../services/polly/polly-service';
 import { PollyFactory } from '../factory/polly/polly-factory';
@@ -32,7 +32,7 @@ class RecordingController {
 
   // Modèle custom
   /** évenements récéptionnés */
-  private _recording : IMessageModel[] = [];
+  private _recording : IMessage[] = [];
 
   // Methodes
 
@@ -450,7 +450,7 @@ class RecordingController {
    * Permet de gérer les messages reçus du content script
    */
   private _handleMessage(
-    message : IMessageModel,
+    message : IMessage,
     sender? : { frameId : number, url : string }
   ) : void {
 
@@ -472,7 +472,7 @@ class RecordingController {
   /**
    * Permet de gérer les messages de "type" contrôle
    */
-  private _handleControlMessage(message : IMessageModel) : void {
+  private _handleControlMessage(message : IMessage) : void {
     switch (message.control) {
       case controlMSG.EVENT_RECORDER_STARTED_EVENT :
         ChromeService.setBadgeText(this._badgeState);
@@ -509,7 +509,7 @@ class RecordingController {
    * Permet de récupérer le fichier HAR généré
    * (fichier contient toutes les requêtes enregistrées)
    */
-  private _getHARcontent(message : IMessageModel) : void {
+  private _getHARcontent(message : IMessage) : void {
 
     // on vérifie si on a le résultat de la séquence et on affecte à polly
     if (message.resultURL) {
@@ -541,7 +541,7 @@ class RecordingController {
    * Permet d'enregistrer un fichier uploadé par l'utilisateur dans un tableau
    * afin de pouvoir rejouer au scénario
    */
-  private _recordNewFile(message : IMessageModel) : void {
+  private _recordNewFile(message : IMessage) : void {
 
     // on vérifie que le fichier uploadé à bien un nom et un contenu
     // et que le record n'est pas en pause

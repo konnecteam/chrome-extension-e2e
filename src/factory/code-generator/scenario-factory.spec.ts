@@ -7,7 +7,7 @@ import { ClickBlockFactory } from './block-event-factory/click-block-factory';
 import { defaults } from './../../constants/default-options';
 import actionEvents from '../../constants/action-events';
 import domEventsToRecord from '../../constants/dom-events-to-record';
-import { IEventModel } from '../../models/i-event-model';
+import { IEvent } from '../../interfaces/i-event';
 import { Block } from '../../code-generator/block';
 import 'jest';
 import { ScenarioFactory } from './scenario-factory';
@@ -141,37 +141,37 @@ describe('Test de Scenario Factory', () => {
 
 
   test('Test de generate Click event', () => {
-    const eventModel : IEventModel = {
+    const eventI : IEvent = {
       typeEvent : domEventsToRecord.CLICK,
       selector : '#id',
       action : actionEvents.BASIC_CLICK
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventI, frameId, frame, defaults)
     ).toEqual(
-      ClickBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+      ClickBlockFactory.generateBlock(eventI, frameId, frame, defaults)
     );
   });
 
 
   test('Test de generate Change event', () => {
-    const eventModel : IEventModel = {
+    const eventI : IEvent = {
       typeEvent : domEventsToRecord.CHANGE,
       selector : '#id',
       action : actionEvents.CHANGE,
       value: 'content'
     };
     expect(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventI, frameId, frame, defaults)
     ).toEqual(
-      ChangeBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+      ChangeBlockFactory.generateBlock(eventI, frameId, frame, defaults)
     );
   });
 
 
   test('Test de generate Drop event', () => {
-    const eventModel : IEventModel = {
+    const eventI : IEvent = {
       typeEvent : domEventsToRecord.DROP,
       selector : '#id',
       action : actionEvents.DROP_DROPZONE,
@@ -179,28 +179,28 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventI, frameId, frame, defaults)
     ).toEqual(
-      DropBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+      DropBlockFactory.generateBlock(eventI, frameId, frame, defaults)
     );
   });
 
   test('Test de generate Submit event', () => {
-    const eventModel : IEventModel = {
+    const eventI : IEvent = {
       typeEvent : domEventsToRecord.SUBMIT,
       selector : '#id',
       action : actionEvents.SUBMIT
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventI, frameId, frame, defaults)
     ).toEqual(
-      SubmitBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+      SubmitBlockFactory.generateBlock(eventI, frameId, frame, defaults)
     );
   });
 
   test('Test de generate Kedown event', () => {
-    const eventModel : IEventModel = {
+    const eventI : IEvent = {
       typeEvent : domEventsToRecord.KEYDOWN,
       selector : '#id',
       action : actionEvents.LISTKEYDOWN,
@@ -209,14 +209,14 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventI, frameId, frame, defaults)
     ).toEqual(
-      KeydownBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+      KeydownBlockFactory.generateBlock(eventI, frameId, frame, defaults)
     );
   });
 
   test('Test de generate PPtr action event', () => {
-    const eventModel : IEventModel = {
+    const eventI : IEvent = {
       typeEvent : pptrActions.pptr,
       selector : '#id',
       action : pptrActions.GOTO,
@@ -224,9 +224,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventI, frameId, frame, defaults)
     ).toEqual(
-      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+      PPtrActionBlockFactory.generateBlock(eventI, frameId, frame, defaults)
     );
   });
 });

@@ -2,7 +2,7 @@ import { CheckboxComponent } from './checkbox-component';
 import 'jest';
 import * as path from 'path';
 import componentName from '../../constants/component-name';
-import { IEventModel } from '../../models/i-event-model';
+import { IEvent } from '../../interfaces/i-event';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -33,7 +33,7 @@ describe('Test de Checkbox', () => {
 
   test('Test de editCheckboxMessage', () => {
     // On créé un event model qui contient les infos dont on a besoin
-    const eventCatched : IEventModel = {
+    const eventCatched : IEvent = {
       action : 'change'
     };
 

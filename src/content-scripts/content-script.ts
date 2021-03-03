@@ -1,8 +1,8 @@
-import { IMessageModel } from '../models/i-message-model';
+import { IMessage } from '../interfaces/i-message';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
 import elementsTagName from '../constants/elements-tagName';
-import { IEventModel } from '../models/i-event-model';
+import { IEvent } from '../interfaces/i-event';
 import { KeyDownService } from '../services/key-down/key-down-service';
 import { StorageService } from '../services/storage/storage-service';
 import eventsToRecord from '../constants/dom-events-to-record';
@@ -160,7 +160,7 @@ class EventRecorder {
    * Permet de rediriger les messages dans la bonne méthode
    * @param message
    */
-  private _messageControl(message : IMessageModel) : void {
+  private _messageControl(message : IMessage) : void {
 
     if (message && message.hasOwnProperty('control')) {
 
@@ -261,8 +261,8 @@ class EventRecorder {
       comments = '/!\\ The selector returns more than one element, thus the test will be wrong.';
     }
 
-    // construction du message model: IEventModel
-    let message : IEventModel = {
+    // construction du message: IEvent
+    let message : IEvent = {
       selector: SelectorService.standardizeSelector(selector),
       comments,
       value: e.target.value,

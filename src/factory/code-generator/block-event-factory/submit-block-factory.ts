@@ -1,5 +1,5 @@
-import { IEventModel } from '../../../models/i-event-model';
-import { IOptionModel } from '../../../models/i-options-model';
+import { IEvent } from '../../../interfaces/i-event';
+import { IOption } from '../../../interfaces/i-options';
 import ActionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 import { Block } from '../../../code-generator/block';
@@ -13,7 +13,7 @@ export class SubmitBlockFactory {
   // les attributs sont utilisés pour éviter de les passer aux méthodes
 
   /** Options du plugin */
-  public static options : IOptionModel;
+  public static options : IOption;
 
   /** Id de la frame */
   public static frameId : number;
@@ -24,7 +24,7 @@ export class SubmitBlockFactory {
   /**
    * Génère un block lié à l'event submit
    */
-  public static generateBlock(event : IEventModel, frameId : number, frame : string, options : IOptionModel) : Block {
+  public static generateBlock(event : IEvent, frameId : number, frame : string, options : IOption) : Block {
 
     const { action, tagName} = event;
     this.frameId = frameId;

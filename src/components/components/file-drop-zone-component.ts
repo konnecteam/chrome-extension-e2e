@@ -1,6 +1,6 @@
 import { FileService } from './../../services/file/file-service';
-import { IEventModel } from '../../models/i-event-model';
-import { IComponentModel } from '../../models/i-component-model';
+import { IEvent } from '../../interfaces/i-event';
+import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import elementsTagName from '../../constants/elements-tagName';
 import componentName from '../../constants/component-name';
@@ -20,7 +20,7 @@ export class FileDropZoneComponent {
   /**
    * Vérifie si l'élément est dans un file dropzone
    */
-  public static isFileDropZone(element : HTMLElement) : IComponentModel {
+  public static isFileDropZone(element : HTMLElement) : IComponent {
     const elementFileDropZone = ElementService.findParentElementWithTagName(
       element,
       elementsTagName.FILEDROPZONE.toUpperCase()
@@ -49,7 +49,7 @@ export class FileDropZoneComponent {
   /**
    * Edit et retourne l'event pour le file dropzone event
    */
-  public static editFileDropZoneMessage(event : IEventModel, files : FileList) : IEventModel {
+  public static editFileDropZoneMessage(event : IEvent, files : FileList) : IEvent {
     const newMessage = event;
 
     /* Si il y a des fichiers à uplaoder
@@ -70,7 +70,7 @@ export class FileDropZoneComponent {
   /**
    * Edit et retourne l'event pour le click sur le bouton ajouter des fichiers
    */
-  public static editFileDropZoneButtonMessage(event : IEventModel) : IEventModel {
+  public static editFileDropZoneButtonMessage(event : IEvent) : IEvent {
     event.action = actionEvents.CLICK_DROPZONE;
     return event;
   }

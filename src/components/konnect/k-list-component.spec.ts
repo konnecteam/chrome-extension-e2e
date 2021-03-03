@@ -1,9 +1,9 @@
 import { KListComponent } from './k-list-component';
 import 'jest';
 import * as path from 'path';
-import { IComponentModel } from 'models/i-component-model';
+import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
-import { IEventModel } from '../../models/i-event-model';
+import { IEvent } from '../../interfaces/i-event';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -83,12 +83,12 @@ describe('Test de k list Component', () => {
       element: document.querySelector(previousSelector)
     };
 
-    const eventModel : IEventModel = {
+    const eventI : IEvent = {
       selector : elementSelector
     };
 
     // On est dans un component Dropdown liste
-    const component : IComponentModel = {
+    const component : IComponent = {
       component : componentName.KLIST,
       element: element as HTMLElement,
       previousSelector,
@@ -97,7 +97,7 @@ describe('Test de k list Component', () => {
 
     // On doit trouver l'action click sur un item de la liste
     expect(
-      KListComponent.editKlistMessage(eventModel, component).action
+      KListComponent.editKlistMessage(eventI, component).action
     ).toEqual(actionEvents.CLICK_ITEMLIST);
   });
 
@@ -113,11 +113,11 @@ describe('Test de k list Component', () => {
       element: document.querySelector(elementSelector)
     };
 
-    const eventModel : IEventModel = {
+    const eventI : IEvent = {
       selector : elementSelector
     };
 
-    const component : IComponentModel = {
+    const component : IComponent = {
       component : componentName.KLIST,
       element: element as HTMLElement,
       previousSelector: elementSelector,
@@ -126,7 +126,7 @@ describe('Test de k list Component', () => {
 
     // On doit trouver l'action click mouse
     expect(
-      KListComponent.editKlistMessage(eventModel, component).action
+      KListComponent.editKlistMessage(eventI, component).action
     ).toEqual(actionEvents.CLICKMOUSE);
 
   });

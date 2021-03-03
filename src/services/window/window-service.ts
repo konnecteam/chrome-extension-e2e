@@ -1,4 +1,4 @@
-import { IMessageModel } from '../../models/i-message-model';
+import { IMessage } from '../../interfaces/i-message';
 import { ChromeService } from '../../services/chrome/chrome-service';
 
 /**
@@ -9,7 +9,7 @@ export class WindowService {
   /**
    * Récupère l'url courant
    */
-  public static getCurrentUrl(message : IMessageModel) : void {
+  public static getCurrentUrl(message : IMessage) : void {
     ChromeService.sendMessage({
       control: message.control,
       frameUrl: window.location.href
@@ -19,7 +19,7 @@ export class WindowService {
   /**
    * Récupère la taille de l'écran courant
    */
-  public static getViewPortSize(message : IMessageModel) : void {
+  public static getViewPortSize(message : IMessage) : void {
     ChromeService.sendMessage({
       control: message.control,
       coordinates: {
@@ -32,7 +32,7 @@ export class WindowService {
   /**
    * Permet de faire un reload de la page
    */
-  public static reload(message : IMessageModel, callback? : () => void) : void {
+  public static reload(message : IMessage, callback? : () => void) : void {
 
     if (message && message.hasOwnProperty('control') && message.control === 'reload-page') {
 

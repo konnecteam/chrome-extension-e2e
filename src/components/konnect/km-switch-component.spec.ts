@@ -1,9 +1,9 @@
 import { KmSwitchComponent } from './km-switch- component';
 import 'jest';
 import * as path from 'path';
-import { IComponentModel } from 'models/i-component-model';
+import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
-import { IEventModel } from '../../models/i-event-model';
+import { IEvent } from '../../interfaces/i-event';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -38,18 +38,18 @@ describe('Test de km switch Component', () => {
     const elementSelector = 'switch > div > span > span:nth-child(3) > span';
     const element = document.querySelector(elementSelector);
 
-    const eventModel : IEventModel = {
+    const eventI : IEvent = {
       selector: '#id'
     };
 
-    const component : IComponentModel = {
+    const component : IComponent = {
       component : componentName.KMSWITCH,
       element : element as HTMLElement
     };
 
     // On doit trouver l'action click mouse
     expect(
-      KmSwitchComponent.editKmSwitchMessage(eventModel, component).action
+      KmSwitchComponent.editKmSwitchMessage(eventI, component).action
     ).toEqual(actionEvents.CLICKMOUSE);
   });
 });

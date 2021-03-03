@@ -1,5 +1,5 @@
 import { ElementService } from './../services/element/element-service';
-import { IComponentModel } from '../models/i-component-model';
+import { IComponent } from '../interfaces/i-component';
 import domEventsToRecord from '../constants/dom-events-to-record';
 
 /**
@@ -14,7 +14,7 @@ export class ComponentManager {
     event : string,
     element : HTMLElement,
     previousElement : {selector : string, element : Element, typeList : string
-  }) : IComponentModel {
+  }) : IComponent {
 
     // En fonction de l'événement déclancheur
     switch (event) {

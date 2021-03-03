@@ -2,7 +2,7 @@ import { KSelectComponent } from './k-select-component';
 import 'jest';
 import * as path from 'path';
 import componentName from '../../constants/component-name';
-import { IEventModel } from '../../models/i-event-model';
+import { IEvent } from '../../interfaces/i-event';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -32,7 +32,7 @@ describe('Test de k select Component', () => {
 
 
   test('Test de editKSelectMessage', () => {
-    const eventModel : IEventModel = {
+    const eventModel : IEvent = {
       selector: '#id'
     };
 

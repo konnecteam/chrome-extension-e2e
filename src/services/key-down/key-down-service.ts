@@ -1,5 +1,5 @@
 import { ChromeService } from './../chrome/chrome-service';
-import { IEventModel } from '../../models/i-event-model';
+import { IEvent } from '../../interfaces/i-event';
 import domEventsToRecord from '../../constants/dom-events-to-record';
 import actionEvents from '../../constants/action-events';
 import elementsTagName from '../../constants/elements-tagName';
@@ -13,7 +13,7 @@ export class KeyDownService {
   public static instance : KeyDownService;
 
   /** Liste des keydown enregistrés */
-  private _listsKeyDown : IEventModel[] = [];
+  private _listsKeyDown : IEvent[] = [];
 
   /**
    * Constructeur
@@ -33,7 +33,7 @@ export class KeyDownService {
   /**
    * Permet de gérer les evènement keydown
    */
-  public handleEvent(msg : IEventModel, element : HTMLElement) : void {
+  public handleEvent(msg : IEvent, element : HTMLElement) : void {
     // On vérifie que l'event est un keydown et que ce n'est pas un input ou que c'est un input de liste
     if (msg.action === domEventsToRecord.KEYDOWN) {
       if (!msg.value && element.tagName !== elementsTagName.INPUT.toUpperCase() ||  this._isInputList(element)) {
@@ -51,7 +51,7 @@ export class KeyDownService {
   /**
    * Permet de gérer la liste des évènements pour un sélecteur
    */
-  private _handleKeyDownEvent(msg : IEventModel) : IEventModel {
+  private _handleKeyDownEvent(msg : IEvent) : IEvent {
 
     if (this._listsKeyDown.length > 0) {
 
