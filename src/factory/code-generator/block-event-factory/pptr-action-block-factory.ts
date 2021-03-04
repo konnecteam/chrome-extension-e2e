@@ -1,4 +1,4 @@
-import { IEvent } from '../../../interfaces/i-event';
+import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
 import { Block } from '../../../code-generator/block';
 import pptrActions from '../../../constants/pptr-actions';
@@ -22,7 +22,7 @@ export class PPtrActionBlockFactory {
   /**
    * Génère le block lié à une action pupeteer
    */
-  public static generateBlock(event : IEvent, frameId : number, frame : string, options : IOption) : Block {
+  public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
 
     const { action, value} = event;
 

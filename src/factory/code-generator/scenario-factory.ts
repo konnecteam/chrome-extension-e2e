@@ -6,7 +6,7 @@ import domEventsToRecord from '../../constants/dom-events-to-record';
 import { ClickBlockFactory } from './block-event-factory/click-block-factory';
 import { IOption } from '../../interfaces/i-options';
 import { Block } from '../../code-generator/block';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import pptrActions from '../../constants/pptr-actions';
 import { PPtrActionBlockFactory } from './block-event-factory/pptr-action-block-factory';
 
@@ -107,7 +107,7 @@ export class ScenarioFactory {
   /**
    * Parser un événement en Block
    */
-  public static parseEvent(event : IEvent, frameId : number, frame : string, options : IOption) : Block {
+  public static parseEvent(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
     // Pour chaque type d'event possible
     const { typeEvent } = event;
     // En fonction du typeEvent déclancheur

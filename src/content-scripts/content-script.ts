@@ -1,8 +1,7 @@
-import { IMessage } from '../interfaces/i-message';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
 import elementsTagName from '../constants/elements-tagName';
-import { IEvent } from '../interfaces/i-event';
+import { IMessage } from '../interfaces/i-message';
 import { KeyDownService } from '../services/key-down/key-down-service';
 import { StorageService } from '../services/storage/storage-service';
 import eventsToRecord from '../constants/dom-events-to-record';
@@ -261,8 +260,8 @@ class EventRecorder {
       comments = '/!\\ The selector returns more than one element, thus the test will be wrong.';
     }
 
-    // construction du message: IEvent
-    let message : IEvent = {
+    // construction du message: IMessage
+    let message : IMessage = {
       selector: SelectorService.standardizeSelector(selector),
       comments,
       value: e.target.value,
@@ -273,7 +272,7 @@ class EventRecorder {
       keyCode: e.keyCode ? e.keyCode : null,
       href: e.target.href ? e.target.href : null,
       durancyClick: durationClick ? durationClick : 0,
-      coordinates: this._keyDownService.getClickCoordinates(e),
+      clickCoordinates: this._keyDownService.getClickCoordinates(e),
       scrollY: window.pageYOffset,
       scrollX: window.pageXOffset
     };

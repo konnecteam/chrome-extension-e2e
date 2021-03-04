@@ -1,4 +1,4 @@
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import 'jest';
 import * as chrome from 'sinon-chrome';
 import { KeyDownService } from './key-down-service';
@@ -30,7 +30,7 @@ describe('Test de Keydown Service', () => {
     messageSend  = '';
     const element = document.getElementById('txtArea');
 
-    const msg : IEvent = {
+    const msg : IMessage = {
       selector: '.txtArea',
       tagName: 'textarea',
       action: 'keydown',
@@ -53,7 +53,7 @@ describe('Test de Keydown Service', () => {
     messageSend = '';
     const element = document.getElementById('input');
 
-    const msg : IEvent = {
+    const msg : IMessage = {
       selector: '.input',
       tagName: 'input',
       action: 'change',
@@ -79,7 +79,7 @@ describe('Test de Keydown Service', () => {
     messageSend = '';
     const element = document.getElementById('input');
 
-    const msg : IEvent = {
+    const msg : IMessage = {
       selector: '.input',
       tagName: 'input',
       action: 'keydown',

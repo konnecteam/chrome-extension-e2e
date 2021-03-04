@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -38,7 +38,7 @@ describe('Test de km switch Component', () => {
     const elementSelector = 'switch > div > span > span:nth-child(3) > span';
     const element = document.querySelector(elementSelector);
 
-    const eventI : IEvent = {
+    const eventMessage : IMessage = {
       selector: '#id'
     };
 
@@ -49,7 +49,7 @@ describe('Test de km switch Component', () => {
 
     // On doit trouver l'action click mouse
     expect(
-      KmSwitchComponent.editKmSwitchMessage(eventI, component).action
+      KmSwitchComponent.editKmSwitchMessage(eventMessage, component).action
     ).toEqual(actionEvents.CLICKMOUSE);
   });
 });

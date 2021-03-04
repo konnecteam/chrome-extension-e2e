@@ -1,7 +1,7 @@
 import { ObjectService } from '../services/object/object-service';
 import { default as pptrActions} from '../constants/pptr-actions';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
-import { IEvent } from '../interfaces/i-event';
+import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
 import { IOption } from '../interfaces/i-options';
 import { defaults } from '../constants/default-options';
@@ -43,7 +43,7 @@ export default class CodeGenerator {
     this._blocks = [];
   }
 
-  public generate(events : IEvent[]) : string {
+  public generate(events : IMessage[]) : string {
     return HeaderFactory.getHeader(
       this._options.recordHttpRequest,
       this._options.wrapAsync,
@@ -57,7 +57,7 @@ export default class CodeGenerator {
   /**
    * On génère le code à partir des events enregistrés
    */
-  private _parseEvents(events : IEvent[]) : string {
+  private _parseEvents(events : IMessage[]) : string {
 
     let result = '';
 

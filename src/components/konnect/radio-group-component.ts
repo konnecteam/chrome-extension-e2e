@@ -2,7 +2,7 @@ import { ElementService } from '../../services/element/element-service';
 import componentName from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
 import elementsTagName from '../../constants/elements-tagName';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import actionEvents from '../../constants/action-events';
 
 /**
@@ -31,7 +31,7 @@ export class RadioGroupComponent {
   /**
    * Modification de l'event pour un RadioGroup
    */
-  public static editRadioGroupMessage(event : IEvent) : IEvent {
+  public static editRadioGroupMessage(event : IMessage) : IMessage {
     event.action = actionEvents.BASIC_CLICK;
     return event;
   }

@@ -1,5 +1,5 @@
 import { SelectorService } from './../../services/selector/selector-service';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import componentName from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
 import elementsTagName from '../../constants/elements-tagName';
@@ -90,7 +90,7 @@ export class KListComponent {
    * @param event
    * @param component
    */
-  public static editKlistMessage(event : IEvent, component : IComponent) : IEvent {
+  public static editKlistMessage(event : IMessage, component : IComponent) : IMessage {
 
     // Si click list item
     if (ElementService.isUlListElement(component.element)) {

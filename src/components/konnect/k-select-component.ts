@@ -1,7 +1,6 @@
-import elementsTagName  from '../../constants/elements-tagName';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import actionEvents from '../../constants/action-events';
 import componentName from '../../constants/component-name';
 
@@ -28,7 +27,7 @@ export class KSelectComponent {
   /**
    * Edit le message pour les k select
    */
-  public static editKSelectMessage(event : IEvent) : IEvent {
+  public static editKSelectMessage(event : IMessage) : IMessage {
     event.action = actionEvents.CLICKMOUSE_INPUTNUMERIC;
     return event;
   }

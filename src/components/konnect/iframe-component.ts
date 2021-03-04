@@ -1,4 +1,4 @@
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import componentName from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
 import { SelectorService } from '../../services/selector/selector-service';
@@ -26,7 +26,7 @@ export class IframeComponent {
   /**
    * Modifier l'event et retourne les modifications liées à l'iframe
    */
-  public static editIframeMessage(event : IEvent, component : IComponent) : IEvent {
+  public static editIframeMessage(event : IMessage, component : IComponent) : IMessage {
 
     event.iframe = SelectorService.find(component.element);
     return event;

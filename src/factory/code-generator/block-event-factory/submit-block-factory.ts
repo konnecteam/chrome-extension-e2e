@@ -1,4 +1,4 @@
-import { IEvent } from '../../../interfaces/i-event';
+import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
 import ActionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
@@ -24,7 +24,7 @@ export class SubmitBlockFactory {
   /**
    * Génère un block lié à l'event submit
    */
-  public static generateBlock(event : IEvent, frameId : number, frame : string, options : IOption) : Block {
+  public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
 
     const { action, tagName} = event;
     this.frameId = frameId;

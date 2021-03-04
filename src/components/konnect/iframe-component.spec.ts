@@ -2,7 +2,7 @@ import { IframeComponent } from './iframe-component';
 import 'jest';
 import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 const fs = require('fs');
 
 describe('Test de Iframe Component', () => {
@@ -46,7 +46,7 @@ describe('Test de Iframe Component', () => {
 
   test('Test de editIframeMessage', () => {
     // Event model qui contient les infos utiles
-    const eventCatched : IEvent = {
+    const eventCatched : IMessage = {
       selector: 'selector'
     };
     // On selectionne l'iframe

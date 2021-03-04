@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -35,7 +35,7 @@ describe('Test de Input numeric Component', () => {
 
     const element = document.querySelector('numeric > div > span > span > input\:nth-child(2)');
 
-    const event : IEvent = {
+    const event : IMessage = {
       selector : '#id'
     };
 

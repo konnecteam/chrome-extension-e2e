@@ -1,6 +1,6 @@
 import { InputFilesComponent } from './input-file-component';
 import 'jest';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 
 describe('Test de input file Component', () => {
 
@@ -28,7 +28,7 @@ describe('Test de input file Component', () => {
 
     const element  = document.getElementById('inFile') as HTMLInputElement;
 
-    const event : IEvent = {
+    const event : IMessage = {
       selector : '#id'
     };
 

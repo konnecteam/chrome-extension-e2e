@@ -1,7 +1,7 @@
 import { FileService } from './../../services/file/file-service';
 import { IComponent } from '../../interfaces/i-component';
 import componentName from '../../constants/component-name';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 
 /**
  * Composant qui permet la gestion des input files
@@ -22,7 +22,7 @@ export class InputFilesComponent {
    * Modifie l'event et
    * envoie les fichiers au background pour les ajouter dans le zip
    */
-  public static editInputFileMessage(event : IEvent, filesUpload : FileList) : IEvent {
+  public static editInputFileMessage(event : IMessage, filesUpload : FileList) : IMessage {
 
     event.files = FileService.Instance.sendFilesToBackground(filesUpload);
     return event;

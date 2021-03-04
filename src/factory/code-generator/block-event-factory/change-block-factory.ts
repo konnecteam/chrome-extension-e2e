@@ -1,4 +1,4 @@
-import { IEvent } from '../../../interfaces/i-event';
+import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
 import ActionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
@@ -23,7 +23,7 @@ export class ChangeBlockFactory {
 
   // Génère les blocks en fonction des paramètres données
   public static generateBlock(
-    event : IEvent,
+    event : IMessage,
     frameId : number,
     frame : string,
     options : IOption

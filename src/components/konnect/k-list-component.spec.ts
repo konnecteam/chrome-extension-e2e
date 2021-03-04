@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -83,7 +83,7 @@ describe('Test de k list Component', () => {
       element: document.querySelector(previousSelector)
     };
 
-    const eventI : IEvent = {
+    const eventMessage : IMessage = {
       selector : elementSelector
     };
 
@@ -97,7 +97,7 @@ describe('Test de k list Component', () => {
 
     // On doit trouver l'action click sur un item de la liste
     expect(
-      KListComponent.editKlistMessage(eventI, component).action
+      KListComponent.editKlistMessage(eventMessage, component).action
     ).toEqual(actionEvents.CLICK_ITEMLIST);
   });
 
@@ -113,7 +113,7 @@ describe('Test de k list Component', () => {
       element: document.querySelector(elementSelector)
     };
 
-    const eventI : IEvent = {
+    const eventMessage : IMessage = {
       selector : elementSelector
     };
 
@@ -126,7 +126,7 @@ describe('Test de k list Component', () => {
 
     // On doit trouver l'action click mouse
     expect(
-      KListComponent.editKlistMessage(eventI, component).action
+      KListComponent.editKlistMessage(eventMessage, component).action
     ).toEqual(actionEvents.CLICKMOUSE);
 
   });

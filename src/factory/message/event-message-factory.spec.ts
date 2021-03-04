@@ -1,4 +1,4 @@
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { CheckboxComponent } from '../../components/konnect/checkbox-component';
 import { IframeComponent } from '../../components/konnect/iframe-component';
@@ -27,7 +27,7 @@ describe('Test de event message builder factory', () => {
   test('Test de FileDropZone component message', async () => {
     // On init le body
     await changeBodyDocumentAsync('./../../../static/test/dom/dom-filedropzone.html');
-    const eventCatched : IEvent = {
+    const eventCatched : IMessage = {
       files : 'text.txt'
     };
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
@@ -48,7 +48,7 @@ describe('Test de event message builder factory', () => {
     // On init
     await changeBodyDocumentAsync('./../../../static/test/dom/dom-filedropzone.html');
 
-    const eventCatched : IEvent = {
+    const eventCatched : IMessage = {
       files : 'texte.txt'
     };
     // On doit trouver un event model du bouton ajouter fichier du file drop zone
@@ -73,7 +73,7 @@ describe('Test de event message builder factory', () => {
 
     const element = document.querySelector('numeric > div > span > span > input\:nth-child(2)');
 
-    const event : IEvent = {
+    const event : IMessage = {
       selector : '#id'
     };
 
@@ -98,7 +98,7 @@ describe('Test de event message builder factory', () => {
     const elementSelector = 'span > span > span > span\:nth-child(1) > span';
     const element = document.querySelector(elementSelector);
     const component = KSelectComponent.isKSelect(element as HTMLElement);
-    const event : IEvent = {
+    const event : IMessage = {
       selector: '#id'
     };
     // On doit trouver un event model de k select
@@ -132,7 +132,7 @@ describe('Test de event message builder factory', () => {
 
     const component =  IframeComponent.isIframe(element);
 
-    const event : IEvent = {
+    const event : IMessage = {
       selector: 'selector'
     };
 
@@ -169,7 +169,7 @@ describe('Test de event message builder factory', () => {
     };
 
     // event model de base
-    const event : IEvent = {
+    const event : IMessage = {
       selector : elementSelector
     };
 
@@ -198,7 +198,7 @@ describe('Test de event message builder factory', () => {
 
     const component = CheckboxComponent.isCheckboxComponent(element);
 
-    const event : IEvent =  {
+    const event : IMessage =  {
       action : '',
     };
     // On doit trouver un event model d'input calendar
@@ -222,7 +222,7 @@ describe('Test de event message builder factory', () => {
 
     const component = RadioGroupComponent.isRadioGroupComponent(element);
 
-    const event : IEvent =  {
+    const event : IMessage =  {
       action : '',
     };
     // On doit trouver un event model d'input calendar

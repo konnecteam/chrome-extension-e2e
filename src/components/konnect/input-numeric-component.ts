@@ -3,7 +3,7 @@ import  componentName  from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import actionEvents from '../../constants/action-events';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 
 
 /**
@@ -30,7 +30,7 @@ export class InputNumericComponent {
   /**
    * Modification de l'event pour un input numeric
    */
-  public static editInputNumericMessage(event : IEvent, component : IComponent) : IEvent {
+  public static editInputNumericMessage(event : IMessage, component : IComponent) : IMessage {
 
     event.selectorFocus = SelectorService.find(component.element);
     event.action = actionEvents.CHANGE_INPUTNUMERIC;

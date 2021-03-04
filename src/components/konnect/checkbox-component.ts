@@ -2,7 +2,7 @@ import { ElementService } from '../../services/element/element-service';
 import componentName from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
 import elementsTagName from '../../constants/elements-tagName';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import actionEvents from '../../constants/action-events';
 
 /**
@@ -31,7 +31,7 @@ export class CheckboxComponent {
   /**
    * Modification de l'event pour un checkbox
    */
-  public static editCheckboxMessage(event : IEvent) : IEvent {
+  public static editCheckboxMessage(event : IMessage) : IMessage {
     event.action = actionEvents.BASIC_CLICK;
     return event;
   }

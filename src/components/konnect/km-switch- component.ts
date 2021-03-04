@@ -1,5 +1,5 @@
 import { SelectorService } from '../../services/selector/selector-service';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import elementsTagName from '../../constants/elements-tagName';
 import { ElementService } from '../../services/element/element-service';
@@ -27,7 +27,7 @@ export class KmSwitchComponent {
   /**
    * Modifie l'event message pour km switch
    */
-  public static editKmSwitchMessage(event : IEvent, component : IComponent) : IEvent {
+  public static editKmSwitchMessage(event : IMessage, component : IComponent) : IMessage {
 
     event.selector = SelectorService.find(component.element);
     event.action = actionEvents.CLICKMOUSE;

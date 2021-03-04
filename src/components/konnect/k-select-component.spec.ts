@@ -2,7 +2,7 @@ import { KSelectComponent } from './k-select-component';
 import 'jest';
 import * as path from 'path';
 import componentName from '../../constants/component-name';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
 
@@ -32,13 +32,13 @@ describe('Test de k select Component', () => {
 
 
   test('Test de editKSelectMessage', () => {
-    const eventModel : IEvent = {
+    const eventMessage : IMessage = {
       selector: '#id'
     };
 
     // on doit trouver un click sur un input numeric
     expect(
-      KSelectComponent.editKSelectMessage(eventModel).action
+      KSelectComponent.editKSelectMessage(eventMessage).action
     ).toEqual(actionEvents.CLICKMOUSE_INPUTNUMERIC);
   });
 });

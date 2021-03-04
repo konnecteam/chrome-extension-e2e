@@ -1,5 +1,5 @@
 import { Block } from '../../../code-generator/block';
-import { IEvent } from '../../../interfaces/i-event';
+import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
 import ActionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
@@ -20,10 +20,10 @@ export class ClickBlockFactory {
   /** Frame courante */
   public static frame : string;
   /**
-   * Génère un block à partir d'un IEvent
+   * Génère un block à partir d'un IMessage
    */
   public static generateBlock(
-    event : IEvent,
+    event : IMessage,
     frameId : number,
     frame : string,
     options : IOption

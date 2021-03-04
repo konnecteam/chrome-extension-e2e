@@ -1,5 +1,5 @@
 import { FileService } from './../../services/file/file-service';
-import { IEvent } from '../../interfaces/i-event';
+import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import elementsTagName from '../../constants/elements-tagName';
@@ -49,7 +49,7 @@ export class FileDropZoneComponent {
   /**
    * Edit et retourne l'event pour le file dropzone event
    */
-  public static editFileDropZoneMessage(event : IEvent, files : FileList) : IEvent {
+  public static editFileDropZoneMessage(event : IMessage, files : FileList) : IMessage {
     const newMessage = event;
 
     /* Si il y a des fichiers à uplaoder
@@ -70,7 +70,7 @@ export class FileDropZoneComponent {
   /**
    * Edit et retourne l'event pour le click sur le bouton ajouter des fichiers
    */
-  public static editFileDropZoneButtonMessage(event : IEvent) : IEvent {
+  public static editFileDropZoneButtonMessage(event : IMessage) : IMessage {
     event.action = actionEvents.CLICK_DROPZONE;
     return event;
   }

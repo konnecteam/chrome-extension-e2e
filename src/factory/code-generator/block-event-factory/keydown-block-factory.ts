@@ -1,5 +1,5 @@
 import { Block } from '../../../code-generator/block';
-import { IEvent } from '../../../interfaces/i-event';
+import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
 import ActionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
@@ -23,7 +23,7 @@ export class KeydownBlockFactory {
   /**
    * Génère un block de l'event keydown
    */
-  public static generateBlock(event : IEvent, frameId : number, frame : string, options : IOption) : Block {
+  public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
     const { action, selector, value, iframe } = event;
 
     this.options = options;
