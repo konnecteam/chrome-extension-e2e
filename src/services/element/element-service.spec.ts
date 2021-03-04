@@ -1,3 +1,4 @@
+import { ChangeBlockFactory } from './../../factory/code-generator/block-event-factory/change-block-factory';
 import { ElementService } from './element-service';
 import 'jest';
 import * as path from 'path';
@@ -9,6 +10,13 @@ import { KmSwitchComponent } from '../../components/konnect/km-switch- component
 import { IframeComponent } from '../../components/konnect/iframe-component';
 import { InputFilesComponent } from '../../components/components/input-file-component';
 import { InputNumericComponent } from '../../components/konnect/input-numeric-component';
+
+
+const FILE_DROP_ZONE_PATH = './../../../static/test/dom/dom-filedropzone.html';
+const K_SELECT_PATH = './../../../static/test/dom/dom-k-select.html';
+const KM_SWITCH_PATH = './../../../static/test/dom/dom-km-switch.html';
+const K_LIST_PATH = './../../../static/test/dom/dom-k-list.html';
+const INPUT_NUMERIC = './../../../static/test/dom/dom-input-numeric.html';
 
 /**
  * Permet de changer le contenu du body
@@ -117,12 +125,107 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     ).toEqual(exceptedResult);
   });
 
+  test('Test de la fonction IsIniframeElement', () => {
+
+    // Ajout d'une iframe
+    const iframe = document.createElement('iframe');
+    const iframeContent = '<body> <h1> IFRAME </h1> </body>';
+    document.body.appendChild(iframe);
+    const docIframe = document.querySelector('iframe').contentWindow.document;
+    docIframe.open();
+    docIframe.write(iframeContent);
+    docIframe.close();
+
+    expect(ElementService.isInIframeElement(docIframe.body)).toBeDefined();
+  });
+
+  test('Test de la fonction isInputNumericElement', async () => {
+
+    await changeBodyDocumentAsync(INPUT_NUMERIC);
+
+    expect(
+      ElementService.isInputNumericElement(
+        document.querySelector('INPUT[data-role]')))
+    .toBeDefined();
+  });
+
+
+  test('Test de la fonction isNumericElement', async () => {
+
+    await changeBodyDocumentAsync(INPUT_NUMERIC);
+
+    expect(
+      ElementService.isNumericElement(
+        document.querySelector('numeric')))
+    .toBeDefined();
+  });
+
+
+  test('Test de la fonction findListComponent', async () => {
+
+    await changeBodyDocumentAsync(K_LIST_PATH);
+
+    expect(
+      ElementService.findListComponent(
+        document.querySelector('konnect-dropdownlist'), 'Dropdown'))
+    .toBeDefined();
+  });
+
+  test('Test de la fonction isUlListElement', async () => {
+
+    await changeBodyDocumentAsync(K_LIST_PATH);
+
+    expect(
+      ElementService.isUlListElement(
+        document.querySelector('LI[data-offset-index="27"]')))
+    .toBeDefined();
+  });
+
+  test('Test de la fonction isInputKList', async () => {
+
+    await changeBodyDocumentAsync(K_LIST_PATH);
+
+    expect(
+      ElementService.isInputKList(
+        document.querySelector('INPUT[role="listbox"]')))
+    .toBeDefined();
+  });
+
+  test('Test de la fonction isKSelectElement', async () => {
+
+    await changeBodyDocumentAsync(K_SELECT_PATH);
+
+    expect(
+      ElementService.isKSelectElement(
+        document.querySelector('.k-select')))
+    .toBeDefined();
+  });
+
+  test('Test de la fonction isKmSwitchElement', async () => {
+
+    await changeBodyDocumentAsync(KM_SWITCH_PATH);
+
+    expect(
+      ElementService.isKmSwitchElement(
+        document.querySelector('.km-switch-handle')))
+    .toBeDefined();
+  });
+
+  test('Test de la fonction findKmSwitchElement', async () => {
+
+    await changeBodyDocumentAsync(KM_SWITCH_PATH);
+
+    expect(
+      ElementService.findKmSwitchElement(
+        document.querySelector('.km-switch-container')))
+    .toBeDefined();
+  });
 });
 
 describe('Test du determinate click event', () => {
   test('Determiner click d\'un FileDropZoneComponent', async () => {
     // on init le body
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-filedropzone.html');
+    await changeBodyDocumentAsync(FILE_DROP_ZONE_PATH);
 
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
 
@@ -138,7 +241,7 @@ describe('Test du determinate click event', () => {
 
   test('Determiner click d\'un KSelectComponent', async () => {
     // on init le body
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-k-select.html');
+    await changeBodyDocumentAsync(K_SELECT_PATH);
 
     const elementSelector = 'span > span > span > span\:nth-child(1) > span';
     const element = document.querySelector(elementSelector);
@@ -155,7 +258,7 @@ describe('Test du determinate click event', () => {
 
   test('Determiner click d\'un KmSwitchComponent', async () => {
     // on init le body
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-km-switch.html');
+    await changeBodyDocumentAsync(KM_SWITCH_PATH);
 
     const elementSelector = 'switch > div > span > span:nth-child(3) > span';
     const element = document.querySelector(elementSelector);
@@ -171,7 +274,7 @@ describe('Test du determinate click event', () => {
 
   test('Determiner click d\'un KListComponent', async () => {
     // on init le body
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-k-list.html');
+    await changeBodyDocumentAsync(K_LIST_PATH);
 
     const elementSelector = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
     const element = document.querySelector(elementSelector);
@@ -249,15 +352,11 @@ describe('Test du determinate change event', () => {
 
   beforeAll(async () => {
     // On init le body
-    const content = await FileService.readFileAsync(
-      path.join(__dirname, './../../../static/test/dom/dom-input-numeric.html')
-    );
-
-    document.body.innerHTML =
+    await changeBodyDocumentAsync(INPUT_NUMERIC);
+    document.body.innerHTML +=
     `<div>
     <input id="inFile" type="file"> </input>
-    </div>` + content;
-
+    </div>`;
   });
 
   test('Determiner change d\'un input file', () => {

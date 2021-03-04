@@ -101,7 +101,7 @@ describe('Test de Polly recorder', () => {
 
     // On met en pause polly
     await page.evaluate(async () => {
-      return (window as any).polly.pause();
+      return (window as any).polly._pause();
     });
 
     // On récupère le résultat
@@ -117,7 +117,7 @@ describe('Test de Polly recorder', () => {
 
     // On met en pause polly
     await page.evaluate(async () => {
-      return (window as any).polly.unpause();
+      return (window as any).polly._unpause();
     });
 
     // On récupère le résultat
@@ -134,12 +134,12 @@ describe('Test de Polly recorder', () => {
 
     // On stop polly
     await page.evaluate(async () => {
-      return (window as any).polly.stop();
+      return (window as any).polly._stopAsync();
     });
 
     // On récupère le résultat
     const result = await page.evaluate(async () => {
-      return (window as any).polly.getResult((window  as any).polly.recordingId);
+      return (window as any).polly._getResult((window  as any).polly.recordingId);
     });
 
     // Le résultat ne doit pas être vide

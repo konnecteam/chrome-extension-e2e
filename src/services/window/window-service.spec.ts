@@ -64,4 +64,14 @@ describe('Test de Window Service', () => {
     expect(message).toEqual('addEvent');
     window.removeEventListener('addListener', addEventListener);
   });
+
+  test('remove event listener event', () => {
+
+    message = '';
+    WindowService.addEventListener('removeListener', addEventListener);
+    WindowService.removeEventListener('removeListener', addEventListener);
+    window.dispatchEvent(new CustomEvent('removeListener'));
+
+    expect(message).toBeDefined();
+  });
 });
