@@ -6,6 +6,7 @@ describe('Test de Scroll Block factory', () => {
 
   test('Build un scroll', () => {
 
+    /** Attribut d'un IMessage */
     const frame = 'page';
     const frameId = 0;
     const scrollX = 150;

@@ -7,7 +7,7 @@ let fileService : FileService;
 
 describe('Test de File Service', () => {
 
-  // On initialise Fsileservice
+  // On initialise Fileservice
   beforeAll(() => {
     fileService = FileService.Instance;
   });

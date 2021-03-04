@@ -28,7 +28,7 @@ export class IMessage {
   filename? : string;
 
   /** Contenu du fichier */
-  content? : string;
+  content? : string | ArrayBuffer;
 
   // Information concernant l'event :
 

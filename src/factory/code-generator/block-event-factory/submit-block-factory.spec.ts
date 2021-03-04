@@ -1,3 +1,4 @@
+import { IMessage } from './../../../interfaces/i-message';
 import { SubmitBlockFactory } from './submit-block-factory';
 import { Block } from './../../../code-generator/block';
 import { defaults } from '../../../constants/default-options';
@@ -31,13 +32,13 @@ describe('Test de Submit Block Factory', () => {
   });
 
   test('généré un block pour submit dans un formulaire', () => {
-    const eventI = {
+    const eventMessage : IMessage = {
       tagName : elementsTagName.FORM.toUpperCase(),
       action : actionEvents.SUBMIT
     };
 
     expect(
-      SubmitBlockFactory.generateBlock(eventI, frameId, frame, defaults )
+      SubmitBlockFactory.generateBlock(eventMessage , frameId, frame, defaults )
     ).toEqual(
       SubmitBlockFactory.buildSubmit()
     );

@@ -1,3 +1,4 @@
+import { IMessage } from './../../../interfaces/i-message';
 import { defaults } from './../../../constants/default-options';
 import { PPtrActionBlockFactory } from './pptr-action-block-factory';
 import { Block } from '../../../code-generator/block';
@@ -89,38 +90,38 @@ describe('Test de Pptr Action Block Factory', () => {
 
   test('Test de generate d\'un GOTO ', () => {
 
-    const eventI = {
+    const eventMessage : IMessage = {
       action : pptrActions.GOTO,
       value : 'localhost'
     };
 
     expect(
-      PPtrActionBlockFactory.generateBlock(eventI, frameId, frame, defaults)
+      PPtrActionBlockFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrActionBlockFactory.buildGoto(eventI.value)
+      PPtrActionBlockFactory.buildGoto(eventMessage .value)
     );
   });
 
   test('Test de generate d\'un ViewPort ', () => {
-    const eventI = {
+    const eventMessage  = {
       action : pptrActions.VIEWPORT,
       value : { width : 1920, height : 1080}
     };
 
     expect(
-      PPtrActionBlockFactory.generateBlock(eventI, frameId, frame, defaults)
+      PPtrActionBlockFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrActionBlockFactory.buildViewport(eventI.value.width, eventI.value.height)
+      PPtrActionBlockFactory.buildViewport(eventMessage .value.width, eventMessage .value.height)
     );
   });
 
   test('Test de generate d\'un WaitForNavigation ', () => {
-    const eventI = {
+    const eventMessage  = {
       action : pptrActions.NAVIGATION,
     };
 
     expect(
-      PPtrActionBlockFactory.generateBlock(eventI, frameId, frame, defaults)
+      PPtrActionBlockFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
       PPtrActionBlockFactory.buildWaitForNavigation()
     );

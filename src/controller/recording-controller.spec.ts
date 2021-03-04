@@ -1,18 +1,19 @@
 import { defaults } from './../constants/default-options';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
 import 'jest';
-const puppeteer = require('puppeteer');
+import * as puppeteer from 'puppeteer';
 import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as path from 'path';
 import * as chrome from 'sinon-chrome';
 import { IMessage } from '../interfaces/i-message';
 import controlActions from '../constants/control-actions';
+import { Server } from 'http';
 
-let server;
-let browser;
-let page;
-let buildDir;
+let server : Server;
+let browser : puppeteer.Browser;
+let page : puppeteer.Page;
+let buildDir : string ;
 
 
 /**
@@ -235,7 +236,7 @@ describe('Test de Recording Controller', () => {
   afterAll(async () => {
     await page.close();
     await browser.close();
-    await server.close();
+    server.close();
   }, 50000);
 
 

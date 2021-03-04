@@ -1,14 +1,15 @@
 import 'jest';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
-const puppeteer = require('puppeteer');
+import * as puppeteer from 'puppeteer';
 import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as path from 'path';
+import { Server } from 'http';
 
-let server;
-let browser;
-let page;
-let buildDir;
+let server : Server;
+let browser : puppeteer.Browser;
+let page : puppeteer.Page;
+let buildDir : string ;
 
 /**
  * Permet d'attendre que le polly soit prết pour enregistrer
@@ -80,7 +81,7 @@ describe('Test de Polly recorder', () => {
   afterAll(async () => {
     await page.close();
     await browser.close();
-    await server.close();
+    server.close();
   });
 
   test('Test de création de polly', async () => {

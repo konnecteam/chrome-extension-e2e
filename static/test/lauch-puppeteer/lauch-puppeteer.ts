@@ -1,5 +1,4 @@
 import * as path from 'path';
-
 const extensionPath = path.join(__dirname, '../../../dist');
 
 export const launchPuppeteerWithExtension = function (puppeteer) {

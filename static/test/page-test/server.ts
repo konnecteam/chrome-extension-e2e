@@ -1,7 +1,8 @@
+import { Server } from 'http';
 import * as express from 'express';
 import * as path from 'path';
 
-export const startServer = function (buildDir, file) {
+export const startServer = function (buildDir, file) : Promise<Server> {
   return new Promise((resolve, reject) => {
 
     const app = express() as any;

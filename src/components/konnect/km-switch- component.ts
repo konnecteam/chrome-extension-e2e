@@ -1,7 +1,6 @@
 import { SelectorService } from '../../services/selector/selector-service';
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
-import elementsTagName from '../../constants/elements-tagName';
 import { ElementService } from '../../services/element/element-service';
 import componentName from '../../constants/component-name';
 import actionEvents from '../../constants/action-events';

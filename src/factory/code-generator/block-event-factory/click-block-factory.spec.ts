@@ -7,7 +7,7 @@ import actionEvents from '../../../constants/action-events';
 import { ClickBlockFactory } from './click-block-factory';
 
 /**
- * Attributs d'un eventI
+ * Attributs d'un IMessage
  */
 const selector = '#id';
 const value = 'testValue';

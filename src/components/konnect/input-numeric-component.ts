@@ -23,8 +23,9 @@ export class InputNumericComponent {
 
         return { component: componentName.INPUTNUMERIC, element : inputElement as HTMLElement };
       }
+    } else {
+      return null;
     }
-    return null;
   }
 
   /**

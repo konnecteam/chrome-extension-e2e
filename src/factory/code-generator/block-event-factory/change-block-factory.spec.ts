@@ -5,6 +5,7 @@ import 'jest';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 import actionEvents from '../../../constants/action-events';
 import elementsTagName from '../../../constants/elements-tagName';
+import { IMessage } from '../../../interfaces/i-message';
 
 /** selecteur de l'élément */
 const selector = '#id';
@@ -105,7 +106,7 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de generateBlock pour un change input numeric', () => {
     // Attributs utilisés pour générer le block
-    const eventI = {
+    const eventMessage : IMessage = {
       selector,
       value,
       selectorFocus: '#input',
@@ -114,7 +115,7 @@ describe('Test de Change Block Factory', () => {
 
     expect(
       ChangeBlockFactory.generateBlock(
-        eventI,
+        eventMessage ,
         ChangeBlockFactory.frameId,
         ChangeBlockFactory.frame,
         defaults
@@ -131,7 +132,7 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de generateBlock pour un change simple', () => {
     // Attributs utilisés pour générer le block
-    const eventI = {
+    const eventMessage : IMessage = {
       selector,
       value,
       action : actionEvents.CHANGE
@@ -139,7 +140,7 @@ describe('Test de Change Block Factory', () => {
 
     expect(
       ChangeBlockFactory.generateBlock(
-        eventI,
+        eventMessage ,
         ChangeBlockFactory.frameId,
         ChangeBlockFactory.frame,
         defaults
@@ -154,7 +155,7 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de generateBlock pour un select change', () => {
     // Attributs utilisés pour générer le block
-    const eventI = {
+    const eventMessage : IMessage = {
       selector,
       value,
       action : actionEvents.CHANGE,
@@ -163,7 +164,7 @@ describe('Test de Change Block Factory', () => {
 
     expect(
       ChangeBlockFactory.generateBlock(
-        eventI,
+        eventMessage ,
         ChangeBlockFactory.frameId,
         ChangeBlockFactory.frame,
         defaults
@@ -180,7 +181,7 @@ describe('Test de Change Block Factory', () => {
   test('Test de generateBlock pour un input file', () => {
     // Attributs utilisés pour générer le block
     const files = 'test.txt';
-    const eventI = {
+    const eventMessage : IMessage = {
       selector,
       value,
       action : actionEvents.CHANGE,
@@ -189,7 +190,7 @@ describe('Test de Change Block Factory', () => {
 
     expect(
       ChangeBlockFactory.generateBlock(
-        eventI,
+        eventMessage ,
         ChangeBlockFactory.frameId,
         ChangeBlockFactory.frame,
         defaults

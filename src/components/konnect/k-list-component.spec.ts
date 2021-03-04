@@ -77,7 +77,7 @@ describe('Test de k list Component', () => {
     const previousSelector : string = 'konnect-dropdownlist';
 
     // contient les informations previous element donc de la liste
-    const previousElement  = {
+    const previousElement = {
       selector : previousSelector,
       typeList : dropdown,
       element: document.querySelector(previousSelector)

@@ -546,7 +546,7 @@ class RecordingController {
     // on vérifie que le fichier uploadé à bien un nom et un contenu
     // et que le record n'est pas en pause
     if (message.filename && message.content && !this._isPaused) {
-      this._fileService.addfile(message.filename, message.content);
+      this._fileService.addfile(message.filename, message.content as string);
     }
   }
 }
