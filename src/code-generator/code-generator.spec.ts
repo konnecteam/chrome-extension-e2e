@@ -16,7 +16,7 @@ import { ObjectService } from '../services/object/object-service';
 const frameId = 0;
 
 /** Le tableau qui va contenir les events à parser */
-let listIMessage : IMessage[] = [];
+let messageList : IMessage[] = [];
 
 /** Nom de la frame */
 const frame = 'page';
@@ -61,7 +61,7 @@ function createScenario(options : IOption) {
 
   const listBlock = [];
   // Scénario
-  for (const currentEvent of listIMessage) {
+  for (const currentEvent of messageList) {
     const block = ScenarioFactory.parseEvent(
       currentEvent,
       frameId,
@@ -104,15 +104,15 @@ describe('Test de Code Generator', () => {
 
   beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
-    listIMessage.push(
+    messageList.push(
       {typeEvent: pptrActions.pptr , action: pptrActions.GOTO, value: 'localhost'}
     );
 
-    listIMessage.push(
+    messageList.push(
       {typeEvent: domEventsToRecord.CLICK, action: actionEvents.BASIC_CLICK, selector: '#idInput'}
     );
 
-    listIMessage.push(
+    messageList.push(
       {typeEvent: domEventsToRecord.CHANGE, action: actionEvents.CHANGE, selector: '#idInput', value: 'change de value input'}
     );
   });
@@ -128,7 +128,7 @@ describe('Test de Code Generator', () => {
   test('Test avec les options par défauts', () => {
 
     expect(
-      new CodeGenerator(optionsDefault).generate(listIMessage))
+      new CodeGenerator(optionsDefault).generate(messageList))
       .toEqual(
       createScenario(optionsDefault)
     );
@@ -140,7 +140,7 @@ describe('Test de Code Generator', () => {
     options.customLineAfterClick = 'ligne custom 2';
 
     expect(
-      new CodeGenerator(options).generate(listIMessage))
+      new CodeGenerator(options).generate(messageList))
       .toEqual(
       createScenario(options)
     );
@@ -151,7 +151,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.customLinesBeforeEvent = 'line before event';
     expect(
-      new CodeGenerator(options).generate(listIMessage))
+      new CodeGenerator(options).generate(messageList))
       .toEqual(
       createScenario(options)
     );
@@ -162,7 +162,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.recordHttpRequest = true;
     expect(
-      new CodeGenerator(options).generate(listIMessage))
+      new CodeGenerator(options).generate(messageList))
       .toEqual(
       createScenario(options)
     );
@@ -173,7 +173,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.recordHttpRequest = false;
     expect(
-      new CodeGenerator(options).generate(listIMessage))
+      new CodeGenerator(options).generate(messageList))
       .toEqual(
       createScenario(options)
     );
@@ -184,7 +184,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.wrapAsync = true;
     expect(
-      new CodeGenerator(options).generate(listIMessage))
+      new CodeGenerator(options).generate(messageList))
       .toEqual(
       createScenario(options)
     );
@@ -195,7 +195,7 @@ describe('Test de Code Generator', () => {
     const options = JSON.parse(JSON.stringify(optionsDefault));
     options.wrapAsync = false;
     expect(
-      new CodeGenerator(options).generate(listIMessage))
+      new CodeGenerator(options).generate(messageList))
       .toEqual(
       createScenario(options)
     );
@@ -204,10 +204,10 @@ describe('Test de Code Generator', () => {
   test('Test avec un event', () => {
 
     // On garde que le premier event
-    listIMessage = listIMessage.splice(0, 1);
+    messageList = messageList.splice(0, 1);
 
     expect(
-      new CodeGenerator(optionsDefault).generate(listIMessage))
+      new CodeGenerator(optionsDefault).generate(messageList))
       .toEqual(
       createScenario(optionsDefault)
     );
@@ -215,9 +215,9 @@ describe('Test de Code Generator', () => {
 
   test('Test avec une liste d\'event vide', () => {
 
-    listIMessage = [];
+    messageList = [];
     expect(
-      new CodeGenerator(optionsDefault).generate(listIMessage))
+      new CodeGenerator(optionsDefault).generate(messageList))
       .toEqual(
       createScenario(optionsDefault)
     );
