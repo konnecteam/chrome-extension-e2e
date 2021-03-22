@@ -4,7 +4,7 @@ import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import actionEvents from '../../constants/action-events';
+import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
 
 // Path du fichier qui contient le body
@@ -98,7 +98,7 @@ describe('Test de k list Component', () => {
     // On doit trouver l'action click sur un item de la liste
     expect(
       KListComponent.editKlistMessage(eventMessage, component).action
-    ).toEqual(actionEvents.CLICK_ITEMLIST);
+    ).toEqual(customEvents.CLICK_LIST_ITEM);
   });
 
   test('Test de editKlistMessage pour un input de list', () => {
@@ -127,7 +127,7 @@ describe('Test de k list Component', () => {
     // On doit trouver l'action click mouse
     expect(
       KListComponent.editKlistMessage(eventMessage, component).action
-    ).toEqual(actionEvents.CLICKMOUSE);
+    ).toEqual(customEvents.CLICK_MOUSE);
 
   });
 });

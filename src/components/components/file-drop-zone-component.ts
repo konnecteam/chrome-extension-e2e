@@ -2,9 +2,9 @@ import { FileService } from './../../services/file/file-service';
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
-import elementsTagName from '../../constants/elements-tagName';
+import elementsTagName from '../../constants/elements/tag-name';
 import componentName from '../../constants/component-name';
-import actionEvents from '../../constants/action-events';
+import customEvents from '../../constants/events/events-custom';
 
 /**
  * Composant qui permet la gestion du composant file dropzone
@@ -23,7 +23,7 @@ export class FileDropZoneComponent {
   public static getFileDropZone(element : HTMLElement) : IComponent {
     const fileDropzoneElement = ElementService.findParentElementWithTagName(
       element,
-      elementsTagName.FILEDROPZONE.toUpperCase()
+      elementsTagName.FILE_DROPZONE.toUpperCase()
     );
 
     const addButtonElement = ElementService.findParentElementWithTagNameAndValueAttribute(
@@ -36,11 +36,11 @@ export class FileDropZoneComponent {
     // Si c'est un file dropzone
     if (fileDropzoneElement) {
 
-      return {component : componentName.FILEDROPZONE , element: fileDropzoneElement};
+      return {component : componentName.FILE_DROPZONE , element: fileDropzoneElement};
 
     } else if (addButtonElement) {
       // Si c'est un le bouton ajouter un fichier du file dropzone
-      return {component : componentName.FILEDROPZONEADD , element: addButtonElement};
+      return {component : componentName.BUTTON_ADD_FILE_DROPZONE , element: addButtonElement};
 
     } else {
       return null;
@@ -57,12 +57,12 @@ export class FileDropZoneComponent {
        On les envoie au background pour qu'il les rajoute dans le zip
     */
     if (files) {
-      newMessage.action = actionEvents.DROP_DROPZONE;
+      newMessage.action = customEvents.DROP_FILE;
       newMessage.files = FileService.Instance.sendFilesToBackground(files);
 
     } else {
       // Sinon c'est qu'on a juste click sur la dropzone
-      newMessage.action = actionEvents.CLICK_DROPZONE;
+      newMessage.action = customEvents.CLICK_DROPZONE;
     }
 
     return newMessage;
@@ -72,7 +72,7 @@ export class FileDropZoneComponent {
    * Edit et retourne l'event pour le click sur le bouton ajouter des fichiers
    */
   public static editFileDropZoneButtonMessage(event : IMessage) : IMessage {
-    event.action = actionEvents.CLICK_DROPZONE;
+    event.action = customEvents.CLICK_DROPZONE;
     return event;
   }
 

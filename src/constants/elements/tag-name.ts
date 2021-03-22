@@ -23,7 +23,7 @@ export default {
   HTML: 'html',
   IFRAME: 'iframe',
   FORM: 'form',
-  FILEDROPZONE : 'file-dropzone',
+  FILE_DROPZONE : 'file-dropzone',
   NUMERIC: 'numeric',
   KONNECT_DROPDOWNLIST: 'konnect-dropdownlist',
   KONNECT_MULTISELECT: 'konnect-multiselect',

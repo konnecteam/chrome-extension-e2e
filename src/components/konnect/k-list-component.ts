@@ -2,9 +2,9 @@ import { SelectorService } from './../../services/selector/selector-service';
 import { IMessage } from '../../interfaces/i-message';
 import componentName from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
-import elementsTagName from '../../constants/elements-tagName';
+import elementsTagName from '../../constants/elements/tag-name';
 import { ElementService } from '../../services/element/element-service';
-import actionEvents from '../../constants/action-events';
+import customEvents from '../../constants/events/events-custom';
 
 /**
  * Composant qui permet de gérer les konnect list
@@ -95,7 +95,7 @@ export class KListComponent {
     // Si click list item
     if (ElementService.isUlListElement(component.element)) {
 
-      event.action = actionEvents.CLICK_ITEMLIST;
+      event.action = customEvents.CLICK_LIST_ITEM;
       event.scrollElement = SelectorService.find(component.element);
       event.scrollXElement = component.element.parentElement.scrollLeft;
       event.scrollYElement = component.element.parentElement.scrollTop;
@@ -109,7 +109,7 @@ export class KListComponent {
      * pour l'ouvir il faut faire un click mouse
     */
     if (ElementService.isInputKList(component.element) || component.previousElement.typeList === this._MULTISELECT) {
-      event.action = actionEvents.CLICKMOUSE;
+      event.action = customEvents.CLICK_MOUSE;
       return event;
     }
 

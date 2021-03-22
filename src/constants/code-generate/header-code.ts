@@ -1,14 +1,14 @@
-import controlMSG from '../../constants/control-message';
+import controlMSG from '../control/control-message';
 /**
  * Constantes du header du scénario
  */
 export default {
-  importPuppeteer: `const puppeteer = require('puppeteer');
+  IMPORT_PUPPETEER: `const puppeteer = require('puppeteer');
   const fs = require('fs');
   const path = require('path');
   const fakeTimeScriptContent = fs.readFileSync(path.join(__dirname, './recordings/scripts-build/fake-time-script.js'), 'utf-8');\n`,
 
-  importHTTPrequest : `const puppeteer = require('puppeteer');
+  IMPORT_HTTP_REQUEST : `const puppeteer = require('puppeteer');
 const fs = require('fs');
 const atob = require('atob');
 const url = require('url');
@@ -98,7 +98,7 @@ for (let index = 0; index < jsonContents.log.entries.length; index++) {
 let notNormalizeChar= [',', '(', ')', '{', '}', '[', ']', '|', '!', '*'];
 let normalizeChar= ['%2C', '%28', '%29', '%7B', '%7D', '%5B', '%5D', '%7C', '%21', '%2A'];
 `,
-  header : `const browser = await puppeteer.launch()
+  HEADER : `const browser = await puppeteer.launch()
 const page = await browser.newPage()
 page.setDefaultTimeout('100000')
 let fileChooser = null;
@@ -120,7 +120,7 @@ page.on('load', async () => {
   })
 }); \n`,
 
-  wrappedHeader : `(async () => {
+  WRAPPED_HEADER : `(async () => {
   const browser = await puppeteer.launch()
   const page = await browser.newPage()
   page.setDefaultTimeout('100000')
@@ -143,7 +143,7 @@ page.on('load', async () => {
     })
   });\n`,
 
-  listenerPage : `   await page.setRequestInterception(true);
+  LISTENER_PAGE : `   await page.setRequestInterception(true);
   await page.setBypassCSP(true);
   await page.setOfflineMode(true);
 

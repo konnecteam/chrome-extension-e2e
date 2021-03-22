@@ -26,7 +26,7 @@ describe('Test du Header Factory', () => {
     test('Test du header avec en dehors d\'une fonction async', () => {
       resetParamter();
       // Ajout des imports et du header
-      let exceptedResult = HeaderCode.importPuppeteer + HeaderCode.header;
+      let exceptedResult = HeaderCode.IMPORT_PUPPETEER + HeaderCode.HEADER;
       // headless est à false donc on le met à false
       exceptedResult = exceptedResult.replace('launch()', 'launch({ headless: false })');
 
@@ -46,7 +46,7 @@ describe('Test du Header Factory', () => {
       resetParamter();
       wrapAsync = true;
       // Ajout des imports et du header
-      let exceptedResult = HeaderCode.importPuppeteer + HeaderCode.wrappedHeader;
+      let exceptedResult = HeaderCode.IMPORT_PUPPETEER + HeaderCode.WRAPPED_HEADER;
       // headless est à false donc on le met à false
       exceptedResult = exceptedResult.replace('launch()', 'launch({ headless: false })');
 
@@ -66,7 +66,7 @@ describe('Test du Header Factory', () => {
       resetParamter();
       recordHttpRequest = true;
       // Ajout des imports et du header
-      let exceptedResult = HeaderCode.importHTTPrequest + HeaderCode.header;
+      let exceptedResult = HeaderCode.IMPORT_HTTP_REQUEST + HeaderCode.HEADER;
 
       // headless est à false donc on le met à false
       exceptedResult = exceptedResult.replace('launch()', 'launch({ headless: false })');
@@ -74,7 +74,7 @@ describe('Test du Header Factory', () => {
       exceptedResult = exceptedResult.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
 
       // On enlève la condition de filtrage des requètes
-      exceptedResult += HeaderCode.listenerPage.replace('**httpregex**', ``);
+      exceptedResult += HeaderCode.LISTENER_PAGE.replace('**httpregex**', ``);
 
       expect(
         HeaderFactory.getHeader(
@@ -92,7 +92,7 @@ describe('Test du Header Factory', () => {
       resetParamter();
       headless = true;
       // Ajout des imports et du header
-      const exceptedResult = HeaderCode.importPuppeteer + HeaderCode.header;
+      const exceptedResult = HeaderCode.IMPORT_PUPPETEER + HeaderCode.HEADER;
 
       expect(
         HeaderFactory.getHeader(
@@ -111,7 +111,7 @@ describe('Test du Header Factory', () => {
       recordHttpRequest = true;
       regexHttp = '/.*localhost*./gm';
       // Ajout des imports et du header
-      let exceptedResult = HeaderCode.importHTTPrequest + HeaderCode.header;
+      let exceptedResult = HeaderCode.IMPORT_HTTP_REQUEST + HeaderCode.HEADER;
 
       // headless est à false donc on le met à false
       exceptedResult = exceptedResult.replace('launch()', 'launch({ headless: false })');
@@ -124,7 +124,7 @@ describe('Test du Header Factory', () => {
       // On rajoute la regexp de filtrage
       let codeRegExp = `'${regexp.regexp}'`;
       codeRegExp += `, '${regexp.flags}'`;
-      exceptedResult += HeaderCode.listenerPage.replace(
+      exceptedResult += HeaderCode.LISTENER_PAGE.replace(
         '**httpregex**',
         `&& !new RegExp(${codeRegExp}).test(url) `
       );
@@ -147,7 +147,7 @@ describe('Test du Header Factory', () => {
       headless = true;
 
       // Ajout des imports et du header
-      const exceptedResult = HeaderCode.importPuppeteer + HeaderCode.wrappedHeader;
+      const exceptedResult = HeaderCode.IMPORT_PUPPETEER + HeaderCode.WRAPPED_HEADER;
 
       expect(
         HeaderFactory.getHeader(
@@ -167,13 +167,13 @@ describe('Test du Header Factory', () => {
       headless = true;
       recordHttpRequest = true;
       // Ajout des imports et du header
-      let exceptedResult = HeaderCode.importHTTPrequest + HeaderCode.wrappedHeader;
+      let exceptedResult = HeaderCode.IMPORT_HTTP_REQUEST + HeaderCode.WRAPPED_HEADER;
 
       // Ajout ignoreHTTPSError
       exceptedResult = exceptedResult.replace('launch()', 'launch({ignoreHTTPSErrors: true})');
 
       // On enlève la condition de filtrage des requètes
-      exceptedResult += HeaderCode.listenerPage.replace('**httpregex**', ``);
+      exceptedResult += HeaderCode.LISTENER_PAGE.replace('**httpregex**', ``);
       expect(
         HeaderFactory.getHeader(
          recordHttpRequest,
@@ -193,7 +193,7 @@ describe('Test du Header Factory', () => {
       recordHttpRequest = true;
       regexHttp = '/*.localhost*./gm';
       // Ajout des imports et du header
-      let exceptedResult = HeaderCode.importHTTPrequest + HeaderCode.wrappedHeader;
+      let exceptedResult = HeaderCode.IMPORT_HTTP_REQUEST + HeaderCode.WRAPPED_HEADER;
 
       // Ajout ignoreHTTPSError
       exceptedResult = exceptedResult.replace('launch()', 'launch({ignoreHTTPSErrors: true})');
@@ -202,7 +202,7 @@ describe('Test du Header Factory', () => {
        // On rajoute la regexp de filtrage
       let codeRegExp = `'${regexp.regexp}'`;
       codeRegExp += `, '${regexp.flags}'`;
-      exceptedResult += HeaderCode.listenerPage.replace(
+      exceptedResult += HeaderCode.LISTENER_PAGE.replace(
            '**httpregex**',
            `&& !new RegExp(${codeRegExp}).test(url) `
        );

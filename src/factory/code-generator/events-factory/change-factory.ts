@@ -1,9 +1,10 @@
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
-import ActionEvents from '../../../constants/action-events';
-import domEventsToRecord from '../../../constants/dom-events-to-record';
+import customEvents from '../../../constants/events/events-custom';
+import domEventsToRecord from '../../../constants/events/events-dom';
 import { Block } from '../../../code-generator/block';
-import elementsTagName from '../../../constants/elements-tagName';
+import elementsTagName from '../../../constants/elements/tag-name';
+import eventsDom from '../../../constants/events/events-dom';
 
 /**
  * Factory qui permet de créér des objets liés à l'événement change
@@ -37,11 +38,11 @@ export class ChangeFactory {
     // En fonction de l'action détéctée
     switch (action) {
       // Si c'est un changement dans un input numeric
-      case ActionEvents.CHANGE_INPUTNUMERIC:
+      case customEvents.CHANGE_INPUT_NUMERIC:
         return this.buildChangeBlockInputNumericBlock(selector, value,
           selectorFocus);
       // Si c'est un change
-      case ActionEvents.CHANGE:
+      case eventsDom.CHANGE:
 
         // Si c'est un select
         if (tagName === elementsTagName.SELECT.toUpperCase()) {

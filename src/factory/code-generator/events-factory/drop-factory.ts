@@ -3,7 +3,7 @@ import { ClickFactory } from './click-factory';
 import { Block } from 'code-generator/block';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
-import ActionEvents from '../../../constants/action-events';
+import customEvents from '../../../constants/events/events-custom';
 
 /**
  * Factory qui permet de créér des objets liés à l'event drop
@@ -14,7 +14,7 @@ export class DropFactory {
     const { action, selector, files} = event;
 
     // Si l'action est un drop sur un file dropzone
-    if (action === ActionEvents.DROP_DROPZONE) {
+    if (action === customEvents.DROP_FILE) {
 
       ClickFactory.options = options;
       ClickFactory.frameId = frameId;

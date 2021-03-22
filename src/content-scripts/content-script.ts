@@ -1,16 +1,16 @@
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
-import elementsTagName from '../constants/elements-tagName';
+import elementsTagName from '../constants/elements/tag-name';
 import { IMessage } from '../interfaces/i-message';
 import { KeyDownService } from '../services/key-down/key-down-service';
 import { StorageService } from '../services/storage/storage-service';
-import eventsToRecord from '../constants/dom-events-to-record';
+import eventsToRecord from '../constants/events/events-dom';
 import { ChromeService } from '../services/chrome/chrome-service';
 import { WindowService } from '../services/window/window-service';
 import { PollyService } from '../services/polly/polly-service';
 import { ComponentManager } from '../manager/component-manager';
 import { EventMessageFactory } from '../factory/message/event-message-factory';
-import controlMSG from '../constants/control-message';
+import controlMSG from '../constants/control/control-message';
 
 /**
  * Enregistre les intéractions de l'utilisateur avec la page

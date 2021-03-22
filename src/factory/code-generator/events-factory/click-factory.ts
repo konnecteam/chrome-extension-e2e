@@ -1,8 +1,9 @@
 import { Block } from '../../../code-generator/block';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
-import ActionEvents from '../../../constants/action-events';
-import domEventsToRecord from '../../../constants/dom-events-to-record';
+import customEvents from '../../../constants/events/events-custom';
+import domEventsToRecord from '../../../constants/events/events-dom';
+import eventsDom from '../../../constants/events/events-dom';
 
 /**
  * Factory qui permet de créér des objets liés à l'event Click
@@ -40,19 +41,19 @@ export class ClickFactory {
     switch (action) {
 
       // Si c'est un click basique
-      case ActionEvents.BASIC_CLICK:
+      case eventsDom.CLICK:
         return this.buildClickBlock(selector);
       // Si c'est un click sur un dropzone element
-      case ActionEvents.CLICK_DROPZONE:
+      case customEvents.CLICK_DROPZONE:
         return this.buildclickFileDropZoneBlock(selector);
       // Si c'est un click sur les flêches de l'input numeric
-      case ActionEvents.CLICKMOUSE_INPUTNUMERIC:
+      case customEvents.CLICK_MOUSE_INPUT_NUMERIC:
         return this.buildClickMouseInputNumericBlock(selector, durancyClick);
       // Si c'est un click mouse (mousdown, mouseup)
-      case ActionEvents.CLICKMOUSE :
+      case customEvents.CLICK_MOUSE :
         return this.buildClickMouseBlock(selector);
       // Si c'est un click sur une liste
-      case ActionEvents.CLICK_ITEMLIST:
+      case customEvents.CLICK_LIST_ITEM:
         return this.buildClickKListItemBlock(
           selector, scrollElement, scrollXElement, scrollYElement
         );

@@ -10,8 +10,8 @@ import { PollyService } from '../services/polly/polly-service';
 import { PollyFactory } from '../factory/polly/polly-factory';
 import packageJsonZip from '../constants/package-json-zip';
 import { HttpService } from '../services/http/http-service';
-import controlActions from '../constants/control-actions';
-import controlMSG from '../constants/control-message';
+import controlActions from '../constants/control/control-actions';
+import controlMSG from '../constants/control/control-message';
 /**
  * Background du Plugin qui permet de gérer le recording
  */
@@ -159,7 +159,7 @@ class RecordingController {
       this._zipService.addFileInFolder('script.js', result.code);
 
       // Ajout du package Json
-      this._zipService.addFileInFolder('package.json', new File([packageJsonZip.packageJsonContent], 'package.json'));
+      this._zipService.addFileInFolder('package.json', new File([packageJsonZip.PACKAGE_JSON_CONTENT], 'package.json'));
       // changement de la barre de progression
       ChromeService.sendMessage({
         valueLoad: 15
@@ -439,7 +439,7 @@ class RecordingController {
    */
   private _recordNavigation() : void {
     this._handleMessage({
-      typeEvent : pptrActions.pptr,
+      typeEvent : pptrActions.PPTR,
       selector: undefined,
       value: undefined,
       action: pptrActions.NAVIGATION
@@ -495,14 +495,14 @@ class RecordingController {
    * Enregistre la taille de l'écran
    */
   private _recordCurrentViewportSizeAsync(value : { width : number, height : number }) : void {
-    this._handleMessage({ typeEvent: pptrActions.pptr, selector: undefined, value, action: pptrActions.VIEWPORT });
+    this._handleMessage({ typeEvent: pptrActions.PPTR, selector: undefined, value, action: pptrActions.VIEWPORT });
   }
 
   /**
    * Enregistre l'url courante
    */
   private _recordCurrentUrlAsync(value : string) : void {
-    this._handleMessage({ typeEvent: pptrActions.pptr, selector: undefined, value, action: pptrActions.GOTO });
+    this._handleMessage({ typeEvent: pptrActions.PPTR, selector: undefined, value, action: pptrActions.GOTO });
   }
 
   /**

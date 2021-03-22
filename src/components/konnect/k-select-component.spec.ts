@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import actionEvents from '../../constants/action-events';
+import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
 
 /**
@@ -27,7 +27,7 @@ describe('Test de k select Component', () => {
     const element = document.querySelector(elementSelector);
     expect(
       KSelectComponent.getKSelect(element as HTMLElement).component
-    ).toEqual(componentName.KSELECT);
+    ).toEqual(componentName.K_SELECT);
   });
 
 
@@ -39,6 +39,6 @@ describe('Test de k select Component', () => {
     // on doit trouver un click sur un input numeric
     expect(
       KSelectComponent.editKSelectMessage(eventMessage).action
-    ).toEqual(actionEvents.CLICKMOUSE_INPUTNUMERIC);
+    ).toEqual(customEvents.CLICK_MOUSE_INPUT_NUMERIC);
   });
 });

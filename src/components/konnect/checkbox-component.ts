@@ -1,9 +1,9 @@
 import { ElementService } from '../../services/element/element-service';
 import componentName from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
-import elementsTagName from '../../constants/elements-tagName';
+import elementsTagName from '../../constants/elements/tag-name';
 import { IMessage } from '../../interfaces/i-message';
-import actionEvents from '../../constants/action-events';
+import eventsDom from '../../constants/events/events-dom';
 
 /**
  * Permet de gérer les checkbox
@@ -32,7 +32,7 @@ export class CheckboxComponent {
    * Modification de l'event pour un checkbox
    */
   public static editCheckboxMessage(event : IMessage) : IMessage {
-    event.action = actionEvents.BASIC_CLICK;
+    event.action = eventsDom.CLICK;
     return event;
   }
 }

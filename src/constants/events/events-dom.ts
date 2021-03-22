@@ -1,5 +1,5 @@
 /**
- * Constantes des événement du dom que l'on écoute
+ * Constantes des événements du dom que l'on écoute
  */
 export default {
   CLICK: 'click',

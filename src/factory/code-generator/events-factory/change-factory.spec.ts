@@ -2,11 +2,11 @@ import { ChangeFactory } from './change-factory';
 import { Block } from '../../../code-generator/block';
 import { defaults } from '../../../constants/default-options';
 import 'jest';
-import domEventsToRecord from '../../../constants/dom-events-to-record';
-import actionEvents from '../../../constants/action-events';
-import elementsTagName from '../../../constants/elements-tagName';
+import domEventsToRecord from '../../../constants/events/events-dom';
+import customEvents from '../../../constants/events/events-custom';
+import elementsTagName from '../../../constants/elements/tag-name';
 import { IMessage } from '../../../interfaces/i-message';
-
+import eventsDom from '../../../constants/events/events-dom';
 /** selecteur de l'élément */
 const selector = '#id';
 /** valeur de l'élément */
@@ -110,7 +110,7 @@ describe('Test de Change Block Factory', () => {
       selector,
       value,
       selectorFocus: '#input',
-      action : actionEvents.CHANGE_INPUTNUMERIC
+      action : customEvents.CHANGE_INPUT_NUMERIC
     };
 
     expect(
@@ -135,7 +135,7 @@ describe('Test de Change Block Factory', () => {
     const eventMessage : IMessage = {
       selector,
       value,
-      action : actionEvents.CHANGE
+      action : eventsDom.CHANGE
     };
 
     expect(
@@ -158,7 +158,7 @@ describe('Test de Change Block Factory', () => {
     const eventMessage : IMessage = {
       selector,
       value,
-      action : actionEvents.CHANGE,
+      action : eventsDom.CHANGE,
       tagName : elementsTagName.SELECT.toUpperCase()
     };
 
@@ -184,7 +184,7 @@ describe('Test de Change Block Factory', () => {
     const eventMessage : IMessage = {
       selector,
       value,
-      action : actionEvents.CHANGE,
+      action : eventsDom.CHANGE,
       files
     };
 

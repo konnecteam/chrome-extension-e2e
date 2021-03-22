@@ -2,9 +2,9 @@
  * Constantes du footer du scénario
  */
 export default {
-  footer : `await browser.close()`,
+  FOOTER : `await browser.close()`,
 
-  wrappedFooter: `  await browser.close()
+  WRAPPED_FOOTER: `  await browser.close()
 })()`
 
 };

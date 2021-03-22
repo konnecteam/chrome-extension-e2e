@@ -6,7 +6,7 @@ import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as chrome from 'sinon-chrome';
 import { IMessage } from '../interfaces/i-message';
-import controlActions from '../constants/control-actions';
+import controlActions from '../constants/control/control-actions';
 import { Server } from 'http';
 
 let server : Server;

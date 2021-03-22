@@ -1,8 +1,8 @@
 import { ChromeService } from './../chrome/chrome-service';
 import { IMessage } from '../../interfaces/i-message';
-import domEventsToRecord from '../../constants/dom-events-to-record';
-import actionEvents from '../../constants/action-events';
-import elementsTagName from '../../constants/elements-tagName';
+import domEventsToRecord from '../../constants/events/events-dom';
+import customEvents from '../../constants/events/events-custom';
+import elementsTagName from '../../constants/elements/tag-name';
 
 /**
  * Service qui permet de gérer les keydown pour un sélecteur
@@ -103,7 +103,7 @@ export class KeyDownService {
 
     // On définit le premier élément
     this._listsKeyDown[0].value = value;
-    this._listsKeyDown[0].action = actionEvents.LISTKEYDOWN;
+    this._listsKeyDown[0].action = customEvents.LIST_KEYDOWN;
     return this._listsKeyDown[0];
   }
 

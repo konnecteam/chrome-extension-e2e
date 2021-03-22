@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import actionEvents from '../../constants/action-events';
+import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
 
 /**
@@ -28,7 +28,7 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver la file dropzone
     expect(
       FileDropZoneComponent.getFileDropZone(element as HTMLElement).component
-    ).toEqual(componentName.FILEDROPZONE);
+    ).toEqual(componentName.FILE_DROPZONE);
   });
 
   test('Test de getFileDropZone pour le bouton ajouter des fichiers de la zone', () => {
@@ -39,7 +39,7 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver le bouton de la file dropzone
     expect(
       FileDropZoneComponent.getFileDropZone(element as HTMLElement).component
-    ).toEqual(componentName.FILEDROPZONEADD);
+    ).toEqual(componentName.BUTTON_ADD_FILE_DROPZONE);
 
   });
 
@@ -53,7 +53,7 @@ describe('Test de File DopZone Component', () => {
     expect(
       FileDropZoneComponent.
       editFileDropZoneMessage(eventCatched, (document.getElementById('fileItem') as HTMLInputElement).files).action
-    ).toEqual(actionEvents.DROP_DROPZONE);
+    ).toEqual(customEvents.DROP_FILE);
   });
 
   test('Test de editFileDropZoneMessage sans files', () => {
@@ -66,7 +66,7 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver l'action click sur une dropzone
     expect(
       FileDropZoneComponent.editFileDropZoneMessage(eventCatched, undefined).action
-    ).toEqual(actionEvents.CLICK_DROPZONE);
+    ).toEqual(customEvents.CLICK_DROPZONE);
 
   });
 
@@ -79,6 +79,6 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver l'action click sur une dropzone
     expect(
       FileDropZoneComponent.editFileDropZoneButtonMessage(eventCatched).action
-    ).toEqual(actionEvents.CLICK_DROPZONE);
+    ).toEqual(customEvents.CLICK_DROPZONE);
   });
 });

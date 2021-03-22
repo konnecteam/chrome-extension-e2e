@@ -4,7 +4,7 @@ import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import actionEvents from '../../constants/action-events';
+import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
 
 // Path pour acceder au contenu du body que l'on va utiliser
@@ -27,7 +27,7 @@ describe('Test de Input numeric Component', () => {
     // On doit trouver qur l'on est dans une input numeric
     expect(
       InputNumericComponent.getInputNumeric(element as HTMLElement).component
-    ).toEqual(componentName.INPUTNUMERIC);
+    ).toEqual(componentName.INPUT_NUMERIC);
   });
 
 
@@ -49,6 +49,6 @@ describe('Test de Input numeric Component', () => {
     // On doit trouver que c'est un change input numeric
     expect(
       InputNumericComponent.editInputNumericMessage(event, component).action
-    ).toEqual(actionEvents.CHANGE_INPUTNUMERIC);
+    ).toEqual(customEvents.CHANGE_INPUT_NUMERIC);
   });
 });

@@ -1,8 +1,8 @@
 import { Block } from '../../../code-generator/block';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
-import ActionEvents from '../../../constants/action-events';
-import domEventsToRecord from '../../../constants/dom-events-to-record';
+import customEvents from '../../../constants/events/events-custom';
+import domEventsToRecord from '../../../constants/events/events-dom';
 
 /**
  * Factory qui permet de créér des objets liés à l'event keydown
@@ -31,7 +31,7 @@ export class KeydownFactory {
     this.frame = frame;
 
     // Si c'est une action event de liste keydown
-    if (action === ActionEvents.LISTKEYDOWN) {
+    if (action === customEvents.LIST_KEYDOWN) {
       return this.buildListKeydownBlock(selector, value, iframe);
     }
   }

@@ -1,7 +1,7 @@
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import { IMessage } from '../../interfaces/i-message';
-import actionEvents from '../../constants/action-events';
+import customEvents from '../../constants/events/events-custom';
 import componentName from '../../constants/component-name';
 
 
@@ -18,7 +18,7 @@ export class KSelectComponent {
     // Si c'est un k select qui se situe dans input numeric
     if (ElementService.isNumericElement(element) &&
      ElementService.getKSelectElement(element)) {
-      return { component: componentName.KSELECT, element };
+      return { component: componentName.K_SELECT, element };
     } else {
       return null;
     }
@@ -28,7 +28,7 @@ export class KSelectComponent {
    * Edit le message pour les k select
    */
   public static editKSelectMessage(event : IMessage) : IMessage {
-    event.action = actionEvents.CLICKMOUSE_INPUTNUMERIC;
+    event.action = customEvents.CLICK_MOUSE_INPUT_NUMERIC;
     return event;
   }
 }

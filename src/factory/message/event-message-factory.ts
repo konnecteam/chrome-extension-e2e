@@ -22,27 +22,27 @@ export class EventMessageFactory {
     switch (component.component) {
 
       // Si c'est un file drop zone component
-      case componentName.FILEDROPZONE :
+      case componentName.FILE_DROPZONE :
         newMessage = FileDropZoneComponent.editFileDropZoneMessage(event, filesUpload);
         break;
       // Si c'est le bouton ajouter des fichiers
-      case componentName.FILEDROPZONEADD :
+      case componentName.BUTTON_ADD_FILE_DROPZONE :
         newMessage = FileDropZoneComponent.editFileDropZoneButtonMessage(event);
         break;
       // Si c'est un input de fichier
-      case componentName.INPUTFILE :
+      case componentName.INPUT_FILE :
         newMessage = InputFilesComponent.editInputFileMessage(event, (component.element as HTMLInputElement).files);
         break;
       // Si c'est un input numeric
-      case componentName.INPUTNUMERIC :
+      case componentName.INPUT_NUMERIC :
         newMessage = InputNumericComponent.editInputNumericMessage(event, component);
         break;
       // Si c'est un k select (les flêches à coté de l'input numeric)
-      case componentName.KSELECT :
+      case componentName.K_SELECT :
         newMessage = KSelectComponent.editKSelectMessage(event);
         break;
       // Si c'est un switch
-      case componentName.KMSWITCH :
+      case componentName.KM_SWITCH :
         newMessage = KmSwitchComponent.editKmSwitchMessage(event, component);
         break;
       // Si c'est une frame
@@ -58,7 +58,7 @@ export class EventMessageFactory {
         newMessage = CheckboxComponent.editCheckboxMessage(event);
         break;
       // Si c'est un radio group
-      case componentName.RADIOGROUP :
+      case componentName.RADIO_GROUP :
         newMessage = RadioGroupComponent.editRadioGroupMessage(event);
         break;
     }

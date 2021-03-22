@@ -48,7 +48,7 @@
   import RecordingTab from "./RecordingTab.vue"
   import ResultsTab from "./ResultsTab.vue";
   import HelpTab from "./HelpTab.vue";
-  import controlAction from '../../constants/control-actions'
+  import controlAction from '../../constants/control/control-actions'
   import Vue from 'vue';
   
   export default {

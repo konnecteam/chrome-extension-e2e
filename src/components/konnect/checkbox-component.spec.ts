@@ -3,8 +3,8 @@ import 'jest';
 import * as path from 'path';
 import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import actionEvents from '../../constants/action-events';
 import { FileService } from '../../services/file/file-service';
+import eventsDom from '../../constants/events/events-dom';
 
 /**
  * chemin du fichier html qui contient le body
@@ -37,10 +37,10 @@ describe('Test de Checkbox', () => {
       action : 'change'
     };
 
-    // On doit trouver l'action BASIC CLICK
+    // On doit trouver l'action Click
     expect(
       CheckboxComponent.
       editCheckboxMessage(eventCatched).action
-    ).toEqual(actionEvents.BASIC_CLICK);
+    ).toEqual(eventsDom.CLICK);
   });
 });

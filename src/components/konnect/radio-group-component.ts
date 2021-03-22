@@ -1,9 +1,9 @@
 import { ElementService } from '../../services/element/element-service';
 import componentName from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
-import elementsTagName from '../../constants/elements-tagName';
+import elementsTagName from '../../constants/elements/tag-name';
 import { IMessage } from '../../interfaces/i-message';
-import actionEvents from '../../constants/action-events';
+import eventsDom from '../../constants/events/events-dom';
 
 /**
  * Permet de gérer les RadioGroup
@@ -21,7 +21,7 @@ export class RadioGroupComponent {
       elementsTagName.RADIOGROUP.toUpperCase()
     )) {
 
-      return { component: componentName.RADIOGROUP, element };
+      return { component: componentName.RADIO_GROUP, element };
 
     } else {
       return null;
@@ -32,7 +32,7 @@ export class RadioGroupComponent {
    * Modification de l'event pour un RadioGroup
    */
   public static editRadioGroupMessage(event : IMessage) : IMessage {
-    event.action = actionEvents.BASIC_CLICK;
+    event.action = eventsDom.CLICK;
     return event;
   }
 }

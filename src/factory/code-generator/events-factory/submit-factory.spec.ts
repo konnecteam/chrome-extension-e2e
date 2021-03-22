@@ -3,9 +3,9 @@ import { SubmitFactory } from './submit-factory';
 import { Block } from '../../../code-generator/block';
 import { defaults } from '../../../constants/default-options';
 import 'jest';
-import domEventsToRecord from '../../../constants/dom-events-to-record';
-import actionEvents from '../../../constants/action-events';
-import elementsTagName from '../../../constants/elements-tagName';
+import domEventsToRecord from '../../../constants/events/events-dom';
+import customEvents from '../../../constants/events/events-custom';
+import elementsTagName from '../../../constants/elements/tag-name';
 
 /** Frame définie pour les tests */
 const frameId = 0;
@@ -34,7 +34,7 @@ describe('Test de Submit Block Factory', () => {
   test('généré un block pour submit dans un formulaire', () => {
     const eventMessage : IMessage = {
       tagName : elementsTagName.FORM.toUpperCase(),
-      action : actionEvents.SUBMIT
+      action : customEvents.SUBMIT
     };
 
     expect(

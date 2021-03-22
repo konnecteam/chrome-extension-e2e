@@ -1,6 +1,6 @@
 import { ElementService } from './../services/element/element-service';
 import { IComponent } from '../interfaces/i-component';
-import domEventsToRecord from '../constants/dom-events-to-record';
+import domEventsToRecord from '../constants/events/events-dom';
 
 /**
  * Manager qui fait la gestions des composants

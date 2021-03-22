@@ -2,7 +2,7 @@ import { SelectorService } from '../../services/selector/selector-service';
 import  componentName  from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
-import actionEvents from '../../constants/action-events';
+import customEvents from '../../constants/events/events-custom';
 import { IMessage } from '../../interfaces/i-message';
 
 
@@ -21,7 +21,7 @@ export class InputNumericComponent {
       const inputElement = ElementService.getInputNumericElement(element);
       if (inputElement) {
 
-        return { component: componentName.INPUTNUMERIC, element : inputElement as HTMLElement };
+        return { component: componentName.INPUT_NUMERIC, element : inputElement as HTMLElement };
       }
     } else {
       return null;
@@ -34,7 +34,7 @@ export class InputNumericComponent {
   public static editInputNumericMessage(event : IMessage, component : IComponent) : IMessage {
 
     event.selectorFocus = SelectorService.find(component.element);
-    event.action = actionEvents.CHANGE_INPUTNUMERIC;
+    event.action = customEvents.CHANGE_INPUT_NUMERIC;
     return event;
   }
 }

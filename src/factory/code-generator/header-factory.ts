@@ -17,7 +17,7 @@ export class HeaderFactory {
   ) : string {
 
     const importPackage = this.getImport(recordHttpRequest);
-    let hdr = wrapAsync ? HeaderCode.wrappedHeader : HeaderCode.header;
+    let hdr = wrapAsync ? HeaderCode.WRAPPED_HEADER : HeaderCode.HEADER;
     hdr = headless ? hdr : hdr.replace('launch()', 'launch({ headless: false })');
 
     if (recordHttpRequest) {
@@ -37,19 +37,19 @@ export class HeaderFactory {
 
           codeRegExp += `'${regexpBuild.regexp}'`;
           codeRegExp += regexpBuild.flags ? `, '${regexpBuild.flags}'` : '';
-          addRegexHTTP = HeaderCode.listenerPage.replace(
+          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace(
             '**httpregex**',
             `&& !new RegExp(${codeRegExp}).test(url) `);
         }
         // Si il n'y a pas de Regexp alors on remplace par rien
         else {
-          addRegexHTTP = HeaderCode.listenerPage.replace('**httpregex**', ``);
+          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace('**httpregex**', ``);
         }
 
         hdr += addRegexHTTP;
 
       } else {
-        hdr += HeaderCode.listenerPage.replace('**httpregex**', ``);
+        hdr += HeaderCode.LISTENER_PAGE.replace('**httpregex**', ``);
       }
 
     }
@@ -60,6 +60,6 @@ export class HeaderFactory {
    * Si on prends en compte les requêtes on rajoute les inputs nécéssaires
    */
   private static getImport(recordHttpRequest : boolean) : string {
-    return recordHttpRequest ? HeaderCode.importHTTPrequest : HeaderCode.importPuppeteer;
+    return recordHttpRequest ? HeaderCode.IMPORT_HTTP_REQUEST : HeaderCode.IMPORT_PUPPETEER;
   }
 }

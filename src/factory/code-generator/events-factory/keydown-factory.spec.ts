@@ -2,7 +2,7 @@ import { defaults } from '../../../constants/default-options';
 import { KeydownFactory } from './keydown-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
-import domEventsToRecord from '../../../constants/dom-events-to-record';
+import domEventsToRecord from '../../../constants/events/events-dom';
 
 const frame = 'page';
 const frameId = 0;

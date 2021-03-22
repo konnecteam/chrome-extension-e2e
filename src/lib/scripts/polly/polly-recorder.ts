@@ -3,7 +3,7 @@ import { Polly } from '@pollyjs/core';
 import * as  FetchAdapter from '@pollyjs/adapter-fetch';
 import * as XHRAdapter from '@pollyjs/adapter-xhr';
 import inMemoryPersister from '../../persister/polly/in-memory-persister';
-import controlMSG from '../../../constants/control-message';
+import controlMSG from '../../../constants/control/control-message';
 
 // On prrécise à polly les adapter et persister utilisés
 Polly.register(XHRAdapter);

@@ -2,7 +2,7 @@ import { KeydownFactory } from './events-factory/keydown-factory';
 import { SubmitFactory } from './events-factory/submit-factory';
 import { DropFactory } from './events-factory/drop-factory';
 import { ChangeFactory } from './events-factory/change-factory';
-import domEventsToRecord from '../../constants/dom-events-to-record';
+import domEventsToRecord from '../../constants/events/events-dom';
 import { ClickFactory } from './events-factory/click-factory';
 import { IOption } from '../../interfaces/i-options';
 import { Block } from '../../code-generator/block';
@@ -128,7 +128,7 @@ export class ScenarioFactory {
       case domEventsToRecord.KEYDOWN:
         return KeydownFactory.generateBlock(event, frameId, frame, options);
       // Si c'est une action pupeteer
-      case pptrActions.pptr:
+      case pptrActions.PPTR:
         return PPtrFactory.generateBlock(event, frameId, frame, options);
       default : return null;
     }

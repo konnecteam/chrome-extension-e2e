@@ -1,9 +1,9 @@
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
-import ActionEvents from '../../../constants/action-events';
-import domEventsToRecord from '../../../constants/dom-events-to-record';
+import customEvents from '../../../constants/events/events-custom';
+import domEventsToRecord from '../../../constants/events/events-dom';
 import { Block } from '../../../code-generator/block';
-import elementsTagName from '../../../constants/elements-tagName';
+import elementsTagName from '../../../constants/elements/tag-name';
 
 /**
  * Facotry qui permet de créér des objets liés au submit
@@ -32,7 +32,7 @@ export class SubmitFactory {
     this.options = options;
 
     // Si l'event est un submit
-    if (action === ActionEvents.SUBMIT) {
+    if (action === customEvents.SUBMIT) {
       if (tagName === elementsTagName.FORM.toUpperCase()) {
         return this.buildSubmitBlock();
       }

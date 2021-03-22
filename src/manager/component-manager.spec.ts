@@ -1,7 +1,7 @@
 import { ElementService } from './../services/element/element-service';
 import { ComponentManager } from './component-manager';
 import * as path from 'path';
-import domEventsToRecord from '../constants/dom-events-to-record';
+import domEventsToRecord from '../constants/events/events-dom';
 import 'jest';
 import { FileService } from '../services/file/file-service';
 

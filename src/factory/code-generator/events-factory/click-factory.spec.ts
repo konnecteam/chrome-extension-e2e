@@ -2,9 +2,10 @@ import { ILineBlock } from '../../../interfaces/i-line-block';
 import { Block } from '../../../code-generator/block';
 import { defaults } from '../../../constants/default-options';
 import 'jest';
-import domEventsToRecord from '../../../constants/dom-events-to-record';
-import actionEvents from '../../../constants/action-events';
+import domEventsToRecord from '../../../constants/events/events-dom';
+import customEvents from '../../../constants/events/events-custom';
 import { ClickFactory } from './click-factory';
+import eventsDom from '../../../constants/events/events-dom';
 
 /**
  * Attributs d'un IMessage
@@ -435,7 +436,7 @@ describe('Test de Click Block Factory', () => {
     test('Test de generateBlock pour un simple click', () => {
       const eventI = {
         selector,
-        action : actionEvents.BASIC_CLICK,
+        action : eventsDom.CLICK,
       };
 
       expect(
@@ -455,7 +456,7 @@ describe('Test de Click Block Factory', () => {
     test('Test de generateBlock pour un click sur un file drop zone', () => {
       const eventI = {
         selector,
-        action : actionEvents.CLICK_DROPZONE
+        action : customEvents.CLICK_DROPZONE
       };
 
       expect(
@@ -477,7 +478,7 @@ describe('Test de Click Block Factory', () => {
       const eventI = {
         selector,
         durancyClick : time,
-        action : actionEvents.CLICKMOUSE_INPUTNUMERIC
+        action : customEvents.CLICK_MOUSE_INPUT_NUMERIC
       };
 
       expect(
@@ -498,7 +499,7 @@ describe('Test de Click Block Factory', () => {
     test('Test de generateBlock pour un click mouse', () => {
       const eventI = {
         selector,
-        action : actionEvents.CLICKMOUSE
+        action : customEvents.CLICK_MOUSE
       };
 
       expect(
@@ -521,7 +522,7 @@ describe('Test de Click Block Factory', () => {
         scrollElement,
         scrollXElement,
         scrollYElement,
-        action : actionEvents.CLICK_ITEMLIST
+        action : customEvents.CLICK_LIST_ITEM
       };
 
       expect(

@@ -2,7 +2,7 @@ import { IMessage } from '../../../interfaces/i-message';
 import { DropFactory } from './drop-factory';
 import { defaults } from '../../../constants/default-options';
 import 'jest';
-import actionEvents from '../../../constants/action-events';
+import customEvents from '../../../constants/events/events-custom';
 import { ClickFactory } from './click-factory';
 import { ChangeFactory } from './change-factory';
 
@@ -26,7 +26,7 @@ describe('Test de Drop Block Factory', () => {
 
   test('Généré un Drop Block', () => {
     const eventMessage : IMessage = {
-      action : actionEvents.DROP_DROPZONE,
+      action : customEvents.DROP_FILE,
       selector: '#test',
       files : 'text.txt'
     };

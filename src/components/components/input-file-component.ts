@@ -13,7 +13,7 @@ export class InputFilesComponent {
    */
   public static getInputFile(element : HTMLInputElement) : IComponent {
     if (element.files && element.files[0]) {
-      return { component : componentName.INPUTFILE, element };
+      return { component : componentName.INPUT_FILE, element };
     }
     return null;
   }

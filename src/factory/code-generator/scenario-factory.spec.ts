@@ -5,13 +5,14 @@ import { DropFactory } from './events-factory/drop-factory';
 import { ChangeFactory } from './events-factory/change-factory';
 import { ClickFactory } from './events-factory/click-factory';
 import { defaults } from './../../constants/default-options';
-import actionEvents from '../../constants/action-events';
-import domEventsToRecord from '../../constants/dom-events-to-record';
+import customEvents from '../../constants/events/events-custom';
+import domEventsToRecord from '../../constants/events/events-dom';
 import { IMessage } from '../../interfaces/i-message';
 import { Block } from '../../code-generator/block';
 import 'jest';
 import { ScenarioFactory } from './scenario-factory';
 import pptrActions from '../../constants/pptr-actions';
+import eventsDom from '../../constants/events/events-dom';
 
 /** Frame définie pour les tests */
 const frameId = 0;
@@ -144,7 +145,7 @@ describe('Test de Scenario Factory', () => {
     const eventMessage : IMessage = {
       typeEvent : domEventsToRecord.CLICK,
       selector : '#id',
-      action : actionEvents.BASIC_CLICK
+      action : eventsDom.CLICK
     };
 
     expect(
@@ -159,7 +160,7 @@ describe('Test de Scenario Factory', () => {
     const eventMessage : IMessage = {
       typeEvent : domEventsToRecord.CHANGE,
       selector : '#id',
-      action : actionEvents.CHANGE,
+      action : eventsDom.CHANGE,
       value: 'content'
     };
     expect(
@@ -174,7 +175,7 @@ describe('Test de Scenario Factory', () => {
     const eventMessage : IMessage = {
       typeEvent : domEventsToRecord.DROP,
       selector : '#id',
-      action : actionEvents.DROP_DROPZONE,
+      action : customEvents.DROP_FILE,
       files : 'text.txt'
     };
 
@@ -189,7 +190,7 @@ describe('Test de Scenario Factory', () => {
     const eventMessage : IMessage = {
       typeEvent : domEventsToRecord.SUBMIT,
       selector : '#id',
-      action : actionEvents.SUBMIT
+      action : customEvents.SUBMIT
     };
 
     expect(
@@ -203,7 +204,7 @@ describe('Test de Scenario Factory', () => {
     const eventMessage : IMessage = {
       typeEvent : domEventsToRecord.KEYDOWN,
       selector : '#id',
-      action : actionEvents.LISTKEYDOWN,
+      action : customEvents.LIST_KEYDOWN,
       value : 'content',
       iframe : '#iframe'
     };
@@ -217,7 +218,7 @@ describe('Test de Scenario Factory', () => {
 
   test('Test de generate PPtr action event', () => {
     const eventMessage : IMessage = {
-      typeEvent : pptrActions.pptr,
+      typeEvent : pptrActions.PPTR,
       selector : '#id',
       action : pptrActions.GOTO,
       value : 'localhost'

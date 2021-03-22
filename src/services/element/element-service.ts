@@ -8,7 +8,7 @@ import { KSelectComponent } from '../../components/konnect/k-select-component';
 import { KmSwitchComponent } from '../../components/konnect/km-switch- component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { IComponent } from '../../interfaces/i-component';
-import elementsTagName from '../../constants/elements-tagName';
+import elementsTagName from '../../constants/elements/tag-name';
 import { SelectorService } from '../selector/selector-service';
 
 /**

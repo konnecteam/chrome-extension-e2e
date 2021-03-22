@@ -1,16 +1,16 @@
 import { defaults } from './../constants/default-options';
-import domEventsToRecord from '../constants/dom-events-to-record';
+import domEventsToRecord from '../constants/events/events-dom';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { FooterFactory } from '../factory/code-generator/footer-factory';
 import { HeaderFactory } from '../factory/code-generator/header-factory';
 import { IOption } from '../interfaces/i-options';
 import  pptrActions  from '../constants/pptr-actions';
-import  actionEvents from '../constants/action-events';
 import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
 import 'jest';
 import CodeGenerator from './code-generator';
 import { ObjectService } from '../services/object/object-service';
+import eventsDom from '../constants/events/events-dom';
 
 /** Frame dans laquelle on se situe */
 const frameId = 0;
@@ -105,15 +105,15 @@ describe('Test de Code Generator', () => {
   beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
     messageList.push(
-      {typeEvent: pptrActions.pptr , action: pptrActions.GOTO, value: 'localhost'}
+      {typeEvent: pptrActions.PPTR , action: pptrActions.GOTO, value: 'localhost'}
     );
 
     messageList.push(
-      {typeEvent: domEventsToRecord.CLICK, action: actionEvents.BASIC_CLICK, selector: '#idInput'}
+      {typeEvent: domEventsToRecord.CLICK, action: eventsDom.CLICK, selector: '#idInput'}
     );
 
     messageList.push(
-      {typeEvent: domEventsToRecord.CHANGE, action: actionEvents.CHANGE, selector: '#idInput', value: 'change de value input'}
+      {typeEvent: domEventsToRecord.CHANGE, action: eventsDom.CHANGE, selector: '#idInput', value: 'change de value input'}
     );
   });
 

@@ -4,7 +4,7 @@ import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import actionEvents from '../../constants/action-events';
+import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
 
 /**
@@ -29,7 +29,7 @@ describe('Test de km switch Component', () => {
     // on doit trouver le km switch
     expect(
       KmSwitchComponent.getKmSwitch(element as HTMLElement).component
-    ).toEqual(componentName.KMSWITCH);
+    ).toEqual(componentName.KM_SWITCH);
   });
 
 
@@ -43,13 +43,13 @@ describe('Test de km switch Component', () => {
     };
 
     const component : IComponent = {
-      component : componentName.KMSWITCH,
+      component : componentName.KM_SWITCH,
       element : element as HTMLElement
     };
 
     // On doit trouver l'action click mouse
     expect(
       KmSwitchComponent.editKmSwitchMessage(eventMessage, component).action
-    ).toEqual(actionEvents.CLICKMOUSE);
+    ).toEqual(customEvents.CLICK_MOUSE);
   });
 });
