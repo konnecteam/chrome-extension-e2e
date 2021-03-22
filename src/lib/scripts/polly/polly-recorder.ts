@@ -325,7 +325,6 @@ export class PollyRecorder {
     await this._stopAsync();
 
     // On envoie le résultat au content-script
-    //window.postMessage({action: controlMSG.GOT_HAR_EVENT, payload: resulRecord}, event.origin);
     window.postMessage(
       {
         action : controlMSG.GOT_HAR_EVENT,
