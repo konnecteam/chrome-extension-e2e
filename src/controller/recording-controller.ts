@@ -113,7 +113,7 @@ class RecordingController {
           case controlActions.STOP :
             this._stop();
             break;
-          case controlActions.CLEAN:
+          case controlActions.CLEANUP:
             this._cleanUp();
             break;
           case controlActions.PAUSE :
@@ -235,7 +235,7 @@ class RecordingController {
     this._badgeState = 'rec';
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = false;
-    ChromeService.queryToContentscriptEvent(controlMSG.UNPAUSE_EVENT);
+    ChromeService.sendMessageToContentScript(controlMSG.UNPAUSE_EVENT);
   }
 
   /**
@@ -246,7 +246,7 @@ class RecordingController {
     this._badgeState = '❚❚';
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = true;
-    ChromeService.queryToContentscriptEvent(controlMSG.PAUSE_EVENT);
+    ChromeService.sendMessageToContentScript(controlMSG.PAUSE_EVENT);
   }
 
   /**
@@ -283,7 +283,7 @@ class RecordingController {
     StorageService.setData({ recording : this._recording });
 
     // 5 - On récupère le résultat
-    ChromeService.queryToContentscriptEvent(controlMSG.GET_RESULT_EVENT);
+    ChromeService.sendMessageToContentScript(controlMSG.GET_RESULT_EVENT);
 
     // 6 - Si on record pas les requête on peut mettre à true isRemovedListener
     if (!this._recordHttpRequest) {

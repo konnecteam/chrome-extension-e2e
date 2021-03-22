@@ -136,7 +136,7 @@ describe('Test de Recording Controller', () => {
               case browserOption.controlActions.STOP :
                 (window as any).recordingController._stop();
                 break;
-              case browserOption.controlActions.CLEAN:
+              case browserOption.controlActions.CLEANUP:
                 (window as any).recordingController._cleanUp();
                 break;
               case browserOption.controlActions.PAUSE :
@@ -250,7 +250,7 @@ describe('Test de Recording Controller', () => {
 
   test('Test de cleanUp', async () => {
 
-    const badge = await verfiyBadgeContentAsync(controlActions.CLEAN);
+    const badge = await verfiyBadgeContentAsync(controlActions.CLEANUP);
     // Verifier si il est égale à '' car il n'y a pas d'event à save
     expect(badge).toEqual('');
   });

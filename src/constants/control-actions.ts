@@ -4,7 +4,7 @@
 export default {
   START : 'start',
   STOP : 'stop',
-  CLEAN : 'cleanup',
+  CLEANUP : 'cleanup',
   PAUSE : 'pause',
   UNPAUSE : 'unpause',
   EXPORT_SCRIPT : 'exportScript'
