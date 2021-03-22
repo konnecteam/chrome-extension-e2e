@@ -31,7 +31,7 @@
     "open_in_tab": true
   },
   "web_accessible_resources": [
-    "polly-build/polly.js",
-    "lib/script-to-inject/fake-time-script.js"
+    "lib/scripts/polly/polly.js",
+    "lib/scripts/fake-time/fake-time.js"
   ]
 }

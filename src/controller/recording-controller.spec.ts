@@ -4,7 +4,6 @@ import 'jest';
 import * as puppeteer from 'puppeteer';
 import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
-import * as path from 'path';
 import * as chrome from 'sinon-chrome';
 import { IMessage } from '../interfaces/i-message';
 import controlActions from '../constants/control-actions';
@@ -13,8 +12,6 @@ import { Server } from 'http';
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
-let buildDir : string ;
-
 
 /**
  * Récupère l'état du badge pour savoir
@@ -67,11 +64,9 @@ describe('Test de Recording Controller', () => {
   beforeAll(async done => {
 
     await runBuild();
-    buildDir = '../../../dist';
-    const fixture = path.join(__dirname, '../../static/test/page-test/html-page/forms.html');
 
     // On démarre le serveur de test
-    server = await startServer(buildDir, fixture);
+    server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
 
     // On lance puppeteer et on met en place la page pour les tests
@@ -108,8 +103,8 @@ describe('Test de Recording Controller', () => {
       };
 
 
-      // On overwrite la foncion pour lui donner l'url de fake time script js
-      window.chrome.extension.getURL = () => 'scripts/fake-time-script.js';
+      // On overwrite la foncion pour lui donner l'url de fake time js
+      window.chrome.extension.getURL = () => 'libs/scripts/fake-time/fake-time.js';
 
       // On overwrite le set pour set dans local storage pour les tests
       window.chrome.storage.local.set = valueTOsave => {

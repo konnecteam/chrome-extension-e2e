@@ -4,7 +4,6 @@ import { runBuild } from '../../../static/test/extension-builder/extension-build
 import * as puppeteer from 'puppeteer';
 import { startServer } from '../../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../../static/test/lauch-puppeteer/lauch-puppeteer';
-import * as path from 'path';
 import { Server } from 'http';
 
 let urlLink = '';
@@ -12,16 +11,13 @@ const obj = {hello: 'world'};
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
-let buildDir : string ;
 
 describe('Test de du Service UrlService', function() {
 
   beforeAll(async function (done) {
     await runBuild();
-    buildDir = '../../../dist';
-    const fixture = path.join(__dirname, '../../../static/test/page-test/html-page/forms.html');
     // On démarre le serveur de test
-    server = await startServer(buildDir, fixture);
+    server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
 
     // On lance puppeteer et on met en place la page pour les tests

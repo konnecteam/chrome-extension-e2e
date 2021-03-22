@@ -4,7 +4,7 @@
 export class PollyService {
 
   /** Path du script à injecter */
-  public static readonly POLLY_SCRIPT_PATH = './polly-build/polly.js';
+  public static readonly POLLY_SCRIPT_PATH = 'lib/scripts/polly/polly.js';
 
   /** Instance de classe */
   public static instance : PollyService;

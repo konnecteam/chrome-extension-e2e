@@ -1,15 +1,13 @@
 import 'jest';
-import { runBuild } from './../../static/test/extension-builder/extension-builder';
+import { runBuild } from '../../../../static/test/extension-builder/extension-builder';
 import * as puppeteer from 'puppeteer';
-import { startServer } from '../../static/test/page-test/server';
-import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
-import * as path from 'path';
+import { startServer } from '../../../../static/test/page-test/server';
+import { launchPuppeteerWithExtension } from '../../../../static/test/lauch-puppeteer/lauch-puppeteer';
 import { Server } from 'http';
 
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
-let buildDir : string ;
 
 /**
  * Permet d'attendre que le polly soit prết pour enregistrer
@@ -44,10 +42,9 @@ describe('Test de Polly recorder', () => {
   beforeAll(async done => {
 
     await runBuild();
-    buildDir = '../../../dist';
-    const fixture = path.join(__dirname, '../../static/test/page-test/html-page/forms.html');
+
     // On démarre le serveur de test
-    server = await startServer(buildDir, fixture);
+    server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
 
     // On lance puppeteer et on met en place la page pour les tests
@@ -73,12 +70,13 @@ describe('Test de Polly recorder', () => {
       el.src = scriptText;
       document.body.parentElement.appendChild(el);
 
-    }, 'build/polly-build/polly.js');
+    }, 'build/lib/scripts/polly/polly.js');
     done();
   }, 50000);
 
   // Close server
   afterAll(async () => {
+
     await page.close();
     await browser.close();
     server.close();

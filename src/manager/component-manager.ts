@@ -30,6 +30,8 @@ export class ComponentManager {
       // Si c'est un keydown
       case domEventsToRecord.KEYDOWN:
         return ElementService.determinateKeydownComponent(element);
+      default:
+        return null;
     }
   }
 }

@@ -5,14 +5,12 @@ import 'jest';
 import * as puppeteer from 'puppeteer';
 import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
-import * as path from 'path';
 import * as chrome from 'sinon-chrome';
 import { Server } from 'http';
 
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
-let buildDir : string ;
 
 /**
  * Permet de lancer un dispatch event sur la window
@@ -52,11 +50,9 @@ describe('Test Content script ', () => {
 
     // On met un timeout car runbuild met plus de 2000ms
     await runBuild();
-    buildDir = '../../../dist';
-    const fixture = path.join(__dirname, '../../static/test/page-test/html-page/forms.html');
 
     // On démarre le serveur de test
-    server = await startServer(buildDir, fixture);
+    server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
 
     // On lance puppeteer et on met en place la page pour les tests
@@ -71,7 +67,7 @@ describe('Test Content script ', () => {
       window.localStorage.setItem('options', JSON.stringify({ options: { code: browserOption.options } }));
 
       // On overwrite la foncion pour lui donner l'url de polly js
-      window.chrome.extension.getURL = () => 'build/polly-build/polly.js';
+      window.chrome.extension.getURL = () => 'build/lib/scripts/polly/polly.js';
 
       // On overwrite pour adapter le get au local storage
       window.chrome.storage.local.get = (key, callback?) => {
@@ -130,6 +126,7 @@ describe('Test Content script ', () => {
 
   // Close Server
   afterAll(async () => {
+
     await page.close();
     await browser.close();
     server.close();
