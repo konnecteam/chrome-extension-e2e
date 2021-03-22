@@ -6,9 +6,9 @@ import { Block } from '../../../code-generator/block';
 import elementsTagName from '../../../constants/elements-tagName';
 
 /**
- * Facotry qui génère les blocks liés au submit
+ * Facotry qui permet de créér des objets liés au submit
  */
-export class SubmitBlockFactory {
+export class SubmitFactory {
 
   // les attributs sont utilisés pour éviter de les passer aux méthodes
 

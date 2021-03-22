@@ -6,9 +6,9 @@ import { Block } from '../../../code-generator/block';
 import elementsTagName from '../../../constants/elements-tagName';
 
 /**
- * Factory qui permet de créér les block liés à l'événement change
+ * Factory qui permet de créér des objets liés à l'événement change
  */
-export class ChangeBlockFactory {
+export class ChangeFactory {
 
   // les attributs sont utilisés pour éviter de les passer en paramètre méthodes
 

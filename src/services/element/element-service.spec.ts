@@ -1,4 +1,3 @@
-import { ChangeBlockFactory } from './../../factory/code-generator/block-event-factory/change-block-factory';
 import { ElementService } from './element-service';
 import 'jest';
 import * as path from 'path';

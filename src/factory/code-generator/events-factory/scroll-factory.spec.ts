@@ -1,5 +1,5 @@
-import { ScrollBlockFactory } from './scroll-block-factory';
-import { Block } from './../../../code-generator/block';
+import { ScrollFactory } from './scroll-factory';
+import { Block } from '../../../code-generator/block';
 import 'jest';
 
 describe('Test de Scroll Block factory', () => {
@@ -22,7 +22,7 @@ describe('Test de Scroll Block factory', () => {
     });
 
     expect(
-      ScrollBlockFactory.buildScroll(
+      ScrollFactory.buildScroll(
         frame,
         frameId,
         scrollX,

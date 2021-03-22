@@ -1,14 +1,14 @@
-import { KeydownBlockFactory } from './block-event-factory/keydown-block-factory';
-import { SubmitBlockFactory } from './block-event-factory/submit-block-factory';
-import { DropBlockFactory } from './block-event-factory/drop-block-factory';
-import { ChangeBlockFactory } from './block-event-factory/change-block-factory';
+import { KeydownFactory } from './events-factory/keydown-factory';
+import { SubmitFactory } from './events-factory/submit-factory';
+import { DropFactory } from './events-factory/drop-factory';
+import { ChangeFactory } from './events-factory/change-factory';
 import domEventsToRecord from '../../constants/dom-events-to-record';
-import { ClickBlockFactory } from './block-event-factory/click-block-factory';
+import { ClickFactory } from './events-factory/click-factory';
 import { IOption } from '../../interfaces/i-options';
 import { Block } from '../../code-generator/block';
 import { IMessage } from '../../interfaces/i-message';
 import pptrActions from '../../constants/pptr-actions';
-import { PPtrActionBlockFactory } from './block-event-factory/pptr-action-block-factory';
+import { PPtrFactory } from './events-factory/pptr-factory';
 
 /**
  * Factory qui génére le contenu du scnénario
@@ -114,22 +114,22 @@ export class ScenarioFactory {
     switch (typeEvent) {
       // Si c'est un click
       case domEventsToRecord.CLICK:
-        return ClickBlockFactory.generateBlock(event, frameId, frame, options);
+        return ClickFactory.generateBlock(event, frameId, frame, options);
       // Si c'est un change
       case domEventsToRecord.CHANGE :
-        return ChangeBlockFactory.generateBlock(event, frameId, frame, options);
+        return ChangeFactory.generateBlock(event, frameId, frame, options);
       // Si c'est un drop
       case domEventsToRecord.DROP :
-        return DropBlockFactory.generateBlock(event, frameId, frame, options);
+        return DropFactory.generateBlock(event, frameId, frame, options);
       // Si c'est un submit
       case domEventsToRecord.SUBMIT:
-        return SubmitBlockFactory.generateBlock(event, frameId, frame, options);
+        return SubmitFactory.generateBlock(event, frameId, frame, options);
       // Si c'est un keydown
       case domEventsToRecord.KEYDOWN:
-        return KeydownBlockFactory.generateBlock(event, frameId, frame, options);
+        return KeydownFactory.generateBlock(event, frameId, frame, options);
       // Si c'est une action pupeteer
       case pptrActions.pptr:
-        return PPtrActionBlockFactory.generateBlock(event, frameId, frame, options);
+        return PPtrFactory.generateBlock(event, frameId, frame, options);
       default : return null;
     }
   }

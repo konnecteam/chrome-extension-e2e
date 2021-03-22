@@ -1,9 +1,9 @@
-import { PPtrActionBlockFactory } from './block-event-factory/pptr-action-block-factory';
-import { KeydownBlockFactory } from './block-event-factory/keydown-block-factory';
-import { SubmitBlockFactory } from './block-event-factory/submit-block-factory';
-import { DropBlockFactory } from './block-event-factory/drop-block-factory';
-import { ChangeBlockFactory } from './block-event-factory/change-block-factory';
-import { ClickBlockFactory } from './block-event-factory/click-block-factory';
+import { PPtrFactory } from './events-factory/pptr-factory';
+import { KeydownFactory } from './events-factory/keydown-factory';
+import { SubmitFactory } from './events-factory/submit-factory';
+import { DropFactory } from './events-factory/drop-factory';
+import { ChangeFactory } from './events-factory/change-factory';
+import { ClickFactory } from './events-factory/click-factory';
 import { defaults } from './../../constants/default-options';
 import actionEvents from '../../constants/action-events';
 import domEventsToRecord from '../../constants/dom-events-to-record';
@@ -150,7 +150,7 @@ describe('Test de Scenario Factory', () => {
     expect(
       ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
     ).toEqual(
-      ClickBlockFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      ClickFactory.generateBlock(eventMessage, frameId, frame, defaults)
     );
   });
 
@@ -165,7 +165,7 @@ describe('Test de Scenario Factory', () => {
     expect(
       ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
     ).toEqual(
-      ChangeBlockFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      ChangeFactory.generateBlock(eventMessage, frameId, frame, defaults)
     );
   });
 
@@ -181,7 +181,7 @@ describe('Test de Scenario Factory', () => {
     expect(
       ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
     ).toEqual(
-      DropBlockFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      DropFactory.generateBlock(eventMessage, frameId, frame, defaults)
     );
   });
 
@@ -195,7 +195,7 @@ describe('Test de Scenario Factory', () => {
     expect(
       ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
     ).toEqual(
-      SubmitBlockFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      SubmitFactory.generateBlock(eventMessage, frameId, frame, defaults)
     );
   });
 
@@ -211,7 +211,7 @@ describe('Test de Scenario Factory', () => {
     expect(
       ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
     ).toEqual(
-      KeydownBlockFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      KeydownFactory.generateBlock(eventMessage, frameId, frame, defaults)
     );
   });
 
@@ -226,7 +226,7 @@ describe('Test de Scenario Factory', () => {
     expect(
       ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
     ).toEqual(
-      PPtrActionBlockFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      PPtrFactory.generateBlock(eventMessage, frameId, frame, defaults)
     );
   });
 });

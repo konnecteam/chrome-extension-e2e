@@ -4,9 +4,9 @@ import { Block } from '../../../code-generator/block';
 import pptrActions from '../../../constants/pptr-actions';
 
 /**
- * Factory qui génère les block lié aux actions pptr
+ * Factory qui permet de créér des objets lié aux actions puppeteer
  */
-export class PPtrActionBlockFactory {
+export class PPtrFactory {
 
   // les attributs sont utilisés pour éviter de les passer aux méthodes
 

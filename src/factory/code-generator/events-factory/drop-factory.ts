@@ -1,14 +1,14 @@
-import { ChangeBlockFactory } from './change-block-factory';
-import { ClickBlockFactory } from './click-block-factory';
+import { ChangeFactory } from './change-factory';
+import { ClickFactory } from './click-factory';
 import { Block } from 'code-generator/block';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
 import ActionEvents from '../../../constants/action-events';
 
 /**
- * Factory qui génère les event liés à l'event drop
+ * Factory qui permet de créér des objets liés à l'event drop
  */
-export class DropBlockFactory {
+export class DropFactory {
 
   public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
     const { action, selector, files} = event;
@@ -16,18 +16,18 @@ export class DropBlockFactory {
     // Si l'action est un drop sur un file dropzone
     if (action === ActionEvents.DROP_DROPZONE) {
 
-      ClickBlockFactory.options = options;
-      ClickBlockFactory.frameId = frameId;
-      ClickBlockFactory.frame = frame;
+      ClickFactory.options = options;
+      ClickFactory.frameId = frameId;
+      ClickFactory.frame = frame;
       // On rajoute d'abord la partie du click du file dropzone
-      const newBlock = ClickBlockFactory.buildclickFileDropZone(selector);
+      const newBlock = ClickFactory.buildclickFileDropZone(selector);
 
       // On modifie les attribus de la classe utilisé pour les mettre à jour
-      ChangeBlockFactory.options = options;
-      ChangeBlockFactory.frameId = frameId;
-      ChangeBlockFactory.frame = frame;
+      ChangeFactory.options = options;
+      ChangeFactory.frameId = frameId;
+      ChangeFactory.frame = frame;
       // On rajoute la partie acceptation du fichier
-      const chooserFile = ChangeBlockFactory.buildAcceptUploadFileChange(selector, files);
+      const chooserFile = ChangeFactory.buildAcceptUploadFileChange(selector, files);
 
       for (const line of chooserFile.getLines()) {
         newBlock.addLine(line);

@@ -1,6 +1,6 @@
-import { IMessage } from './../../../interfaces/i-message';
-import { defaults } from './../../../constants/default-options';
-import { PPtrActionBlockFactory } from './pptr-action-block-factory';
+import { IMessage } from '../../../interfaces/i-message';
+import { defaults } from '../../../constants/default-options';
+import { PPtrFactory } from './pptr-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
 import pptrActions from '../../../constants/pptr-actions';
@@ -11,11 +11,11 @@ const frameId = 0;
 
 describe('Test de Pptr Action Block Factory', () => {
 
-  // Initialisation PPtrActionBlockFactory
+  // Initialisation PPtrFactory
   beforeAll(() => {
-    PPtrActionBlockFactory.options = JSON.parse(JSON.stringify(defaults));
-    PPtrActionBlockFactory.frame = frame;
-    PPtrActionBlockFactory.frameId = frameId;
+    PPtrFactory.options = JSON.parse(JSON.stringify(defaults));
+    PPtrFactory.frame = frame;
+    PPtrFactory.frameId = frameId;
 
   });
 
@@ -35,7 +35,7 @@ describe('Test de Pptr Action Block Factory', () => {
   });`
     });
     expect(
-      PPtrActionBlockFactory.buildGoto(href)
+      PPtrFactory.buildGoto(href)
     ).toEqual(
       exceptedResult
     );
@@ -51,7 +51,7 @@ describe('Test de Pptr Action Block Factory', () => {
     });
 
     expect(
-      PPtrActionBlockFactory.buildViewport(
+      PPtrFactory.buildViewport(
         width,
         height
       )
@@ -62,7 +62,7 @@ describe('Test de Pptr Action Block Factory', () => {
   });
 
   test('Test de build WaitForNavigation avec option WaitForNavigation activée', () => {
-    PPtrActionBlockFactory.options.waitForNavigation = true;
+    PPtrFactory.options.waitForNavigation = true;
 
     const exceptedResult = new Block(frameId, {
       type: pptrActions.NAVIGATION,
@@ -70,19 +70,19 @@ describe('Test de Pptr Action Block Factory', () => {
     });
 
     expect(
-      PPtrActionBlockFactory.buildWaitForNavigation()
+      PPtrFactory.buildWaitForNavigation()
     ).toEqual(
       exceptedResult
     );
   });
 
   test('Test de build WaitForNavigation avec option WaitForNavigation desactivée', () => {
-    PPtrActionBlockFactory.options.waitForNavigation = false;
+    PPtrFactory.options.waitForNavigation = false;
 
     const exceptedResult = new Block(frameId);
 
     expect(
-      PPtrActionBlockFactory.buildWaitForNavigation()
+      PPtrFactory.buildWaitForNavigation()
     ).toEqual(
       exceptedResult
     );
@@ -96,9 +96,9 @@ describe('Test de Pptr Action Block Factory', () => {
     };
 
     expect(
-      PPtrActionBlockFactory.generateBlock(eventMessage , frameId, frame, defaults)
+      PPtrFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrActionBlockFactory.buildGoto(eventMessage .value)
+      PPtrFactory.buildGoto(eventMessage .value)
     );
   });
 
@@ -109,9 +109,9 @@ describe('Test de Pptr Action Block Factory', () => {
     };
 
     expect(
-      PPtrActionBlockFactory.generateBlock(eventMessage , frameId, frame, defaults)
+      PPtrFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrActionBlockFactory.buildViewport(eventMessage .value.width, eventMessage .value.height)
+      PPtrFactory.buildViewport(eventMessage .value.width, eventMessage .value.height)
     );
   });
 
@@ -121,9 +121,9 @@ describe('Test de Pptr Action Block Factory', () => {
     };
 
     expect(
-      PPtrActionBlockFactory.generateBlock(eventMessage , frameId, frame, defaults)
+      PPtrFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrActionBlockFactory.buildWaitForNavigation()
+      PPtrFactory.buildWaitForNavigation()
     );
   });
 });

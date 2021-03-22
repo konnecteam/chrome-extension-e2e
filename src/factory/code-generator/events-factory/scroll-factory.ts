@@ -1,9 +1,9 @@
 import { Block } from '../../../code-generator/block';
 
 /**
- * Génère les blocks liés au scroll
+ * Génère qui permet de créér des objets liés au scroll
  */
-export class ScrollBlockFactory {
+export class ScrollFactory {
 
   /**
    * Factory qui génère un scroll

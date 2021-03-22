@@ -1,6 +1,6 @@
-import { IMessage } from './../../../interfaces/i-message';
-import { SubmitBlockFactory } from './submit-block-factory';
-import { Block } from './../../../code-generator/block';
+import { IMessage } from '../../../interfaces/i-message';
+import { SubmitFactory } from './submit-factory';
+import { Block } from '../../../code-generator/block';
 import { defaults } from '../../../constants/default-options';
 import 'jest';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
@@ -14,8 +14,8 @@ describe('Test de Submit Block Factory', () => {
 
   // Initialisation
   beforeAll(() => {
-    SubmitBlockFactory.frameId = frameId;
-    SubmitBlockFactory.frame = frame;
+    SubmitFactory.frameId = frameId;
+    SubmitFactory.frame = frame;
   });
 
   test('Créer un submit', () => {
@@ -25,7 +25,7 @@ describe('Test de Submit Block Factory', () => {
     });
 
     expect(
-      SubmitBlockFactory.buildSubmit()
+      SubmitFactory.buildSubmit()
     ).toEqual(
       exceptedResult
     );
@@ -38,9 +38,9 @@ describe('Test de Submit Block Factory', () => {
     };
 
     expect(
-      SubmitBlockFactory.generateBlock(eventMessage , frameId, frame, defaults )
+      SubmitFactory.generateBlock(eventMessage , frameId, frame, defaults )
     ).toEqual(
-      SubmitBlockFactory.buildSubmit()
+      SubmitFactory.buildSubmit()
     );
 
   });

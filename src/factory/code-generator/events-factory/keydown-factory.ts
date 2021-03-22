@@ -5,9 +5,9 @@ import ActionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 
 /**
- * Factory qui génère les block liés à l'event keydown
+ * Factory qui permet de créér des objets liés à l'event keydown
  */
-export class KeydownBlockFactory {
+export class KeydownFactory {
 
   // les attributs sont utilisés pour éviter de les passer aux méthodes
 

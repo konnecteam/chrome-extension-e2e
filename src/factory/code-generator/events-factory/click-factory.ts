@@ -5,9 +5,9 @@ import ActionEvents from '../../../constants/action-events';
 import domEventsToRecord from '../../../constants/dom-events-to-record';
 
 /**
- * Factory qui génère les block liés à l'event Click
+ * Factory qui permet de créér des objets liés à l'event Click
  */
-export class ClickBlockFactory {
+export class ClickFactory {
 
   // les attributs sont utilisés pour éviter de les passer aux méthodes
 

@@ -1,10 +1,10 @@
-import { IMessage } from './../../../interfaces/i-message';
-import { DropBlockFactory } from './drop-block-factory';
+import { IMessage } from '../../../interfaces/i-message';
+import { DropFactory } from './drop-factory';
 import { defaults } from '../../../constants/default-options';
 import 'jest';
 import actionEvents from '../../../constants/action-events';
-import { ClickBlockFactory } from './click-block-factory';
-import { ChangeBlockFactory } from './change-block-factory';
+import { ClickFactory } from './click-factory';
+import { ChangeFactory } from './change-factory';
 
 /** Frame définie pour les tests */
 const frame = 'page';
@@ -15,13 +15,13 @@ describe('Test de Drop Block Factory', () => {
   // Initialisation
   beforeAll(() => {
 
-    ClickBlockFactory.options = JSON.parse(JSON.stringify(defaults));
-    ClickBlockFactory.frameId = frameId;
-    ClickBlockFactory.frame = frame;
+    ClickFactory.options = JSON.parse(JSON.stringify(defaults));
+    ClickFactory.frameId = frameId;
+    ClickFactory.frame = frame;
 
-    ChangeBlockFactory.options = JSON.parse(JSON.stringify(defaults));
-    ChangeBlockFactory.frameId = frameId;
-    ChangeBlockFactory.frame = frame;
+    ChangeFactory.options = JSON.parse(JSON.stringify(defaults));
+    ChangeFactory.frameId = frameId;
+    ChangeFactory.frame = frame;
   });
 
   test('Généré un Drop Block', () => {
@@ -32,14 +32,14 @@ describe('Test de Drop Block Factory', () => {
     };
 
     // On rajoute d'abord la partie du click du file dropzone
-    const exceptedResult = ClickBlockFactory.buildclickFileDropZone(eventMessage .selector);
+    const exceptedResult = ClickFactory.buildclickFileDropZone(eventMessage .selector);
     // On rajoute la partie acceptation du fichier
-    const chooserFile = ChangeBlockFactory.buildAcceptUploadFileChange(eventMessage .selector, eventMessage .files);
+    const chooserFile = ChangeFactory.buildAcceptUploadFileChange(eventMessage .selector, eventMessage .files);
 
     exceptedResult.addLine(chooserFile.getLines()[0]);
 
     expect(
-      DropBlockFactory.generateBlock(
+      DropFactory.generateBlock(
         eventMessage ,
         frameId,
         frame,
