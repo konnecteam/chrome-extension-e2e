@@ -33,11 +33,14 @@ export class PollyRecorder {
     'node_modules/konnect-web-theme/dist/font-awesome5/webfonts/fa-regular-400.ttf',
   ];
 
+  // Contient les chemins de l'url pour récupérer les informations d'un produit
+  private static readonly _catalaogProductUrl = [ 'picture/obj' ];
+
   /** Liste des requêtes enreigstrées */
   public requestRecorded : string[];
 
   /** Promèse des requêtes éxécutées */
-  private _listPromise : Array<Promise<any>>;
+  private _listRequestPromise : Array<Promise<any>>;
 
   /** PollyJS */
   private _polly : Polly;
@@ -51,7 +54,7 @@ export class PollyRecorder {
   /** Permet d'observer les entrées des requêtes */
   public static observer : PerformanceObserver;
 
-  /** bind des fonction pour les listeners des messages entre le content script
+  /** bind des fonctions pour les listeners des messages entre le content script
    * et le Polly Recorder
    */
   private _boundedGetHARResult : () => void = null;
@@ -66,20 +69,20 @@ export class PollyRecorder {
     this._boundedUnpause = this._unpause.bind(this);
 
     this.requestRecorded = [];
-    this._listPromise = [];
+    this._listRequestPromise = [];
 
     this._polly = this._createPollyInstance();
     this.recordingId = this._polly.recordingId;
     this._start();
 
-    // On send au statup condig que PollyJS est prêt et qu'il peut donc charger les modules
+    // On send au startup condig que PollyJS est prêt et qu'il peut donc charger les modules
     this._dispatchPollyReadyEvent();
 
     // On enregistre des requêtes que l'on a pas
     this._fetchRequest('favicon.ico');
     this._fetchRequest(window.location.pathname);
 
-    // le Statup config nous dit quand il a exporté les modules
+    // le startup config nous dit quand il a exporté les modules
     WindowService.addEventListener(controlMSG.SETUP_READY_EVENT, this._dispatchPollyReadyEvent, false);
 
     this._dispatchPollyReadyEvent();
@@ -106,8 +109,12 @@ export class PollyRecorder {
           });
           this.requestRecorded.push(entry.name);
 
-          //Pour les items du lazy loading à cause d'un item qui veut se charger mais qui ne devrait pas
-          if ((entry.name.includes('picture/obj') || new RegExp(/autoroute\/obj\/+\d/g).test(entry.name)) && entry.name ) {
+          /**
+           * Pour le catalog des prduits, il y a un lazy load qui execute une requête http
+           * pour récupérer un produit qui n'est pas visible sur notre page mais quand même charger dans le dom
+           * on récupêre donc sa requête car quand on rejoue le scénario, il nous l'a faut.
+           */
+          if ((entry.name.includes(PollyRecorder._catalaogProductUrl.toString()) || new RegExp(/autoroute\/obj\/+\d/g).test(entry.name)) && entry.name ) {
 
             this._fetchProductCatalogRequest(entry.name);
           }
@@ -119,7 +126,7 @@ export class PollyRecorder {
   }
 
   /**
-   * Dispatch l'event PollyReady  au statupconfig pour qu'il exporte les modules
+   * Dispatch l'event PollyReady  au startup config pour qu'il exporte les modules
    */
   private _dispatchPollyReadyEvent() {
     WindowService.dispatchEvent(new CustomEvent(controlMSG.POLLY_READY_EVENT));
@@ -260,7 +267,7 @@ export class PollyRecorder {
           && !this._paused
       ) {
 
-        this._listPromise.push(
+        this._listRequestPromise.push(
           fetch(currentReq.name)
           .then(() => {
             Promise.resolve('ok');
@@ -274,7 +281,7 @@ export class PollyRecorder {
       this._fetchRequest(PollyRecorder._requestNotRecorded[i]);
     }
 
-    await Promise.all(this._listPromise);
+    await Promise.all(this._listRequestPromise);
     await this._polly.stop();
     Promise.resolve('fini');
   }
@@ -298,7 +305,7 @@ export class PollyRecorder {
 
     if (!this.requestRecorded.includes(requestTofetch) && !this._paused) {
 
-      this._listPromise.push(
+      this._listRequestPromise.push(
         fetch(requestTofetch)
         .then(() => {
           Promise.resolve('ok');
@@ -313,15 +320,23 @@ export class PollyRecorder {
    * qui permet de récuperer le résultat de polly
    * @param event
    */
-  private _getHARResult(event) : void {
-    this._stopAsync().then(() => {
-      const har = this._getResult(this.recordingId);
-      const id = this.recordingId;
-      const resulRecord = {result: har, recordingId: id };
-      window.postMessage({action: controlMSG.GOT_HAR_EVENT, payload: resulRecord}, event.origin);
-      this._removeAllListener();
-      PollyRecorder.observer.disconnect();
-    });
+  private async _getHARResult(event) : Promise<void> {
+    // On atttend que polly ait fini de stopper
+    await this._stopAsync();
+
+    // On envoie le résultat au content-script
+    //window.postMessage({action: controlMSG.GOT_HAR_EVENT, payload: resulRecord}, event.origin);
+    window.postMessage(
+      {
+        action : controlMSG.GOT_HAR_EVENT,
+        payload : { result : this._getResult(this.recordingId), recordingId : this.recordingId }
+      },
+      event.origin
+    );
+
+    // On remove les listeners
+    this._removeAllListener();
+    PollyRecorder.observer.disconnect();
   }
 
   /**

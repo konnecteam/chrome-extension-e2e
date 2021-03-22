@@ -37,7 +37,7 @@ async function getEvensRecordAsync() : Promise<any[]> {
 /**
  * Permet d'attendre que le content script soit prết pour enregistrer
  */
-async function isContentScriptReadyAsync() : Promise<string> {
+async function waitContentScriptReadyAsync() : Promise<string> {
   return page.evaluate(async () => {
     return (window as any).waitRecordReady;
   });
@@ -134,7 +134,7 @@ describe('Test Content script ', () => {
 
   test('Test de record d\'un click', async () => {
 
-    await isContentScriptReadyAsync();
+    await waitContentScriptReadyAsync();
 
     await page.click('#inputText');
 
@@ -154,7 +154,7 @@ describe('Test Content script ', () => {
      * pour la récupération de l'url
      */
 
-    await isContentScriptReadyAsync();
+    await waitContentScriptReadyAsync();
 
     await dispatchEventAsync('OnMessage', { control: 'get-current-url' });
 
@@ -173,7 +173,7 @@ describe('Test Content script ', () => {
      * du background
      * pour le viewport
      */
-    await isContentScriptReadyAsync();
+    await waitContentScriptReadyAsync();
 
     await dispatchEventAsync('OnMessage', { control: 'get-viewport-size' });
 

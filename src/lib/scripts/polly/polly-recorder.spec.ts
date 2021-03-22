@@ -12,7 +12,7 @@ let page : puppeteer.Page;
 /**
  * Permet d'attendre que le polly soit prết pour enregistrer
  */
-async function isPollyReadyAsync() : Promise<string> {
+async function waitPollyReadyAsync() : Promise<string> {
   return page.evaluate(async () => {
     return (window as any).waitPolly;
   });
@@ -85,7 +85,7 @@ describe('Test de Polly recorder', () => {
   test('Test de création de polly', async () => {
 
     // On attend que polly soit prêt
-    await isPollyReadyAsync();
+    await waitPollyReadyAsync();
     // On récupère l'id de polly
     const polly = await getPollyIDAsync();
     expect(polly).toBeDefined();
@@ -95,7 +95,7 @@ describe('Test de Polly recorder', () => {
   test('Test de mise en pause de polly', async () => {
 
     // On attend que polly soit prêt
-    await isPollyReadyAsync();
+    await waitPollyReadyAsync();
 
     // On met en pause polly
     await page.evaluate(async () => {
@@ -111,7 +111,7 @@ describe('Test de Polly recorder', () => {
   test('Test de reprise du record de polly', async () => {
 
     // On attend que polly soit prêt
-    await isPollyReadyAsync();
+    await waitPollyReadyAsync();
 
     // On met en pause polly
     await page.evaluate(async () => {
@@ -128,7 +128,7 @@ describe('Test de Polly recorder', () => {
   test('Test de récupération du résultat de polly', async () => {
 
     // On attend que polly soit prêt
-    await isPollyReadyAsync();
+    await waitPollyReadyAsync();
 
     // On stop polly
     await page.evaluate(async () => {

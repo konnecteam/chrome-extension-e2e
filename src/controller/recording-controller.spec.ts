@@ -27,7 +27,7 @@ async function getBadgeTextAsync() : Promise<string> {
 /**
  * Permet d'attendre que le content script soit prết pour enregistrer
  */
-async function isBackgroundReadyAsync() : Promise<string> {
+async function waitBackgroundReadyAsync() : Promise<string> {
   return page.evaluate(async () => {
     return (window as any).waitBackground;
   });
@@ -50,7 +50,7 @@ async function dispatchEventAsync(event : string, message : IMessage) : Promise<
  * @param action
  */
 async function verfiyBadgeContentAsync(action : string ) : Promise<string> {
-  await isBackgroundReadyAsync();
+  await waitBackgroundReadyAsync();
   // Dispatch event
   await dispatchEventAsync('OnMessage', { action });
   // Récupérer l'état du badge
@@ -271,7 +271,7 @@ describe('Test de Recording Controller', () => {
 
   test('Test de exportScript', async () => {
 
-    await isBackgroundReadyAsync();
+    await waitBackgroundReadyAsync();
 
     // On met result à true pour simuler la reception d'un résultat
     await page.evaluate(() => {
