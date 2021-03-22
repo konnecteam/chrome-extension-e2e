@@ -12,13 +12,13 @@ import { IMessage } from '../../interfaces/i-message';
 export class InputNumericComponent {
 
   /**
-   * Verifie si c'est un input numeric et retourne le component associé
+   * Récupère le component input numeric
    */
-  public static isInputNumeric(element : HTMLElement) : IComponent  {
+  public static getInputNumeric(element : HTMLElement) : IComponent  {
 
     if (ElementService.isNumericElement(element)) {
 
-      const inputElement = ElementService.isInputNumericElement(element);
+      const inputElement = ElementService.getInputNumericElement(element);
       if (inputElement) {
 
         return { component: componentName.INPUTNUMERIC, element : inputElement as HTMLElement };

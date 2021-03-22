@@ -21,14 +21,14 @@ describe('Test de km switch Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de isKmSwitch', () => {
+  test('Test de getKmSwitch', () => {
 
     const elementSelector = 'switch > div > span > span:nth-child(3) > span';
     const element = document.querySelector(elementSelector);
 
     // on doit trouver le km switch
     expect(
-      KmSwitchComponent.isKmSwitch(element as HTMLElement).component
+      KmSwitchComponent.getKmSwitch(element as HTMLElement).component
     ).toEqual(componentName.KMSWITCH);
   });
 

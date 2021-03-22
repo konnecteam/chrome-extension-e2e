@@ -11,13 +11,13 @@ import componentName from '../../constants/component-name';
 export class KSelectComponent {
 
   /**
-   * Verifie si l'element est un k select et retourne le composant associé
+   * Récupère le component kselect
    */
-  public static isKSelect(element : HTMLElement) : IComponent {
+  public static getKSelect(element : HTMLElement) : IComponent {
 
     // Si c'est un k select qui se situe dans input numeric
     if (ElementService.isNumericElement(element) &&
-     ElementService.isKSelectElement(element)) {
+     ElementService.getKSelectElement(element)) {
       return { component: componentName.KSELECT, element };
     } else {
       return null;

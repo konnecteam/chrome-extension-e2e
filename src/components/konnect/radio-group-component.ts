@@ -11,10 +11,10 @@ import actionEvents from '../../constants/action-events';
 export class RadioGroupComponent {
 
   /**
-   * Verifie si c'est un RadioGroup et retourne le component associé
+   * Récupère le component radiogroup
    * @param element
    */
-  public static isRadioGroupComponent(element : HTMLElement) : IComponent {
+  public static getRadioGroupComponent(element : HTMLElement) : IComponent {
 
     if (ElementService.findParentElementWithTagName(
       element,

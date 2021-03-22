@@ -18,28 +18,29 @@ export class FileDropZoneComponent {
   private static readonly _TITLE_ATTRIBUTE_VALUE = 'Ajouter un document';
 
   /**
-   * Vérifie si l'élément est dans un file dropzone
+   * Récupère le component filedropzone
    */
-  public static isFileDropZone(element : HTMLElement) : IComponent {
-    const elementFileDropZone = ElementService.findParentElementWithTagName(
+  public static getFileDropZone(element : HTMLElement) : IComponent {
+    const fileDropzoneElement = ElementService.findParentElementWithTagName(
       element,
       elementsTagName.FILEDROPZONE.toUpperCase()
     );
 
-    const elementButtonAdd = ElementService.findParentElementWithTagNameAndValueAttribute(
+    const addButtonElement = ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
       elementsTagName.LINK.toUpperCase(),
       this._TITLE_ATTRIBUTE,
       this._TITLE_ATTRIBUTE_VALUE
     );
-    // Si c'est un file  dropzone
-    if (elementFileDropZone) {
 
-      return {component : componentName.FILEDROPZONE , element: elementFileDropZone};
+    // Si c'est un file dropzone
+    if (fileDropzoneElement) {
 
-    } else if (elementButtonAdd) {
+      return {component : componentName.FILEDROPZONE , element: fileDropzoneElement};
+
+    } else if (addButtonElement) {
       // Si c'est un le bouton ajouter un fichier du file dropzone
-      return {component : componentName.FILEDROPZONEADD , element: elementButtonAdd};
+      return {component : componentName.FILEDROPZONEADD , element: addButtonElement};
 
     } else {
       return null;

@@ -27,7 +27,7 @@ describe('Test de RadioGroup', () => {
 
     // On doit trouver la RadioGroup
     expect(
-       RadioGroupComponent.isRadioGroupComponent(element).component
+       RadioGroupComponent.getRadioGroupComponent(element).component
     ).toEqual(componentName.RADIOGROUP);
   });
 

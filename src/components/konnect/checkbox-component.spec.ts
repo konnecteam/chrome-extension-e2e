@@ -20,14 +20,14 @@ describe('Test de Checkbox', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de isCheckboxComponent', () => {
+  test('Test de getCheckboxComponent', () => {
 
     // Selecteur du label qui est dans la checkbox
     const element = document.getElementById('ckb146');
 
     // On doit trouver la Checkbox
     expect(
-      CheckboxComponent.isCheckboxComponent(element).component
+      CheckboxComponent.getCheckboxComponent(element).component
     ).toEqual(componentName.CHECKBOX);
   });
 

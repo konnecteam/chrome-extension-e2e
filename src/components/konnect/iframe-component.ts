@@ -10,9 +10,9 @@ import { ElementService } from '../../services/element/element-service';
 export class IframeComponent {
 
   /**
-   * Verifie si c'est une frame
+   * Récupère le component Iframe
    */
-  public static isIframe(element : HTMLElement) : IComponent {
+  public static getIframe(element : HTMLElement) : IComponent {
 
     const iframeElement = ElementService.isInIframeElement(element);
     // Si c'est un iframe on retourne le composant associé

@@ -33,14 +33,14 @@ describe('Test de Iframe Component', () => {
 
   });
 
-  test('Test de isIframe', () => {
+  test('Test de getIframe', () => {
 
     // on selectionne le titre qui ce trouve dans l'iframe
     const element  = document.querySelector('iframe').contentWindow.document.querySelector('h1');
 
     // On doit trouver que c'est une iframe
     expect(
-      IframeComponent.isIframe(element).component
+      IframeComponent.getIframe(element).component
     ).toEqual(componentName.IFRAME);
   });
 

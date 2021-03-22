@@ -31,7 +31,7 @@ describe('Test de event message builder factory', () => {
       files : 'text.txt'
     };
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
-    const component = FileDropZoneComponent.isFileDropZone(element as HTMLElement);
+    const component = FileDropZoneComponent.getFileDropZone(element as HTMLElement);
 
     // On doit trouver un event model de file drop zone
     expect(
@@ -54,7 +54,7 @@ describe('Test de event message builder factory', () => {
     // On doit trouver un event model du bouton ajouter fichier du file drop zone
 
     const element = document.querySelector('div > div > div > span > a');
-    const component = FileDropZoneComponent.isFileDropZone(element as HTMLElement);
+    const component = FileDropZoneComponent.getFileDropZone(element as HTMLElement);
 
     expect(
       EventMessageFactory.buildMessageEvent(
@@ -77,7 +77,7 @@ describe('Test de event message builder factory', () => {
       selector : '#id'
     };
 
-    const component = InputNumericComponent.isInputNumeric(element as HTMLElement);
+    const component = InputNumericComponent.getInputNumeric(element as HTMLElement);
 
     // On doit trouver un event model d'input numeric
     expect(
@@ -97,7 +97,7 @@ describe('Test de event message builder factory', () => {
 
     const elementSelector = 'span > span > span > span\:nth-child(1) > span';
     const element = document.querySelector(elementSelector);
-    const component = KSelectComponent.isKSelect(element as HTMLElement);
+    const component = KSelectComponent.getKSelect(element as HTMLElement);
     const event : IMessage = {
       selector: '#id'
     };
@@ -130,7 +130,7 @@ describe('Test de event message builder factory', () => {
 
     const element = document.querySelector('iframe').contentWindow.document.querySelector('h1');
 
-    const component =  IframeComponent.isIframe(element);
+    const component =  IframeComponent.getIframe(element);
 
     const event : IMessage = {
       selector: 'selector'
@@ -173,7 +173,7 @@ describe('Test de event message builder factory', () => {
       selector : elementSelector
     };
 
-    const component = KListComponent.isKList(
+    const component = KListComponent.getKList(
       element as HTMLElement,
       previousElement
     );
@@ -196,7 +196,7 @@ describe('Test de event message builder factory', () => {
 
     const element = document.getElementById('ckb146');
 
-    const component = CheckboxComponent.isCheckboxComponent(element);
+    const component = CheckboxComponent.getCheckboxComponent(element);
 
     const event : IMessage =  {
       action : '',
@@ -220,7 +220,7 @@ describe('Test de event message builder factory', () => {
 
     const element = document.getElementById('rg168_0');
 
-    const component = RadioGroupComponent.isRadioGroupComponent(element);
+    const component = RadioGroupComponent.getRadioGroupComponent(element);
 
     const event : IMessage =  {
       action : '',

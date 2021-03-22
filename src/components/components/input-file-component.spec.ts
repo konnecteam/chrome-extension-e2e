@@ -12,14 +12,14 @@ describe('Test de input file Component', () => {
    </div>`;
   });
 
-  test('Test de isInputFile pour un input sans files', () => {
+  test('Test de getInputFile pour un input sans files', () => {
 
     // On selectione l'input file
     const element  = document.getElementById('inFile') as HTMLInputElement;
 
     // On doit trouver null car l'input file n'as pas de fichier (files)
     expect(
-      InputFilesComponent.isInputFile(element)
+      InputFilesComponent.getInputFile(element)
     ).toBeNull();
   });
 

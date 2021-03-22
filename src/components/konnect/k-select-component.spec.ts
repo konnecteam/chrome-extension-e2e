@@ -20,13 +20,13 @@ describe('Test de k select Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de isKSelect', () => {
+  test('Test de getKSelect', () => {
 
     // On doit trouver que l'on se trouve dans un kselect
     const elementSelector = 'span > span > span > span\:nth-child(1) > span';
     const element = document.querySelector(elementSelector);
     expect(
-      KSelectComponent.isKSelect(element as HTMLElement).component
+      KSelectComponent.getKSelect(element as HTMLElement).component
     ).toEqual(componentName.KSELECT);
   });
 

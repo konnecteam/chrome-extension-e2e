@@ -17,11 +17,11 @@ export class KListComponent {
   private static readonly _MULTIPLESELECT = 'Multiselect';
 
   /**
-   * Verifie si c'est une konnect list
+   * Récupère un component konnect list
    * @param element
    * @param previousElement
    */
-  public static isKList(
+  public static getKList(
     element : HTMLElement,
     previousElement : { selector : string; typeList : string; element : Element; }
     ) : IComponent {

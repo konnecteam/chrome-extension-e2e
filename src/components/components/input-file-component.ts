@@ -9,9 +9,9 @@ import { IMessage } from '../../interfaces/i-message';
 export class InputFilesComponent {
 
   /**
-   * Verifie si l'élément est un input file et retourne un composant
+   * Récupère le component input file
    */
-  public static isInputFile(element : HTMLInputElement) : IComponent {
+  public static getInputFile(element : HTMLInputElement) : IComponent {
     if (element.files && element.files[0]) {
       return { component : componentName.INPUTFILE, element };
     }

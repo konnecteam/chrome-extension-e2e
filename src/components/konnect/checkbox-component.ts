@@ -11,10 +11,10 @@ import actionEvents from '../../constants/action-events';
 export class CheckboxComponent {
 
   /**
-   * Verifie si c'est un checkbox et retourne le component associé
+   * Récupère le component Checkbox
    * @param element
    */
-  public static isCheckboxComponent(element : HTMLElement) : IComponent {
+  public static getCheckboxComponent(element : HTMLElement) : IComponent {
 
     if (ElementService.findParentElementWithTagName(
       element,

@@ -20,25 +20,25 @@ describe('Test de File DopZone Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de isFileDropZone pour une zone de drop', () => {
+  test('Test de getFileDropZone pour une zone de drop', () => {
 
     // Selecteur de l'element de la file dropzone
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
 
     // On doit trouver la file dropzone
     expect(
-      FileDropZoneComponent.isFileDropZone(element as HTMLElement).component
+      FileDropZoneComponent.getFileDropZone(element as HTMLElement).component
     ).toEqual(componentName.FILEDROPZONE);
   });
 
-  test('Test de isFileDropZone pour le bouton ajouter des fichiers de la zone', () => {
+  test('Test de getFileDropZone pour le bouton ajouter des fichiers de la zone', () => {
 
     // Selecteur du bouton ajouter fichier de la file drop zone
     const element = document.querySelector('div > div > div > span > a');
 
     // On doit trouver le bouton de la file dropzone
     expect(
-      FileDropZoneComponent.isFileDropZone(element as HTMLElement).component
+      FileDropZoneComponent.getFileDropZone(element as HTMLElement).component
     ).toEqual(componentName.FILEDROPZONEADD);
 
   });

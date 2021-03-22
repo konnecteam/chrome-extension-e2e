@@ -11,10 +11,10 @@ import actionEvents from '../../constants/action-events';
 export class KmSwitchComponent {
 
   /**
-   * Verifie si l'élément est un km switch
+   * Récupère le component km Switch
    */
-  public static isKmSwitch(element : HTMLElement) : IComponent {
-    const elementFind = ElementService.isKmSwitchElement(element);
+  public static getKmSwitch(element : HTMLElement) : IComponent {
+    const elementFind = ElementService.getKmSwitchElement(element);
 
     if (elementFind) {
       return { component: componentName.KMSWITCH, element: elementFind as HTMLElement };

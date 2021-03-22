@@ -139,12 +139,12 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     expect(ElementService.isInIframeElement(docIframe.body)).toBeDefined();
   });
 
-  test('Test de la fonction isInputNumericElement', async () => {
+  test('Test de la fonction getInputNumericElement', async () => {
 
     await changeBodyDocumentAsync(INPUT_NUMERIC);
 
     expect(
-      ElementService.isInputNumericElement(
+      ElementService.getInputNumericElement(
         document.querySelector('INPUT[data-role]')))
     .toBeDefined();
   });
@@ -191,22 +191,22 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     .toBeDefined();
   });
 
-  test('Test de la fonction isKSelectElement', async () => {
+  test('Test de la fonction getKSelectElement', async () => {
 
     await changeBodyDocumentAsync(K_SELECT_PATH);
 
     expect(
-      ElementService.isKSelectElement(
+      ElementService.getKSelectElement(
         document.querySelector('.k-select')))
     .toBeDefined();
   });
 
-  test('Test de la fonction isKmSwitchElement', async () => {
+  test('Test de la fonction getKmSwitchElement', async () => {
 
     await changeBodyDocumentAsync(KM_SWITCH_PATH);
 
     expect(
-      ElementService.isKmSwitchElement(
+      ElementService.getKmSwitchElement(
         document.querySelector('.km-switch-handle')))
     .toBeDefined();
   });
@@ -235,7 +235,7 @@ describe('Test du determinate click event', () => {
         element as HTMLElement,
         null
       )
-    ).toEqual(FileDropZoneComponent.isFileDropZone(element as HTMLElement));
+    ).toEqual(FileDropZoneComponent.getFileDropZone(element as HTMLElement));
   });
 
 
@@ -252,7 +252,7 @@ describe('Test du determinate click event', () => {
         element as HTMLElement,
         null
       )
-    ).toEqual(KSelectComponent.isKSelect(element as HTMLElement));
+    ).toEqual(KSelectComponent.getKSelect(element as HTMLElement));
 
   });
 
@@ -269,7 +269,7 @@ describe('Test du determinate click event', () => {
         element as HTMLElement,
         null
       )
-    ).toEqual(KmSwitchComponent.isKmSwitch(element as HTMLElement));
+    ).toEqual(KmSwitchComponent.getKmSwitch(element as HTMLElement));
   });
 
   test('Determiner click d\'un KListComponent', async () => {
@@ -294,7 +294,7 @@ describe('Test du determinate click event', () => {
         element as HTMLElement,
         previousElement
       )
-    ).toEqual(KListComponent.isKList(element as HTMLElement, previousElement));
+    ).toEqual(KListComponent.getKList(element as HTMLElement, previousElement));
 
   });
 });
@@ -309,7 +309,7 @@ describe('Test de determinate drop event', () => {
     const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
     expect(
       ElementService.determinateDropComponent(element as HTMLElement)
-    ).toEqual(FileDropZoneComponent.isFileDropZone(element as HTMLElement));
+    ).toEqual(FileDropZoneComponent.getFileDropZone(element as HTMLElement));
   });
 });
 
@@ -344,7 +344,7 @@ describe('Test de determinate keydown event', () => {
     // on doit trouver un component iframe
     expect(
       ElementService.determinateKeydownComponent(element)
-    ).toEqual(IframeComponent.isIframe(element));
+    ).toEqual(IframeComponent.getIframe(element));
   });
 });
 
@@ -365,7 +365,7 @@ describe('Test du determinate change event', () => {
     // On doit trouver que l'on est sur un input file
     expect(
       ElementService.determinateChangeComponent(element as HTMLInputElement)
-    ).toEqual(InputFilesComponent.isInputFile(element as HTMLInputElement)
+    ).toEqual(InputFilesComponent.getInputFile(element as HTMLInputElement)
     );
   });
 
@@ -375,7 +375,7 @@ describe('Test du determinate change event', () => {
     // On doit trouver que l'on est dans un input numeric
     expect(
       ElementService.determinateChangeComponent(element as HTMLElement)
-    ).toEqual(InputNumericComponent.isInputNumeric(element as HTMLElement)
+    ).toEqual(InputNumericComponent.getInputNumeric(element as HTMLElement)
     );
   });
 });

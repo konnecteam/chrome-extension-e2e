@@ -19,14 +19,14 @@ describe('Test de Input numeric Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de isInputNumeric', () => {
+  test('Test de getInputNumeric', () => {
 
     // On selectionne l'input du composant input numeric qui change de valeur
     const element = document.querySelector('numeric > div > span > span > input\:nth-child(2)');
 
     // On doit trouver qur l'on est dans une input numeric
     expect(
-      InputNumericComponent.isInputNumeric(element as HTMLElement).component
+      InputNumericComponent.getInputNumeric(element as HTMLElement).component
     ).toEqual(componentName.INPUTNUMERIC);
   });
 

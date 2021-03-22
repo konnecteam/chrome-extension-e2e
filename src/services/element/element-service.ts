@@ -189,7 +189,7 @@ export class ElementService {
   /**
    * Verifie si c'est un input numeric et retourne le bon event
    */
-  public static isInputNumericElement(element : HTMLElement) : Element {
+  public static getInputNumericElement(element : HTMLElement) : Element {
 
     return this.findElementChildWithTagNameAndAttribute(
       element.parentElement,
@@ -249,7 +249,7 @@ export class ElementService {
   /**
    * Vérfiie si c'est un k select element
    */
-  public static isKSelectElement(element : HTMLElement) : Element {
+  public static getKSelectElement(element : HTMLElement) : Element {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
@@ -262,7 +262,7 @@ export class ElementService {
   /**
    * Verifie si l'élément est un km switch
    */
-  public static isKmSwitchElement(element : HTMLElement) : Element {
+  public static getKmSwitchElement(element : HTMLElement) : Element {
 
     if (ElementService.findParentElementWithTagNameAndValueAttribute(
       element, elementsTagName.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
@@ -299,8 +299,8 @@ export class ElementService {
    */
   public static determinateChangeComponent(element : HTMLElement) : IComponent {
 
-    return InputFilesComponent.isInputFile(element as HTMLInputElement) || InputNumericComponent.isInputNumeric(element)
-    || CheckboxComponent.isCheckboxComponent(element) || RadioGroupComponent.isRadioGroupComponent(element);
+    return InputFilesComponent.getInputFile(element as HTMLInputElement) || InputNumericComponent.getInputNumeric(element)
+    || CheckboxComponent.getCheckboxComponent(element) || RadioGroupComponent.getRadioGroupComponent(element);
   }
 
   /**
@@ -308,9 +308,9 @@ export class ElementService {
    */
   public static determinateClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : IComponent {
 
-    return FileDropZoneComponent.isFileDropZone(element) ||
-    KSelectComponent.isKSelect(element) || KmSwitchComponent.isKmSwitch(element) ||
-    KListComponent.isKList(element, previousElement);
+    return FileDropZoneComponent.getFileDropZone(element) ||
+    KSelectComponent.getKSelect(element) || KmSwitchComponent.getKmSwitch(element) ||
+    KListComponent.getKList(element, previousElement);
   }
 
   /**
@@ -318,7 +318,7 @@ export class ElementService {
    */
   public static determinateDropComponent(element : HTMLElement) : IComponent {
 
-    return FileDropZoneComponent.isFileDropZone(element);
+    return FileDropZoneComponent.getFileDropZone(element);
   }
 
 
@@ -327,7 +327,7 @@ export class ElementService {
    */
   public static determinateKeydownComponent(element : HTMLElement) : IComponent {
 
-    return IframeComponent.isIframe(element);
+    return IframeComponent.getIframe(element);
   }
 
 }

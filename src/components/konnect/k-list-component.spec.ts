@@ -12,7 +12,7 @@ const pathFile = path.join(__dirname, './../../../static/test/dom/dom-k-list.htm
 const dropdown = 'Dropdown';
 const multiselect = 'Multiselect';
 
-function isKList(elementSelector : string,
+function getKList(elementSelector : string,
   previousSelector : string, typeList : string
   ) : void {
 
@@ -26,7 +26,7 @@ function isKList(elementSelector : string,
 
   // On doit trouver que l'on est dans une konnect liste
   expect(
-    KListComponent.isKList(element as HTMLElement, previousElement).component
+    KListComponent.getKList(element as HTMLElement, previousElement).component
   ).toEqual(componentName.KLIST);
 }
 
@@ -39,33 +39,33 @@ describe('Test de k list Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de isKList pour konnect dropdown', () => {
+  test('Test de getKList pour konnect dropdown', () => {
     // Selector de la konnect dropdown
     const elementSelector = 'konnect-dropdownlist';
     // On doit trouver que l'on est dans une konnect liste
-    isKList(elementSelector, null, null);
+    getKList(elementSelector, null, null);
   });
 
-  test('Test de isKList pour konnect multiselect', () => {
+  test('Test de getKList pour konnect multiselect', () => {
 
-    isKList('konnect-multiselect', null, null);
+    getKList('konnect-multiselect', null, null);
   });
 
-  test('Test de isKList pour input de list', () => {
+  test('Test de getKList pour input de list', () => {
     // Selector de l'input d'une liste
     const elementSelector = 'input[role="listbox"]';
     // On doit trouver que l'on est dans une konnect liste
-    isKList(elementSelector, 'konnect-dropdownlist', dropdown);
+    getKList(elementSelector, 'konnect-dropdownlist', dropdown);
   });
 
-  test('Test de isKList pour un item de liste', () => {
+  test('Test de getKList pour un item de liste', () => {
 
     // Selector de l'item d'une liste
     const elementSelector = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
     // Selector de la liste déroulante
     const previousSelector : string = 'konnect-dropdownlist';
     // On doit trouver que l'on est dans une konnect liste
-    isKList(elementSelector,  previousSelector, dropdown);
+    getKList(elementSelector,  previousSelector, dropdown);
   });
 
   test('Test de editKlistMessage pour un item de k list', () => {
