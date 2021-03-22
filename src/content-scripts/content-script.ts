@@ -137,7 +137,7 @@ class EventRecorder {
       if (data.options.code.recordHttpRequest) {
         this._init();
       } else {
-        // On send au statup condig que PollyJS est prêt et qu'il peut donc charger les modules
+        // On dit au startup config que pollyJS est prêt et que les modules peuvent être chargé
         const event = new CustomEvent(controlMSG.POLLY_READY_EVENT);
         WindowService.dispatchEvent(event);
       }
