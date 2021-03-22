@@ -33,21 +33,21 @@ export class PPtrFactory {
     switch (action) {
       // Si l'action est un goto
       case pptrActions.GOTO:
-        return this.buildGoto(value);
+        return this.buildGotoBlock(value);
       // Si l'action est la récupération du viewport
       case pptrActions.VIEWPORT:
-        return this.buildViewport(
+        return this.buildViewportBlock(
           value.width, value.height);
       // Si l'action est une navigation
       case pptrActions.NAVIGATION:
-        return this.buildWaitForNavigation();
+        return this.buildWaitForNavigationBlock();
     }
   }
 
   /**
    * Génère l'accès à une page
    */
-  public static buildGoto(href : string) : Block {
+  public static buildGotoBlock(href : string) : Block {
 
     const block =  new Block(this.frameId, {
       type: pptrActions.GOTO,
@@ -68,7 +68,7 @@ export class PPtrFactory {
   /**
    * Génère le block de la taille de la page
    */
-  public static buildViewport(width : number, height : number) : Block {
+  public static buildViewportBlock(width : number, height : number) : Block {
 
     return new Block(this.frameId, {
       type: pptrActions.VIEWPORT,
@@ -79,7 +79,7 @@ export class PPtrFactory {
   /**
    * Génère le block de navigation
    */
-  public static buildWaitForNavigation() : Block {
+  public static buildWaitForNavigationBlock() : Block {
     const block = new Block(this.frameId);
     if (this.options.waitForNavigation) {
       block.addLine({

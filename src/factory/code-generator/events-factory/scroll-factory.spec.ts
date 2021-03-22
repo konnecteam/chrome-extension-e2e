@@ -22,7 +22,7 @@ describe('Test de Scroll Block factory', () => {
     });
 
     expect(
-      ScrollFactory.buildScroll(
+      ScrollFactory.buildScrollBlock(
         frame,
         frameId,
         scrollX,

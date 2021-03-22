@@ -35,7 +35,7 @@ describe('Test de Pptr Action Block Factory', () => {
   });`
     });
     expect(
-      PPtrFactory.buildGoto(href)
+      PPtrFactory.buildGotoBlock(href)
     ).toEqual(
       exceptedResult
     );
@@ -51,7 +51,7 @@ describe('Test de Pptr Action Block Factory', () => {
     });
 
     expect(
-      PPtrFactory.buildViewport(
+      PPtrFactory.buildViewportBlock(
         width,
         height
       )
@@ -70,7 +70,7 @@ describe('Test de Pptr Action Block Factory', () => {
     });
 
     expect(
-      PPtrFactory.buildWaitForNavigation()
+      PPtrFactory.buildWaitForNavigationBlock()
     ).toEqual(
       exceptedResult
     );
@@ -82,7 +82,7 @@ describe('Test de Pptr Action Block Factory', () => {
     const exceptedResult = new Block(frameId);
 
     expect(
-      PPtrFactory.buildWaitForNavigation()
+      PPtrFactory.buildWaitForNavigationBlock()
     ).toEqual(
       exceptedResult
     );
@@ -98,7 +98,7 @@ describe('Test de Pptr Action Block Factory', () => {
     expect(
       PPtrFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrFactory.buildGoto(eventMessage .value)
+      PPtrFactory.buildGotoBlock(eventMessage .value)
     );
   });
 
@@ -111,7 +111,7 @@ describe('Test de Pptr Action Block Factory', () => {
     expect(
       PPtrFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrFactory.buildViewport(eventMessage .value.width, eventMessage .value.height)
+      PPtrFactory.buildViewportBlock(eventMessage .value.width, eventMessage .value.height)
     );
   });
 
@@ -123,7 +123,7 @@ describe('Test de Pptr Action Block Factory', () => {
     expect(
       PPtrFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrFactory.buildWaitForNavigation()
+      PPtrFactory.buildWaitForNavigationBlock()
     );
   });
 });

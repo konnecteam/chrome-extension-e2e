@@ -41,19 +41,19 @@ export class ClickFactory {
 
       // Si c'est un click basique
       case ActionEvents.BASIC_CLICK:
-        return this.buildClick(selector);
+        return this.buildClickBlock(selector);
       // Si c'est un click sur un dropzone element
       case ActionEvents.CLICK_DROPZONE:
-        return this.buildclickFileDropZone(selector);
+        return this.buildclickFileDropZoneBlock(selector);
       // Si c'est un click sur les flêches de l'input numeric
       case ActionEvents.CLICKMOUSE_INPUTNUMERIC:
-        return this.buildClickMouseInputNumeric(selector, durancyClick);
+        return this.buildClickMouseInputNumericBlock(selector, durancyClick);
       // Si c'est un click mouse (mousdown, mouseup)
       case ActionEvents.CLICKMOUSE :
-        return this.buildClickMouse(selector);
+        return this.buildClickMouseBlock(selector);
       // Si c'est un click sur une liste
       case ActionEvents.CLICK_ITEMLIST:
-        return this.buildClickKListItem(
+        return this.buildClickKListItemBlock(
           selector, scrollElement, scrollXElement, scrollYElement
         );
     }
@@ -62,7 +62,7 @@ export class ClickFactory {
 /**
  * Génère le click d'un simple click
  */
-  public static buildClick(selector : string) : Block {
+  public static buildClickBlock(selector : string) : Block {
 
     const block = new Block(this.frameId);
     if (this.options.waitForSelectorOnClick) {
@@ -88,7 +88,7 @@ export class ClickFactory {
 /**
  * Génère un Click d'une file drop zone
  */
-  public static buildclickFileDropZone(
+  public static buildclickFileDropZoneBlock(
   selector : string) : Block {
 
     const block = new Block(this.frameId);
@@ -115,7 +115,7 @@ export class ClickFactory {
 /**
  * Génère un click appuyé du k select de l'input numeric
  */
-  public static buildClickMouseInputNumeric(selector : string, time : number) : Block {
+  public static buildClickMouseInputNumericBlock(selector : string, time : number) : Block {
 
     const block = new Block(this.frameId);
     if (this.options.waitForSelectorOnClick) {
@@ -157,7 +157,7 @@ export class ClickFactory {
   /**
    * Génère un click appuyé
    */
-  public static buildClickMouse(selector : string) : Block {
+  public static buildClickMouseBlock(selector : string) : Block {
     const block = new Block(this.frameId);
     if (this.options.waitForSelectorOnClick) {
 
@@ -194,7 +194,7 @@ export class ClickFactory {
   /**
    * Click sur un item de konnect liste
    */
-  public static buildClickKListItem(
+  public static buildClickKListItemBlock(
      selector : string, scrollElement : string, scrollXElement : number, scrollYElement : number) : Block {
 
     const block = new Block(this.frameId);

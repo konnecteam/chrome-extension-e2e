@@ -18,7 +18,7 @@ export class ScenarioFactory {
   /**
    * Renvoie le block issue d'une custom ligne
    */
-  public static generateCustomLine(framedID : number, customLine : string) : Block {
+  public static generateCustomLineBlock(framedID : number, customLine : string) : Block {
     return new Block(framedID, {frameId: framedID, type: 'custom-line' , value: customLine });
   }
 
@@ -54,7 +54,7 @@ export class ScenarioFactory {
   /**
    * Génère une ligne blanche
    */
-  public static generateBlankLine() : Block {
+  public static generateBlankLineBlock() : Block {
 
     const blankLine = new Block();
     blankLine.addLine({
@@ -68,7 +68,7 @@ export class ScenarioFactory {
   /**
    * Génère le scroll
    */
-  public static generateScroll(frameId : number, frame : string,
+  public static generateScrollBlock(frameId : number, frame : string,
      scrollX : number, scrollY : number) : Block {
 
     const block = new Block(frameId);
@@ -86,7 +86,7 @@ export class ScenarioFactory {
   /**
    * Génère la variable navigationPromise en cas de navigation
    */
-  public static generateNavigationVar(frameId : number) : Block {
+  public static generateVarNavigationBlock(frameId : number) : Block {
     return new Block(frameId, {
       type: pptrActions.NAVIGATION_PROMISE,
       value: 'const navigationPromise = page.waitForNavigation();'
@@ -96,7 +96,7 @@ export class ScenarioFactory {
   /**
    * Ajoute le commentaire dans le block donné
    */
-  public static generateComments(block : Block, comments : string) : Block {
+  public static generateCommentsBlock(block : Block, comments : string) : Block {
     block.addLineToTop({
       value: `/** ${comments} */`
     });

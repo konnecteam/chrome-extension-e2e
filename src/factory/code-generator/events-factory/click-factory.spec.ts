@@ -178,7 +178,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(simpleClickLineBlock());
 
       expect(
-        ClickFactory.buildClick(selector)
+        ClickFactory.buildClickBlock(selector)
       ).toEqual(
         exceptedBlock
       );
@@ -193,7 +193,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(simpleClickLineBlock());
 
       expect(
-        ClickFactory.buildClick(selector)
+        ClickFactory.buildClickBlock(selector)
       ).toEqual(
         exceptedBlock
       );
@@ -214,7 +214,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(customeLineLineBlock());
 
       expect(
-        ClickFactory.buildClick(selector)
+        ClickFactory.buildClickBlock(selector)
       ).toEqual(
         exceptedBlock
       );
@@ -230,7 +230,7 @@ describe('Test de Click Block Factory', () => {
       // Click in file dropzone
       exceptedBlock.addLine(clickFileDropZoneLineModel());
       expect(
-        ClickFactory.buildclickFileDropZone(selector)
+        ClickFactory.buildclickFileDropZoneBlock(selector)
       ).toEqual(
         exceptedBlock
       );
@@ -243,7 +243,7 @@ describe('Test de Click Block Factory', () => {
       // Click in file dropzone
       exceptedBlock.addLine(clickFileDropZoneLineModel());
       expect(
-        ClickFactory.buildclickFileDropZone(selector)
+        ClickFactory.buildclickFileDropZoneBlock(selector)
       ).toEqual(
         exceptedBlock
       );
@@ -261,7 +261,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(clickMouseInputNumericLineModel());
 
       expect(
-        ClickFactory.buildClickMouseInputNumeric(selector, time)
+        ClickFactory.buildClickMouseInputNumericBlock(selector, time)
       ).toEqual(
         exceptedBlock
       );
@@ -276,7 +276,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(clickMouseInputNumericLineModel());
 
       expect(
-        ClickFactory.buildClickMouseInputNumeric(selector, time)
+        ClickFactory.buildClickMouseInputNumericBlock(selector, time)
       ).toEqual(
         exceptedBlock
       );
@@ -298,7 +298,7 @@ describe('Test de Click Block Factory', () => {
       });
 
       expect(
-        ClickFactory.buildClickMouseInputNumeric(selector, time)
+        ClickFactory.buildClickMouseInputNumericBlock(selector, time)
       ).toEqual(
         exceptedBlock
       );
@@ -315,7 +315,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(clickMouseLineModel());
 
       expect(
-        ClickFactory.buildClickMouse(selector)
+        ClickFactory.buildClickMouseBlock(selector)
       ).toEqual(
         exceptedBlock
       );
@@ -330,7 +330,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(clickMouseLineModel());
 
       expect(
-        ClickFactory.buildClickMouse(selector)
+        ClickFactory.buildClickMouseBlock(selector)
       ).toEqual(
         exceptedBlock
       );
@@ -349,7 +349,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(customeLineLineBlock());
 
       expect(
-        ClickFactory.buildClickMouse(selector)
+        ClickFactory.buildClickMouseBlock(selector)
       ).toEqual(
         exceptedBlock
       );
@@ -368,7 +368,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(clickKListItemLineBlock());
 
       expect(
-        ClickFactory.buildClickKListItem(
+        ClickFactory.buildClickKListItemBlock(
           selector,
           scrollElement,
           scrollXElement,
@@ -390,7 +390,7 @@ describe('Test de Click Block Factory', () => {
 
 
       expect(
-        ClickFactory.buildClickKListItem(
+        ClickFactory.buildClickKListItemBlock(
           selector,
           scrollElement,
           scrollXElement,
@@ -417,7 +417,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(customeLineLineBlock());
 
       expect(
-        ClickFactory.buildClickKListItem(
+        ClickFactory.buildClickKListItemBlock(
           selector,
           scrollElement,
           scrollXElement,
@@ -446,7 +446,7 @@ describe('Test de Click Block Factory', () => {
           defaults
         )
       ).toEqual(
-        ClickFactory.buildClick(
+        ClickFactory.buildClickBlock(
           selector
         )
       );
@@ -466,7 +466,7 @@ describe('Test de Click Block Factory', () => {
           defaults
         )
       ).toEqual(
-        ClickFactory.buildclickFileDropZone(
+        ClickFactory.buildclickFileDropZoneBlock(
           selector
         )
       );
@@ -488,7 +488,7 @@ describe('Test de Click Block Factory', () => {
           defaults
         )
       ).toEqual(
-        ClickFactory.buildClickMouseInputNumeric(
+        ClickFactory.buildClickMouseInputNumericBlock(
           selector,
           time
         )
@@ -509,7 +509,7 @@ describe('Test de Click Block Factory', () => {
           defaults
         )
       ).toEqual(
-        ClickFactory.buildClickMouse(
+        ClickFactory.buildClickMouseBlock(
           selector
         )
       );
@@ -532,7 +532,7 @@ describe('Test de Click Block Factory', () => {
           defaults
         )
       ).toEqual(
-        ClickFactory.buildClickKListItem(
+        ClickFactory.buildClickKListItemBlock(
           selector,
           scrollElement,
           scrollXElement,

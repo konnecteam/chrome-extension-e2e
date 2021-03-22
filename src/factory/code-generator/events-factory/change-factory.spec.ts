@@ -22,7 +22,7 @@ describe('Test de Change Block Factory', () => {
     ChangeFactory.frame = 'page';
   });
 
-  test('Test de buildChangeInputNumeric', () => {
+  test('Test de buildChangeBlockInputNumericBlock', () => {
 
     // Attributs utilisés pour générer le block
     const selectorFocus = '#inputNum';
@@ -43,7 +43,7 @@ describe('Test de Change Block Factory', () => {
      })`
     });
 
-    const result = ChangeFactory.buildChangeInputNumeric(
+    const result = ChangeFactory.buildChangeBlockInputNumericBlock(
       selector,
       value,
       selectorFocus
@@ -52,7 +52,7 @@ describe('Test de Change Block Factory', () => {
     expect(result).toEqual(exceptedBlock);
   });
 
-  test('Test de buildSelectChange', () => {
+  test('Test de buildSelectChangeBlock', () => {
 
     const exceptedBlock = new Block(ChangeFactory.frameId);
     exceptedBlock.addLine({
@@ -60,7 +60,7 @@ describe('Test de Change Block Factory', () => {
       value: `await ${ChangeFactory.frame}.select('${selector}', \`${value}\`);`
     });
 
-    const result = ChangeFactory.buildSelectChange(
+    const result = ChangeFactory.buildSelectChangeBlock(
       selector,
       value
     );
@@ -68,7 +68,7 @@ describe('Test de Change Block Factory', () => {
     expect(result).toEqual(exceptedBlock);
   });
 
-  test('Test de buildChange', () => {
+  test('Test de buildChangeBlock', () => {
 
     const exceptedBlock = new Block(ChangeFactory.frameId);
     exceptedBlock.addLine({
@@ -77,7 +77,7 @@ describe('Test de Change Block Factory', () => {
       await ${ChangeFactory.frame}.type('${selector}', \`${value}\`);`
     });
 
-    const result = ChangeFactory.buildChange(
+    const result = ChangeFactory.buildChangeBlock(
       selector,
       value
     );
@@ -85,7 +85,7 @@ describe('Test de Change Block Factory', () => {
     expect(result).toEqual(exceptedBlock);
   });
 
-  test('Test de buildAcceptUploadFileChange', () => {
+  test('Test de buildAcceptUploadFileChangeBlock', () => {
 
     // Attributs utilisés pour générer le block
     const files = '\"./recordings/files/test.txt\"';
@@ -96,7 +96,7 @@ describe('Test de Change Block Factory', () => {
       value: ` await fileChooser.accept([${files}]);`
     });
 
-    const result = ChangeFactory.buildAcceptUploadFileChange(
+    const result = ChangeFactory.buildAcceptUploadFileChangeBlock(
       selector,
       'test.txt'
     );
@@ -121,7 +121,7 @@ describe('Test de Change Block Factory', () => {
         defaults
       )
     ).toEqual(
-      ChangeFactory.buildChangeInputNumeric(
+      ChangeFactory.buildChangeBlockInputNumericBlock(
         selector,
         value,
         '#input'
@@ -146,7 +146,7 @@ describe('Test de Change Block Factory', () => {
         defaults
       )
     ).toEqual(
-      ChangeFactory.buildChange(
+      ChangeFactory.buildChangeBlock(
         selector,
         value
       )
@@ -170,7 +170,7 @@ describe('Test de Change Block Factory', () => {
         defaults
       )
     ).toEqual(
-      ChangeFactory.buildSelectChange(
+      ChangeFactory.buildSelectChangeBlock(
         selector,
         value
       )
@@ -196,7 +196,7 @@ describe('Test de Change Block Factory', () => {
         defaults
       )
     ).toEqual(
-      ChangeFactory.buildAcceptUploadFileChange(
+      ChangeFactory.buildAcceptUploadFileChangeBlock(
         selector,
         files
       )

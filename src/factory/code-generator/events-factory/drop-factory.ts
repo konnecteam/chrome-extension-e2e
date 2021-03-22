@@ -20,14 +20,14 @@ export class DropFactory {
       ClickFactory.frameId = frameId;
       ClickFactory.frame = frame;
       // On rajoute d'abord la partie du click du file dropzone
-      const newBlock = ClickFactory.buildclickFileDropZone(selector);
+      const newBlock = ClickFactory.buildclickFileDropZoneBlock(selector);
 
       // On modifie les attribus de la classe utilisé pour les mettre à jour
       ChangeFactory.options = options;
       ChangeFactory.frameId = frameId;
       ChangeFactory.frame = frame;
       // On rajoute la partie acceptation du fichier
-      const chooserFile = ChangeFactory.buildAcceptUploadFileChange(selector, files);
+      const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(selector, files);
 
       for (const line of chooserFile.getLines()) {
         newBlock.addLine(line);

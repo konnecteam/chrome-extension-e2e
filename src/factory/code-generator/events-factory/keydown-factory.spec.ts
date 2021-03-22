@@ -39,7 +39,7 @@ describe('Test de Keydown Block Factory', () => {
     });
 
     expect(
-      KeydownFactory.buildListKeydown(
+      KeydownFactory.buildListKeydownBlock(
         selector,
         value,
         iframe
@@ -75,7 +75,7 @@ describe('Test de Keydown Block Factory', () => {
     });
 
     expect(
-      KeydownFactory.buildListKeydown(
+      KeydownFactory.buildListKeydownBlock(
         selector,
         value,
         null
@@ -118,7 +118,7 @@ describe('Test de Keydown Block Factory', () => {
     });
 
     expect(
-      KeydownFactory.buildListKeydown(
+      KeydownFactory.buildListKeydownBlock(
         selector,
         value,
         null // cas qui n'est pas dans une iframe

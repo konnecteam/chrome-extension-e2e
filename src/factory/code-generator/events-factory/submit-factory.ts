@@ -34,7 +34,7 @@ export class SubmitFactory {
     // Si l'event est un submit
     if (action === ActionEvents.SUBMIT) {
       if (tagName === elementsTagName.FORM.toUpperCase()) {
-        return this.buildSubmit();
+        return this.buildSubmitBlock();
       }
     }
   }
@@ -42,7 +42,7 @@ export class SubmitFactory {
   /**
    * Généré un submit
    */
-  public static buildSubmit() : Block {
+  public static buildSubmitBlock() : Block {
 
     const block = new Block(this.frameId);
 

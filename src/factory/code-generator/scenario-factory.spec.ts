@@ -23,7 +23,7 @@ describe('Test de Scenario Factory', () => {
 
     const customLine = 'await page.waitFor(1500);';
     expect(
-      ScenarioFactory.generateCustomLine(
+      ScenarioFactory.generateCustomLineBlock(
         frameId,
         customLine
       )
@@ -79,7 +79,7 @@ describe('Test de Scenario Factory', () => {
   test('Test de generate Blank Line', () => {
 
     expect(
-      ScenarioFactory.generateBlankLine()
+      ScenarioFactory.generateBlankLineBlock()
     ).toEqual(
       new Block(undefined, {
         type: null,
@@ -93,7 +93,7 @@ describe('Test de Scenario Factory', () => {
     const scrollY = 250;
 
     expect(
-      ScenarioFactory.generateScroll(frameId, frame, scrollX, scrollY)
+      ScenarioFactory.generateScrollBlock(frameId, frame, scrollX, scrollY)
     ).toEqual(
       new Block(frameId, {
         type: 'scroll',
@@ -108,7 +108,7 @@ describe('Test de Scenario Factory', () => {
   test('Test de generate NavigationVar', () => {
 
     expect(
-      ScenarioFactory.generateNavigationVar(frameId)
+      ScenarioFactory.generateVarNavigationBlock(frameId)
     ).toEqual(
       new Block(frameId, {
         type: pptrActions.NAVIGATION_PROMISE,
@@ -133,7 +133,7 @@ describe('Test de Scenario Factory', () => {
     blockResult.addLineToTop({value: `/** ${comment} */`});
 
     expect(
-      ScenarioFactory.generateComments(block, comment)
+      ScenarioFactory.generateCommentsBlock(block, comment)
     ).toEqual(
       blockResult
     );

@@ -75,11 +75,11 @@ export default class CodeGenerator {
 
           // Si on a une ligne customisé avant chaque event, on l'a rajoute
           if (this._options.customLinesBeforeEvent) {
-            this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLinesBeforeEvent));
+            this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
           }
 
           this._blocks.push(
-            ScenarioFactory.generateScroll(this._frameId, this._frame, currentEvent.scrollX, currentEvent.scrollY)
+            ScenarioFactory.generateScrollBlock(this._frameId, this._frame, currentEvent.scrollX, currentEvent.scrollY)
           );
         }
       }
@@ -97,12 +97,12 @@ export default class CodeGenerator {
         if (this._options.customLinesBeforeEvent &&
           !ObjectService.isValueInObject(pptrActions, currentEvent.action)) {
 
-          this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLinesBeforeEvent));
+          this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
         }
 
         /* Si l'event contient un commentaire alors on rajoute un block de commentaire */
         if (currentEvent.comments) {
-          this._blocks.push(ScenarioFactory.generateComments(newBlock, currentEvent.comments));
+          this._blocks.push(ScenarioFactory.generateCommentsBlock(newBlock, currentEvent.comments));
         } else {
           this._blocks.push(newBlock);
         }
@@ -119,7 +119,7 @@ export default class CodeGenerator {
        Alors on rajoute le block de navigation
     */
     if (this._hasNavigation && this._options.waitForNavigation) {
-      this._blocks.unshift(ScenarioFactory.generateNavigationVar(this._frameId));
+      this._blocks.unshift(ScenarioFactory.generateVarNavigationBlock(this._frameId));
     }
 
     // 2- on effectue les opération post processs
@@ -188,7 +188,7 @@ export default class CodeGenerator {
     let i = 0;
     while (i <= this._blocks.length) {
 
-      const blankLine = ScenarioFactory.generateBlankLine();
+      const blankLine = ScenarioFactory.generateBlankLineBlock();
       this._blocks.splice(i, 0, blankLine);
       i += 2;
     }

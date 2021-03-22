@@ -8,7 +8,7 @@ export class ScrollFactory {
   /**
    * Factory qui génère un scroll
    */
-  public static buildScroll(frame : string, frameId : number, scrollX : number
+  public static buildScrollBlock(frame : string, frameId : number, scrollX : number
     , scrollY : number) : Block {
     const block = new Block(frameId);
     block.addLine({

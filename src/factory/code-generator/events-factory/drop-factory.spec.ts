@@ -32,9 +32,9 @@ describe('Test de Drop Block Factory', () => {
     };
 
     // On rajoute d'abord la partie du click du file dropzone
-    const exceptedResult = ClickFactory.buildclickFileDropZone(eventMessage .selector);
+    const exceptedResult = ClickFactory.buildclickFileDropZoneBlock(eventMessage .selector);
     // On rajoute la partie acceptation du fichier
-    const chooserFile = ChangeFactory.buildAcceptUploadFileChange(eventMessage .selector, eventMessage .files);
+    const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(eventMessage .selector, eventMessage .files);
 
     exceptedResult.addLine(chooserFile.getLines()[0]);
 

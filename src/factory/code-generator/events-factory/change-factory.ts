@@ -38,7 +38,7 @@ export class ChangeFactory {
     switch (action) {
       // Si c'est un changement dans un input numeric
       case ActionEvents.CHANGE_INPUTNUMERIC:
-        return this.buildChangeInputNumeric(selector, value,
+        return this.buildChangeBlockInputNumericBlock(selector, value,
           selectorFocus);
       // Si c'est un change
       case ActionEvents.CHANGE:
@@ -46,14 +46,14 @@ export class ChangeFactory {
         // Si c'est un select
         if (tagName === elementsTagName.SELECT.toUpperCase()) {
 
-          return this.buildSelectChange(selector, value);
+          return this.buildSelectChangeBlock(selector, value);
 
         } else if (files) {
           // Si il y a des files c'est qu c'est un change dans un input files
-          return this.buildAcceptUploadFileChange(selector, files);
+          return this.buildAcceptUploadFileChangeBlock(selector, files);
         } else {
           // Sinon c'est un input simple
-          return this.buildChange(selector, value);
+          return this.buildChangeBlock(selector, value);
         }
     }
   }
@@ -61,7 +61,7 @@ export class ChangeFactory {
   /**
    * Généré le change d'un input numeric
    */
-  public static buildChangeInputNumeric(selector : string , value : string,
+  public static buildChangeBlockInputNumericBlock(selector : string , value : string,
     selectorFocus : string) : Block {
 
     const block = new Block(this.frameId);
@@ -85,7 +85,7 @@ export class ChangeFactory {
  /**
   * Génère un changement de valeur d'un select
   */
-  public static buildSelectChange(selector : string, value : string) : Block {
+  public static buildSelectChangeBlock(selector : string, value : string) : Block {
     return new Block(this.frameId, {
       type: domEventsToRecord.CHANGE,
       value: `await ${this.frame}.select('${selector}', \`${value}\`);`
@@ -95,7 +95,7 @@ export class ChangeFactory {
  /**
   * Génère un change de valeur
   */
-  public static buildChange(selector : string, value : string) : Block {
+  public static buildChangeBlock(selector : string, value : string) : Block {
    // On remplace : \n par \\r\\n pour l'exportation du script
     return new Block(this.frameId, {
       type: domEventsToRecord.CHANGE,
@@ -107,7 +107,7 @@ export class ChangeFactory {
   /**
    * Génère une acceptation d'uploader de fichier
    */
-  public static buildAcceptUploadFileChange(selector : string, files : string) : Block {
+  public static buildAcceptUploadFileChangeBlock(selector : string, files : string) : Block {
 
     const block = new Block(this.frameId);
     let listFile = '';

@@ -25,7 +25,7 @@ describe('Test de Submit Block Factory', () => {
     });
 
     expect(
-      SubmitFactory.buildSubmit()
+      SubmitFactory.buildSubmitBlock()
     ).toEqual(
       exceptedResult
     );
@@ -40,7 +40,7 @@ describe('Test de Submit Block Factory', () => {
     expect(
       SubmitFactory.generateBlock(eventMessage , frameId, frame, defaults )
     ).toEqual(
-      SubmitFactory.buildSubmit()
+      SubmitFactory.buildSubmitBlock()
     );
 
   });

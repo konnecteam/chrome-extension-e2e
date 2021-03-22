@@ -72,11 +72,11 @@ function createScenario(options : IOption) {
     if (block) {
 
       if (options.customLinesBeforeEvent && !ObjectService.isValueInObject(pptrActions, currentEvent.action)) {
-        listBlock.push(ScenarioFactory.generateCustomLine(frameId, options.customLinesBeforeEvent));
+        listBlock.push(ScenarioFactory.generateCustomLineBlock(frameId, options.customLinesBeforeEvent));
       }
 
       if (currentEvent.comments) {
-        listBlock.push(ScenarioFactory.generateComments(block, currentEvent.comments));
+        listBlock.push(ScenarioFactory.generateCommentsBlock(block, currentEvent.comments));
       } else {
         listBlock.push(block);
       }
@@ -88,7 +88,7 @@ function createScenario(options : IOption) {
     let i = 0;
     while (i <= listBlock.length) {
 
-      const blankLine = ScenarioFactory.generateBlankLine();
+      const blankLine = ScenarioFactory.generateBlankLineBlock();
       listBlock.splice(i, 0, blankLine);
       i += 2;
     }
