@@ -26,7 +26,7 @@ export default {
   FILEDROPZONE : 'file-dropzone',
   NUMERIC: 'numeric',
   KONNECT_DROPDOWNLIST: 'konnect-dropdownlist',
-  MULTIPLE_LIST_TAGNAME: 'konnect-multiselect',
+  KONNECT_MULTISELECT: 'konnect-multiselect',
   LIST_ELEMENT : 'ul',
   DATE : 'date',
   CHECKBOX: 'checkbox',

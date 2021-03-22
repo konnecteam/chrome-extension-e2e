@@ -14,7 +14,7 @@ export class KListComponent {
   /** Types de liste */
   private static readonly _DROPDOWN = 'Dropdown';
 
-  private static readonly _MULTIPLESELECT = 'Multiselect';
+  private static readonly _MULTISELECT = 'Multiselect';
 
   /**
    * Récupère un component konnect list
@@ -28,7 +28,7 @@ export class KListComponent {
 
     // On récupère l'élement correspondant à la liste
     const dropdownElement : Element = ElementService.findListComponent(element, elementsTagName.KONNECT_DROPDOWNLIST);
-    const multipleListElement : Element = ElementService.findListComponent(element, elementsTagName.MULTIPLE_LIST_TAGNAME );
+    const multiselectListElement : Element = ElementService.findListComponent(element, elementsTagName.KONNECT_MULTISELECT);
 
     // si c'est une dropdown
     if (dropdownElement) {
@@ -44,20 +44,20 @@ export class KListComponent {
     }
 
     // si c'est une mulitple
-    if (multipleListElement) {
+    if (multiselectListElement) {
 
       return this._getKListComponent(
-        multipleListElement as HTMLElement,
+        multiselectListElement as HTMLElement,
         {
-          selector : SelectorService.find(multipleListElement as HTMLElement),
-          element : multipleListElement,
-          typeList: this._MULTIPLESELECT
+          selector : SelectorService.find(multiselectListElement as HTMLElement),
+          element : multiselectListElement,
+          typeList: this._MULTISELECT
         }
       );
     }
 
     // Si on a déjà cliqué sur une liste alors on peut acceder aux éléments qu'elle contient
-    if (previousElement && (previousElement.typeList === this._DROPDOWN || previousElement.typeList === this._MULTIPLESELECT)) {
+    if (previousElement && (previousElement.typeList === this._DROPDOWN || previousElement.typeList === this._MULTISELECT)) {
       // On vérifie si c'est un input
       const input = ElementService.isInputKList(element);
 
@@ -108,7 +108,7 @@ export class KListComponent {
      * alors on vérifie si c'est une multiselect car
      * pour l'ouvir il faut faire un click mouse
     */
-    if (ElementService.isInputKList(component.element) || component.previousElement.typeList === this._MULTIPLESELECT) {
+    if (ElementService.isInputKList(component.element) || component.previousElement.typeList === this._MULTISELECT) {
       event.action = actionEvents.CLICKMOUSE;
       return event;
     }
