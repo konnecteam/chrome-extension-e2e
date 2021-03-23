@@ -253,6 +253,8 @@ export class PollyRecorder {
    * On stop le record
    */
   private async _stopAsync() : Promise<void> {
+    // on enlève la pause pour pouvoir fetch les requests dont on a besoin
+    this._unpause();
 
     const listRequest = window.performance.getEntries();
     let currentReq = null;
@@ -264,7 +266,6 @@ export class PollyRecorder {
       if (currentReq.initiatorType !== PollyRecorder.XMLHTTREQUEST &&
          currentReq.initiatorType !== PollyRecorder.FETCH &&
           !this.requestRecorded.includes(currentReq.name)
-          && !this._paused
       ) {
 
         this._listRequestPromise.push(
@@ -303,7 +304,7 @@ export class PollyRecorder {
   private _fetchRequest(request : string) {
     const requestTofetch = window.location.protocol + '//' + window.location.host + '/' + request;
 
-    if (!this.requestRecorded.includes(requestTofetch) && !this._paused) {
+    if (!this.requestRecorded.includes(requestTofetch)) {
 
       this._listRequestPromise.push(
         fetch(requestTofetch)
