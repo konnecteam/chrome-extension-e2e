@@ -8,6 +8,7 @@ import * as chrome from 'sinon-chrome';
 import { IMessage } from '../interfaces/i-message';
 import controlActions from '../constants/control/control-actions';
 import { Server } from 'http';
+import badgeStates from '../constants/badge-states';
 
 let server : Server;
 let browser : puppeteer.Browser;
@@ -239,7 +240,7 @@ describe('Test de Recording Controller', () => {
 
     const badge = await verfiyBadgeContentAsync(controlActions.START);
     // Verifier si il est égale à 'rec' car il n'y a pas d'event à save
-    expect(badge).toEqual('rec');
+    expect(badge).toEqual(badgeStates.REC);
   });
 
   test('Test de stop', async () => {
@@ -259,14 +260,14 @@ describe('Test de Recording Controller', () => {
 
     const badge = await verfiyBadgeContentAsync(controlActions.PAUSE);
     // Verifier si il est égale à '❚❚' car on est en pause
-    expect(badge).toEqual('❚❚');
+    expect(badge).toEqual(badgeStates.PAUSE);
   });
 
   test('Test de unpause', async () => {
 
     const badge = await verfiyBadgeContentAsync(controlActions.UNPAUSE);
     // Verifier si il est égale à 'rec' car on record
-    expect(badge).toEqual('rec');
+    expect(badge).toEqual(badgeStates.REC);
   });
 
   test('Test de exportScript', async () => {

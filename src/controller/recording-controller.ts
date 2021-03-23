@@ -12,6 +12,7 @@ import packageJsonZip from '../constants/package-json-zip';
 import { HttpService } from '../services/http/http-service';
 import controlActions from '../constants/control/control-actions';
 import controlMSG from '../constants/control/control-message';
+import badgeStates from '../constants/badge-states';
 /**
  * Background du Plugin qui permet de gérer le recording
  */
@@ -28,7 +29,22 @@ class RecordingController {
   private static readonly _TYPEDATA : string = 'base64';
 
   /** Path du script fake time buildé et qui se situe dans dist */
-  private static readonly _FAKE_TIME_SCRIPT : string = './lib/scripts/fake-time/fake-time.js';
+  private static readonly _FAKE_TIME_SCRIPT_PATH : string = './lib/scripts/fake-time/fake-time.js';
+
+  /** Nom du fichier content script */
+  private static readonly _CONTENT_SCRIPT_FILENAME = 'content-script.js';
+
+  /** Nom du fichier qui contiendra les requêtes http */
+  private static readonly _RECORDING_FILENAME = 'recording.har';
+
+  /** Nom du fichier qui contiendra le scénario */
+  private static readonly _SCENARIO_FILNAME = 'script.js';
+
+  /** Nom du fichier qui contiendra le package json */
+  private static readonly _PACKAGE_JSON = 'package.json';
+
+  /** Nom du fichier qui contiendra le script pour fake le temps */
+  private static readonly _FAKE_TIME_FILNAME = 'fake-time-script.js';
 
   // Modèle custom
   /** évenements récéptionnés */
@@ -156,10 +172,14 @@ class RecordingController {
     StorageService.get(['code', 'dateTimeStart'], async result => {
 
       // Ajout du fichier script.js dans l'archive
-      this._zipService.addFileInFolder('script.js', result.code);
+      this._zipService.addFileInFolder(RecordingController._SCENARIO_FILNAME, result.code);
 
       // Ajout du package Json
-      this._zipService.addFileInFolder('package.json', new File([packageJsonZip.PACKAGE_JSON_CONTENT], 'package.json'));
+      this._zipService.addFileInFolder(
+        RecordingController._PACKAGE_JSON,
+        new File([packageJsonZip.PACKAGE_JSON_CONTENT], RecordingController._PACKAGE_JSON)
+      );
+
       // changement de la barre de progression
       ChromeService.sendMessage({
         valueLoad: 15
@@ -174,7 +194,7 @@ class RecordingController {
       // On remplace 0 par la time de départ du record
       const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuild.replace('now:0', `now:${result.dateTimeStart}`);
       // On créé le fil à ajouter dans le zip
-      const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], 'fake-time-script.js' );
+      const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], RecordingController._FAKE_TIME_FILNAME );
       // On ajoute le fake script permettant de fake le time dans le zip
       this._zipService.addFileInFolder(`recordings/scripts-build/${buildFakeTimeScript.name}`, buildFakeTimeScript);
 
@@ -192,9 +212,9 @@ class RecordingController {
         });
         // Ajoute le recording dans le zip
         this._zipService.addFileInFolder(
-          `recordings/${recording.folderName}/recording.har`,
+          `recordings/${recording.folderName}/${RecordingController._RECORDING_FILENAME}`,
           new File([recording.har],
-          'recording.har'
+          RecordingController._RECORDING_FILENAME
         ));
       }
 
@@ -232,7 +252,7 @@ class RecordingController {
    */
   private _unPause() : void {
 
-    this._badgeState = 'rec';
+    this._badgeState = badgeStates.REC;
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = false;
     ChromeService.sendMessageToContentScript(controlMSG.UNPAUSE_EVENT);
@@ -243,7 +263,7 @@ class RecordingController {
    */
   private _pause() : void {
 
-    this._badgeState = '❚❚';
+    this._badgeState = badgeStates.PAUSE;
     ChromeService.setBadgeText(this._badgeState);
     this._isPaused = true;
     ChromeService.sendMessageToContentScript(controlMSG.PAUSE_EVENT);
@@ -267,7 +287,7 @@ class RecordingController {
   private _stop() : void {
 
     // 1 - met à jour le badge state
-    this._badgeState = this._recording.length > 0 ? '1' : '';
+    this._badgeState = this._recording.length > 0 ? badgeStates.RESULT_NOT_EMPTY : '';
 
     // 2 - Supprime les listener
     ChromeService.removeOnCompletedListener(this._boundedNavigationHandler);
@@ -334,7 +354,7 @@ class RecordingController {
 
     // 5 - Inject le script
     ChromeService.executeScript({
-      file : 'content-script.js',
+      file : RecordingController._CONTENT_SCRIPT_FILENAME,
       allFrames : false,
       runAt : 'document_start'
     }, () => {
@@ -366,7 +386,7 @@ class RecordingController {
       ChromeService.addOnCompletedListener(this._boundedNavigationHandler);
       ChromeService.addOnBeforeNavigateListener(this._boundedWaitHandler);
       ChromeService.addOnCommittedListener(this._boundedScriptHandler);
-      this._badgeState = 'rec';
+      this._badgeState = badgeStates.REC;
       ChromeService.setIcon('../assets/images/icon-green.png');
       ChromeService.setBadgeText(this._badgeState);
       ChromeService.setBadgeBackgroundColor('#FF0000');
@@ -386,7 +406,7 @@ class RecordingController {
        il faut qu'il soit accessible et
        il faut fetch l'url pour récupérer le résultat
     */
-    fetch(ChromeService.getUrl(RecordingController._FAKE_TIME_SCRIPT))
+    fetch(ChromeService.getUrl(RecordingController._FAKE_TIME_SCRIPT_PATH))
     .then(response => response.text())
     .then(value => {
       this._contentFakeTimeServiceBuild = value;
@@ -399,7 +419,7 @@ class RecordingController {
   private _handleNavigation(frameId : number) : void {
     if (frameId === 0) {
       this._recordNavigation();
-      this._badgeState = 'rec';
+      this._badgeState = badgeStates.REC;
       ChromeService.setBadgeText(this._badgeState);
     }
   }
@@ -419,7 +439,7 @@ class RecordingController {
    * Gère le wait
    */
   private _handleWait() {
-    this._badgeState = 'wait';
+    this._badgeState = badgeStates.WAIT;
     ChromeService.setBadgeText(this._badgeState);
   }
 
@@ -428,7 +448,7 @@ class RecordingController {
    */
   private _injectScript(callback? : () => void) : void {
     ChromeService.executeScript({
-      file : 'content-script.js',
+      file : RecordingController._CONTENT_SCRIPT_FILENAME,
       allFrames : false,
       runAt : 'document-start'
     }, callback);
@@ -528,7 +548,8 @@ class RecordingController {
       });
     }
 
-    if (this._badgeState === '1' || this._badgeState === '') {
+    // Si on a le résultat du record
+    if (this._badgeState === badgeStates.RESULT_NOT_EMPTY || this._badgeState === '') {
       ChromeService.removeOnMessageListener(this._boundedMessageHandler);
       // On stock que l'on a supprimé le listener
       StorageService.setData({
