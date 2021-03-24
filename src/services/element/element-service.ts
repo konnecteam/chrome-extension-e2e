@@ -60,8 +60,9 @@ export class ElementService {
 
       if (currentElement.tagName === tagName) {
         return currentElement;
+      } else {
+        currentElement = currentElement.parentElement;
       }
-      currentElement = currentElement.parentElement;
 
     }
 
@@ -269,9 +270,9 @@ export class ElementService {
     )) {
 
       return element;
+    } else {
+      return this.findKmSwitchElement(element);
     }
-
-    return this.findKmSwitchElement(element);
   }
 
   /**
