@@ -525,16 +525,6 @@ class RecordingController {
       }
       URL.revokeObjectURL(message.resultURL);
       this._isResult = true;
-      /*xhr, message.resultURL, () => {
-        // On a reçus toutes les requêtes
-        this._isResult = true;
-        // on récupère le fichier har
-        if (xhr.status === 200) {
-          this._pollyService.record.har = xhr.response;
-        }
-        // On supprime l'accès à l'url du fichier har
-        URL.revokeObjectURL(message.resultURL);
-      });*/
     }
 
     const badge = await ChromeService.getBadgeText();

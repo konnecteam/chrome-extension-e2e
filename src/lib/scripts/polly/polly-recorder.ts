@@ -39,7 +39,7 @@ export class PollyRecorder {
   /** Liste des requêtes enreigstrées */
   public requestRecorded : string[];
 
-  /** Promèse des requêtes éxécutées */
+  /** Promesses des requêtes éxécutées */
   private _listRequestPromise : Array<Promise<any>>;
 
   /** PollyJS */
@@ -99,16 +99,8 @@ export class PollyRecorder {
         && (entry as PerformanceNavigationTiming).initiatorType !== PollyRecorder.XMLHTTREQUEST
         && !this._paused
       ) {
-
-          fetch(entry.name)
-          .then(() => {
-            Promise.resolve('ok');
-          })
-          .catch(err => {
-            Promise.reject(err);
-          });
+          fetch(entry.name);
           this.requestRecorded.push(entry.name);
-
           /**
            * Pour le catalog des prduits, il y a un lazy load qui execute une requête http
            * pour récupérer un produit qui n'est pas visible sur notre page mais quand même charger dans le dom
@@ -161,17 +153,15 @@ export class PollyRecorder {
         if (!isNaN(productId) && indexId) {
 
           // On build la requete avec le product id voulu et on fetch
-          splitURL[indexId] = productId + '?' + splitURL[indexId].split('?')[1];
+          splitURL[indexId] = `${productId}?${splitURL[indexId].split('?')[1]}`;
           const builtLink = splitURL.join('/');
 
           if (!this.requestRecorded.includes(builtLink)) {
-
-            fetch(builtLink)
-            .then(() => {
-              Promise.resolve('ok');
-            })
-            .catch(err => Promise.reject(err));
-            this.requestRecorded.push(builtLink);
+            try {
+              fetch(builtLink);
+              this.requestRecorded.push(builtLink);
+            }
+            catch (err) {}
           }
         }
       }
@@ -186,7 +176,6 @@ export class PollyRecorder {
       mode: 'record',
       keepUnusedRequests: true,
       recordFailedRequests: true,
-      expiresIn: '1000000000d',
       recordIfMissing: true,
       logging: true,
       adapters: ['fetch', 'xhr'],
@@ -198,23 +187,7 @@ export class PollyRecorder {
           context: window
         }
       },
-      persister: 'in-memory-persister',
-      matchRequestsBy: {
-        method: true,
-        headers: false,
-        body: true,
-        order: true,
-        url: {
-          protocol: false,
-          username: false,
-          password: false,
-          hostname: true,
-          port: true,
-          pathname: true,
-          query: true,
-          hash: true
-        }
-      }
+      persister: 'in-memory-persister'
     });
   }
 
@@ -268,13 +241,7 @@ export class PollyRecorder {
           !this.requestRecorded.includes(currentReq.name)
       ) {
 
-        this._listRequestPromise.push(
-          fetch(currentReq.name)
-          .then(() => {
-            Promise.resolve('ok');
-          })
-          .catch(err => Promise.reject(err))
-        );
+        this._addToRequestList(currentReq.name);
       }
     }
     // Requête qu'on doit fech car on ne les a pas fetch
@@ -284,7 +251,6 @@ export class PollyRecorder {
 
     await Promise.all(this._listRequestPromise);
     await this._polly.stop();
-    Promise.resolve('fini');
   }
 
   /**
@@ -302,18 +268,28 @@ export class PollyRecorder {
    * Fetch la requête donnée
    */
   private _fetchRequest(request : string) {
-    const requestTofetch = window.location.protocol + '//' + window.location.host + '/' + request;
+    /*
+     * On fetch la request par exemple en fonction de l'url de la page :
+       Par exemple si on est dans localhost:3000 :
+       http://localhost:3000/requesteQuiNousInteresse
+     */
+    const requestTofetch = `${window.location.protocol}//${window.location.host}/${request}`;
 
+    // Si on n'a pas la request alors on l'a fetch
     if (!this.requestRecorded.includes(requestTofetch)) {
 
-      this._listRequestPromise.push(
-        fetch(requestTofetch)
-        .then(() => {
-          Promise.resolve('ok');
-        })
-        .catch(err => Promise.reject(err))
-      );
+      this._addToRequestList(requestTofetch);
     }
+  }
+
+  /**
+   * Ajoute une fetch request dans la liste des request à fatch
+   * @param url
+   */
+  private _addToRequestList(url : string) : void {
+    this._listRequestPromise.push(
+      fetch(url)
+    );
   }
 
   /**
