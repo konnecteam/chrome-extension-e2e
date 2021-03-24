@@ -1,5 +1,5 @@
 /**
- * Constantes des états du bagdge du plugin
+ * Constantes des états du badge du plugin
  */
 export default {
   REC: 'rec',

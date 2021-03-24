@@ -5,11 +5,11 @@ import * as chrome from 'sinon-chrome';
 
 const DATAVALUE = 'test de data';
 
-let dataStorage = '';
+let dataStorage : { [keys : string] : any; };
 
-let getStorage = '';
+let getStorage : { [keys : string] : any; };
 chrome.storage.local.set.withArgs({data : DATAVALUE }).callsFake(() => {
-  dataStorage = DATAVALUE;
+  dataStorage = { test : DATAVALUE};
 });
 
 chrome.storage.local.get.withArgs(['data']).callsFake(() => {
@@ -17,7 +17,7 @@ chrome.storage.local.get.withArgs(['data']).callsFake(() => {
 });
 
 chrome.storage.local.remove.withArgs('data').callsFake(() => {
-  dataStorage = '';
+  dataStorage = null;
 });
 
 describe('Test de Storage Service', () => {
@@ -30,18 +30,18 @@ describe('Test de Storage Service', () => {
   test('Test de set data', () => {
 
     StorageService.setData({data : 'test de data'});
-    expect(dataStorage).toEqual(DATAVALUE);
+    expect(dataStorage.test).toEqual(DATAVALUE);
   });
 
-  test('Test de get data', () => {
-    StorageService.get(['data'], () => {});
-    expect(getStorage).toEqual(DATAVALUE);
+  test('Test de get data', async () => {
+    StorageService.getDataAsync(['data']);
+    expect(getStorage.test).toEqual(DATAVALUE);
 
   });
 
   test('Test de remove data', () => {
-    StorageService.remove('data');
-    expect(dataStorage).toEqual('');
+    StorageService.removeDataAsync('data');
+    expect(dataStorage).toBeNull();
   });
 
 });

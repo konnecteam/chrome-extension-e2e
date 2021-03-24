@@ -65,8 +65,6 @@ class RecordingController {
   private _boundedScriptHandler : () => void = null;
 
   // String
-  /** Contient l'état de l'enregistrement  */
-  private _badgeState : string = '';
 
   /** Contient le contenu du scéario à exporter */
   private _zipContent : File;
@@ -169,8 +167,8 @@ class RecordingController {
     }
 
     // 3 - Recupération du code dans le local storage
-    StorageService.get(['code', 'dateTimeStart'], async result => {
-
+    const result  = await StorageService.getDataAsync(['code', 'dateTimeStart']);
+    if (result) {
       // Ajout du fichier script.js dans l'archive
       this._zipService.addFileInFolder(RecordingController._SCENARIO_FILNAME, result.code);
 
@@ -244,7 +242,7 @@ class RecordingController {
       } catch (e) {
         throw new Error(e);
       }
-    });
+    }
   }
 
   /**
@@ -252,8 +250,7 @@ class RecordingController {
    */
   private _unPause() : void {
 
-    this._badgeState = badgeStates.REC;
-    ChromeService.setBadgeText(this._badgeState);
+    ChromeService.setBadgeText(badgeStates.REC);
     this._isPaused = false;
     ChromeService.sendMessageToContentScript(controlMSG.UNPAUSE_EVENT);
   }
@@ -263,8 +260,7 @@ class RecordingController {
    */
   private _pause() : void {
 
-    this._badgeState = badgeStates.PAUSE;
-    ChromeService.setBadgeText(this._badgeState);
+    ChromeService.setBadgeText(badgeStates.PAUSE);
     this._isPaused = true;
     ChromeService.sendMessageToContentScript(controlMSG.PAUSE_EVENT);
   }
@@ -273,12 +269,13 @@ class RecordingController {
    * Clean des données
    * @param callback
    */
-  private _cleanUp(callback? : () => void) : void {
+  private async _cleanUp(callback? : () => void) : Promise<void> {
 
     this._recording = [];
     this._contentFakeTimeServiceBuild = '';
     ChromeService.setBadgeText('');
-    StorageService.remove('recording', callback);
+    await StorageService.removeDataAsync('recording');
+    callback();
   }
 
   /**
@@ -287,7 +284,7 @@ class RecordingController {
   private _stop() : void {
 
     // 1 - met à jour le badge state
-    this._badgeState = this._recording.length > 0 ? badgeStates.RESULT_NOT_EMPTY : '';
+    ChromeService.setBadgeText(this._recording.length > 0 ? badgeStates.RESULT_NOT_EMPTY : '');
 
     // 2 - Supprime les listener
     ChromeService.removeOnCompletedListener(this._boundedNavigationHandler);
@@ -296,7 +293,6 @@ class RecordingController {
 
     // 3 - Mise à jour du visuel
     ChromeService.setIcon('../assets/images/icon-black.png');
-    ChromeService.setBadgeText(this._badgeState);
     ChromeService.setBadgeBackgroundColor('#45C8F1');
 
     // 4 - Met à jour le recording dans le local storage
@@ -307,19 +303,16 @@ class RecordingController {
 
     // 6 - Si on record pas les requête on peut mettre à true isRemovedListener
     if (!this._recordHttpRequest) {
-
-      if (!this._recordHttpRequest) {
-        StorageService.setData({
-          isRemovedListener: true
-        });
-      }
+      StorageService.setData({
+        isRemovedListener: true
+      });
     }
   }
 
   /**
    * Démarre l'enregistrement d'un scénario
    */
-  private _start() : void {
+  private async _start() : Promise<void> {
 
     // 1 - On clean les data et remove le message listerner
     /**
@@ -343,7 +336,7 @@ class RecordingController {
 
     // 3 - Suppression du recording en local storage
     // On met isRemovedListener à false car on démarre le record
-    StorageService.remove('recording');
+    await StorageService.removeDataAsync('recording');
 
     StorageService.setData({
       isRemovedListener: false
@@ -353,49 +346,42 @@ class RecordingController {
     this._getFakeTimeScriptContent();
 
     // 5 - Inject le script
-    ChromeService.executeScript({
+    await ChromeService.executeScript({
       file : RecordingController._CONTENT_SCRIPT_FILENAME,
       allFrames : false,
       runAt : 'document_start'
-    }, () => {
+    });
 
       // listening après injection
-      chrome.tabs.query({
-        active: true,
-        currentWindow: true
-      },
-      tabs => {
+    const currentTab = await ChromeService.getCurrentTabId();
+      // Récupération le viewport
+    chrome.tabs.sendMessage(currentTab, {
+      control: controlMSG.GET_VIEWPORT_SIZE_EVENT
+    });
+      // Récupération de l'url
+    chrome.tabs.sendMessage(currentTab, {
+      control: controlMSG.GET_CURRENT_URL_EVENT
+    });
 
-        // Récupération le viewport
-        chrome.tabs.sendMessage(tabs[0].id, {
-          control: controlMSG.GET_VIEWPORT_SIZE_EVENT
-        });
+    this._boundedMessageHandler = this._handleMessage.bind(this);
+    this._boundedNavigationHandler = this._handleNavigation.bind(this);
+    this._boundedWaitHandler = this._handleAction.bind(this, this._handleWait.bind(this));
+    this._boundedScriptHandler = this._handleAction.bind(this, this._injectScript.bind(this));
 
-        // Récupératio de l'url
-        chrome.tabs.sendMessage(tabs[0].id, {
-          control: controlMSG.GET_CURRENT_URL_EVENT
-        });
-      });
-
-      this._boundedMessageHandler = this._handleMessage.bind(this);
-      this._boundedNavigationHandler = this._handleNavigation.bind(this);
-      this._boundedWaitHandler = this._handleAction.bind(this, this._handleWait.bind(this));
-      this._boundedScriptHandler = this._handleAction.bind(this, this._injectScript.bind(this));
-
-      ChromeService.addOnMessageListener(this._boundedMessageHandler);
-      ChromeService.addOnCompletedListener(this._boundedNavigationHandler);
-      ChromeService.addOnBeforeNavigateListener(this._boundedWaitHandler);
-      ChromeService.addOnCommittedListener(this._boundedScriptHandler);
-      this._badgeState = badgeStates.REC;
-      ChromeService.setIcon('../assets/images/icon-green.png');
-      ChromeService.setBadgeText(this._badgeState);
-      ChromeService.setBadgeBackgroundColor('#FF0000');
+    ChromeService.addOnMessageListener(this._boundedMessageHandler);
+    ChromeService.addOnCompletedListener(this._boundedNavigationHandler);
+    ChromeService.addOnBeforeNavigateListener(this._boundedWaitHandler);
+    ChromeService.addOnCommittedListener(this._boundedScriptHandler);
+    ChromeService.setIcon('../assets/images/icon-green.png');
+    ChromeService.setBadgeText(badgeStates.REC);
+    ChromeService.setBadgeBackgroundColor('#FF0000');
 
       // On récupère l'option des requêtes http
-      StorageService.get(['options'], data => {
-        this._recordHttpRequest = data.options.code.recordHttpRequest;
-      });
-    });
+    const data = await StorageService.getDataAsync(['options']);
+    if  (data) {
+      this._recordHttpRequest = data.options.code.recordHttpRequest;
+
+    }
   }
 
   /**
@@ -419,8 +405,7 @@ class RecordingController {
   private _handleNavigation(frameId : number) : void {
     if (frameId === 0) {
       this._recordNavigation();
-      this._badgeState = badgeStates.REC;
-      ChromeService.setBadgeText(this._badgeState);
+      ChromeService.setBadgeText(badgeStates.REC);
     }
   }
 
@@ -428,10 +413,8 @@ class RecordingController {
    * Permet si la frame est la frame courante d'éffecuer le callback
    */
   private _handleAction(callback : () => void, frameId = null) : void {
-    if (frameId === 0) {
-      if (callback) {
-        callback();
-      }
+    if (frameId === 0 && callback) {
+      callback();
     }
   }
 
@@ -439,19 +422,19 @@ class RecordingController {
    * Gère le wait
    */
   private _handleWait() {
-    this._badgeState = badgeStates.WAIT;
-    ChromeService.setBadgeText(this._badgeState);
+    ChromeService.setBadgeText(badgeStates.WAIT);
   }
 
   /**
    * Permet d'injecter le script
    */
-  private _injectScript(callback? : () => void) : void {
-    ChromeService.executeScript({
+  private async _injectScript(callback? : () => void) : Promise<void> {
+    await ChromeService.executeScript({
       file : RecordingController._CONTENT_SCRIPT_FILENAME,
       allFrames : false,
       runAt : 'document-start'
-    }, callback);
+    });
+    callback();
   }
 
   /**
@@ -493,9 +476,9 @@ class RecordingController {
    * Permet de gérer les messages de "type" contrôle
    */
   private _handleControlMessage(message : IMessage) : void {
-    switch (message.control) {
+    switch (message?.control) {
       case controlMSG.EVENT_RECORDER_STARTED_EVENT :
-        ChromeService.setBadgeText(this._badgeState);
+        ChromeService.setBadgeText(badgeStates.REC);
         break;
       case controlMSG.GET_VIEWPORT_SIZE_EVENT :
         this._recordCurrentViewportSizeAsync(message.coordinates);
@@ -529,14 +512,20 @@ class RecordingController {
    * Permet de récupérer le fichier HAR généré
    * (fichier contient toutes les requêtes enregistrées)
    */
-  private _getHARcontent(message : IMessage) : void {
+  private async _getHARcontent(message : IMessage) : Promise<void> {
 
     // on vérifie si on a le résultat de la séquence et on affecte à polly
     if (message.resultURL) {
       this._pollyService.record.id = message.recordingId;
 
-      const xhr = new XMLHttpRequest();
-      HttpService.getRequest(xhr, message.resultURL, () => {
+      const recordHAR = await HttpService.getRequest(message.resultURL);
+
+      if (recordHAR) {
+        this._pollyService.record.har = recordHAR;
+      }
+      URL.revokeObjectURL(message.resultURL);
+      this._isResult = true;
+      /*xhr, message.resultURL, () => {
         // On a reçus toutes les requêtes
         this._isResult = true;
         // on récupère le fichier har
@@ -545,11 +534,13 @@ class RecordingController {
         }
         // On supprime l'accès à l'url du fichier har
         URL.revokeObjectURL(message.resultURL);
-      });
+      });*/
     }
 
+    const badge = await ChromeService.getBadgeText();
+
     // Si on a le résultat du record
-    if (this._badgeState === badgeStates.RESULT_NOT_EMPTY || this._badgeState === '') {
+    if (badge === badgeStates.RESULT_NOT_EMPTY || badge === '') {
       ChromeService.removeOnMessageListener(this._boundedMessageHandler);
       // On stock que l'on a supprimé le listener
       StorageService.setData({

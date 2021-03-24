@@ -81,6 +81,18 @@ export class ChromeService {
   }
 
   /**
+   * Permet de récupérer le bage
+   */
+  public static async getBadgeText() : Promise<string> {
+    const currentTab = await this.getCurrentTabId();
+    return new Promise((resolve, err) => {
+      chrome.browserAction.getBadgeText({tabId : currentTab}, result => {
+        resolve(result);
+      });
+    });
+  }
+
+  /**
    * Permet de définir une couleur
    */
   public static setBadgeBackgroundColor(color : string) : void {
@@ -88,32 +100,58 @@ export class ChromeService {
   }
 
   /**
+   * Permet de récupérer l'id du tab courrant
+   */
+  public static async getCurrentTabId() : Promise<number> {
+    return new Promise(async (resolve, err) => {
+      const tabs = await this._query({
+        active: true,
+        currentWindow: true
+      });
+      if (tabs && tabs[0]) {
+        resolve(tabs[0].id);
+      } else {
+        err('tabs is undefined');
+      }
+    });
+  }
+
+  /**
    * Permet d'exécuter un script
    */
-  public static executeScript(details : chrome.tabs.InjectDetails, callback? : (result : any[]) => void) : void {
-    chrome.tabs.executeScript(details, callback);
+  public static executeScript(details : chrome.tabs.InjectDetails) : Promise<boolean> {
+    return new Promise((resolve, err) => {
+      chrome.tabs.executeScript(details, () => {
+        resolve(true);
+      });
+    });
   }
 
   /**
    * Permet de récupérer des info via une query
    */
-  public static query(queryInfo : chrome.tabs.QueryInfo, callback : (result : chrome.tabs.Tab[]) => void) : void {
-    chrome.tabs.query(queryInfo, callback);
+  private static async _query(queryInfo : chrome.tabs.QueryInfo) : Promise<chrome.tabs.Tab[]> {
+    return new Promise((resolve, err) => {
+      chrome.tabs.query(queryInfo, (result : chrome.tabs.Tab[]) => {
+        resolve(result);
+      });
+    });
   }
 
   /**
    * Permet d'envoyer des messages au content-script pour qu'il les envoie à PollyRecorder
    * @param message
    */
-  public static sendMessageToContentScript(message : string) : void {
-    ChromeService.query({
+  public static async sendMessageToContentScript(message : string) : Promise<void> {
+    const tabs = await this._query({
       currentWindow: true,
       active: true
-    }, tabs => {
+    });
+    if (tabs && tabs[0]) {
       chrome.tabs.sendMessage(tabs[0].id, {
         control : message
       });
-    });
+    }
   }
 
   /**

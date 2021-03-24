@@ -8,10 +8,19 @@ export class HttpService {
    * @param url
    * @param loadhandle
    */
-  public static getRequest(xhr : XMLHttpRequest, url : string, loadhandle : any) : void {
-    xhr.open('GET', url, true);
-    xhr.responseType = 'text';
-    xhr.onload = loadhandle;
-    xhr.send();
+  public static async getRequest(url : string) : Promise<string> {
+    const xhr = new XMLHttpRequest();
+    return new Promise((resolve, err) => {
+      xhr.open('GET', url, true);
+      xhr.responseType = 'text';
+      xhr.onload = ( ) => {
+        if (xhr.status === 200) {
+          resolve(xhr.response);
+        } else {
+          err('empty response');
+        }
+      };
+      xhr.send();
+    });
   }
 }

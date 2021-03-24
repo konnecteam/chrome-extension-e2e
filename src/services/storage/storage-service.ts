@@ -13,14 +13,22 @@ export class StorageService {
   /**
    * Permet de récupérer un objet
    */
-  public static get(keys : string[] , callback? : (any) => void) : void {
-    chrome.storage.local.get(keys, callback);
+  public static getDataAsync(keys : string[]) : Promise<{ [keys : string] : any}> {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.get(keys, data => {
+        resolve(data);
+      });
+    });
   }
 
   /**
    * Supprime des données dans le local storage
    */
-  public static remove(key : string, callback? : () => void) : void {
-    chrome.storage.local.remove(key, callback);
+  public static removeDataAsync(key : string) : Promise<void> {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.remove(key, () => {
+        resolve();
+      });
+    });
   }
 }

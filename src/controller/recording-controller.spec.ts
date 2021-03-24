@@ -74,10 +74,10 @@ describe('Test de Recording Controller', () => {
     page = await browser.newPage();
     await page.goto('http://localhost:3000/');
 
-    await page.evaluate(browserOption => {
+    await page.evaluate(params => {
 
       // On donne l'api chrome à la window
-      window.chrome = browserOption.chrome;
+      window.chrome = params.chrome;
 
       // Variable qui va permettre de savoir si le backgournd est prêt
       (window as any).waitBackground = new Promise((resolve, reject) => {
@@ -91,7 +91,7 @@ describe('Test de Recording Controller', () => {
         }, 100);
       });
       // On set les options dans le local storage de la window car on est pas dans le plugin
-      window.localStorage.setItem('options', JSON.stringify({ options: { code: browserOption.options } }));
+      window.localStorage.setItem('options', JSON.stringify({ options: { code: params.options } }));
 
 
       // On utilise sendMessage donc il faut le declarer mais on a pas besoin de l'overwrite
@@ -100,7 +100,7 @@ describe('Test de Recording Controller', () => {
       // On overwrite pour adapter le get au local storage
       window.chrome.storage.local.get = (key, callback?) => {
         callback(JSON.parse(window.localStorage.getItem(key[0])));
-        return browserOption.options;
+        Promise.resolve(params.options);
       };
 
 
@@ -118,6 +118,7 @@ describe('Test de Recording Controller', () => {
       // On overwrite remove pour supprimer des éléments
       chrome.storage.local.remove = key => {
         window.localStorage.removeItem(key);
+        Promise.resolve();
       };
 
       /*
@@ -129,25 +130,31 @@ describe('Test de Recording Controller', () => {
         addListener(fct) {
 
           // On adapte la méthode boot pour les tests
-          window.addEventListener('OnMessage', (msg : any) => {
+          window.addEventListener('OnMessage', async (msg : any) => {
             switch (msg.action) {
-              case browserOption.controlActions.START :
+              case params.controlActions.START :
                 (window as any).recordingController._start();
+                (window as any).badgeText = params.badgeStates.REC;
                 break;
-              case browserOption.controlActions.STOP :
+              case params.controlActions.STOP :
                 (window as any).recordingController._stop();
+                (window as any).badgeText = '';
                 break;
-              case browserOption.controlActions.CLEANUP:
+              case params.controlActions.CLEANUP:
                 (window as any).recordingController._cleanUp();
+                (window as any).badgeText = '';
                 break;
-              case browserOption.controlActions.PAUSE :
+              case params.controlActions.PAUSE :
                 (window as any).recordingController._pause();
+                (window as any).badgeText = params.badgeStates.PAUSE;
                 break;
-              case browserOption.controlActions.UNPAUSE :
+              case params.controlActions.UNPAUSE :
                 (window as any).recordingController._unPause();
+                (window as any).badgeText = params.badgeStates.REC;
                 break;
-              case browserOption.controlActions.EXPORT_SCRIPT :
+              case params.controlActions.EXPORT_SCRIPT :
                 (window as any).recordingController._exportScriptAsync();
+                (window as any).badgeText = params.badgeStates.RESULT_NOT_EMPTY;
                 break;
             }
           });
@@ -216,7 +223,7 @@ describe('Test de Recording Controller', () => {
         (window as any).ddlFile = true;
       };
 
-    }, { chrome, options: defaults, controlActions });
+    }, { chrome, options: defaults, controlActions , badgeStates});
 
     // On ajoute le background dans la page
     await page.evaluate(scriptText => {
@@ -230,6 +237,7 @@ describe('Test de Recording Controller', () => {
 
   // Close server
   afterAll(async () => {
+
     await page.close();
     await browser.close();
     server.close();
@@ -241,6 +249,7 @@ describe('Test de Recording Controller', () => {
     const badge = await verfiyBadgeContentAsync(controlActions.START);
     // Verifier si il est égale à 'rec' car il n'y a pas d'event à save
     expect(badge).toEqual(badgeStates.REC);
+
   });
 
   test('Test de stop', async () => {

@@ -116,7 +116,7 @@ class EventRecorder {
   /**
    * Démarrage du recorder
    */
-  public start() {
+  public async start() {
 
     /**
      * Quand on start,
@@ -127,9 +127,10 @@ class EventRecorder {
     StorageService.setData({
       loadingPage: false
     });
-    // Récupération des options
-    StorageService.get(['options'], data => {
 
+    // Récupération des options
+    const data = await StorageService.getDataAsync(['options']);
+    if (data) {
       // Mise à jour des options
       this._updateOptions(data.options);
 
@@ -152,7 +153,7 @@ class EventRecorder {
       (window as any).observer.observe(document, { childList: true, subtree: true });
 
       ChromeService.sendMessage({ control: controlMSG.EVENT_RECORDER_STARTED_EVENT });
-    });
+    }
   }
 
   /**
