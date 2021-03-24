@@ -7,19 +7,25 @@ import customEvents from '../../../constants/events/events-custom';
 import elementsTagName from '../../../constants/elements/tag-name';
 import { IMessage } from '../../../interfaces/i-message';
 import eventsDom from '../../../constants/events/events-dom';
+import { IOption } from 'interfaces/i-options';
 /** selecteur de l'élément */
 const selector = '#id';
 /** valeur de l'élément */
 const value = `testValue`;
+
+/** frame et options utilisées pour les tests */
+let frame : string;
+let frameId : number;
+let options : IOption;
 
 describe('Test de Change Block Factory', () => {
 
   // Initialisation des attributs de change-block-factory
   beforeAll(() => {
 
-    ChangeFactory.options = JSON.parse(JSON.stringify(defaults));
-    ChangeFactory.frameId = 0;
-    ChangeFactory.frame = 'page';
+    options = JSON.parse(JSON.stringify(defaults));
+    frameId = 0;
+    frame = 'page';
   });
 
   test('Test de buildChangeBlockInputNumericBlock', () => {
@@ -27,7 +33,7 @@ describe('Test de Change Block Factory', () => {
     // Attributs utilisés pour générer le block
     const selectorFocus = '#inputNum';
 
-    const exceptedBlock = new Block(ChangeFactory.frameId);
+    const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
       type: 'focus',
       value: `await page.focus('${selectorFocus}');`
@@ -35,7 +41,7 @@ describe('Test de Change Block Factory', () => {
 
     exceptedBlock.addLine({
       type: domEventsToRecord.CHANGE,
-      value: `await ${ChangeFactory.frame}.evaluate( async function(){
+      value: `await ${frame}.evaluate( async function(){
        let input = document.querySelector('${selector}');
        input.value = '${value}';
        input.dispatchEvent(new Event('blur'));
@@ -44,6 +50,8 @@ describe('Test de Change Block Factory', () => {
     });
 
     const result = ChangeFactory.buildChangeBlockInputNumericBlock(
+      frameId,
+      frame,
       selector,
       value,
       selectorFocus
@@ -54,13 +62,15 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de buildSelectChangeBlock', () => {
 
-    const exceptedBlock = new Block(ChangeFactory.frameId);
+    const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
       type: domEventsToRecord.CHANGE,
-      value: `await ${ChangeFactory.frame}.select('${selector}', \`${value}\`);`
+      value: `await ${frame}.select('${selector}', \`${value}\`);`
     });
 
     const result = ChangeFactory.buildSelectChangeBlock(
+      frameId,
+      frame,
       selector,
       value
     );
@@ -70,14 +80,16 @@ describe('Test de Change Block Factory', () => {
 
   test('Test de buildChangeBlock', () => {
 
-    const exceptedBlock = new Block(ChangeFactory.frameId);
+    const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
       type: domEventsToRecord.CHANGE,
-      value: `await ${ChangeFactory.frame}.evaluate( () => document.querySelector('${selector}').value = "");
-      await ${ChangeFactory.frame}.type('${selector}', \`${value}\`);`
+      value: `await ${frame}.evaluate( () => document.querySelector('${selector}').value = "");
+      await ${frame}.type('${selector}', \`${value}\`);`
     });
 
     const result = ChangeFactory.buildChangeBlock(
+      frameId,
+      frame,
       selector,
       value
     );
@@ -90,13 +102,16 @@ describe('Test de Change Block Factory', () => {
     // Attributs utilisés pour générer le block
     const files = '\"./recordings/files/test.txt\"';
 
-    const exceptedBlock = new Block(ChangeFactory.frameId);
+    const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
       type: domEventsToRecord.DROP,
       value: ` await fileChooser.accept([${files}]);`
     });
 
     const result = ChangeFactory.buildAcceptUploadFileChangeBlock(
+      options,
+      frameId,
+      frame,
       selector,
       'test.txt'
     );
@@ -116,12 +131,14 @@ describe('Test de Change Block Factory', () => {
     expect(
       ChangeFactory.generateBlock(
         eventMessage ,
-        ChangeFactory.frameId,
-        ChangeFactory.frame,
+        frameId,
+        frame,
         defaults
       )
     ).toEqual(
       ChangeFactory.buildChangeBlockInputNumericBlock(
+        frameId,
+        frame,
         selector,
         value,
         '#input'
@@ -141,12 +158,14 @@ describe('Test de Change Block Factory', () => {
     expect(
       ChangeFactory.generateBlock(
         eventMessage ,
-        ChangeFactory.frameId,
-        ChangeFactory.frame,
+        frameId,
+        frame,
         defaults
       )
     ).toEqual(
       ChangeFactory.buildChangeBlock(
+        frameId,
+        frame,
         selector,
         value
       )
@@ -165,12 +184,14 @@ describe('Test de Change Block Factory', () => {
     expect(
       ChangeFactory.generateBlock(
         eventMessage ,
-        ChangeFactory.frameId,
-        ChangeFactory.frame,
+        frameId,
+        frame,
         defaults
       )
     ).toEqual(
       ChangeFactory.buildSelectChangeBlock(
+        frameId,
+        frame,
         selector,
         value
       )
@@ -191,12 +212,15 @@ describe('Test de Change Block Factory', () => {
     expect(
       ChangeFactory.generateBlock(
         eventMessage ,
-        ChangeFactory.frameId,
-        ChangeFactory.frame,
+        frameId,
+        frame,
         defaults
       )
     ).toEqual(
       ChangeFactory.buildAcceptUploadFileChangeBlock(
+        options,
+        frameId,
+        frame,
         selector,
         files
       )

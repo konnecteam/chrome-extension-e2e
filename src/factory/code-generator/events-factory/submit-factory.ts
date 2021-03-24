@@ -10,31 +10,17 @@ import elementsTagName from '../../../constants/elements/tag-name';
  */
 export class SubmitFactory {
 
-  // les attributs sont utilisés pour éviter de les passer aux méthodes
-
-  /** Options du plugin */
-  public static options : IOption;
-
-  /** Id de la frame */
-  public static frameId : number;
-
-  /** Frame courante */
-  public static frame : string;
-
   /**
    * Génère un block lié à l'event submit
    */
   public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
 
     const { action, tagName} = event;
-    this.frameId = frameId;
-    this.frame = frame;
-    this.options = options;
 
     // Si l'event est un submit
     if (action === customEvents.SUBMIT) {
       if (tagName === elementsTagName.FORM.toUpperCase()) {
-        return this.buildSubmitBlock();
+        return this.buildSubmitBlock(frameId, frame);
       }
     }
   }
@@ -42,13 +28,13 @@ export class SubmitFactory {
   /**
    * Généré un submit
    */
-  public static buildSubmitBlock() : Block {
+  public static buildSubmitBlock(frameId : number, frame : string) : Block {
 
-    const block = new Block(this.frameId);
+    const block = new Block(frameId);
 
     block.addLine({
       type: domEventsToRecord.CHANGE,
-      value: `await ${this.frame}.keyboard.press('Enter');`
+      value: `await ${frame}.keyboard.press('Enter');`
     });
     return block;
   }

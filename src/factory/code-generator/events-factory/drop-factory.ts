@@ -16,18 +16,11 @@ export class DropFactory {
     // Si l'action est un drop sur un file dropzone
     if (action === customEvents.DROP_FILE) {
 
-      ClickFactory.options = options;
-      ClickFactory.frameId = frameId;
-      ClickFactory.frame = frame;
       // On rajoute d'abord la partie du click du file dropzone
-      const newBlock = ClickFactory.buildclickFileDropZoneBlock(selector);
+      const newBlock = ClickFactory.buildclickFileDropZoneBlock(options, frameId, frame, selector);
 
-      // On modifie les attribus de la classe utilisé pour les mettre à jour
-      ChangeFactory.options = options;
-      ChangeFactory.frameId = frameId;
-      ChangeFactory.frame = frame;
       // On rajoute la partie acceptation du fichier
-      const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(selector, files);
+      const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(options, frameId, frame, selector, files);
 
       for (const line of chooserFile.getLines()) {
         newBlock.addLine(line);

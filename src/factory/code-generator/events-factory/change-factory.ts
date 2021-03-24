@@ -11,17 +11,6 @@ import eventsDom from '../../../constants/events/events-dom';
  */
 export class ChangeFactory {
 
-  // les attributs sont utilisés pour éviter de les passer en paramètre méthodes
-
-  /** Options du plugin */
-  public static options : IOption;
-
-  /** Id de la frame */
-  public static frameId : number;
-
-  /** Frame courante */
-  public static frame : string;
-
   // Génère les blocks en fonction des paramètres données
   public static generateBlock(
     event : IMessage,
@@ -31,30 +20,26 @@ export class ChangeFactory {
   ) : Block {
 
     const { action, selector, value, tagName, files, selectorFocus} = event;
-    this.options = options;
-    this.frameId = frameId;
-    this.frame = frame;
 
     // En fonction de l'action détéctée
     switch (action) {
       // Si c'est un changement dans un input numeric
       case customEvents.CHANGE_INPUT_NUMERIC:
-        return this.buildChangeBlockInputNumericBlock(selector, value,
-          selectorFocus);
+        return this.buildChangeBlockInputNumericBlock(frameId, frame, selector, value, selectorFocus);
       // Si c'est un change
       case eventsDom.CHANGE:
 
         // Si c'est un select
         if (tagName === elementsTagName.SELECT.toUpperCase()) {
 
-          return this.buildSelectChangeBlock(selector, value);
+          return this.buildSelectChangeBlock(frameId, frame, selector, value);
 
         } else if (files) {
           // Si il y a des files c'est qu c'est un change dans un input files
-          return this.buildAcceptUploadFileChangeBlock(selector, files);
+          return this.buildAcceptUploadFileChangeBlock(options, frameId, frame, selector, files);
         } else {
           // Sinon c'est un input simple
-          return this.buildChangeBlock(selector, value);
+          return this.buildChangeBlock(frameId, frame, selector, value);
         }
     }
   }
@@ -62,10 +47,14 @@ export class ChangeFactory {
   /**
    * Généré le change d'un input numeric
    */
-  public static buildChangeBlockInputNumericBlock(selector : string , value : string,
+  public static buildChangeBlockInputNumericBlock(
+    frameId : number,
+    frame : string,
+    selector : string ,
+    value : string,
     selectorFocus : string) : Block {
 
-    const block = new Block(this.frameId);
+    const block = new Block(frameId);
     block.addLine({
       type: 'focus',
       value: `await page.focus('${selectorFocus}');`
@@ -73,7 +62,7 @@ export class ChangeFactory {
 
     block.addLine({
       type: domEventsToRecord.CHANGE,
-      value: `await ${this.frame}.evaluate( async function(){
+      value: `await ${frame}.evaluate( async function(){
        let input = document.querySelector('${selector}');
        input.value = '${value}';
        input.dispatchEvent(new Event('blur'));
@@ -86,31 +75,46 @@ export class ChangeFactory {
  /**
   * Génère un changement de valeur d'un select
   */
-  public static buildSelectChangeBlock(selector : string, value : string) : Block {
-    return new Block(this.frameId, {
+  public static buildSelectChangeBlock(
+    frameId : number,
+    frame : string,
+    selector : string,
+    value : string
+  ) : Block {
+    return new Block(frameId, {
       type: domEventsToRecord.CHANGE,
-      value: `await ${this.frame}.select('${selector}', \`${value}\`);`
+      value: `await ${frame}.select('${selector}', \`${value}\`);`
     });
   }
 
  /**
   * Génère un change de valeur
   */
-  public static buildChangeBlock(selector : string, value : string) : Block {
+  public static buildChangeBlock(
+    frameId : number,
+    frame : string,
+    selector : string,
+    value : string
+  ) : Block {
    // On remplace : \n par \\r\\n pour l'exportation du script
-    return new Block(this.frameId, {
+    return new Block(frameId, {
       type: domEventsToRecord.CHANGE,
-      value: `await ${this.frame}.evaluate( () => document.querySelector('${selector}').value = "");
-      await ${this.frame}.type('${selector}', \`${value.replace(/\n/g, '\\r\\n')}\`);`
+      value: `await ${frame}.evaluate( () => document.querySelector('${selector}').value = "");
+      await ${frame}.type('${selector}', \`${value.replace(/\n/g, '\\r\\n')}\`);`
     });
   }
 
   /**
    * Génère une acceptation d'uploader de fichier
    */
-  public static buildAcceptUploadFileChangeBlock(selector : string, files : string) : Block {
+  public static buildAcceptUploadFileChangeBlock(
+    options : IOption,
+    frameId : number,
+    frame : string,
+    selector : string, files : string
+  ) : Block {
 
-    const block = new Block(this.frameId);
+    const block = new Block(frameId);
     let listFile = '';
     const pathBase = './recordings/files/';
     const filesList = files.split(';');

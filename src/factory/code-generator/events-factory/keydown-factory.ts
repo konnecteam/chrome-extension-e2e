@@ -9,30 +9,16 @@ import domEventsToRecord from '../../../constants/events/events-dom';
  */
 export class KeydownFactory {
 
-  // les attributs sont utilisés pour éviter de les passer aux méthodes
-
-    /** Options du plugin */
-  public static options : IOption;
-
-  /** Id de la frame */
-  public static frameId : number;
-
-  /** Frame courante */
-  public static frame : string;
-
   /**
    * Génère un block de l'event keydown
    */
   public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
     const { action, selector, value, iframe } = event;
 
-    this.options = options;
-    this.frameId = frameId;
-    this.frame = frame;
 
     // Si c'est une action event de liste keydown
     if (action === customEvents.LIST_KEYDOWN) {
-      return this.buildListKeydownBlock(selector, value, iframe);
+      return this.buildListKeydownBlock(options, frameId, frame, selector, value, iframe);
     }
   }
 
@@ -40,14 +26,19 @@ export class KeydownFactory {
    * Généré une liste keydown
    */
   public static buildListKeydownBlock(
-    selector : string, value : string, iframe : string) : Block {
+    options : IOption,
+    frameId : number,
+    frame : string,
+    selector : string,
+    value : string,
+    iframe : string
+  ) : Block {
+    const block = new Block(frameId);
 
-    const block = new Block(this.frameId);
-
-    if (this.options.waitForSelectorOnClick) {
+    if (options.waitForSelectorOnClick) {
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: ` await ${this.frame}.waitForSelector('${iframe ? iframe : selector}')`
+        value: ` await ${frame}.waitForSelector('${iframe ? iframe : selector}')`
       });
     }
 
@@ -56,7 +47,7 @@ export class KeydownFactory {
       block.addLine({
 
         type: domEventsToRecord.KEYDOWN,
-        value: ` await ${this.frame}.evaluate( async function(){
+        value: ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
           let element = iframeElement.contentDocument.querySelector('${selector}');
           element.className = '';
@@ -71,7 +62,7 @@ export class KeydownFactory {
 
       block.addLine({
         type: 'KEYUP',
-        value: ` await ${this.frame}.evaluate( async function(){
+        value: ` await ${frame}.evaluate( async function(){
           let element = document.querySelector('${selector}');
           var docEvent = document.createEvent('KeyboardEvents');
           //If it isn't input element

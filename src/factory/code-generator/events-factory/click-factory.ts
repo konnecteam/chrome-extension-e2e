@@ -10,16 +10,6 @@ import eventsDom from '../../../constants/events/events-dom';
  */
 export class ClickFactory {
 
-  // les attributs sont utilisés pour éviter de les passer aux méthodes
-
-  /** Options du plugin */
-  public static options : IOption;
-
-  /** Id de la frame */
-  public static frameId : number;
-
-  /** Frame courante */
-  public static frame : string;
   /**
    * Génère un block à partir d'un IMessage
    */
@@ -33,29 +23,25 @@ export class ClickFactory {
     const { action, selector, durancyClick, scrollElement,
       scrollXElement, scrollYElement} = event;
 
-    this.options = options;
-    this.frameId = frameId;
-    this.frame = frame;
-
     // En fonction de l'action détécté
     switch (action) {
 
       // Si c'est un click basique
       case eventsDom.CLICK:
-        return this.buildClickBlock(selector);
+        return this.buildClickBlock(options, frameId, frame, selector);
       // Si c'est un click sur un dropzone element
       case customEvents.CLICK_DROPZONE:
-        return this.buildclickFileDropZoneBlock(selector);
+        return this.buildclickFileDropZoneBlock(options, frameId, frame, selector);
       // Si c'est un click sur les flêches de l'input numeric
       case customEvents.CLICK_MOUSE_INPUT_NUMERIC:
-        return this.buildClickMouseInputNumericBlock(selector, durancyClick);
+        return this.buildClickMouseInputNumericBlock(options, frameId, frame, selector, durancyClick);
       // Si c'est un click mouse (mousdown, mouseup)
       case customEvents.CLICK_MOUSE :
-        return this.buildClickMouseBlock(selector);
+        return this.buildClickMouseBlock(options, frameId, frame, selector);
       // Si c'est un click sur une liste
       case customEvents.CLICK_LIST_ITEM:
         return this.buildClickKListItemBlock(
-          selector, scrollElement, scrollXElement, scrollYElement
+          options, frameId, frame, selector, scrollElement, scrollXElement, scrollYElement
         );
     }
   }
@@ -63,24 +49,29 @@ export class ClickFactory {
 /**
  * Génère le click d'un simple click
  */
-  public static buildClickBlock(selector : string) : Block {
+  public static buildClickBlock(
+    options : IOption,
+    frameId : number,
+    frame : string,
+    selector : string
+  ) : Block {
 
-    const block = new Block(this.frameId);
-    if (this.options.waitForSelectorOnClick) {
+    const block = new Block(frameId);
+    if (options.waitForSelectorOnClick) {
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `await ${this.frame}.waitForSelector('${selector}');`
+        value: `await ${frame}.waitForSelector('${selector}');`
       });
     }
     block.addLine({
       type: domEventsToRecord.CLICK,
-      value: `await ${this.frame}.$eval('${selector}',  el=> el.click());`
+      value: `await ${frame}.$eval('${selector}',  el=> el.click());`
     });
 
-    if (this.options.customLineAfterClick) {
+    if (options.customLineAfterClick) {
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `${this.options.customLineAfterClick}`
+        value: `${options.customLineAfterClick}`
       });
     }
     return block;
@@ -90,23 +81,27 @@ export class ClickFactory {
  * Génère un Click d'une file drop zone
  */
   public static buildclickFileDropZoneBlock(
-  selector : string) : Block {
+    options : IOption,
+    frameId : number,
+    frame : string,
+    selector : string
+  ) : Block {
 
-    const block = new Block(this.frameId);
-    if (this.options.waitForSelectorOnClick) {
+    const block = new Block(frameId);
+    if (options.waitForSelectorOnClick) {
 
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `await ${this.frame}.waitForSelector('${selector}');`
+        value: `await ${frame}.waitForSelector('${selector}');`
       });
     }
 
     block.addLine({
       type: domEventsToRecord.CLICK,
       value: `  [fileChooser] = await Promise.all([
-      ${this.frame}.waitForFileChooser(),
-      ${this.frame}.waitForSelector('${selector}'),
-      ${this.frame}.$eval('${selector}',  el=> el.click())
+      ${frame}.waitForFileChooser(),
+      ${frame}.waitForSelector('${selector}'),
+      ${frame}.$eval('${selector}',  el=> el.click())
     ]);`
     });
 
@@ -116,20 +111,25 @@ export class ClickFactory {
 /**
  * Génère un click appuyé du k select de l'input numeric
  */
-  public static buildClickMouseInputNumericBlock(selector : string, time : number) : Block {
+  public static buildClickMouseInputNumericBlock(
+    options : IOption,
+    frameId : number,
+    frame : string,
+    selector : string, time : number
+  ) : Block {
 
-    const block = new Block(this.frameId);
-    if (this.options.waitForSelectorOnClick) {
+    const block = new Block(frameId);
+    if (options.waitForSelectorOnClick) {
 
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `await ${this.frame}.waitForSelector('${selector}');`
+        value: `await ${frame}.waitForSelector('${selector}');`
       });
     }
 
     block.addLine({
       type: domEventsToRecord.CLICK,
-      value: ` await ${this.frame}.evaluate( async function(){
+      value: ` await ${frame}.evaluate( async function(){
       let e = document.querySelector('${selector}');
       var docEvent = document.createEvent ('MouseEvents');
       docEvent.initEvent ('mousedown', true, true);
@@ -146,10 +146,10 @@ export class ClickFactory {
     });`
     });
 
-    if (this.options.customLineAfterClick) {
+    if (options.customLineAfterClick) {
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `${this.options.customLineAfterClick}`
+        value: `${options.customLineAfterClick}`
       });
     }
 
@@ -158,19 +158,24 @@ export class ClickFactory {
   /**
    * Génère un click appuyé
    */
-  public static buildClickMouseBlock(selector : string) : Block {
-    const block = new Block(this.frameId);
-    if (this.options.waitForSelectorOnClick) {
+  public static buildClickMouseBlock(
+    options : IOption,
+    frameId : number,
+    frame : string,
+    selector : string
+  ) : Block {
+    const block = new Block(frameId);
+    if (options.waitForSelectorOnClick) {
 
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `await ${this.frame}.waitForSelector('${selector}');`
+        value: `await ${frame}.waitForSelector('${selector}');`
       });
     }
 
     block.addLine({
       type: domEventsToRecord.CLICK,
-      value: ` await ${this.frame}.evaluate( async function(){
+      value: ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         var docEvent = document.createEvent ('MouseEvents');
         docEvent.initEvent ('mousedown', true, true);
@@ -181,11 +186,11 @@ export class ClickFactory {
       });`
     });
 
-    if (this.options.customLineAfterClick) {
+    if (options.customLineAfterClick) {
 
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `${this.options.customLineAfterClick}`
+        value: `${options.customLineAfterClick}`
       });
     }
     return block;
@@ -196,20 +201,27 @@ export class ClickFactory {
    * Click sur un item de konnect liste
    */
   public static buildClickKListItemBlock(
-     selector : string, scrollElement : string, scrollXElement : number, scrollYElement : number) : Block {
+    options : IOption,
+    frameId : number,
+    frame : string,
+    selector : string,
+    scrollElement : string,
+    scrollXElement : number,
+    scrollYElement : number
+  ) : Block {
 
-    const block = new Block(this.frameId);
+    const block = new Block(frameId);
 
-    if (this.options.waitForSelectorOnClick) {
+    if (options.waitForSelectorOnClick) {
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `await ${this.frame}.waitForSelector('${scrollElement}');`
+        value: `await ${frame}.waitForSelector('${scrollElement}');`
       });
     }
 
     block.addLine({
       type: domEventsToRecord.CLICK,
-      value: ` await ${this.frame}.evaluate( async function(){
+      value: ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${scrollElement}').parentElement;
         e.scroll(${scrollXElement}, ${scrollYElement});
         return Promise.resolve('finish');
@@ -217,27 +229,27 @@ export class ClickFactory {
     });
 
     // Permet d'attendre que les items chargent
-    if (this.options.customLinesBeforeEvent) {
+    if (options.customLinesBeforeEvent) {
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `${this.options.customLinesBeforeEvent}`
+        value: `${options.customLinesBeforeEvent}`
       });
     }
 
     block.addLine({
       type: domEventsToRecord.CLICK,
-      value: `await ${this.frame}.evaluate( async function(){
+      value: `await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         e.click();
         return Promise.resolve('finish');
       });`
     });
 
-    if (this.options.customLineAfterClick) {
+    if (options.customLineAfterClick) {
 
       block.addLine({
         type: domEventsToRecord.CLICK,
-        value: `${this.options.customLineAfterClick}`
+        value: `${options.customLineAfterClick}`
       });
     }
     return block;

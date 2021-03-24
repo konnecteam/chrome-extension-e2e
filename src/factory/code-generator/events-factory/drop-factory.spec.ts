@@ -1,3 +1,4 @@
+import { IOption } from 'interfaces/i-options';
 import { IMessage } from '../../../interfaces/i-message';
 import { DropFactory } from './drop-factory';
 import { defaults } from '../../../constants/default-options';
@@ -6,22 +7,20 @@ import customEvents from '../../../constants/events/events-custom';
 import { ClickFactory } from './click-factory';
 import { ChangeFactory } from './change-factory';
 
-/** Frame définie pour les tests */
-const frame = 'page';
-const frameId = 0;
+/** frame utilisée pour les tests */
+let frame : string;
+let frameId : number;
+// options des tests
+let options : IOption;
 
 describe('Test de Drop Block Factory', () => {
 
   // Initialisation
   beforeAll(() => {
 
-    ClickFactory.options = JSON.parse(JSON.stringify(defaults));
-    ClickFactory.frameId = frameId;
-    ClickFactory.frame = frame;
-
-    ChangeFactory.options = JSON.parse(JSON.stringify(defaults));
-    ChangeFactory.frameId = frameId;
-    ChangeFactory.frame = frame;
+    options = JSON.parse(JSON.stringify(defaults));
+    frameId = 0;
+    frame = 'page';
   });
 
   test('Généré un Drop Block', () => {
@@ -32,15 +31,24 @@ describe('Test de Drop Block Factory', () => {
     };
 
     // On rajoute d'abord la partie du click du file dropzone
-    const exceptedResult = ClickFactory.buildclickFileDropZoneBlock(eventMessage .selector);
+    const exceptedResult = ClickFactory.buildclickFileDropZoneBlock(
+      options,
+      frameId,
+      frame,
+      eventMessage.selector);
     // On rajoute la partie acceptation du fichier
-    const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(eventMessage .selector, eventMessage .files);
+    const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(
+      options,
+      frameId,
+      frame,
+      eventMessage.selector,
+      eventMessage.files);
 
     exceptedResult.addLine(chooserFile.getLines()[0]);
 
     expect(
       DropFactory.generateBlock(
-        eventMessage ,
+        eventMessage,
         frameId,
         frame,
         defaults

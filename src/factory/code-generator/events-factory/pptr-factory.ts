@@ -8,17 +8,6 @@ import pptrActions from '../../../constants/pptr-actions';
  */
 export class PPtrFactory {
 
-  // les attributs sont utilisés pour éviter de les passer aux méthodes
-
-  /** Options du plugin */
-  public static options : IOption;
-
-  /** Id de la frame */
-  public static frameId : number;
-
-  /** Frame courante */
-  public static frame : string;
-
   /**
    * Génère le block lié à une action pupeteer
    */
@@ -26,32 +15,34 @@ export class PPtrFactory {
 
     const { action, value} = event;
 
-    this.frame = frame;
-    this.frameId = frameId;
-    this.options = options;
+
     // En fonction de l'action de l'event
     switch (action) {
       // Si l'action est un goto
       case pptrActions.GOTO:
-        return this.buildGotoBlock(value);
+        return this.buildGotoBlock(frameId, frame, value);
       // Si l'action est la récupération du viewport
       case pptrActions.VIEWPORT:
         return this.buildViewportBlock(
-          value.width, value.height);
+          frameId, frame, value.width, value.height);
       // Si l'action est une navigation
       case pptrActions.NAVIGATION:
-        return this.buildWaitForNavigationBlock();
+        return this.buildWaitForNavigationBlock(options, frameId, frame);
     }
   }
 
   /**
    * Génère l'accès à une page
    */
-  public static buildGotoBlock(href : string) : Block {
+  public static buildGotoBlock(
+    frameId : number,
+    frame : string,
+    href : string
+  ) : Block {
 
-    const block =  new Block(this.frameId, {
+    const block =  new Block(frameId, {
       type: pptrActions.GOTO,
-      value: `await ${this.frame}.goto('${href}');`
+      value: `await ${frame}.goto('${href}');`
     });
 
     // On wait une seconde pour attendre konnect
@@ -68,20 +59,29 @@ export class PPtrFactory {
   /**
    * Génère le block de la taille de la page
    */
-  public static buildViewportBlock(width : number, height : number) : Block {
+  public static buildViewportBlock(
+    frameId : number,
+    frame : string,
+    width : number,
+    height : number
+  ) : Block {
 
-    return new Block(this.frameId, {
+    return new Block(frameId, {
       type: pptrActions.VIEWPORT,
-      value: `await ${this.frame}.setViewport({ width: ${width}, height: ${height} });`
+      value: `await ${frame}.setViewport({ width: ${width}, height: ${height} });`
     });
   }
 
   /**
    * Génère le block de navigation
    */
-  public static buildWaitForNavigationBlock() : Block {
-    const block = new Block(this.frameId);
-    if (this.options.waitForNavigation) {
+  public static buildWaitForNavigationBlock(
+    options : IOption,
+    frameId : number,
+    frame : string
+  ) : Block {
+    const block = new Block(frameId);
+    if (options.waitForNavigation) {
       block.addLine({
         type: pptrActions.NAVIGATION,
         value: `await navigationPromise`

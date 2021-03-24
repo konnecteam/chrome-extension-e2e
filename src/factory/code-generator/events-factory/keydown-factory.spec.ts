@@ -1,11 +1,15 @@
+import { IOption } from 'interfaces/i-options';
 import { defaults } from '../../../constants/default-options';
 import { KeydownFactory } from './keydown-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
 import domEventsToRecord from '../../../constants/events/events-dom';
 
-const frame = 'page';
-const frameId = 0;
+/** frame et options utilisées pour les tests */
+let frame : string;
+let frameId : number;
+let options : IOption;
+
 const iframe = 'body > iframe';
 const selector = '#id';
 const value = 'test de value';
@@ -14,14 +18,14 @@ describe('Test de Keydown Block Factory', () => {
 
   // Initialisation des attributs de Keydown block factory
   beforeAll(() => {
-    KeydownFactory.frame = frame;
-    KeydownFactory.frameId = frameId;
-    KeydownFactory.options = JSON.parse(JSON.stringify(defaults));
+    frame = 'page';
+    frameId = 0;
+    options = JSON.parse(JSON.stringify(defaults));
   });
 
   test('Test de build ListKeydown dans une iframe', () => {
-    KeydownFactory.options.waitForSelectorOnClick = false;
-    const exceptedResult = new Block(KeydownFactory.frameId);
+    options.waitForSelectorOnClick = false;
+    const exceptedResult = new Block(frameId);
 
     exceptedResult.addLine({
 
@@ -40,6 +44,9 @@ describe('Test de Keydown Block Factory', () => {
 
     expect(
       KeydownFactory.buildListKeydownBlock(
+        options,
+        frameId,
+        frame,
         selector,
         value,
         iframe
@@ -51,7 +58,7 @@ describe('Test de Keydown Block Factory', () => {
   });
 
   test('Test de build ListKeydown', () => {
-    const exceptedResult = new Block(KeydownFactory.frameId);
+    const exceptedResult = new Block(frameId);
 
     exceptedResult.addLine({
 
@@ -76,6 +83,9 @@ describe('Test de Keydown Block Factory', () => {
 
     expect(
       KeydownFactory.buildListKeydownBlock(
+        options,
+        frameId,
+        frame,
         selector,
         value,
         null
@@ -87,9 +97,9 @@ describe('Test de Keydown Block Factory', () => {
 
   test('Test de build ListKeydown avec l\'option waitForSelectorOnClick', () => {
 
-    KeydownFactory.options.waitForSelectorOnClick = true;
+    options.waitForSelectorOnClick = true;
 
-    const exceptedResult = new Block(KeydownFactory.frameId);
+    const exceptedResult = new Block(frameId);
 
     exceptedResult.addLine({
       type: domEventsToRecord.CLICK,
@@ -119,6 +129,9 @@ describe('Test de Keydown Block Factory', () => {
 
     expect(
       KeydownFactory.buildListKeydownBlock(
+        options,
+        frameId,
+        frame,
         selector,
         value,
         null // cas qui n'est pas dans une iframe

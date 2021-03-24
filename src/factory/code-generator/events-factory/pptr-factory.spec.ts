@@ -1,3 +1,4 @@
+import { IOption } from 'interfaces/i-options';
 import { IMessage } from '../../../interfaces/i-message';
 import { defaults } from '../../../constants/default-options';
 import { PPtrFactory } from './pptr-factory';
@@ -5,17 +6,18 @@ import { Block } from '../../../code-generator/block';
 import 'jest';
 import pptrActions from '../../../constants/pptr-actions';
 
-/** Frame définie pour les tests */
-const frame = 'page';
-const frameId = 0;
+/** frame et options utilisées pour les tests */
+let frame : string;
+let frameId : number;
+let options : IOption;
 
 describe('Test de Pptr Action Block Factory', () => {
 
   // Initialisation PPtrFactory
   beforeAll(() => {
-    PPtrFactory.options = JSON.parse(JSON.stringify(defaults));
-    PPtrFactory.frame = frame;
-    PPtrFactory.frameId = frameId;
+    options = JSON.parse(JSON.stringify(defaults));
+    frame = 'page';
+    frameId = 0;
 
   });
 
@@ -35,7 +37,7 @@ describe('Test de Pptr Action Block Factory', () => {
   });`
     });
     expect(
-      PPtrFactory.buildGotoBlock(href)
+      PPtrFactory.buildGotoBlock(frameId, frame, href)
     ).toEqual(
       exceptedResult
     );
@@ -52,6 +54,8 @@ describe('Test de Pptr Action Block Factory', () => {
 
     expect(
       PPtrFactory.buildViewportBlock(
+        frameId,
+        frame,
         width,
         height
       )
@@ -62,7 +66,7 @@ describe('Test de Pptr Action Block Factory', () => {
   });
 
   test('Test de build WaitForNavigation avec option WaitForNavigation activée', () => {
-    PPtrFactory.options.waitForNavigation = true;
+    options.waitForNavigation = true;
 
     const exceptedResult = new Block(frameId, {
       type: pptrActions.NAVIGATION,
@@ -70,19 +74,27 @@ describe('Test de Pptr Action Block Factory', () => {
     });
 
     expect(
-      PPtrFactory.buildWaitForNavigationBlock()
+      PPtrFactory.buildWaitForNavigationBlock(
+        options,
+        frameId,
+        frame
+      )
     ).toEqual(
       exceptedResult
     );
   });
 
   test('Test de build WaitForNavigation avec option WaitForNavigation desactivée', () => {
-    PPtrFactory.options.waitForNavigation = false;
+    options.waitForNavigation = false;
 
     const exceptedResult = new Block(frameId);
 
     expect(
-      PPtrFactory.buildWaitForNavigationBlock()
+      PPtrFactory.buildWaitForNavigationBlock(
+        options,
+        frameId,
+        frame
+      )
     ).toEqual(
       exceptedResult
     );
@@ -98,7 +110,11 @@ describe('Test de Pptr Action Block Factory', () => {
     expect(
       PPtrFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrFactory.buildGotoBlock(eventMessage .value)
+      PPtrFactory.buildGotoBlock(
+        frameId,
+        frame,
+        eventMessage.value
+      )
     );
   });
 
@@ -111,7 +127,12 @@ describe('Test de Pptr Action Block Factory', () => {
     expect(
       PPtrFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrFactory.buildViewportBlock(eventMessage .value.width, eventMessage .value.height)
+      PPtrFactory.buildViewportBlock(
+        frameId,
+        frame,
+        eventMessage.value.width,
+        eventMessage.value.height
+      )
     );
   });
 
@@ -123,7 +144,11 @@ describe('Test de Pptr Action Block Factory', () => {
     expect(
       PPtrFactory.generateBlock(eventMessage , frameId, frame, defaults)
     ).toEqual(
-      PPtrFactory.buildWaitForNavigationBlock()
+      PPtrFactory.buildWaitForNavigationBlock(
+        defaults,
+        frameId,
+        frame
+      )
     );
   });
 });
