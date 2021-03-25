@@ -61,6 +61,8 @@ export class EventMessageFactory {
       case componentName.RADIO_GROUP :
         newMessage = RadioGroupComponent.editRadioGroupMessage(event);
         break;
+      default :
+        newMessage = null;
     }
     return newMessage;
 

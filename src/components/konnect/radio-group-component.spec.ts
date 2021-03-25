@@ -9,21 +9,26 @@ import eventsDom from '../../constants/events/events-dom';
 /**
  * chemin du fichier html qui contient le body
  */
-const pathFile = path.join(__dirname, './../../../static/test/dom/dom-radio-group.html');
+const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-radio-group.html');
+
+/**
+ * Selecteurs
+ */
+const RADIO_GROUP_ID = 'rg168_0';
 
 describe('Test de RadioGroup', () => {
 
   beforeAll(async() => {
 
     // on ajoute le contenu au body
-    const content = await FileService.readFileAsync(pathFile);
+    const content = await FileService.readFileAsync(PATH_DOM);
     document.body.innerHTML = content;
   });
 
   test('Test de is RadioGroupComponent', () => {
 
     // Selecteur du label qui est dans la RadioGroup
-    const element = document.getElementById('rg168_0');
+    const element = document.getElementById(RADIO_GROUP_ID);
 
     // On doit trouver la RadioGroup
     expect(

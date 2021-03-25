@@ -10,27 +10,50 @@ import 'jest';
 import { KSelectComponent } from '../../components/konnect/k-select-component';
 import { KListComponent } from '../../components/konnect/k-list-component';
 import { FileService } from '../../services/file/file-service';
+import elementsTagName from '../../constants/elements/tag-name';
 
 /**
  * Permet de changer le contenu du body
  * @param pathDoc
  */
 async function changeBodyDocumentAsync(pathDoc : string) {
-  const pathFile = path.join(__dirname, pathDoc );
+  const PATH_DOM = path.join(__dirname, `./../../..${pathDoc}` );
 
-  const content = await FileService.readFileAsync(pathFile);
+  const content = await FileService.readFileAsync(PATH_DOM);
   document.body.innerHTML = content;
 }
 
-describe('Test de event message builder factory', () => {
+/**
+ * Path des dom HTMl de chaque component
+ */
+const FILE_DROP_ZONE_DOM = '/static/test/dom/dom-filedropzone.html';
+const INPUT_NUMERIC_DOM = '/static/test/dom/dom-input-numeric.html';
+const K_SELECT_DOM = '/static/test/dom/dom-k-select.html';
+const K_LIST_DOM = '/static/test/dom/dom-k-list.html';
+const CHECKBOX_DOM = '/static/test/dom/dom-checkbox.html';
+const RADIO_GROUP_DOM = '/static/test/dom/dom-radio-group.html';
+
+/**
+ * Selecteurs
+ */
+const FILE_DROP_ZONE_BUTTON_SELECTOR = 'div > div > div > span > a';
+const FILE_DROP_ZONE_SELECTOR = 'div > file-dropzone > div > div > span\:nth-child(3)';
+const INPUT_NUMERIC_SELECTOR = 'numeric > div > span > span > input\:nth-child(2)';
+const K_SELECT_SELETOR = 'span > span > span > span\:nth-child(1) > span';
+const K_ITEM_LIST_SELECTOR = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
+const CHECKBOX_ID = 'ckb146';
+const RADIO_GROUP_ID = 'rg168_0';
+
+
+describe('Test de event message factory', () => {
 
   test('Test de FileDropZone component message', async () => {
     // On init le body
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-filedropzone.html');
+    await changeBodyDocumentAsync(FILE_DROP_ZONE_DOM);
     const eventCatched : IMessage = {
       files : 'text.txt'
     };
-    const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
+    const element = document.querySelector(FILE_DROP_ZONE_SELECTOR);
     const component = FileDropZoneComponent.getFileDropZone(element as HTMLElement);
 
     // On doit trouver un event model de file drop zone
@@ -46,14 +69,14 @@ describe('Test de event message builder factory', () => {
 
   test('Test de FileDropZone add button component message', async () => {
     // On init
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-filedropzone.html');
+    await changeBodyDocumentAsync(FILE_DROP_ZONE_DOM);
 
     const eventCatched : IMessage = {
       files : 'texte.txt'
     };
     // On doit trouver un event model du bouton ajouter fichier du file drop zone
 
-    const element = document.querySelector('div > div > div > span > a');
+    const element = document.querySelector(FILE_DROP_ZONE_BUTTON_SELECTOR);
     const component = FileDropZoneComponent.getFileDropZone(element as HTMLElement);
 
     expect(
@@ -69,9 +92,9 @@ describe('Test de event message builder factory', () => {
 
   test('Test de INPUT NUMERIC component message', async () => {
     // On init
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-input-numeric.html');
+    await changeBodyDocumentAsync(INPUT_NUMERIC_DOM);
 
-    const element = document.querySelector('numeric > div > span > span > input\:nth-child(2)');
+    const element = document.querySelector(INPUT_NUMERIC_SELECTOR);
 
     const event : IMessage = {
       selector : '#id'
@@ -93,10 +116,9 @@ describe('Test de event message builder factory', () => {
 
   test('Test de K select component message', async () => {
     // On init le body
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-k-select.html');
+    await changeBodyDocumentAsync(K_SELECT_DOM);
 
-    const elementSelector = 'span > span > span > span\:nth-child(1) > span';
-    const element = document.querySelector(elementSelector);
+    const element = document.querySelector(K_SELECT_SELETOR);
     const component = KSelectComponent.getKSelect(element as HTMLElement);
     const event : IMessage = {
       selector: '#id'
@@ -153,13 +175,12 @@ describe('Test de event message builder factory', () => {
 
   test('Test de KLIST component message', async () => {
     // On doit trouver un event model de file drop zone
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-k-list.html');
+    await changeBodyDocumentAsync(K_LIST_DOM);
 
-    const elementSelector = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
-    const element = document.querySelector(elementSelector);
+    const element = document.querySelector(K_ITEM_LIST_SELECTOR);
 
     // Selector de la liste déroulante
-    const previousSelector : string = 'konnect-dropdownlist';
+    const previousSelector : string = elementsTagName.KONNECT_DROPDOWNLIST;
 
     // infos sur l'element klist
     const previousElement  = {
@@ -170,7 +191,7 @@ describe('Test de event message builder factory', () => {
 
     // event model de base
     const event : IMessage = {
-      selector : elementSelector
+      selector : K_ITEM_LIST_SELECTOR
     };
 
     const component = KListComponent.getKList(
@@ -192,9 +213,9 @@ describe('Test de event message builder factory', () => {
 
   test('Test de Checkbox component message', async () => {
     // On init le body
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-checkbox.html');
+    await changeBodyDocumentAsync(CHECKBOX_DOM);
 
-    const element = document.getElementById('ckb146');
+    const element = document.getElementById(CHECKBOX_ID);
 
     const component = CheckboxComponent.getCheckboxComponent(element);
 
@@ -216,9 +237,9 @@ describe('Test de event message builder factory', () => {
 
   test('Test de radio group component message', async () => {
     // On init le body
-    await changeBodyDocumentAsync('./../../../static/test/dom/dom-radio-group.html');
+    await changeBodyDocumentAsync(RADIO_GROUP_DOM);
 
-    const element = document.getElementById('rg168_0');
+    const element = document.getElementById(RADIO_GROUP_ID);
 
     const component = RadioGroupComponent.getRadioGroupComponent(element);
 

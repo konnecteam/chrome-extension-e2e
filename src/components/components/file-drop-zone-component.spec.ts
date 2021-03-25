@@ -9,21 +9,28 @@ import { FileService } from '../../services/file/file-service';
 /**
  * chemin du fichier html qui contient le body
  */
-const pathFile = path.join(__dirname, './../../../static/test/dom/dom-filedropzone.html');
+const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-filedropzone.html');
+
+/**
+ * Selecteurs
+ */
+const FILE_ITEM_SELECTOR = 'fileItem';
+const FILE_DROP_ZONE_BUTTON_SELECTOR = 'div > div > div > span > a';
+const FILE_DROP_ZONE_SELECTOR = 'div > file-dropzone > div > div > span\:nth-child(3)';
 
 describe('Test de File DopZone Component', () => {
 
   beforeAll(async() => {
 
     // on ajoute le contenu au body
-    const content = await FileService.readFileAsync(pathFile);
+    const content = await FileService.readFileAsync(PATH_DOM);
     document.body.innerHTML = content;
   });
 
   test('Test de getFileDropZone pour une zone de drop', () => {
 
     // Selecteur de l'element de la file dropzone
-    const element = document.querySelector('div > file-dropzone > div > div > span\:nth-child(3)');
+    const element = document.querySelector(FILE_DROP_ZONE_SELECTOR);
 
     // On doit trouver la file dropzone
     expect(
@@ -33,8 +40,8 @@ describe('Test de File DopZone Component', () => {
 
   test('Test de getFileDropZone pour le bouton ajouter des fichiers de la zone', () => {
 
-    // Selecteur du bouton ajouter fichier de la file drop zone
-    const element = document.querySelector('div > div > div > span > a');
+    // Selecteur du bouton ajouter fichier de la file dropzone
+    const element = document.querySelector(FILE_DROP_ZONE_BUTTON_SELECTOR);
 
     // On doit trouver le bouton de la file dropzone
     expect(
@@ -49,10 +56,10 @@ describe('Test de File DopZone Component', () => {
       files : 'text.txt'
     };
 
-    // On doit trouver l'action Drop_Dropzone
+    // On doit trouver l'action DROP_FILE
     expect(
       FileDropZoneComponent.
-      editFileDropZoneMessage(eventCatched, (document.getElementById('fileItem') as HTMLInputElement).files).action
+      editFileDropZoneMessage(eventCatched, (document.getElementById(FILE_ITEM_SELECTOR) as HTMLInputElement).files).action
     ).toEqual(customEvents.DROP_FILE);
   });
 

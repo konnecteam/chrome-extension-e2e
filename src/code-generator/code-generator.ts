@@ -158,7 +158,7 @@ export default class CodeGenerator {
    * pour set les frames et ajouter une ligne blanche
    */
   private _postProcess() {
-    // quand les event sont record à partir des différentes frame, on ve ajouterd la bonne frame
+    // quand les event sont record à partir des différentes frames, on va ajouter la bonne frame
     if (Object.keys(this._allFrames).length > 0) {
       this._postProcessSetFrames();
     }
@@ -183,7 +183,7 @@ export default class CodeGenerator {
   /**
    * Ajoute des lignes blanches entre chaque block
    */
-  private _postProcessAddBlankLines() {
+  private _postProcessAddBlankLines() : void {
 
     let i = 0;
     while (i <= this._blocks.length) {

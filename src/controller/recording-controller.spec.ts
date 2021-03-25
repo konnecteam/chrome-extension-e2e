@@ -47,7 +47,7 @@ async function dispatchEventAsync(event : string, message : IMessage) : Promise<
 }
 
 /**
- * Permet de verifie le contenu du badge
+ * Permet de verifier le contenu du badge
  * @param action
  */
 async function verfiyBadgeContentAsync(action : string ) : Promise<string> {
@@ -80,13 +80,13 @@ describe('Test de Recording Controller', () => {
       window.chrome = params.chrome;
 
       // Variable qui va permettre de savoir si le backgournd est prêt
-      (window as any).waitBackground = new Promise((resolve, reject) => {
+      (window as any).waitBackground = new Promise<void>((resolve, reject) => {
         // On verifie si c'est fini toutes les 100Ms
         const verif = setInterval(() => {
           // si on est ready, on clear
           if ((window as any).recordingController) {
             clearInterval(verif);
-            resolve('good');
+            resolve();
           }
         }, 100);
       });
@@ -286,13 +286,13 @@ describe('Test de Recording Controller', () => {
     // On met result à true pour simuler la reception d'un résultat
     await page.evaluate(() => {
       (window as any).recordingController._isResult = true;
-      Promise.resolve('good');
+      Promise.resolve();
     });
 
     // On met du contenu dans code
     await page.evaluate(() => {
       window.chrome.storage.local.set({code : 'code exemple'});
-      Promise.resolve('good');
+      Promise.resolve();
     });
     // Dispatch event
     await dispatchEventAsync('OnMessage', { action: controlActions.EXPORT_SCRIPT });

@@ -6,6 +6,13 @@ import HeaderCode from '../../constants/code-generate/header-code';
  */
 export class HeaderFactory {
 
+
+  /**
+   * String à remplacer dans le header
+   */
+  private static readonly _HTTP_REQUEST_REGEX_KEY = '**httpregex**';
+  private static readonly _LAUNCH_KEY = 'launch()';
+
   /**
    * Génère le header du scénario
    */
@@ -18,10 +25,10 @@ export class HeaderFactory {
 
     const importPackage = this.getImport(recordHttpRequest);
     let hdr = wrapAsync ? HeaderCode.WRAPPED_HEADER : HeaderCode.HEADER;
-    hdr = headless ? hdr : hdr.replace('launch()', 'launch({ headless: false })');
+    hdr = headless ? hdr : hdr.replace(this._LAUNCH_KEY, 'launch({ headless: false })');
 
     if (recordHttpRequest) {
-      hdr = hdr.replace('launch()', 'launch({ignoreHTTPSErrors: true})');
+      hdr = hdr.replace(this._LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
       hdr = hdr.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
 
       // Si il y a une regex on la met
@@ -38,18 +45,18 @@ export class HeaderFactory {
           codeRegExp += `'${regexpBuild.regexp}'`;
           codeRegExp += regexpBuild.flags ? `, '${regexpBuild.flags}'` : '';
           addRegexHTTP = HeaderCode.LISTENER_PAGE.replace(
-            '**httpregex**',
+            this._HTTP_REQUEST_REGEX_KEY,
             `&& !new RegExp(${codeRegExp}).test(url) `);
         }
         // Si il n'y a pas de Regexp alors on remplace par rien
         else {
-          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace('**httpregex**', ``);
+          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
         }
 
         hdr += addRegexHTTP;
 
       } else {
-        hdr += HeaderCode.LISTENER_PAGE.replace('**httpregex**', ``);
+        hdr += HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
       }
 
     }

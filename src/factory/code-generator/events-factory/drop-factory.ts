@@ -20,7 +20,7 @@ export class DropFactory {
       const newBlock = ClickFactory.buildclickFileDropZoneBlock(options, frameId, frame, selector);
 
       // On rajoute la partie acceptation du fichier
-      const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(options, frameId, frame, selector, files);
+      const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(frameId, files);
 
       for (const line of chooserFile.getLines()) {
         newBlock.addLine(line);

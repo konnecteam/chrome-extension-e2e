@@ -3,7 +3,11 @@ import 'jest';
 import { IComponent } from 'interfaces/i-component';
 import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-const fs = require('fs');
+
+/**
+ * Selecteurs
+ */
+const IFRAME_SELECTOR = 'iframe';
 
 describe('Test de Iframe Component', () => {
 
@@ -23,7 +27,7 @@ describe('Test de Iframe Component', () => {
     const iframeContent = '<body> <h1> IFRAME </h1> </body>';
     document.body.appendChild(iframe);
 
-    const docIframe = document.querySelector('iframe').contentWindow.document;
+    const docIframe = document.querySelector(IFRAME_SELECTOR).contentWindow.document;
     docIframe.open();
     docIframe.write(iframeContent);
     docIframe.close();
@@ -36,7 +40,7 @@ describe('Test de Iframe Component', () => {
   test('Test de getIframe', () => {
 
     // on selectionne le titre qui ce trouve dans l'iframe
-    const element  = document.querySelector('iframe').contentWindow.document.querySelector('h1');
+    const element  = document.querySelector(IFRAME_SELECTOR).contentWindow.document.querySelector('h1');
 
     // On doit trouver que c'est une iframe
     expect(
@@ -50,7 +54,7 @@ describe('Test de Iframe Component', () => {
       selector: 'selector'
     };
     // On selectionne l'iframe
-    const element  = document.querySelector('iframe');
+    const element  = document.querySelector(IFRAME_SELECTOR);
 
     const component : IComponent = {
       element,

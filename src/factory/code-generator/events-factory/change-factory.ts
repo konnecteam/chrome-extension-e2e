@@ -35,8 +35,8 @@ export class ChangeFactory {
           return this.buildSelectChangeBlock(frameId, frame, selector, value);
 
         } else if (files) {
-          // Si il y a des files c'est qu c'est un change dans un input files
-          return this.buildAcceptUploadFileChangeBlock(options, frameId, frame, selector, files);
+          // Si il y a des files c'est que c'est un change dans un input files
+          return this.buildAcceptUploadFileChangeBlock(frameId, files);
         } else {
           // Sinon c'est un input simple
           return this.buildChangeBlock(frameId, frame, selector, value);
@@ -108,10 +108,8 @@ export class ChangeFactory {
    * Génère une acceptation d'uploader de fichier
    */
   public static buildAcceptUploadFileChangeBlock(
-    options : IOption,
     frameId : number,
-    frame : string,
-    selector : string, files : string
+    files : string
   ) : Block {
 
     const block = new Block(frameId);

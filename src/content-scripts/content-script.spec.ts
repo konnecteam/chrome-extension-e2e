@@ -7,10 +7,16 @@ import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as chrome from 'sinon-chrome';
 import { Server } from 'http';
+import controlMessage from '../constants/control/control-message';
 
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
+
+/**
+ * Selecteurs
+ */
+const INPUT_TEXT_ID = '#inputText';
 
 /**
  * Permet de lancer un dispatch event sur la window
@@ -136,13 +142,13 @@ describe('Test Content script ', () => {
 
     await waitContentScriptReadyAsync();
 
-    await page.click('#inputText');
+    await page.click(INPUT_TEXT_ID);
 
     // On récupère la liste d'event
     const events = await getEvensRecordAsync();
 
     // Le dernier event doit contenir le selecteur de l'input
-    expect(events[events.length - 1].selector).toEqual('#inputText');
+    expect(events[events.length - 1].selector).toEqual(INPUT_TEXT_ID);
   });
 
   test('Test de récupération d\'un user event', async () => {
@@ -156,7 +162,7 @@ describe('Test Content script ', () => {
 
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control: 'get-current-url' });
+    await dispatchEventAsync('OnMessage', { control: controlMessage.GET_CURRENT_URL_EVENT });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();
@@ -175,7 +181,7 @@ describe('Test Content script ', () => {
      */
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control: 'get-viewport-size' });
+    await dispatchEventAsync('OnMessage', { control: controlMessage.GET_VIEWPORT_SIZE_EVENT });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();

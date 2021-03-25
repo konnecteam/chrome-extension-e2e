@@ -9,21 +9,23 @@ import eventsDom from '../../constants/events/events-dom';
 /**
  * chemin du fichier html qui contient le body
  */
-const pathFile = path.join(__dirname, './../../../static/test/dom/dom-checkbox.html');
+const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-checkbox.html');
+
+const CHECKBOX_ID = 'ckb146';
 
 describe('Test de Checkbox', () => {
 
   beforeAll(async() => {
 
     // on ajoute le contenu au body
-    const content = await FileService.readFileAsync(pathFile);
+    const content = await FileService.readFileAsync(PATH_DOM);
     document.body.innerHTML = content;
   });
 
   test('Test de getCheckboxComponent', () => {
 
     // Selecteur du label qui est dans la checkbox
-    const element = document.getElementById('ckb146');
+    const element = document.getElementById(CHECKBOX_ID);
 
     // On doit trouver la Checkbox
     expect(

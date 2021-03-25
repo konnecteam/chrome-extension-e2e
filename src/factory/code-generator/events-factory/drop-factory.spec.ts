@@ -35,15 +35,13 @@ describe('Test de Drop Block Factory', () => {
       options,
       frameId,
       frame,
-      eventMessage.selector);
+      eventMessage.selector
+    );
     // On rajoute la partie acceptation du fichier
     const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(
-      options,
       frameId,
-      frame,
-      eventMessage.selector,
-      eventMessage.files);
-
+      eventMessage.files
+    );
     exceptedResult.addLine(chooserFile.getLines()[0]);
 
     expect(

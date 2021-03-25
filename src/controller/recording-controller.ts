@@ -301,7 +301,7 @@ class RecordingController {
     // 5 - On récupère le résultat
     ChromeService.sendMessageToContentScript(controlMSG.GET_RESULT_EVENT);
 
-    // 6 - Si on record pas les requête on peut mettre à true isRemovedListener
+    // 6 - Si on record pas les requêtes on peut mettre à true isRemovedListener
     if (!this._recordHttpRequest) {
       StorageService.setData({
         isRemovedListener: true
@@ -352,13 +352,13 @@ class RecordingController {
       runAt : 'document_start'
     });
 
-      // listening après injection
+    // listening après injection
     const currentTab = await ChromeService.getCurrentTabId();
-      // Récupération le viewport
+    // Récupération du viewport
     chrome.tabs.sendMessage(currentTab, {
       control: controlMSG.GET_VIEWPORT_SIZE_EVENT
     });
-      // Récupération de l'url
+    // Récupération de l'url
     chrome.tabs.sendMessage(currentTab, {
       control: controlMSG.GET_CURRENT_URL_EVENT
     });
@@ -376,11 +376,10 @@ class RecordingController {
     ChromeService.setBadgeText(badgeStates.REC);
     ChromeService.setBadgeBackgroundColor('#FF0000');
 
-      // On récupère l'option des requêtes http
+    // On récupère l'option des requêtes http
     const data = await StorageService.getDataAsync(['options']);
     if  (data) {
       this._recordHttpRequest = data.options.code.recordHttpRequest;
-
     }
   }
 

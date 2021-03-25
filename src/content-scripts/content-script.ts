@@ -319,7 +319,7 @@ class EventRecorder {
 
       for (const child of mutation.addedNodes) {
         // Si on a une iframe on rajoute les listener car de base il n'y en pas
-        if (child.tagName === elementsTagName.IFRAME.toUpperCase()) {
+        if (child.tagName === elementsTagName.IFRAME.toUpperCase() && child.contentDocument) {
 
           (window as any).eventRecorder._events.forEach(type => {
             child.contentDocument.addEventListener(type, boundedRecordEvent, true);

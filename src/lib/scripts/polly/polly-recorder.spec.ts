@@ -55,13 +55,13 @@ describe('Test de Polly recorder', () => {
     await page.evaluate(scriptText => {
 
       // Variable qui va permettre de savoir si polly est prêt
-      (window as any).waitPolly = new Promise((resolve, reject) => {
+      (window as any).waitPolly = new Promise<void>((resolve, reject) => {
         // On verifie si c'est fini toutes les 100Ms
         const verif = setInterval(() => {
           // si on est pas ready, on fait une pause
           if ((window as any).polly) {
             clearInterval(verif);
-            resolve('good');
+            resolve();
           }
         }, 100);
       });

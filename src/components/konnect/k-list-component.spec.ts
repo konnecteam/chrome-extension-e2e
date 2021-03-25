@@ -6,17 +6,34 @@ import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
 import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
+import elementsTagName from '../../constants/elements/tag-name';
 
 // Path du fichier qui contient le body
-const pathFile = path.join(__dirname, './../../../static/test/dom/dom-k-list.html');
-const dropdown = 'Dropdown';
-const multiselect = 'Multiselect';
+const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-k-list.html');
 
-function getKList(elementSelector : string,
+/**
+ * Types de liste
+ */
+const DROPDOWN = 'Dropdown';
+const MULTISELECT = 'Multiselect';
+
+/**
+ * Selecteurs
+ */
+const INPUT_LIST_SELECTOR = 'input[role="listbox"]';
+const ITEM_LIST_SELECTOR = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
+
+/**
+ * Permet de tester si c'est une klist
+ * @param elementSelector
+ * @param previousSelector
+ * @param typeList
+ */
+function testKList(elementSelector : string,
   previousSelector : string, typeList : string
-  ) : void {
+) : void {
 
-    // Selector de l'item d'une liste
+  // Selector de l'item d'une liste
   const element = document.querySelector(elementSelector);
   const previousElement  = {
     selector : previousSelector,
@@ -35,56 +52,48 @@ describe('Test de k list Component', () => {
   beforeAll(async() => {
 
     // On init le body
-    const content = await FileService.readFileAsync(pathFile);
+    const content = await FileService.readFileAsync(PATH_DOM);
     document.body.innerHTML = content;
   });
 
-  test('Test de getKList pour konnect dropdown', () => {
-    // Selector de la konnect dropdown
-    const elementSelector = 'konnect-dropdownlist';
+  test('Test de getKList pour konnect DROPDOWN', () => {
+
     // On doit trouver que l'on est dans une konnect liste
-    getKList(elementSelector, null, null);
+    testKList(elementsTagName.KONNECT_DROPDOWNLIST, null, null);
   });
 
   test('Test de getKList pour konnect multiselect', () => {
-
-    getKList('konnect-multiselect', null, null);
+    // On doit trouver que l'on est dans une konnect liste
+    testKList(elementsTagName.KONNECT_MULTISELECT, null, null);
   });
 
-  test('Test de getKList pour input de list', () => {
-    // Selector de l'input d'une liste
-    const elementSelector = 'input[role="listbox"]';
-    // On doit trouver que l'on est dans une konnect liste
-    getKList(elementSelector, 'konnect-dropdownlist', dropdown);
+  test('Test de getKList pour input de liste', () => {
+    // On doit trouver que l'on est dans un input de liste
+    testKList(INPUT_LIST_SELECTOR, elementsTagName.KONNECT_DROPDOWNLIST, DROPDOWN);
   });
 
   test('Test de getKList pour un item de liste', () => {
 
-    // Selector de l'item d'une liste
-    const elementSelector = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
-    // Selector de la liste déroulante
-    const previousSelector : string = 'konnect-dropdownlist';
     // On doit trouver que l'on est dans une konnect liste
-    getKList(elementSelector,  previousSelector, dropdown);
+    testKList(ITEM_LIST_SELECTOR,  elementsTagName.KONNECT_DROPDOWNLIST, DROPDOWN);
   });
 
-  test('Test de editKlistMessage pour un item de k list', () => {
+  test('Test de editKlistMessage pour un item de konnect liste', () => {
 
-    const elementSelector = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
-    const element = document.querySelector(elementSelector);
+    const element = document.querySelector(ITEM_LIST_SELECTOR);
 
     // Selector de la liste déroulante
-    const previousSelector : string = 'konnect-dropdownlist';
+    const previousSelector : string = elementsTagName.KONNECT_DROPDOWNLIST;
 
     // contient les informations previous element donc de la liste
     const previousElement = {
       selector : previousSelector,
-      typeList : dropdown,
+      typeList : DROPDOWN,
       element: document.querySelector(previousSelector)
     };
 
     const eventMessage : IMessage = {
-      selector : elementSelector
+      selector : ITEM_LIST_SELECTOR
     };
 
     // On est dans un component Dropdown liste
@@ -103,24 +112,23 @@ describe('Test de k list Component', () => {
 
   test('Test de editKlistMessage pour un input de list', () => {
 
-    const elementSelector = 'input[role="listbox"]';
-    const element = document.querySelector(elementSelector);
+    const element = document.querySelector(INPUT_LIST_SELECTOR);
 
     // Selector de la liste déroulante
     const previousElement  = {
-      selector : elementSelector,
+      selector : INPUT_LIST_SELECTOR,
       typeList : '',
-      element: document.querySelector(elementSelector)
+      element: document.querySelector(INPUT_LIST_SELECTOR)
     };
 
     const eventMessage : IMessage = {
-      selector : elementSelector
+      selector : INPUT_LIST_SELECTOR
     };
 
     const component : IComponent = {
       component : componentName.KLIST,
       element: element as HTMLElement,
-      previousSelector: elementSelector,
+      previousSelector: INPUT_LIST_SELECTOR,
       previousElement
     };
 

@@ -10,21 +10,25 @@ import { FileService } from '../../services/file/file-service';
 /**
  * Path du fichier qui contient le body
  */
-const pathFile = path.join(__dirname, './../../../static/test/dom/dom-km-switch.html');
+const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-km-switch.html');
+
+/**
+ * Selecteurs
+ */
+const KM_SWITCH_SELECTOR = 'switch > div > span > span:nth-child(3) > span';
 
 describe('Test de km switch Component', () => {
 
   beforeAll(async() => {
 
     // On init le body
-    const content = await FileService.readFileAsync(pathFile);
+    const content = await FileService.readFileAsync(PATH_DOM);
     document.body.innerHTML = content;
   });
 
   test('Test de getKmSwitch', () => {
 
-    const elementSelector = 'switch > div > span > span:nth-child(3) > span';
-    const element = document.querySelector(elementSelector);
+    const element = document.querySelector(KM_SWITCH_SELECTOR);
 
     // on doit trouver le km switch
     expect(
@@ -35,8 +39,7 @@ describe('Test de km switch Component', () => {
 
   test('Test de editKmSwitchMessage', () => {
 
-    const elementSelector = 'switch > div > span > span:nth-child(3) > span';
-    const element = document.querySelector(elementSelector);
+    const element = document.querySelector(KM_SWITCH_SELECTOR);
 
     const eventMessage : IMessage = {
       selector: '#id'

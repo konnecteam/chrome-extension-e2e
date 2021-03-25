@@ -1,4 +1,3 @@
-
 import { ILineBlock } from '../interfaces/i-line-block';
 import { Block } from './block';
 import 'jest';
