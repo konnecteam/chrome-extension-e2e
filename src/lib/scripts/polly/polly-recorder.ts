@@ -106,9 +106,12 @@ export class PollyRecorder {
            * pour récupérer un produit qui n'est pas visible sur notre page mais quand même charger dans le dom
            * on récupêre donc sa requête car quand on rejoue le scénario, il nous l'a faut.
            */
-          if ((entry.name.includes(PollyRecorder._catalaogProductUrl.toString()) || new RegExp(/autoroute\/obj\/+\d/g).test(entry.name)) && entry.name ) {
+          for (const catalogURL of  PollyRecorder._catalaogProductUrl) {
 
-            this._fetchProductCatalogRequest(entry.name);
+            if ((entry.name.includes(catalogURL) || new RegExp(/autoroute\/obj\/+\d/g).test(entry.name)) && entry.name ) {
+
+              this._fetchProductCatalogRequest(entry.name);
+            }
           }
         }
       });

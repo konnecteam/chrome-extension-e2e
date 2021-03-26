@@ -66,7 +66,6 @@ export class ChangeFactory {
        let input = document.querySelector('${selector}');
        input.value = '${value}';
        input.dispatchEvent(new Event('blur'));
-       return Promise.resolve('finish');
      })`
     });
     return block;

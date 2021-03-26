@@ -258,7 +258,7 @@ class EventRecorder {
 
     // On vérifie si le sélecteur est ambigu (plus de deux réponses)
     if (customAttribute && document.querySelectorAll(selector).length > 1) {
-      comments = '/!\\ The selector returns more than one element, thus the test will be wrong.';
+      comments = `/!\\ Le sélécteur a retourné plus d'un élément, il risque d'y avoir une erreur`;
     }
 
     // construction du message: IMessage

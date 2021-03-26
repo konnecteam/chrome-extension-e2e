@@ -55,7 +55,6 @@ export class KeydownFactory {
           var docEvent = document.createEvent('KeyboardEvents');
           docEvent.initEvent ('keyup', true, true);
           element.dispatchEvent (docEvent);
-          return Promise.resolve('finish');
         });`
       });
     } else {
@@ -76,7 +75,6 @@ export class KeydownFactory {
             docEvent.initEvent('keydown', true, true);
             element.dispatchEvent(docEvent);
           }
-          return Promise.resolve('finish');
         });`
       });
 

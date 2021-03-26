@@ -17,7 +17,6 @@ describe('Test de Scroll Block factory', () => {
       type: 'scroll',
       value: ` await ${frame}.evaluate( async function(){
         window.scroll(${scrollX}, ${scrollY});
-        return Promise.resolve('finish');
       });`
     });
 

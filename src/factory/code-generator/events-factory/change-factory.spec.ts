@@ -46,7 +46,6 @@ describe('Test de Change Block Factory', () => {
        let input = document.querySelector('${SELECTOR}');
        input.value = '${value}';
        input.dispatchEvent(new Event('blur'));
-       return Promise.resolve('finish');
      })`
     });
 

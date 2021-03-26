@@ -131,18 +131,17 @@ export class ClickFactory {
       type: domEventsToRecord.CLICK,
       value: ` await ${frame}.evaluate( async function(){
       let e = document.querySelector('${selector}');
-      var docEvent = document.createEvent ('MouseEvents');
-      docEvent.initEvent ('mousedown', true, true);
-      e.dispatchEvent (docEvent);
+      var docEvent = document.createEvent('MouseEvents');
+      docEvent.initEvent('mousedown', true, true);
+      e.dispatchEvent(docEvent);
       await new Promise(resolve => setTimeout(resolve, ${time}));
-      docEvent.initEvent ('mouseup', true, true);
-      e.dispatchEvent (docEvent);
-      // we go in parent that containes numeric input
+      docEvent.initEvent('mouseup', true, true);
+      e.dispatchEvent(docEvent);
+      // On blur les inputs qui sont dans l'élément numeric
       let list = e.parentNode.parentNode.parentNode.querySelectorAll('input');
       for(let i=0; i< list.length ;i++) {
         list[i].blur();
       }
-      return Promise.resolve('finish');
     });`
     });
 
@@ -177,12 +176,11 @@ export class ClickFactory {
       type: domEventsToRecord.CLICK,
       value: ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
-        var docEvent = document.createEvent ('MouseEvents');
-        docEvent.initEvent ('mousedown', true, true);
-        e.dispatchEvent (docEvent);
-        docEvent.initEvent ('mouseup', true, true);
-        e.dispatchEvent (docEvent);
-        return Promise.resolve('finish');
+        var docEvent = document.createEvent('MouseEvents');
+        docEvent.initEvent('mousedown', true, true);
+        e.dispatchEvent(docEvent);
+        docEvent.initEvent('mouseup', true, true);
+        e.dispatchEvent(docEvent);
       });`
     });
 
@@ -224,7 +222,6 @@ export class ClickFactory {
       value: ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${scrollElement}').parentElement;
         e.scroll(${scrollXElement}, ${scrollYElement});
-        return Promise.resolve('finish');
       });`
     });
 
@@ -241,7 +238,6 @@ export class ClickFactory {
       value: `await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         e.click();
-        return Promise.resolve('finish');
       });`
     });
 

@@ -38,7 +38,6 @@ describe('Test de Keydown Block Factory', () => {
           var docEvent = document.createEvent('KeyboardEvents');
           docEvent.initEvent ('keyup', true, true);
           element.dispatchEvent (docEvent);
-          return Promise.resolve('finish');
         });`
     });
 
@@ -77,7 +76,6 @@ describe('Test de Keydown Block Factory', () => {
             docEvent.initEvent('keydown', true, true);
             element.dispatchEvent(docEvent);
           }
-          return Promise.resolve('finish');
         });`
     });
 
@@ -123,7 +121,6 @@ describe('Test de Keydown Block Factory', () => {
             docEvent.initEvent('keydown', true, true);
             element.dispatchEvent(docEvent);
           }
-          return Promise.resolve('finish');
         });`
     });
 
