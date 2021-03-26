@@ -15,5 +15,6 @@ export const defaults : IOption = {
   regexHTTPrequest: '',
   customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
-  });`
+  });`,
+  deleteSiteData: true
 };

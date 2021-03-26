@@ -35,4 +35,10 @@ export class IOption {
 
   /** Ligne customisée à rajouter avant le block d'un event */
   customLinesBeforeEvent : string;
+
+  /**
+   * Supprimer le cache du site
+   */
+  deleteSiteData : boolean;
+
 }

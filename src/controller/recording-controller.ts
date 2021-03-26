@@ -81,6 +81,9 @@ class RecordingController {
   /** Permet de savoir si il faut record les requêtes http */
   private _recordHttpRequest : boolean = false;
 
+  /** Permet de savoir si il faut supprimer le cache du site */
+  private _deleteSiteData : boolean = false;
+
   // Services
   /** Permet de faire la gestion du fichier zip que l'on va exporter  */
   private _zipService : ZipService;
@@ -323,6 +326,7 @@ class RecordingController {
     if (this._pollyService.record.id === '') {
       ChromeService.removeOnMessageListener(this._boundedMessageHandler);
     }
+
     this._zipContent = null;
     this._isResult = false;
     this._fileService.clearList();
@@ -330,9 +334,20 @@ class RecordingController {
     this._zipService.resetZip();
     this._pollyService.flush();
     this._isPaused = false;
-
-    // 2 - Set du badge texte
     chrome.browserAction.setBadgeText({ text : '' });
+
+    const currentTab = await ChromeService.getCurrentTabId();
+    // 2 - On récupère les options
+    const data = await StorageService.getDataAsync(['options']);
+    if  (data) {
+      this._recordHttpRequest = data.options.code.recordHttpRequest;
+      this._deleteSiteData = data.options.code.deleteSiteData;
+    }
+
+    // Si l'option deleteSiteDate est activé, on supprime les données du site
+    if (this._deleteSiteData) {
+      await ChromeService.removeBrowsingData(currentTab.url);
+    }
 
     // 3 - Suppression du recording en local storage
     // On met isRemovedListener à false car on démarre le record
@@ -352,14 +367,12 @@ class RecordingController {
       runAt : 'document_start'
     });
 
-    // listening après injection
-    const currentTab = await ChromeService.getCurrentTabId();
     // Récupération du viewport
-    chrome.tabs.sendMessage(currentTab, {
+    chrome.tabs.sendMessage(currentTab.id, {
       control: controlMSG.GET_VIEWPORT_SIZE_EVENT
     });
     // Récupération de l'url
-    chrome.tabs.sendMessage(currentTab, {
+    chrome.tabs.sendMessage(currentTab.id, {
       control: controlMSG.GET_CURRENT_URL_EVENT
     });
 
@@ -375,12 +388,6 @@ class RecordingController {
     ChromeService.setIcon('../assets/images/icon-green.png');
     ChromeService.setBadgeText(badgeStates.REC);
     ChromeService.setBadgeBackgroundColor('#FF0000');
-
-    // On récupère l'option des requêtes http
-    const data = await StorageService.getDataAsync(['options']);
-    if  (data) {
-      this._recordHttpRequest = data.options.code.recordHttpRequest;
-    }
   }
 
   /**

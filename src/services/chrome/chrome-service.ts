@@ -86,7 +86,7 @@ export class ChromeService {
   public static async getBadgeText() : Promise<string> {
     const currentTab = await this.getCurrentTabId();
     return new Promise((resolve, err) => {
-      chrome.browserAction.getBadgeText({tabId : currentTab}, result => {
+      chrome.browserAction.getBadgeText({tabId : currentTab.id}, result => {
         resolve(result);
       });
     });
@@ -102,14 +102,14 @@ export class ChromeService {
   /**
    * Permet de récupérer l'id du tab courrant
    */
-  public static async getCurrentTabId() : Promise<number> {
+  public static async getCurrentTabId() : Promise<{id : number, url : string}> {
     return new Promise(async (resolve, err) => {
       const tabs = await this._query({
         active: true,
         currentWindow: true
       });
       if (tabs && tabs[0]) {
-        resolve(tabs[0].id);
+        resolve({id : tabs[0].id, url: tabs[0].url});
       } else {
         err('tabs is undefined');
       }
@@ -152,6 +152,30 @@ export class ChromeService {
         control : message
       });
     }
+  }
+
+
+  /**
+   * Suppression des données d'un site à partir de l'url
+   * @param url
+   */
+  public static async removeBrowsingData(url : string) : Promise<void> {
+    return new Promise<void>((resolve, err) => {
+      chrome.browsingData.remove({
+        'since': 100000,
+        'origins' : [url]
+      } as any, {
+        'cacheStorage': true,
+        'cookies': true,
+        'fileSystems': true,
+        'indexedDB': true,
+        'localStorage': true,
+        'serviceWorkers': true,
+        'webSQL': true
+      } as any, () => {
+        resolve();
+      });
+    });
   }
 
   /**
