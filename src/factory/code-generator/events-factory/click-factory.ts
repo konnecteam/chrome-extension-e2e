@@ -43,6 +43,8 @@ export class ClickFactory {
         return this.buildClickKListItemBlock(
           options, frameId, frame, selector, scrollElement, scrollXElement, scrollYElement
         );
+      default : return null;
+
     }
   }
 

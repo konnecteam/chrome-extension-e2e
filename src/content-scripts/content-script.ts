@@ -180,6 +180,7 @@ class EventRecorder {
         case controlMSG.UNPAUSE_EVENT:
           this._doUnPause();
           break;
+        // default
       }
     }
   }

@@ -160,9 +160,11 @@ export class ChromeService {
    * @param url
    */
   public static async removeBrowsingData(url : string) : Promise<void> {
+    const millisecondsPerYear = 1000 * 60 * 60 * 24 * 7 * 52;
+    const oneYearAgo = (new Date()).getTime() - millisecondsPerYear;
     return new Promise<void>((resolve, err) => {
       chrome.browsingData.remove({
-        'since': 100000,
+        'since': oneYearAgo,
         'origins' : [url]
       } as any, {
         'cacheStorage': true,

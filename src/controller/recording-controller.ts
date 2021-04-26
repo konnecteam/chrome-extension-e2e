@@ -12,7 +12,7 @@ import packageJsonZip from '../constants/package-json-zip';
 import { HttpService } from '../services/http/http-service';
 import controlActions from '../constants/control/control-actions';
 import controlMSG from '../constants/control/control-message';
-import badgeStates from '../constants/badge-states';
+import {EBadgeState} from '../enum/e-badge-states';
 /**
  * Background du Plugin qui permet de gérer le recording
  */
@@ -142,6 +142,7 @@ class RecordingController {
           case controlActions.EXPORT_SCRIPT :
             this._exportScriptAsync();
             break;
+          // default
         }
       });
     });
@@ -253,7 +254,7 @@ class RecordingController {
    */
   private _unPause() : void {
 
-    ChromeService.setBadgeText(badgeStates.REC);
+    ChromeService.setBadgeText(EBadgeState.REC);
     this._isPaused = false;
     ChromeService.sendMessageToContentScript(controlMSG.UNPAUSE_EVENT);
   }
@@ -263,7 +264,7 @@ class RecordingController {
    */
   private _pause() : void {
 
-    ChromeService.setBadgeText(badgeStates.PAUSE);
+    ChromeService.setBadgeText(EBadgeState.PAUSE);
     this._isPaused = true;
     ChromeService.sendMessageToContentScript(controlMSG.PAUSE_EVENT);
   }
@@ -287,7 +288,7 @@ class RecordingController {
   private _stop() : void {
 
     // 1 - met à jour le badge state
-    ChromeService.setBadgeText(this._recording.length > 0 ? badgeStates.RESULT_NOT_EMPTY : '');
+    ChromeService.setBadgeText(this._recording.length > 0 ? EBadgeState.RESULT_NOT_EMPTY : '');
 
     // 2 - Supprime les listener
     ChromeService.removeOnCompletedListener(this._boundedNavigationHandler);
@@ -386,7 +387,7 @@ class RecordingController {
     ChromeService.addOnBeforeNavigateListener(this._boundedWaitHandler);
     ChromeService.addOnCommittedListener(this._boundedScriptHandler);
     ChromeService.setIcon('../assets/images/icon-green.png');
-    ChromeService.setBadgeText(badgeStates.REC);
+    ChromeService.setBadgeText(EBadgeState.REC);
     ChromeService.setBadgeBackgroundColor('#FF0000');
   }
 
@@ -411,7 +412,7 @@ class RecordingController {
   private _handleNavigation(frameId : number) : void {
     if (frameId === 0) {
       this._recordNavigation();
-      ChromeService.setBadgeText(badgeStates.REC);
+      ChromeService.setBadgeText(EBadgeState.REC);
     }
   }
 
@@ -428,7 +429,7 @@ class RecordingController {
    * Gère le wait
    */
   private _handleWait() {
-    ChromeService.setBadgeText(badgeStates.WAIT);
+    ChromeService.setBadgeText(EBadgeState.WAIT);
   }
 
   /**
@@ -484,7 +485,7 @@ class RecordingController {
   private _handleControlMessage(message : IMessage) : void {
     switch (message?.control) {
       case controlMSG.EVENT_RECORDER_STARTED_EVENT :
-        ChromeService.setBadgeText(badgeStates.REC);
+        ChromeService.setBadgeText(EBadgeState.REC);
         break;
       case controlMSG.GET_VIEWPORT_SIZE_EVENT :
         this._recordCurrentViewportSizeAsync(message.coordinates);
@@ -497,6 +498,7 @@ class RecordingController {
         break;
       case controlMSG.GET_NEW_FILE_EVENT :
         this._recordNewFile(message);
+      // default
     }
   }
 
@@ -536,7 +538,7 @@ class RecordingController {
     const badge = await ChromeService.getBadgeText();
 
     // Si on a le résultat du record
-    if (badge === badgeStates.RESULT_NOT_EMPTY || badge === '') {
+    if (badge === EBadgeState.RESULT_NOT_EMPTY || badge === '') {
       ChromeService.removeOnMessageListener(this._boundedMessageHandler);
       // On stock que l'on a supprimé le listener
       StorageService.setData({

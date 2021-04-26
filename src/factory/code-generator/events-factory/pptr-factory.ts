@@ -28,6 +28,7 @@ export class PPtrFactory {
       // Si l'action est une navigation
       case pptrActions.NAVIGATION:
         return this.buildWaitForNavigationBlock(options, frameId, frame);
+      default : return null;
     }
   }
 

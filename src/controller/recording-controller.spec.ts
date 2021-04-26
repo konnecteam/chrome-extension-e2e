@@ -8,7 +8,7 @@ import * as chrome from 'sinon-chrome';
 import { IMessage } from '../interfaces/i-message';
 import controlActions from '../constants/control/control-actions';
 import { Server } from 'http';
-import badgeStates from '../constants/badge-states';
+import {EBadgeState} from '../enum/e-badge-states';
 
 let server : Server;
 let browser : puppeteer.Browser;
@@ -223,7 +223,7 @@ describe('Test de Recording Controller', () => {
         (window as any).ddlFile = true;
       };
 
-    }, { chrome, options: defaults, controlActions , badgeStates});
+    }, { chrome, options: defaults, controlActions , badgeStates : EBadgeState});
 
     // On ajoute le background dans la page
     await page.evaluate(scriptText => {
@@ -248,7 +248,7 @@ describe('Test de Recording Controller', () => {
 
     const badge = await verfiyBadgeContentAsync(controlActions.START);
     // Verifier si il est égale à 'rec' car il n'y a pas d'event à save
-    expect(badge).toEqual(badgeStates.REC);
+    expect(badge).toEqual(EBadgeState.REC);
 
   });
 
@@ -269,14 +269,14 @@ describe('Test de Recording Controller', () => {
 
     const badge = await verfiyBadgeContentAsync(controlActions.PAUSE);
     // Verifier si il est égale à '❚❚' car on est en pause
-    expect(badge).toEqual(badgeStates.PAUSE);
+    expect(badge).toEqual(EBadgeState.PAUSE);
   });
 
   test('Test de unpause', async () => {
 
     const badge = await verfiyBadgeContentAsync(controlActions.UNPAUSE);
     // Verifier si il est égale à 'rec' car on record
-    expect(badge).toEqual(badgeStates.REC);
+    expect(badge).toEqual(EBadgeState.REC);
   });
 
   test('Test de exportScript', async () => {

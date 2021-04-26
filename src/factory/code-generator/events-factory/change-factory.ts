@@ -41,6 +41,7 @@ export class ChangeFactory {
           // Sinon c'est un input simple
           return this.buildChangeBlock(frameId, frame, selector, value);
         }
+      default : return null;
     }
   }
 
