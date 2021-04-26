@@ -59,13 +59,13 @@ export class KListComponent {
     // Si on a déjà cliqué sur une liste alors on peut acceder aux éléments qu'elle contient
     if (previousElement && (previousElement.typeList === this._DROPDOWN || previousElement.typeList === this._MULTISELECT)) {
       // On vérifie si c'est un input
-      const input = ElementService.isInputKList(element);
+      const input = ElementService.getInputKList(element);
 
       if (input) {
         return this._getKListComponent(input as HTMLElement, previousElement);
       }
       // On vérifie si c'est un element ul
-      const listUL = ElementService.isUlListElement(element);
+      const listUL = ElementService.getUlListElement(element);
       if (listUL) {
         return this._getKListComponent(listUL, previousElement);
       }
@@ -93,7 +93,7 @@ export class KListComponent {
   public static editKlistMessage(event : IMessage, component : IComponent) : IMessage {
 
     // Si click list item
-    if (ElementService.isUlListElement(component.element)) {
+    if (ElementService.getUlListElement(component.element)) {
 
       event.action = customEvents.CLICK_LIST_ITEM;
       event.scrollElement = SelectorService.find(component.element);
@@ -108,7 +108,7 @@ export class KListComponent {
      * alors on vérifie si c'est une multiselect car
      * pour l'ouvir il faut faire un click mouse
     */
-    if (ElementService.isInputKList(component.element) || component.previousElement.typeList === this._MULTISELECT) {
+    if (ElementService.getInputKList(component.element) || component.previousElement.typeList === this._MULTISELECT) {
       event.action = customEvents.CLICK_MOUSE;
       return event;
     }

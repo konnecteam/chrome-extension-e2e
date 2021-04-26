@@ -16,7 +16,7 @@ export class KSelectComponent {
   public static getKSelect(element : HTMLElement) : IComponent {
 
     // Si c'est un k select qui se situe dans input numeric
-    if (ElementService.isNumericElement(element) &&
+    if (ElementService.getNumericElement(element) &&
      ElementService.getKSelectElement(element)) {
       return { component: componentName.K_SELECT, element };
     } else {

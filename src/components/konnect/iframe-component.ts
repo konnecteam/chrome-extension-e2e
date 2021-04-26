@@ -14,7 +14,7 @@ export class IframeComponent {
    */
   public static getIframe(element : HTMLElement) : IComponent {
 
-    const iframeElement = ElementService.isInIframeElement(element);
+    const iframeElement = ElementService.getIframeElement(element);
     // Si c'est un iframe on retourne le composant associé
     if (iframeElement) {
       return {component: componentName.IFRAME, element: iframeElement as HTMLElement};

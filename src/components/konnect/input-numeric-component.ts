@@ -16,7 +16,7 @@ export class InputNumericComponent {
    */
   public static getInputNumeric(element : HTMLElement) : IComponent  {
 
-    if (ElementService.isNumericElement(element)) {
+    if (ElementService.getNumericElement(element)) {
 
       const inputElement = ElementService.getInputNumericElement(element);
       if (inputElement) {

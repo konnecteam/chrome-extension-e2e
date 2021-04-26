@@ -177,7 +177,7 @@ export class ElementService {
   /**
    * Verifie si c'est une iframe et la retourne
    */
-  public static isInIframeElement(element : HTMLElement) : Element  {
+  public static getIframeElement(element : HTMLElement) : Element  {
     const selector = SelectorService.findSelectorIframeElement(element);
     if (selector) {
 
@@ -202,7 +202,7 @@ export class ElementService {
   /**
    * Verifie si c'est un numeric element et retourne l'element
    */
-  public static isNumericElement(element : HTMLElement) : Element {
+  public static getNumericElement(element : HTMLElement) : Element {
 
     return ElementService.findParentElementWithTagName(
       element,
@@ -224,7 +224,7 @@ export class ElementService {
   /**
    * Vérifie si on a cliqué sur un item de la liste
    */
-  public static isUlListElement(element : HTMLElement) : HTMLElement {
+  public static getUlListElement(element : HTMLElement) : HTMLElement {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
@@ -237,7 +237,7 @@ export class ElementService {
   /**
    * Vérifie si on a cliqué sur l'input d'une liste
    */
-  public static isInputKList(element : HTMLElement) : Element {
+  public static getInputKList(element : HTMLElement) : Element {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,

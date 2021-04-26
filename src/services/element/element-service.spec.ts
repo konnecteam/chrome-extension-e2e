@@ -146,7 +146,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     docIframe.write(iframeContent);
     docIframe.close();
 
-    expect(ElementService.isInIframeElement(docIframe.body)).toBeDefined();
+    expect(ElementService.getIframeElement(docIframe.body)).toBeDefined();
   });
 
   test('Test de la fonction getInputNumericElement', async () => {
@@ -165,7 +165,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     await changeBodyDocumentAsync(INPUT_NUMERIC);
 
     expect(
-      ElementService.isNumericElement(
+      ElementService.getNumericElement(
         document.querySelector(tagName.NUMERIC)))
     .toBeDefined();
   });
@@ -186,7 +186,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     await changeBodyDocumentAsync(K_LIST_PATH);
 
     expect(
-      ElementService.isUlListElement(
+      ElementService.getUlListElement(
         document.querySelector(K_ITEM_LIST_SELECTOR)))
     .toBeDefined();
   });
@@ -196,7 +196,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     await changeBodyDocumentAsync(K_LIST_PATH);
 
     expect(
-      ElementService.isInputKList(
+      ElementService.getInputKList(
         document.querySelector('INPUT[role="listbox"]')))
     .toBeDefined();
   });
