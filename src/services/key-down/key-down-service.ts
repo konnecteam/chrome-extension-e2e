@@ -1,8 +1,8 @@
 import { ChromeService } from './../chrome/chrome-service';
-import { EventModel } from './../../models/event-model';
-import domEventsToRecord from '../../constants/dom-events-to-record';
-import actionEvents from '../../constants/action-events';
-import elementsTagName from '../../constants/elements-tagName';
+import { IMessage } from '../../interfaces/i-message';
+import domEventsToRecord from '../../constants/events/events-dom';
+import customEvents from '../../constants/events/events-custom';
+import elementsTagName from '../../constants/elements/tag-name';
 
 /**
  * Service qui permet de gérer les keydown pour un sélecteur
@@ -13,7 +13,7 @@ export class KeyDownService {
   public static instance : KeyDownService;
 
   /** Liste des keydown enregistrés */
-  private _listsKeyDown : EventModel[] = [];
+  private _listsKeyDown : IMessage[] = [];
 
   /**
    * Constructeur
@@ -33,10 +33,10 @@ export class KeyDownService {
   /**
    * Permet de gérer les evènement keydown
    */
-  public handleEvent(msg : EventModel, element : HTMLElement) : void {
+  public handleEvent(msg : IMessage, element : HTMLElement) : void {
     // On vérifie que l'event est un keydown et que ce n'est pas un input ou que c'est un input de liste
     if (msg.action === domEventsToRecord.KEYDOWN) {
-      if (!msg.value && element.tagName !== elementsTagName.INPUT.toUpperCase() ||  this._verifyIsinputList(element)) {
+      if (!msg.value && element.tagName !== elementsTagName.INPUT.toUpperCase() ||  this._isInputList(element)) {
         // On récupère l'event
         this._handleKeyDownEvent(msg);
       }
@@ -51,7 +51,7 @@ export class KeyDownService {
   /**
    * Permet de gérer la liste des évènements pour un sélecteur
    */
-  private _handleKeyDownEvent(msg : EventModel) : EventModel {
+  private _handleKeyDownEvent(msg : IMessage) : IMessage {
 
     if (this._listsKeyDown.length > 0) {
 
@@ -103,14 +103,14 @@ export class KeyDownService {
 
     // On définit le premier élément
     this._listsKeyDown[0].value = value;
-    this._listsKeyDown[0].action = actionEvents.LISTKEYDOWN;
+    this._listsKeyDown[0].action = customEvents.LIST_KEYDOWN;
     return this._listsKeyDown[0];
   }
 
   /**
    * Verifie si c'est un input de list
    */
-  private _verifyIsinputList(element : HTMLElement) : boolean {
+  private _isInputList(element : HTMLElement) : boolean {
     let listbox = '';
     // On verifié si c'est un input d'une dropdown list
     listbox = element.getAttribute('aria-owns');
@@ -127,7 +127,7 @@ export class KeyDownService {
   /**
    * Récupère les évènements liés au clic de la souris
    */
-  public getCoordinates(evt) {
+  public getClickCoordinates(evt) {
     const eventsWithCoordinates = {
       mouseup: true,
       mousedown: true,

@@ -2,14 +2,14 @@
  * Constantes des noms des composants que l'on traite
  */
 export default {
-  FILEDROPZONE: 'file-drop-zone',
-  FILEDROPZONEADD: 'file-drop-zone-button',
-  INPUTFILE: 'input-file',
-  INPUTNUMERIC: 'input-numeric',
-  KSELECT: 'k-select',
-  KMSWITCH: 'Km-switch',
+  FILE_DROPZONE: 'file-dropzone',
+  BUTTON_ADD_FILE_DROPZONE: 'file-dropzone-button',
+  INPUT_FILE: 'input-file',
+  INPUT_NUMERIC: 'input-numeric',
+  K_SELECT: 'k-select',
+  KM_SWITCH: 'km-switch',
   IFRAME: 'iframe',
   KLIST : 'k-list',
   CHECKBOX: 'checkbox',
-  RADIOGROUP: 'radio-group',
+  RADIO_GROUP: 'radio-group',
 };

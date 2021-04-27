@@ -3,29 +3,25 @@
  */
 export class PollyService {
 
-  // Event entre content-script et le script injecté
-
-  /** GET_HAR event */
-  public static readonly GET_HAR_ACTION = 'GET_HAR';
-
-  /** GOT_HAR event */
-  public static readonly GOT_HAR_ACTION = 'GOT_HAR';
-
   /** Path du script à injecter */
-  public static readonly POLLY_SCRIPT_PATH = './polly-build/polly.js';
+  public static readonly POLLY_SCRIPT_PATH = 'lib/scripts/polly/polly.js';
 
   /** Instance de classe */
   public static instance : PollyService;
 
-  /** Id de l'enregristrement Polly */
-  public id : string;
-
-  /** Har de l'enregistrement */
-  public har : string;
+  /**
+   * Contient le résultat de l'enregistrement de polly
+   */
+  public record : {
+    id : string,
+    har : string
+  };
 
   constructor() {
-    this.id = '';
-    this.har = '';
+    this.record = {
+      id : '',
+      har : ''
+    };
   }
 
   /**
@@ -41,23 +37,23 @@ export class PollyService {
   /**
    * Getter pour l'id
    */
-  public getId() : string {
-    return this.id;
+  public getRecordId() : string {
+    return this.record.id;
   }
 
   /**
    * Getter pour har
    */
-  public getHar() : string {
-    return this.har;
+  public getRecordHar() : string {
+    return this.record.har;
   }
 
   /**
    * Réinitialise les datas
    */
   public flush() : void {
-    this.id = '';
-    this.har = '';
+    this.record.id = '';
+    this.record.har = '';
   }
 
   /**

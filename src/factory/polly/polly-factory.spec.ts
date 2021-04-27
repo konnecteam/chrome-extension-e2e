@@ -15,7 +15,7 @@ describe('Test de Polly Factory', () => {
   });
 
   test('Polly Id vide', () => {
-    pollyService.har = 'content';
+    pollyService.record.har = 'content';
 
     expect(
       PollyFactory.buildResultObject()
@@ -28,7 +28,7 @@ describe('Test de Polly Factory', () => {
     // On reset les attributs
     pollyService.flush();
 
-    pollyService.id = 'id';
+    pollyService.record.id = 'id';
 
     expect(
       PollyFactory.buildResultObject()
@@ -51,8 +51,8 @@ describe('Test de Polly Factory', () => {
   });
 
   test('Polly Id et HAR', () => {
-    pollyService.har = 'har content';
-    pollyService.id = 'PollyID';
+    pollyService.record.har = 'har content';
+    pollyService.record.id = 'PollyID';
 
     expect(
       PollyFactory.buildResultObject()

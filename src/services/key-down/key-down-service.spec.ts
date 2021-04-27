@@ -1,4 +1,4 @@
-import { EventModel } from './../../models/event-model';
+import { IMessage } from '../../interfaces/i-message';
 import 'jest';
 import * as chrome from 'sinon-chrome';
 import { KeyDownService } from './key-down-service';
@@ -30,7 +30,7 @@ describe('Test de Keydown Service', () => {
     messageSend  = '';
     const element = document.getElementById('txtArea');
 
-    const msg : EventModel = {
+    const msg : IMessage = {
       selector: '.txtArea',
       tagName: 'textarea',
       action: 'keydown',
@@ -53,7 +53,7 @@ describe('Test de Keydown Service', () => {
     messageSend = '';
     const element = document.getElementById('input');
 
-    const msg : EventModel = {
+    const msg : IMessage = {
       selector: '.input',
       tagName: 'input',
       action: 'change',
@@ -79,7 +79,7 @@ describe('Test de Keydown Service', () => {
     messageSend = '';
     const element = document.getElementById('input');
 
-    const msg : EventModel = {
+    const msg : IMessage = {
       selector: '.input',
       tagName: 'input',
       action: 'keydown',
@@ -107,7 +107,7 @@ describe('Test de Keydown Service', () => {
       clientY : 30
     };
 
-    expect(keyDownService.getCoordinates(event)
+    expect(keyDownService.getClickCoordinates(event)
     ).toEqual({ x : event.clientX, y : event.clientY});
   });
 
@@ -116,7 +116,7 @@ describe('Test de Keydown Service', () => {
       type : 'click'
     };
 
-    expect(keyDownService.getCoordinates(event)
+    expect(keyDownService.getClickCoordinates(event)
     ).toBeNull();
   });
 

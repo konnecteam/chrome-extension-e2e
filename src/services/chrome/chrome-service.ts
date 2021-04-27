@@ -81,6 +81,18 @@ export class ChromeService {
   }
 
   /**
+   * Permet de récupérer le bage
+   */
+  public static async getBadgeText() : Promise<string> {
+    const currentTab = await this.getCurrentTabId();
+    return new Promise((resolve, err) => {
+      chrome.browserAction.getBadgeText({tabId : currentTab.id}, result => {
+        resolve(result);
+      });
+    });
+  }
+
+  /**
    * Permet de définir une couleur
    */
   public static setBadgeBackgroundColor(color : string) : void {
@@ -88,17 +100,84 @@ export class ChromeService {
   }
 
   /**
+   * Permet de récupérer l'id du tab courrant
+   */
+  public static async getCurrentTabId() : Promise<{id : number, url : string}> {
+    return new Promise(async (resolve, err) => {
+      const tabs = await this._query({
+        active: true,
+        currentWindow: true
+      });
+      if (tabs && tabs[0]) {
+        resolve({id : tabs[0].id, url: tabs[0].url});
+      } else {
+        err('tabs is undefined');
+      }
+    });
+  }
+
+  /**
    * Permet d'exécuter un script
    */
-  public static executeScript(details : chrome.tabs.InjectDetails, callback? : (result : any[]) => void) : void {
-    chrome.tabs.executeScript(details, callback);
+  public static executeScript(details : chrome.tabs.InjectDetails) : Promise<boolean> {
+    return new Promise((resolve, err) => {
+      chrome.tabs.executeScript(details, () => {
+        resolve(true);
+      });
+    });
   }
 
   /**
    * Permet de récupérer des info via une query
    */
-  public static query(queryInfo : chrome.tabs.QueryInfo, callback : (result : chrome.tabs.Tab[]) => void) : void {
-    chrome.tabs.query(queryInfo, callback);
+  private static async _query(queryInfo : chrome.tabs.QueryInfo) : Promise<chrome.tabs.Tab[]> {
+    return new Promise((resolve, err) => {
+      chrome.tabs.query(queryInfo, (result : chrome.tabs.Tab[]) => {
+        resolve(result);
+      });
+    });
+  }
+
+  /**
+   * Permet d'envoyer des messages au content-script pour qu'il les envoie à PollyRecorder
+   * @param message
+   */
+  public static async sendMessageToContentScript(message : string) : Promise<void> {
+    const tabs = await this._query({
+      currentWindow: true,
+      active: true
+    });
+    if (tabs && tabs[0]) {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        control : message
+      });
+    }
+  }
+
+
+  /**
+   * Suppression des données d'un site à partir de l'url
+   * @param url
+   */
+  public static async removeBrowsingData(url : string) : Promise<void> {
+    const millisecondsPerYear = 1000 * 60 * 60 * 24 * 7 * 52;
+    const oneYearAgo = (new Date()).getTime() - millisecondsPerYear;
+    return new Promise<void>((resolve, err) => {
+      chrome.browsingData.remove({
+        'since': oneYearAgo,
+        'origins' : [url]
+      } as any, {
+        'cacheStorage': true,
+        'cookies': true,
+        'fileSystems': true,
+        'indexedDB': true,
+        'localStorage': true,
+        'serviceWorkers': true,
+        'webSQL': true
+      } as any, () => {
+        resolve();
+      });
+    });
   }
 
   /**

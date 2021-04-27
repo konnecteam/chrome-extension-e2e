@@ -1,24 +1,29 @@
-import { MessageModel } from './../models/message-model';
+import { IMessage } from '../interfaces/i-message';
 import { defaults } from './../constants/default-options';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
 import 'jest';
-const puppeteer = require('puppeteer');
+import * as puppeteer from 'puppeteer';
 import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
-import * as path from 'path';
 import * as chrome from 'sinon-chrome';
+import { Server } from 'http';
+import controlMessage from '../constants/control/control-message';
 
-let server;
-let browser;
-let page;
-let buildDir;
+let server : Server;
+let browser : puppeteer.Browser;
+let page : puppeteer.Page;
+
+/**
+ * Selecteurs
+ */
+const INPUT_TEXT_ID = '#inputText';
 
 /**
  * Permet de lancer un dispatch event sur la window
  * @param event
  */
-async function dispatchEvent(event : string, message : MessageModel) : Promise<void> {
-  return await page.evaluate(function (ev) {
+async function dispatchEventAsync(event : string, message : IMessage) : Promise<void> {
+  return page.evaluate(ev => {
     const customEvent = new CustomEvent(ev.event);
     Object.assign(customEvent, ev.message);
 
@@ -29,8 +34,8 @@ async function dispatchEvent(event : string, message : MessageModel) : Promise<v
 /**
  * Permet de récupérer la liste des events record
  */
-async function getEvensRecord() : Promise<any[]> {
-  return await page.evaluate(() => {
+async function getEvensRecordAsync() : Promise<any[]> {
+  return page.evaluate(() => {
     return (window as any).events;
   });
 }
@@ -38,24 +43,22 @@ async function getEvensRecord() : Promise<any[]> {
 /**
  * Permet d'attendre que le content script soit prết pour enregistrer
  */
-async function isContentScriptReady() : Promise<string> {
-  return await page.evaluate(async () => {
-    return await (window as any).waitRecordReady;
+async function waitContentScriptReadyAsync() : Promise<string> {
+  return page.evaluate(async () => {
+    return (window as any).waitRecordReady;
   });
 }
 
 describe('Test Content script ', () => {
 
   // Start test server
-  beforeAll(async function (done) {
+  beforeAll(async done => {
 
     // On met un timeout car runbuild met plus de 2000ms
     await runBuild();
-    buildDir = '../../../dist';
-    const fixture = path.join(__dirname, '../../static/test/page-test/html-page/forms.html');
 
     // On démarre le serveur de test
-    server = await startServer(buildDir, fixture);
+    server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
 
     // On lance puppeteer et on met en place la page pour les tests
@@ -70,7 +73,7 @@ describe('Test Content script ', () => {
       window.localStorage.setItem('options', JSON.stringify({ options: { code: browserOption.options } }));
 
       // On overwrite la foncion pour lui donner l'url de polly js
-      window.chrome.extension.getURL = () => 'build/polly-build/polly.js';
+      window.chrome.extension.getURL = () => 'build/lib/scripts/polly/polly.js';
 
       // On overwrite pour adapter le get au local storage
       window.chrome.storage.local.get = (key, callback?) => {
@@ -84,7 +87,7 @@ describe('Test Content script ', () => {
       // Variable qui va permettre de savoir si le content script est prêt
       (window as any).waitRecordReady = new Promise((resolve, reject) => {
         // On verifie si c'est fini toutes les 100Ms
-        const verif = setInterval(function () {
+        const verif = setInterval(() => {
           // si on est ready, on clear
           if ((window as any).recorderReady) {
             clearInterval(verif);
@@ -129,22 +132,23 @@ describe('Test Content script ', () => {
 
   // Close Server
   afterAll(async () => {
+
     await page.close();
     await browser.close();
-    await server.close();
+    server.close();
   }, 50000);
 
   test('Test de record d\'un click', async () => {
 
-    await isContentScriptReady();
+    await waitContentScriptReadyAsync();
 
-    await page.click('#inputText');
+    await page.click(INPUT_TEXT_ID);
 
     // On récupère la liste d'event
-    const events = await getEvensRecord();
+    const events = await getEvensRecordAsync();
 
     // Le dernier event doit contenir le selecteur de l'input
-    expect(events[events.length - 1].selector).toEqual('#inputText');
+    expect(events[events.length - 1].selector).toEqual(INPUT_TEXT_ID);
   });
 
   test('Test de récupération d\'un user event', async () => {
@@ -156,12 +160,12 @@ describe('Test Content script ', () => {
      * pour la récupération de l'url
      */
 
-    await isContentScriptReady();
+    await waitContentScriptReadyAsync();
 
-    await dispatchEvent('OnMessage', { control: 'get-current-url' });
+    await dispatchEventAsync('OnMessage', { control: controlMessage.GET_CURRENT_URL_EVENT });
 
     // On récupère la liste des events
-    const events = await getEvensRecord();
+    const events = await getEvensRecordAsync();
     // Le dernier event doit avoir un un frameUrl
     expect(events[events.length - 1].frameUrl).toBeDefined();
 
@@ -175,12 +179,12 @@ describe('Test Content script ', () => {
      * du background
      * pour le viewport
      */
-    await isContentScriptReady();
+    await waitContentScriptReadyAsync();
 
-    await dispatchEvent('OnMessage', { control: 'get-viewport-size' });
+    await dispatchEventAsync('OnMessage', { control: controlMessage.GET_VIEWPORT_SIZE_EVENT });
 
     // On récupère la liste des events
-    const events = await getEvensRecord();
+    const events = await getEvensRecordAsync();
     // Le dernier event doit avoir l'attribut coordinates non vide
     expect(events[events.length - 1].coordinates).toBeDefined();
 

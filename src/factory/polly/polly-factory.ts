@@ -14,8 +14,8 @@ export class PollyFactory {
     const pollyService : PollyService = PollyService.Instance;
 
     return {
-      folderName : pollyService.getId() !== '' ? pollyService.getId() : 'emptyResult',
-      har : pollyService.getHar() !== '' ? pollyService.getHar() : 'No request recorded'
+      folderName : pollyService.getRecordId() !== '' ? pollyService.getRecordId() : 'emptyResult',
+      har : pollyService.getRecordHar() !== '' ? pollyService.getRecordHar() : 'No request recorded'
     };
   }
 }
