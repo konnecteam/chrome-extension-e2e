@@ -1,4 +1,3 @@
-
 /**
  * Factory de RegExp
  */

@@ -2,7 +2,7 @@
  * Constantes qui contient le contenu du package.json
  */
 export default {
-  packageJsonContent : `{
+  PACKAGE_JSON_CONTENT : `{
     "name": "puppetter-script-e2e",
     "version": "1.0.0",
     "description": "Exported script",

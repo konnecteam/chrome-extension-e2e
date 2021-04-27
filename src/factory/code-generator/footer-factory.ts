@@ -7,7 +7,7 @@ export class FooterFactory {
    * Génère le footer
    */
   public static generateFooter(wrapAsync : boolean) : string {
-    return wrapAsync ? FooterCode.wrappedFooter : FooterCode.footer;
+    return wrapAsync ? FooterCode.WRAPPED_FOOTER : FooterCode.FOOTER;
   }
 
 }

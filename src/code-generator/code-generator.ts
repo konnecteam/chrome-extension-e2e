@@ -1,9 +1,9 @@
-import { ObjectComparatorService } from './../services/object-comparator/object-comparator-service';
+import { ObjectService } from '../services/object/object-service';
 import { default as pptrActions} from '../constants/pptr-actions';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
-import { EventModel } from './../models/event-model';
+import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
-import { OptionModel } from './../models/options-model';
+import { IOption } from '../interfaces/i-options';
 import { defaults } from '../constants/default-options';
 import { FooterFactory } from '../factory/code-generator/footer-factory';
 import { HeaderFactory } from '../factory/code-generator/header-factory';
@@ -15,7 +15,7 @@ import { HeaderFactory } from '../factory/code-generator/header-factory';
 export default class CodeGenerator {
 
   /** Options du plugin */
-  private _options : OptionModel;
+  private _options : IOption;
 
   /** Liste des Block du scénario */
   private _blocks : Block[];
@@ -38,12 +38,12 @@ export default class CodeGenerator {
   /** Dernière position du scroll horizontale */
   private _lastScrollX =  0;
 
-  constructor(options : OptionModel ) {
+  constructor(options : IOption ) {
     this._options = Object.assign(defaults, options);
     this._blocks = [];
   }
 
-  public generate(events : EventModel[]) : string {
+  public generate(events : IMessage[]) : string {
     return HeaderFactory.getHeader(
       this._options.recordHttpRequest,
       this._options.wrapAsync,
@@ -57,7 +57,7 @@ export default class CodeGenerator {
   /**
    * On génère le code à partir des events enregistrés
    */
-  private _parseEvents(events : EventModel[]) : string {
+  private _parseEvents(events : IMessage[]) : string {
 
     let result = '';
 
@@ -75,11 +75,11 @@ export default class CodeGenerator {
 
           // Si on a une ligne customisé avant chaque event, on l'a rajoute
           if (this._options.customLinesBeforeEvent) {
-            this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLinesBeforeEvent));
+            this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
           }
 
           this._blocks.push(
-            ScenarioFactory.generateScroll(this._frameId, this._frame, currentEvent.scrollX, currentEvent.scrollY)
+            ScenarioFactory.generateScrollBlock(this._frameId, this._frame, currentEvent.scrollX, currentEvent.scrollY)
           );
         }
       }
@@ -95,14 +95,14 @@ export default class CodeGenerator {
            Alors on rajoute la ligne customisé
         */
         if (this._options.customLinesBeforeEvent &&
-          !ObjectComparatorService.isValueInObject(pptrActions, currentEvent.action)) {
+          !ObjectService.isValueInObject(pptrActions, currentEvent.action)) {
 
-          this._blocks.push(ScenarioFactory.generateCustomLine(this._frameId, this._options.customLinesBeforeEvent));
+          this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
         }
 
         /* Si l'event contient un commentaire alors on rajoute un block de commentaire */
         if (currentEvent.comments) {
-          this._blocks.push(ScenarioFactory.generateComments(newBlock, currentEvent.comments));
+          this._blocks.push(ScenarioFactory.generateCommentsBlock(newBlock, currentEvent.comments));
         } else {
           this._blocks.push(newBlock);
         }
@@ -119,7 +119,7 @@ export default class CodeGenerator {
        Alors on rajoute le block de navigation
     */
     if (this._hasNavigation && this._options.waitForNavigation) {
-      this._blocks.unshift(ScenarioFactory.generateNavigationVar(this._frameId));
+      this._blocks.unshift(ScenarioFactory.generateVarNavigationBlock(this._frameId));
     }
 
     // 2- on effectue les opération post processs
@@ -158,7 +158,7 @@ export default class CodeGenerator {
    * pour set les frames et ajouter une ligne blanche
    */
   private _postProcess() {
-    // quand les event sont record à partir des différentes frame, on ve ajouterd la bonne frame
+    // quand les event sont record à partir des différentes frames, on va ajouter la bonne frame
     if (Object.keys(this._allFrames).length > 0) {
       this._postProcessSetFrames();
     }
@@ -183,12 +183,12 @@ export default class CodeGenerator {
   /**
    * Ajoute des lignes blanches entre chaque block
    */
-  private _postProcessAddBlankLines() {
+  private _postProcessAddBlankLines() : void {
 
     let i = 0;
     while (i <= this._blocks.length) {
 
-      const blankLine = ScenarioFactory.generateBlankLine();
+      const blankLine = ScenarioFactory.generateBlankLineBlock();
       this._blocks.splice(i, 0, blankLine);
       i += 2;
     }

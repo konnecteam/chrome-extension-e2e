@@ -14,7 +14,7 @@ export class FileFactory {
     let length = bstr.length;
     const u8arr = new Uint8Array(length);
 
-    while (length--) {
+    while (length-- >= 0) {
       u8arr[length] = bstr.charCodeAt(length);
     }
 

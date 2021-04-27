@@ -15,7 +15,7 @@ describe('Test de RegExp Factory', () => {
   });
 
 
-  test('RegExp Mal formatée', () => {
+  test('RegExp mal formatée', () => {
 
     expect(
       RegExpFactory.buildRegeExp('/*.localhost.*')

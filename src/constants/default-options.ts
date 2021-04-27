@@ -1,8 +1,8 @@
-import { OptionModel } from 'models/options-model';
+import { IOption } from 'interfaces/i-options';
 /**
  * Constantes des valeurs des options par défauts
  */
-export const defaults : OptionModel = {
+export const defaults : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -15,5 +15,6 @@ export const defaults : OptionModel = {
   regexHTTPrequest: '',
   customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
-  });`
+  });`,
+  deleteSiteData: true
 };

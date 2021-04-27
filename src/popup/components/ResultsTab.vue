@@ -14,7 +14,7 @@
   export default {
     name: 'ResultsTab',
     props: {
-      code: { type: String, default: '' }
+      code: { type: String, default: `` }
     }
   }
 </script>

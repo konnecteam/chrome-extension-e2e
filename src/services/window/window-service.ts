@@ -1,3 +1,4 @@
+import { IMessage } from '../../interfaces/i-message';
 import { ChromeService } from '../../services/chrome/chrome-service';
 
 /**
@@ -8,7 +9,7 @@ export class WindowService {
   /**
    * Récupère l'url courant
    */
-  public static getCurrentUrl(message : any) : void {
+  public static getCurrentUrl(message : IMessage) : void {
     ChromeService.sendMessage({
       control: message.control,
       frameUrl: window.location.href
@@ -18,7 +19,7 @@ export class WindowService {
   /**
    * Récupère la taille de l'écran courant
    */
-  public static getViewPortSize(message : any) : void {
+  public static getViewPortSize(message : IMessage) : void {
     ChromeService.sendMessage({
       control: message.control,
       coordinates: {
@@ -31,7 +32,7 @@ export class WindowService {
   /**
    * Permet de faire un reload de la page
    */
-  public static reload(message : any, callback? : () => void) : void {
+  public static reload(message : IMessage, callback? : () => void) : void {
 
     if (message && message.hasOwnProperty('control') && message.control === 'reload-page') {
 
@@ -54,7 +55,14 @@ export class WindowService {
   /**
    * Ajout d'un listener sur un event
    */
-  public static addEventListener(event : string, callback : () => void, options? : boolean | AddEventListenerOptions) : void {
+  public static addEventListener(event : string, callback : (event?) => void, options? : boolean | AddEventListenerOptions) : void {
     window.addEventListener(event, callback, options);
+  }
+
+  /**
+   * Supprime un listener sur un event
+   */
+  public static removeEventListener(event : string, callback : (event?) => void, options? : boolean | AddEventListenerOptions) : void {
+    window.removeEventListener(event, callback, options);
   }
 }

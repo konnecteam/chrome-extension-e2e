@@ -37,6 +37,12 @@
                 use record HTTP request
               </label>
             </div>
+              <div class="settings-group">
+              <label>
+                <input id="options-code-deleteSiteData" type="checkbox" v-model="options.code.deleteSiteData" @change="save">
+                delete site data 
+              </label>
+            </div>
           </div>
         </div>
         <div class="settings-block">
