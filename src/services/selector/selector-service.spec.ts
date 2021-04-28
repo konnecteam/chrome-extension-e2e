@@ -1,6 +1,8 @@
 import { SelectorService } from './selector-service';
 import 'jest';
 
+const selectorService = SelectorService.Instance;
+
 describe('Test de Selector Service', () => {
 
   beforeAll(() => {
@@ -32,7 +34,7 @@ describe('Test de Selector Service', () => {
     const exceptedResult = 'body > div > #DivTitle > h1';
 
     expect(
-      SelectorService.find(elementToFind)
+      selectorService.find(elementToFind)
     ).toEqual(exceptedResult);
   });
 
@@ -42,7 +44,7 @@ describe('Test de Selector Service', () => {
     const exceptedResult = '#button';
 
     expect(
-      SelectorService.find(elementToFind)
+      selectorService.find(elementToFind)
     ).toEqual(exceptedResult);
   });
 
@@ -53,7 +55,7 @@ describe('Test de Selector Service', () => {
 
     const exceptedResult = '#button';
     expect(
-      SelectorService.find(elementToFind)
+      selectorService.find(elementToFind)
     ).toEqual(exceptedResult);
   });
 
@@ -61,14 +63,14 @@ describe('Test de Selector Service', () => {
   test('Test de manageSpecialCase', () => {
 
     expect(
-      SelectorService.manageSpecialCase('href.bind')
+      selectorService.manageSpecialCase('href.bind')
     ).toEqual('href');
   });
 
   test('Test de standardizeSelector', () => {
 
     expect(
-      SelectorService.standardizeSelector('input[value\\\.bind]:test')
+      selectorService.standardizeSelector('input[value\\\.bind]:test')
     ).toEqual('input[value\\\\.bind]\\:test');
   });
 
@@ -78,7 +80,7 @@ describe('Test de Selector Service', () => {
     const exceptedResult = 'body > iframe';
 
     expect(
-      SelectorService.findSelectorIframeElement(elementToFind)
+      selectorService.findSelectorIframeElement(elementToFind)
     ).toEqual(exceptedResult);
   });
 });

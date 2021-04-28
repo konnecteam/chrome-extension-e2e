@@ -29,8 +29,8 @@ class EventRecorder {
   /** Service qui permet de gérer les keydown */
   private _keyDownService : KeyDownService;
 
-  /** Liste des data attributes */
-  private _dataAttributes : any = [];
+  /** Service qui permet de trouver le selecteur d'un élément */
+  private _selectorService : SelectorService;
 
   /** Liste des events à ecouter */
   private _events;
@@ -73,6 +73,7 @@ class EventRecorder {
 
     // Service
     this._keyDownService = KeyDownService.Instance;
+    this._selectorService = SelectorService.Instance;
     this._events = Object.values(eventsToRecord);
 
     // Enregistre les informations avant un click d'un item de list
@@ -220,51 +221,24 @@ class EventRecorder {
       return;
     }
 
-    let customAttribute = null;
-
-    // Gestion des cutom attributes
-    if (this._dataAttributes && this._dataAttributes.length && e.target.hasAttribute) {
-      // On recherche les custom attributes
-      const targetAttributes = e.target.attributes;
-      // Ordre des patterns sont important
-      this._dataAttributes.find(patternAttr => {
-        const regexp = RegExp(patternAttr);
-        // On test chaque attribute avec le pattern
-        for (let i = 0; i < targetAttributes.length; i++) {
-          // Regex ou string test
-          if (this._useRegexForDataAttribute ? regexp.test(targetAttributes[i].name) : patternAttr === targetAttributes[i].name) {
-            customAttribute = targetAttributes[i].name;
-
-            // La recherche est terminée
-            // On traite les cas spéciaux des customs attributes
-            customAttribute = SelectorService.manageSpecialCase(customAttribute);
-            return true;
-          }
-        }
-        return false;
-      });
-    }
-
     // définition du selecteur
     let selector = '';
     if (e.target.type === 'file' && e.target.tagName === elementsTagName.INPUT.toUpperCase() && e.type === eventsToRecord.CHANGE) {
       selector = this._previousSelector;
     } else {
-      selector = customAttribute
-        ? SelectorService.formatDataOfSelector(e.target, customAttribute)
-        : SelectorService.find(e.target);
+      selector = this._selectorService.find(e.target);
     }
 
     let comments = '';
 
     // On vérifie si le sélecteur est ambigu (plus de deux réponses)
-    if (customAttribute && document.querySelectorAll(selector).length > 1) {
+    if (document.querySelectorAll(selector).length > 1) {
       comments = `/!\\ Le sélécteur a retourné plus d'un élément, il risque d'y avoir une erreur`;
     }
 
     // construction du message: IMessage
     let message : IMessage = {
-      selector: SelectorService.standardizeSelector(selector),
+      selector: this._selectorService.standardizeSelector(selector),
       comments,
       value: e.target.value,
       tagName: e.target.tagName,
@@ -394,22 +368,9 @@ class EventRecorder {
    * Mise à jour des options
    */
   private _updateOptions(options : {[key : string] : any}) : void {
-    const dataAttribute = options.code.dataAttribute;
-    const useRegexForDataAttribute = options.code.useRegexForDataAttribute;
-    if (dataAttribute) {
-      this._dataAttributes = dataAttribute.split(' ').filter(f => f !== '').map(f => {
-        if (useRegexForDataAttribute) {
-          return new RegExp(f);
-        } else {
-          return f;
-        }
-      });
-    }
-
-    this._useRegexForDataAttribute = useRegexForDataAttribute;
 
     StorageService.setData({
-      useRegexForDataAttribute: this._useRegexForDataAttribute
+      useRegexForDataAttribute: options.code.useRegexForDataAttribute
     });
   }
 

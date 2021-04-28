@@ -28,7 +28,7 @@ export class IframeComponent {
    */
   public static editIframeMessage(event : IMessage, component : IComponent) : IMessage {
 
-    event.iframe = SelectorService.find(component.element);
+    event.iframe = SelectorService.Instance.find(component.element);
     return event;
   }
 
