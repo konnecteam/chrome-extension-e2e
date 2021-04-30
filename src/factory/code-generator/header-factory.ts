@@ -27,39 +27,50 @@ export class HeaderFactory {
     let hdr = wrapAsync ? HeaderCode.WRAPPED_HEADER : HeaderCode.HEADER;
     hdr = headless ? hdr : hdr.replace(this._LAUNCH_KEY, 'launch({ headless: false })');
 
+    let codeRegExp = '';
+
+    // Si les options contiennent un regex alors on la build
+    if (regexHttp) {
+
+      // On la build
+      const regexpBuild = RegExpFactory.buildRegeExp(regexHttp);
+
+      if (regexpBuild && regexpBuild.regexp) {
+        // On créé les paramètres pour l'objet RegExp
+
+        codeRegExp += `'${regexpBuild.regexp}'`;
+        codeRegExp += regexpBuild.flags ? `, '${regexpBuild.flags}'` : '';
+      }
+    }
+
+
     if (recordHttpRequest) {
       hdr = hdr.replace(this._LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
       hdr = hdr.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
 
+      let addRegexHTTP : string;
+
       // Si il y a une regex on la met
-      if (regexHttp) {
+      if (codeRegExp) {
 
-        // On la build
-        const regexpBuild = RegExpFactory.buildRegeExp(regexHttp);
-        let addRegexHTTP : string;
-
-        if (regexpBuild && regexpBuild.regexp) {
-          // On créé les paramètres pour l'objet RegExp
-          let codeRegExp = '';
-
-          codeRegExp += `'${regexpBuild.regexp}'`;
-          codeRegExp += regexpBuild.flags ? `, '${regexpBuild.flags}'` : '';
-          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace(
+        addRegexHTTP = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
             this._HTTP_REQUEST_REGEX_KEY,
             `&& !new RegExp(${codeRegExp}).test(url) `);
-        }
-        // Si il n'y a pas de Regexp alors on remplace par rien
-        else {
-          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
-        }
-
-        hdr += addRegexHTTP;
-
-      } else {
-        hdr += HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
+      }
+      // Si il n'y a pas de Regexp alors on remplace par rien
+      else {
+        addRegexHTTP = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
       }
 
+      hdr += addRegexHTTP;
+
+      // Si on une regex et pas l'option de record activé, on utilise le listener de la page pour les requêtes en live
+    } else if (codeRegExp) {
+      hdr += HeaderCode.LISTENER_PAGE_LIVE_REQUEST.replace(
+        this._HTTP_REQUEST_REGEX_KEY,
+        `&& !new RegExp(${codeRegExp}).test(url) `);
     }
+
     return importPackage + hdr;
   }
 

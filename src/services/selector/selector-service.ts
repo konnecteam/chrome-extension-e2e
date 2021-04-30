@@ -160,7 +160,7 @@ export class SelectorService {
     // Récupération du tagName
     let selector = element.tagName.toLowerCase();
 
-    // On parcour las liste des attributs et on construit le sélecteur à la main
+    // On parcourt la liste des attributs et on construit le sélecteur à la main
     for (let i = 0; i < element.attributes.length; i++) {
       const currentAttribute = element.attributes[i];
       if (currentAttribute.value) {
