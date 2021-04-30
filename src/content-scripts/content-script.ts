@@ -216,6 +216,18 @@ class EventRecorder {
       durationClick = Date.now() - this._startMouseDown;
     }
 
+    /**
+     * On verifie si l'element qui a déclenché le submit
+     * et le même que celui de l'event précédant
+     * si c'est le cas c'est qu'il n'y a pas besoin
+     * de garder le submit car il y a eu une detection de clique
+     * sur l'event précédant donc on le traite pas
+     */
+    if (e.type === eventsToRecord.SUBMIT && this._previousEvent.type === eventsToRecord.CLICK
+      && e.submitter === this._previousEvent.target) {
+      return;
+    }
+
     // Si un evènement précédent est toujours en cours on ne fait rien
     if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp) {
       return;
@@ -250,7 +262,8 @@ class EventRecorder {
       durancyClick: durationClick ? durationClick : 0,
       clickCoordinates: this._keyDownService.getClickCoordinates(e),
       scrollY: window.pageYOffset,
-      scrollX: window.pageXOffset
+      scrollX: window.pageXOffset,
+      submitterSelector : e.submitter ? this._selectorService.find(e.submitter) : ''
     };
 
     // On vérifie si un composant est concerné par l'event

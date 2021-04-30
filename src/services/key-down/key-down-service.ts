@@ -34,9 +34,23 @@ export class KeyDownService {
    * Permet de gérer les evènement keydown
    */
   public handleEvent(msg : IMessage, element : HTMLElement) : void {
-    // On vérifie que l'event est un keydown et que ce n'est pas un input ou que c'est un input de liste
+    // On vérifie que l'event est un keydown
     if (msg.action === domEventsToRecord.KEYDOWN) {
-      if (!msg.value && element.tagName !== elementsTagName.INPUT.toUpperCase() ||  this._isInputList(element)) {
+
+      // On gère le cas ou si c'est un user qui appuie sur la touche Entrer sur un bouton
+      if (element.tagName === elementsTagName.BUTTON.toUpperCase() && msg.key === 'Enter') {
+
+        // Si c'est le cas on tranforme le keydown en click
+        msg.action = domEventsToRecord.CLICK;
+        msg.typeEvent = domEventsToRecord.CLICK;
+        return;
+      }
+
+      // On verifie si c'est un body car les textes areas sont parfois dans un body qui se trouve dans une iframe
+
+      if (!msg.value && element.tagName === elementsTagName.BODY.toUpperCase() || element.tagName === elementsTagName.TEXTAREA.toUpperCase()
+       ||  this._isInputList(element)) {
+
         // On récupère l'event
         this._handleKeyDownEvent(msg);
       }
