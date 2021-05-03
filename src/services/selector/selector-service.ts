@@ -220,7 +220,12 @@ export class SelectorService {
    * Permet de standardiser un sélecteur
    */
   public standardizeSelector(selector : string) : string {
-    return selector.replace(/\\\./g, '\\\\.').replace('\n', '\\"').split('\:').join('\\\:');
+    return selector.replace(/\\\./g, '\\\\.')
+    .replace('\n', '\\"').split('\:').join('\\\:')
+    /* Quand un sélécteur est trouvé par le finder, au lieu de mettre ":" il met 3A donc
+     * il faut transformer le 3A en \\: pour le sélecteur
+     */
+    .split(new RegExp(/3A[ ]?/gm)).join('\\:');
   }
 
   /**
