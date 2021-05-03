@@ -1,3 +1,4 @@
+import { PasswordFactory } from '../factory/password/password-factory';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
 import elementsTagName from '../constants/elements/tag-name';
@@ -211,6 +212,28 @@ class EventRecorder {
       return;
     }
 
+    let value = '';
+    /**
+     * Si c'est un input de type password
+     * il faut changer la value
+     */
+    if (e.target.tagName === elementsTagName.INPUT.toUpperCase()
+      && e.target.type === 'password') {
+
+      // Si c'est un change on modifie la value:
+      if (e.type === eventsToRecord.CHANGE) {
+        value = PasswordFactory.generate();
+      }
+
+      /*
+       * Si c'est un keydown on arrête tout pour pas envoyer les caractères
+       * qui composent le mot de passe
+       */
+      else if (e.type === eventsToRecord.KEYDOWN) {
+        return;
+      }
+    }
+
     if (e.type === eventsToRecord.CLICK) {
       durationClick = Date.now() - this._startMouseDown;
     }
@@ -266,7 +289,7 @@ class EventRecorder {
     let message : IMessage = {
       selector: SelectorService.standardizeSelector(selector),
       comments,
-      value: e.target.value,
+      value: value ? value : e.target.value,
       tagName: e.target.tagName,
       action: e.type,
       typeEvent: e.type,
