@@ -25,10 +25,10 @@ describe('Test de Submit Block Factory', () => {
   });
 
   test('Créer un submit', () => {
-    const exceptedResult = ClickFactory.buildClickBlock(options, frameId, frame, selector);
+    const exceptedResult = ClickFactory.buildBlock(options, frameId, frame, selector);
 
     expect(
-      SubmitFactory.buildSubmitBlock(frameId, frame, options, selector)
+      SubmitFactory.buildBlock(frameId, frame, options, selector)
     ).toEqual(
       exceptedResult
     );
@@ -44,7 +44,7 @@ describe('Test de Submit Block Factory', () => {
     expect(
       SubmitFactory.generateBlock(eventMessage , frameId, frame, options )
     ).toEqual(
-      SubmitFactory.buildSubmitBlock(frameId, frame, options, selector)
+      SubmitFactory.buildBlock(frameId, frame, options, selector)
     );
 
   });

@@ -20,7 +20,7 @@ export class HeaderFactory {
     recordHttpRequest : boolean,
     wrapAsync : boolean,
     headless : boolean,
-    regexHttp : string
+    httpRegex : string
   ) : string {
 
     const importPackage = this.getImport(recordHttpRequest);
@@ -30,10 +30,10 @@ export class HeaderFactory {
     let codeRegExp = '';
 
     // Si les options contiennent un regex alors on la build
-    if (regexHttp) {
+    if (httpRegex) {
 
       // On la build
-      const regexpBuild = RegExpFactory.buildRegeExp(regexHttp);
+      const regexpBuild = RegExpFactory.buildRegeExp(httpRegex);
 
       if (regexpBuild && regexpBuild.regexp) {
         // On créé les paramètres pour l'objet RegExp

@@ -20,7 +20,7 @@ export class SubmitFactory {
     // Si l'event est un submit
     if (action === customEvents.SUBMIT) {
       if (tagName === elementsTagName.FORM.toUpperCase()) {
-        return this.buildSubmitBlock(frameId, frame, options, submitterSelector);
+        return this.buildBlock(frameId, frame, options, submitterSelector);
       }
     }
   }
@@ -28,9 +28,9 @@ export class SubmitFactory {
   /**
    * Généré un submit
    */
-  public static buildSubmitBlock(frameId : number, frame : string, options : IOption, selector : string) : Block {
+  public static buildBlock(frameId : number, frame : string, options : IOption, selector : string) : Block {
 
-    return ClickFactory.buildClickBlock(options, frameId, frame, selector);
+    return ClickFactory.buildBlock(options, frameId, frame, selector);
   }
 
 }

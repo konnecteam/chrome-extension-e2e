@@ -16,7 +16,7 @@ export class KListComponent {
 
   private static readonly _MULTISELECT = 'Multiselect';
 
-  private static readonly _SELECTOR_SERVICE = SelectorService.Instance;
+  private static readonly _selectorService = SelectorService.Instance;
 
   /**
    * Récupère un component konnect list
@@ -38,7 +38,7 @@ export class KListComponent {
       return this._getKListComponent(
         dropdownElement as HTMLElement,
         {
-          selector : this._SELECTOR_SERVICE.find(dropdownElement as HTMLElement),
+          selector : this._selectorService.find(dropdownElement as HTMLElement),
           element : dropdownElement,
           typeList: this._DROPDOWN
         }
@@ -51,7 +51,7 @@ export class KListComponent {
       return this._getKListComponent(
         multiselectListElement as HTMLElement,
         {
-          selector : this._SELECTOR_SERVICE.find(multiselectListElement as HTMLElement),
+          selector : this._selectorService.find(multiselectListElement as HTMLElement),
           element : multiselectListElement,
           typeList: this._MULTISELECT
         }
@@ -98,7 +98,7 @@ export class KListComponent {
     if (ElementService.getUlListElement(component.element)) {
 
       event.action = customEvents.CLICK_LIST_ITEM;
-      event.scrollElement = this._SELECTOR_SERVICE.find(component.element);
+      event.scrollElement = this._selectorService.find(component.element);
       event.scrollXElement = component.element.parentElement.scrollLeft;
       event.scrollYElement = component.element.parentElement.scrollTop;
       return event;
