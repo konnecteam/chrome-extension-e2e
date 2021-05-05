@@ -12,6 +12,12 @@ export class KeyDownService {
   /** Instance de classe */
   public static instance : KeyDownService;
 
+  /**
+   * Value des touches
+   */
+  private static readonly _ENTER_KEY = 'Enter';
+  private static readonly _BACKSPACE_KEY = 'Backspace';
+
   /** Liste des keydown enregistrés */
   private _listsKeyDown : IMessage[] = [];
 
@@ -38,7 +44,7 @@ export class KeyDownService {
     if (msg.action === domEventsToRecord.KEYDOWN) {
 
       // On gère le cas ou si c'est un user qui appuie sur la touche Entrer sur un bouton
-      if (element.tagName === elementsTagName.BUTTON.toUpperCase() && msg.key === 'Enter') {
+      if (element.tagName === elementsTagName.BUTTON.toUpperCase() && msg.key === KeyDownService._ENTER_KEY) {
 
         // Si c'est le cas on tranforme le keydown en click
         msg.action = domEventsToRecord.CLICK;
@@ -104,12 +110,12 @@ export class KeyDownService {
       } else {
 
         // Gestion du backspace
-        if (currentMsg.key === 'Backspace') {
+        if (currentMsg.key === KeyDownService._BACKSPACE_KEY) {
           value = value.slice(0, -1);
         }
 
-        // Gestion de la touche entré
-        if (currentMsg.key === 'Enter') {
+        // Gestion de la touche entrée
+        if (currentMsg.key === KeyDownService._ENTER_KEY) {
           value += '<br/>';
         }
       }

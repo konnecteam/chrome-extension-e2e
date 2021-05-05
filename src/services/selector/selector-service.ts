@@ -11,10 +11,19 @@ export class SelectorService {
   private static readonly _ID_TO_IGNORE_REG  = new RegExp('([A-Za-z0-9]+-){4}', 'g');
   private static readonly _ID_TO_IGNORE = ['formv', 'kdp', 'mv', 'tabs'];
 
-  private _dataAttributes : any[] | string[];
+  /**
+   * Data attribute contient les customs attribute que l'utilisateur veut utiliser
+   * C'est soit des string soit des RegExp
+   */
+  private _dataAttributes : RegExp[] | string[];
+
+  /**
+   * Ce boolean permet de savoir si on utilise des regexp ou des strings
+   */
   private _useRegex : boolean;
 
-  private static _instance : SelectorService;
+  /** Instance singleton */
+  public static instance : SelectorService;
 
   constructor() {
     this._dataAttributes = null;
@@ -55,18 +64,19 @@ export class SelectorService {
       // On recherche les custom attributes
       const targetAttributes = element.attributes;
 
-      for (const patternAttr of this._dataAttributes) {
+      for (let i = 0;  i < this._dataAttributes.length; i++) {
+        const patternAttr = this._dataAttributes[i];
 
         const regexp = RegExp(patternAttr);
 
         // On test chaque attribute avec le pattern
-        for (let i = 0; i < targetAttributes.length; i++) {
+        for (let j = 0; j < targetAttributes.length; j++) {
           // Regex ou string test
-          if (this._useRegex ? regexp.test(targetAttributes[i].name) : patternAttr === targetAttributes[i].name) {
+          if (this._useRegex ? regexp.test(targetAttributes[j].name) : patternAttr === targetAttributes[j].name) {
 
             // La recherche est terminée
             // On traite les cas spéciaux des customs attributes
-            listCustomAttribute.push(this.manageSpecialCase(targetAttributes[i].name));
+            listCustomAttribute.push(this.manageSpecialCase(targetAttributes[j].name));
           }
         }
       }
@@ -79,13 +89,13 @@ export class SelectorService {
    * Récupération de l'instance de la classe
    */
   public static get Instance() : SelectorService {
-    if (SelectorService._instance == null) {
-      SelectorService._instance = new SelectorService();
+    if (SelectorService.instance == null) {
+      SelectorService.instance = new SelectorService();
     } else {
       // on met à jour les options car elles peuvent avoir changées
-      SelectorService._instance._getOption();
+      SelectorService.instance._getOption();
     }
-    return SelectorService._instance;
+    return SelectorService.instance;
   }
 
   /**
