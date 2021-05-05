@@ -1,4 +1,4 @@
-import { PasswordFactory } from '../factory/password/password-factory';
+import { PasswordService } from '../services/password/password-service';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
 import elementsTagName from '../constants/elements/tag-name';
@@ -222,7 +222,7 @@ class EventRecorder {
 
       // Si c'est un change on modifie la value:
       if (e.type === eventsToRecord.CHANGE) {
-        value = PasswordFactory.generate();
+        value = PasswordService.generate();
       }
 
       /*

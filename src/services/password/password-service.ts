@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 
 /**
- * Factory qui permet de créer un password
+ * Service qui permet de créer un password
  */
-export class PasswordFactory {
+export class PasswordService {
 
   /**
    * Génère un password
