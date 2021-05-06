@@ -33,13 +33,13 @@ export class HeaderFactory {
     if (httpRegex) {
 
       // On la build
-      const regexpBuild = RegExpFactory.buildRegeExp(httpRegex);
+      const regexpBuild = RegExpFactory.getRegexpAndFlag(httpRegex);
 
       if (regexpBuild && regexpBuild.regexp) {
         // On créé les paramètres pour l'objet RegExp
 
         codeRegExp += `'${regexpBuild.regexp}'`;
-        codeRegExp += regexpBuild.flags ? `, '${regexpBuild.flags}'` : '';
+        codeRegExp += regexpBuild.flag ? `, '${regexpBuild.flag}'` : '';
       }
     }
 

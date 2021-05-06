@@ -5,30 +5,32 @@ export class RegExpFactory {
 
   /**
    * Permet de construire une regexp à partir d'une chaîne de caractères
+   * Exemple : /*.localhost.*\/g => regexp : *.localhost.*, flag : g
    */
-  public static buildRegeExp(userRegexp : string) : { regexp : string, flags : string } {
+  public static getRegexpAndFlag(userRegexp : string) : { regexp : string, flag : string } {
 
-    const buildRegex = { regexp: '', flags: ''};
+    const object = { regexp: '', flag: ''};
 
-    const splitRegexp = userRegexp.split('/');
+    const splittedRegex = userRegexp.split('/');
 
     // Si la regexp est mal formatée
-    if ((splitRegexp.length < 3 )) {
-      return buildRegex;
+    if ((splittedRegex.length < 3 )) {
+      return object;
     }
 
-    const flag = splitRegexp[splitRegexp.length - 1 ];
+    const flag = splittedRegex[splittedRegex.length - 1 ];
 
-    // on enlève le premier '/' et le dernier '/'
-    const splitWithoutSlash = splitRegexp.splice(1 , splitRegexp.length - 2);
+    // on enlève le premier '/' et le dernier '/'et on la regexp
+    const regex = splittedRegex.splice(1 , splittedRegex.length - 2).join('/');
 
-    // on build la regexp
-    const finalRexp = splitWithoutSlash.join('/');
     if (flag) {
-      buildRegex.flags = flag;
+      object.flag = flag;
     }
 
-    buildRegex.regexp = finalRexp;
-    return buildRegex;
+    if (regex) {
+      object.regexp = regex;
+
+    }
+    return object;
   }
 }

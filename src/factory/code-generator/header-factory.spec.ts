@@ -127,11 +127,11 @@ describe('Test du Header Factory', () => {
       exceptedResult = exceptedResult.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
 
       // on build la regexp de filtrage
-      const regexp = RegExpFactory.buildRegeExp(regexHttp);
+      const regexp = RegExpFactory.getRegexpAndFlag(regexHttp);
 
       // On rajoute la regexp de filtrage
       let codeRegExp = `'${regexp.regexp}'`;
-      codeRegExp += `, '${regexp.flags}'`;
+      codeRegExp += `, '${regexp.flag}'`;
       exceptedResult += HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
         HTTP_REQUEST_REGEX_KEY,
         `&& !new RegExp(${codeRegExp}).test(url) `
@@ -178,11 +178,11 @@ describe('Test du Header Factory', () => {
       let exceptedResult = HeaderCode.IMPORT_PUPPETEER + HeaderCode.WRAPPED_HEADER;
 
       // on build la regexp de filtrage
-      const regexp = RegExpFactory.buildRegeExp(regexHttp);
+      const regexp = RegExpFactory.getRegexpAndFlag(regexHttp);
 
       // On rajoute la regexp de filtrage
       let codeRegExp = `'${regexp.regexp}'`;
-      codeRegExp += `, '${regexp.flags}'`;
+      codeRegExp += `, '${regexp.flag}'`;
 
       // On ajoute la regex
       exceptedResult += HeaderCode.LISTENER_PAGE_LIVE_REQUEST.replace(
@@ -239,11 +239,11 @@ describe('Test du Header Factory', () => {
 
       // Ajout ignoreHTTPSError
       exceptedResult = exceptedResult.replace(LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
-      const regexp = RegExpFactory.buildRegeExp(regexHttp);
+      const regexp = RegExpFactory.getRegexpAndFlag(regexHttp);
 
        // On rajoute la regexp de filtrage
       let codeRegExp = `'${regexp.regexp}'`;
-      codeRegExp += `, '${regexp.flags}'`;
+      codeRegExp += `, '${regexp.flag}'`;
       exceptedResult += HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
            HTTP_REQUEST_REGEX_KEY,
            `&& !new RegExp(${codeRegExp}).test(url) `

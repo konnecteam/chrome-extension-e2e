@@ -91,9 +91,6 @@ export class SelectorService {
   public static get Instance() : SelectorService {
     if (SelectorService.instance == null) {
       SelectorService.instance = new SelectorService();
-    } else {
-      // on met à jour les options car elles peuvent avoir changées
-      SelectorService.instance._getOption();
     }
     return SelectorService.instance;
   }
