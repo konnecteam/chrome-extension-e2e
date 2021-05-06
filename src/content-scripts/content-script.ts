@@ -160,7 +160,7 @@ class EventRecorder {
    * Permet de rediriger les messages dans la bonne méthode
    * @param message
    */
-  private _messageControl(message : IMessage) : void {
+  private _redirectMessage(message : IMessage) : void {
 
     if (message && message.hasOwnProperty('control')) {
 
@@ -346,7 +346,7 @@ class EventRecorder {
 
     (window as any).document.pptRecorderAddedControlListeners = true;
 
-    this._boundedMessageControl = this._messageControl.bind(this);
+    this._boundedMessageControl = this._redirectMessage.bind(this);
     ChromeService.addOnMessageListener(this._boundedMessageControl);
 
     this._boundedSendPollyResult = this._sendPollyResult.bind(this);

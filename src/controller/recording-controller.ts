@@ -98,10 +98,6 @@ class RecordingController {
    * Constructeur
    */
   constructor() {
-
-    this._recording = [];
-    this._zipContent = null;
-
     // Service
     this._zipService = ZipService.Instance;
     this._fileService = FileService.Instance;
@@ -167,7 +163,7 @@ class RecordingController {
       });
 
       ChromeService.download(this._zipContent, RecordingController._FILENAME);
-      return Promise.resolve();
+      return;
     }
 
     // 3 - Recupération du code dans le local storage

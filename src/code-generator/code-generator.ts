@@ -44,7 +44,7 @@ export default class CodeGenerator {
   }
 
   public generate(events : IMessage[]) : string {
-    return HeaderFactory.getHeader(
+    return HeaderFactory.generateHeader(
       this._options.recordHttpRequest,
       this._options.wrapAsync,
       this._options.headless,

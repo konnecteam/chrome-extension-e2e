@@ -16,7 +16,7 @@ export class HeaderFactory {
   /**
    * Génère le header du scénario
    */
-  public static getHeader(
+  public static generateHeader(
     recordHttpRequest : boolean,
     wrapAsync : boolean,
     headless : boolean,
@@ -24,12 +24,12 @@ export class HeaderFactory {
   ) : string {
 
     const importPackage = this.getImport(recordHttpRequest);
-    let hdr = wrapAsync ? HeaderCode.WRAPPED_HEADER : HeaderCode.HEADER;
-    hdr = headless ? hdr : hdr.replace(this._LAUNCH_KEY, 'launch({ headless: false })');
+    let header = wrapAsync ? HeaderCode.WRAPPED_HEADER : HeaderCode.HEADER;
+    header = headless ? header : header.replace(this._LAUNCH_KEY, 'launch({ headless: false })');
 
     if (recordHttpRequest) {
-      hdr = hdr.replace(this._LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
-      hdr = hdr.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
+      header = header.replace(this._LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
+      header = header.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
 
       // Si il y a une regex on la met
       if (regexHttp) {
@@ -50,21 +50,21 @@ export class HeaderFactory {
         }
         // Si il n'y a pas de Regexp alors on remplace par rien
         else {
-          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
+          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, '');
         }
 
-        hdr += addRegexHTTP;
+        header += addRegexHTTP;
 
       } else {
-        hdr += HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
+        header += HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, '');
       }
 
     }
-    return importPackage + hdr;
+    return importPackage + header;
   }
 
   /**
-   * Si on prends en compte les requêtes on rajoute les inputs nécéssaires
+   * Récupère les imports nécessaire au fonctionnment du scénario
    */
   private static getImport(recordHttpRequest : boolean) : string {
     return recordHttpRequest ? HeaderCode.IMPORT_HTTP_REQUEST : HeaderCode.IMPORT_PUPPETEER;

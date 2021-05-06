@@ -52,7 +52,7 @@ function blocksToString(listBlock : Block[], wrapAsync : boolean) {
  */
 function createScenario(options : IOption) {
   // Header du scénario
-  let scenarioExcepted = HeaderFactory.getHeader(
+  let scenarioExcepted = HeaderFactory.generateHeader(
     options.recordHttpRequest,
     options.wrapAsync,
     options.headless,
