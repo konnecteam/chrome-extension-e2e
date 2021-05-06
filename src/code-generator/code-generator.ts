@@ -1,4 +1,4 @@
-import { ObjectService } from '../services/object/object-service';
+import { UtilityService } from '../services/utility/utility-service';
 import { default as pptrActions} from '../constants/pptr-actions';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { IMessage } from '../interfaces/i-message';
@@ -95,7 +95,7 @@ export default class CodeGenerator {
            Alors on rajoute la ligne customisé
         */
         if (this._options.customLinesBeforeEvent &&
-          !ObjectService.isValueInObject(pptrActions, currentEvent.action)) {
+          !UtilityService.isValueInObject(pptrActions, currentEvent.action)) {
 
           this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
         }

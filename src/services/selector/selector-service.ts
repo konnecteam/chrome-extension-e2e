@@ -1,4 +1,4 @@
-import { ObjectService } from '../object/object-service';
+import { UtilityService } from '../utility/utility-service';
 import finder from '@medv/finder';
 
 /**
@@ -17,7 +17,7 @@ export class SelectorService {
 
     // Gestion de l'id
     if (element.id  && !this._ID_TO_IGNORE_REG.test(element.id)
-    && !ObjectService.isStringStartInTab(element.id, this._ID_TO_IGNORE) ) {
+    && !UtilityService.isStringStartInTab(element.id, this._ID_TO_IGNORE) ) {
 
       return '#' + element.id.split(':').join('\\:');
     }
@@ -72,7 +72,7 @@ export class SelectorService {
       element, {
         root : document.body,
         className: name => false, tagName: name => true ,
-        idName: name => !ObjectService.isStringStartInTab(name, this._ID_TO_IGNORE)
+        idName: name => !UtilityService.isStringStartInTab(name, this._ID_TO_IGNORE)
          && !name.match(this._ID_TO_IGNORE_REG) && !this._ID_TO_IGNORE_REG.test(name),
         seedMinLength : 7,
         optimizedMinLength : 12,

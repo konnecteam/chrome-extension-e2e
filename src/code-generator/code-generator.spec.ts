@@ -9,7 +9,7 @@ import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
 import 'jest';
 import CodeGenerator from './code-generator';
-import { ObjectService } from '../services/object/object-service';
+import { UtilityService } from '../services/utility/utility-service';
 import eventsDom from '../constants/events/events-dom';
 
 /** Frame dans laquelle on se situe */
@@ -71,7 +71,7 @@ function createScenario(options : IOption) {
 
     if (block) {
 
-      if (options.customLinesBeforeEvent && !ObjectService.isValueInObject(pptrActions, currentEvent.action)) {
+      if (options.customLinesBeforeEvent && !UtilityService.isValueInObject(pptrActions, currentEvent.action)) {
         listBlock.push(ScenarioFactory.generateCustomLineBlock(frameId, options.customLinesBeforeEvent));
       }
 

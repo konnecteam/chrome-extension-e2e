@@ -232,7 +232,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
   });
 });
 
-describe('Test du determinate click event', () => {
+describe('Test du get click event', () => {
   test('Determiner click d\'un FileDropZoneComponent', async () => {
     // on init le body
     await changeBodyDocumentAsync(FILE_DROP_ZONE_PATH);
@@ -306,7 +306,7 @@ describe('Test du determinate click event', () => {
   });
 });
 
-describe('Test de determinate drop event', () => {
+describe('Test de get drop event', () => {
 
   test('Determiner drop d\'un FileDropZoneComponent', async () => {
     // on init le body
@@ -320,7 +320,7 @@ describe('Test de determinate drop event', () => {
   });
 });
 
-describe('Test de determinate keydown event', () => {
+describe('Test de get keydown event', () => {
 
   beforeAll(() => {
     // on init un body pour le test
@@ -355,7 +355,7 @@ describe('Test de determinate keydown event', () => {
   });
 });
 
-describe('Test du determinate change event', () => {
+describe('Test du get change event', () => {
 
   beforeAll(async () => {
     // On init le body

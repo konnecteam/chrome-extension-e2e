@@ -280,7 +280,7 @@ class EventRecorder {
     };
 
     // On vérifie si un composant est concerné par l'event
-    const component = ComponentManager.determinateComponent(message.typeEvent, e.target, this._previousKList);
+    const component = ComponentManager.determineComponent(message.typeEvent, e.target, this._previousKList);
 
     /* Si c'est le cas et qu'on a un previousElement
        c'est que on a une konnect liste, on update donc la value des k list
