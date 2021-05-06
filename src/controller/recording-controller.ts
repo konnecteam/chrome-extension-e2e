@@ -184,7 +184,7 @@ class RecordingController {
       });
 
       // Recupère la liste des fichiers qui seront dans le zip
-      const files = this._fileService.getFilesList();
+      const files = this._fileService.getUploadedFiles();
       for (let i = 0; i < files.length; i++) {
         this._zipService.addFileInFolder(`recordings/files/${files[i].name}`, files[i]);
       }
@@ -326,7 +326,7 @@ class RecordingController {
 
     this._zipContent = null;
     this._isResult = false;
-    this._fileService.clearList();
+    this._fileService.clearUploadedFiles();
     this._recording = [];
     this._zipService.resetZip();
     this._pollyService.flush();

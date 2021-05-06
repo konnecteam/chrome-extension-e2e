@@ -45,7 +45,7 @@ describe('Test du Component Manager' , () => {
         null
         )
     ).toEqual(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
       element as HTMLElement,
       null
     ));
@@ -64,7 +64,7 @@ describe('Test du Component Manager' , () => {
         null
         )
     ).toEqual(
-      ElementService.determinateDropComponent(element as HTMLElement));
+      ElementService.getDropComponent(element as HTMLElement));
   });
 
   test('Determiner component à partir d\'un change', async () => {
@@ -79,7 +79,7 @@ describe('Test du Component Manager' , () => {
         element as HTMLElement,
         null
       )
-    ).toEqual(ElementService.determinateChangeComponent(element as HTMLElement)
+    ).toEqual(ElementService.getChangeComponent(element as HTMLElement)
     );
   });
 
@@ -103,7 +103,7 @@ describe('Test du Component Manager' , () => {
         element,
         null
       )
-    ).toEqual(ElementService.determinateKeydownComponent(element));
+    ).toEqual(ElementService.getKeydownComponent(element));
   });
 
 });

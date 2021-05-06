@@ -11,21 +11,18 @@ export class FileService {
   public static instance : FileService;
 
   /** Liste des fichiers uplaodés */
-  private _uploadedFiles : File[];
+  private _uploadedFiles : File[] = [];
 
   /** Nom du fichier */
-  private _filename : string;
+  private _filename : string = '';
 
   /** Control du message */
-  private _control : string;
+  private _control : string = '';
 
   /** Lit le contenu du fichier */
   private _reader : FileReader;
 
   constructor() {
-    this._uploadedFiles = [];
-    this._filename = '';
-    this._control = '';
     this._reader = new FileReader();
 
     // Après avoir lu le fichier on l'envoi au background
@@ -73,21 +70,21 @@ export class FileService {
   /**
    * Permet de nettoyer la liste des fichiers uploadés
    */
-  public clearList() : void {
+  public clearUploadedFiles() : void {
     this._uploadedFiles = [];
   }
 
   /**
    * Récupère la liste des fichiers uploadés
    */
-  public getFilesList() : File[] {
+  public getUploadedFiles() : File[] {
     return this._uploadedFiles;
   }
 
   /**
    * Envoi un fichier au background
    */
-  private _getFileTOSend(file : File) : string  {
+  private _getFileToSend(file : File) : string  {
 
     if (file) {
 
@@ -99,15 +96,15 @@ export class FileService {
   }
 
   /**
-   * Envoi au background la liste des fichiers à uploader
+   * Prepare les fichiers pour les utiliser dans le scénario
    */
-  public sendFilesToBackground(files : FileList) : string {
+  public prepareFilesForScenario(files : FileList) : string {
 
     const listFiles : string[] = [];
     if (files) {
       for (let i = 0; i < files.length; i++) {
 
-        listFiles.push(this._getFileTOSend(files[i]));
+        listFiles.push(this._getFileToSend(files[i]));
       }
     }
 

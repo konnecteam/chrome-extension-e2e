@@ -20,16 +20,16 @@ export class ComponentManager {
     switch (event) {
       // Si c'est un click
       case domEventsToRecord.CLICK:
-        return ElementService.determinateClickComponent(element, previousElement);
+        return ElementService.getClickComponent(element, previousElement);
       // Si c'est un drop
       case domEventsToRecord.DROP:
-        return ElementService.determinateDropComponent(element);
+        return ElementService.getDropComponent(element);
       // Si c'est un change
       case domEventsToRecord.CHANGE:
-        return ElementService.determinateChangeComponent(element);
+        return ElementService.getChangeComponent(element);
       // Si c'est un keydown
       case domEventsToRecord.KEYDOWN:
-        return ElementService.determinateKeydownComponent(element);
+        return ElementService.getKeydownComponent(element);
       default:
         return null;
     }

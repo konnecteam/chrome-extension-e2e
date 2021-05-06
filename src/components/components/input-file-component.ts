@@ -24,7 +24,7 @@ export class InputFilesComponent {
    */
   public static editInputFileMessage(event : IMessage, filesUpload : FileList) : IMessage {
 
-    event.files = FileService.Instance.sendFilesToBackground(filesUpload);
+    event.files = FileService.Instance.prepareFilesForScenario(filesUpload);
     return event;
   }
 }

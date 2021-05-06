@@ -241,7 +241,7 @@ describe('Test du determinate click event', () => {
 
     // On doit trouver que l'on est dans un file dropzone
     expect(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
         element as HTMLElement,
         null
       )
@@ -257,7 +257,7 @@ describe('Test du determinate click event', () => {
 
     // on doit trouver un component model de k selct
     expect(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
         element as HTMLElement,
         null
       )
@@ -273,7 +273,7 @@ describe('Test du determinate click event', () => {
 
     // on doit trouver le component model d'un km switch
     expect(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
         element as HTMLElement,
         null
       )
@@ -297,7 +297,7 @@ describe('Test du determinate click event', () => {
 
     // On doit trouver un component model qui fait référence à une k list
     expect(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
         element as HTMLElement,
         previousElement
       )
@@ -315,7 +315,7 @@ describe('Test de determinate drop event', () => {
     // On doit trouver un component file dropzone
     const element = document.querySelector(FILE_DROP_ZONE_SELECTOR);
     expect(
-      ElementService.determinateDropComponent(element as HTMLElement)
+      ElementService.getDropComponent(element as HTMLElement)
     ).toEqual(FileDropZoneComponent.getFileDropZone(element as HTMLElement));
   });
 });
@@ -350,7 +350,7 @@ describe('Test de determinate keydown event', () => {
     const element = document.querySelector('iframe').contentWindow.document.querySelector('h1');
     // on doit trouver un component iframe
     expect(
-      ElementService.determinateKeydownComponent(element)
+      ElementService.getKeydownComponent(element)
     ).toEqual(IframeComponent.getIframe(element));
   });
 });
@@ -371,7 +371,7 @@ describe('Test du determinate change event', () => {
 
     // On doit trouver que l'on est sur un input file
     expect(
-      ElementService.determinateChangeComponent(element as HTMLInputElement)
+      ElementService.getChangeComponent(element as HTMLInputElement)
     ).toEqual(InputFilesComponent.getInputFile(element as HTMLInputElement)
     );
   });
@@ -381,7 +381,7 @@ describe('Test du determinate change event', () => {
     const element = document.querySelector(INPUT_NUMERIC_SELECTOR);
     // On doit trouver que l'on est dans un input numeric
     expect(
-      ElementService.determinateChangeComponent(element as HTMLElement)
+      ElementService.getChangeComponent(element as HTMLElement)
     ).toEqual(InputNumericComponent.getInputNumeric(element as HTMLElement)
     );
   });
