@@ -127,7 +127,7 @@ class RecordingController {
       deleteSiteData: true,
     };
 
-    StorageService.setData({ 'options' :  defaults });
+    StorageService.setData( { 'options' :  defaults } );
   }
 
   /**

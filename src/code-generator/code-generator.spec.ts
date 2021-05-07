@@ -50,10 +50,10 @@ function blocksToString(listBlock : Block[], wrapAsync : boolean) {
   const indent = wrapAsync ? '  ' : '';
   const newLine = `\n`;
   let result = '';
-  for (const block of listBlock) {
-    const lines = block.getLines();
-
-    for (const line of lines) {
+  for (let i = 0 ; i < listBlock.length; i++) {
+    const lines = listBlock[i].getLines();
+    for (let j = 0; j < lines.length; j++) {
+      const line = lines[j];
       result += indent + line.value + newLine;
     }
   }
@@ -75,7 +75,9 @@ function createScenario(options : IOption) {
 
   const listBlock = [];
   // Scénario
-  for (const currentEvent of messageList) {
+  for (let i = 0; i < messageList.length; i++) {
+    const currentEvent = messageList[i];
+
     const block = ScenarioFactory.parseEvent(
       currentEvent,
       frameId,
@@ -119,15 +121,15 @@ describe('Test de Code Generator', () => {
   beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
     messageList.push(
-      {typeEvent: pptrActions.PPTR , action: pptrActions.GOTO, value: 'localhost'}
+      { typeEvent: pptrActions.PPTR , action: pptrActions.GOTO, value: 'localhost' }
     );
 
     messageList.push(
-      {typeEvent: domEventsToRecord.CLICK, action: eventsDom.CLICK, selector: '#idInput'}
+      { typeEvent: domEventsToRecord.CLICK, action: eventsDom.CLICK, selector: '#idInput' }
     );
 
     messageList.push(
-      {typeEvent: domEventsToRecord.CHANGE, action: eventsDom.CHANGE, selector: '#idInput', value: 'change de value input'}
+      { typeEvent: domEventsToRecord.CHANGE, action: eventsDom.CHANGE, selector: '#idInput', value: 'change de value input' }
     );
   });
 

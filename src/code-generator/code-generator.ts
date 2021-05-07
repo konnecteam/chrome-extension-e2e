@@ -127,11 +127,11 @@ export default class CodeGenerator {
     const indent = this._options.wrapAsync ? '  ' : '';
     const newLine = `\n`;
     // 3- on récupère le result
-    for (const block of this._blocks) {
-      const lines = block.getLines();
+    for (let i = 0; i < this._blocks.length; i++) {
 
-      for (const line of lines) {
-        result += indent + line.value + newLine;
+      const lines = this._blocks[i].getLines();
+      for (let j = 0; j < lines.length; j++) {
+        result += indent + lines[j].value + newLine;
       }
     }
     return result;

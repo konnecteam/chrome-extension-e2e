@@ -77,7 +77,7 @@ export class KListComponent {
    * @param element
    * @param previousElement
    */
-  private static _getKListComponent(element : HTMLElement, previousElement : {selector : string, element : Element, typeList : string }) : IComponent {
+  private static _getKListComponent(element : HTMLElement, previousElement : { selector : string, element : Element, typeList : string }) : IComponent {
     return {
       component : componentName.KLIST,
       element,

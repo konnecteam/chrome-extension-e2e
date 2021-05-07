@@ -7,7 +7,7 @@ import * as chrome from 'sinon-chrome';
 import { IMessage } from '../interfaces/i-message';
 import controlActions from '../constants/control/control-actions';
 import { Server } from 'http';
-import {EBadgeState} from '../enum/e-badge-states';
+import { EBadgeState } from '../enum/e-badge-states';
 import { IOption } from 'interfaces/i-options';
 
 let server : Server;
@@ -193,7 +193,7 @@ describe('Test de Recording Controller', () => {
         * On overwrite la méthode seticon pour connaitre l'état de l'icon
         */
       (window as any).badgeIcon = '';
-      chrome.browserAction.setIcon = (badge : { path : string}) => {
+      chrome.browserAction.setIcon = (badge : { path : string }) => {
         (window as any).badgeIcon = badge.path;
       };
 
@@ -201,7 +201,7 @@ describe('Test de Recording Controller', () => {
        * On overwrite la méthode seticon pour connaitre l'état du background
        */
       (window as any).badgeColor = '';
-      chrome.browserAction.setBadgeBackgroundColor = (badge : { color : string}) => {
+      chrome.browserAction.setBadgeBackgroundColor = (badge : { color : string }) => {
         (window as any).badgeIcon = badge.color;
       };
 
@@ -311,7 +311,7 @@ describe('Test de Recording Controller', () => {
 
     // On met du contenu dans code
     await page.evaluate(() => {
-      window.chrome.storage.local.set({code : 'code exemple'});
+      window.chrome.storage.local.set( { code : 'code exemple' });
       Promise.resolve();
     });
     // Dispatch event

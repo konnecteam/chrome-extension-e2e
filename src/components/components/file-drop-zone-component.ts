@@ -36,11 +36,11 @@ export class FileDropZoneComponent {
     // Si c'est un file dropzone
     if (fileDropzoneElement) {
 
-      return {component : componentName.FILE_DROPZONE , element: fileDropzoneElement};
+      return { component : componentName.FILE_DROPZONE , element: fileDropzoneElement };
 
     } else if (addButtonElement) {
       // Si c'est un le bouton ajouter un fichier du file dropzone
-      return {component : componentName.BUTTON_ADD_FILE_DROPZONE , element: addButtonElement};
+      return { component : componentName.BUTTON_ADD_FILE_DROPZONE , element: addButtonElement };
 
     } else {
       return null;

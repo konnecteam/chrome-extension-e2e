@@ -28,8 +28,8 @@ export class ScenarioFactory {
   public static generateSetFrame(blockRead : Block, blockToAddLine : Block, allFrames : any) : any {
 
     const lines = blockRead.getLines();
-
-    for (const line of lines) {
+    for (let i = 0; lines.length; i++) {
+      const line = lines[i];
 
       if (line.frameId && Object.keys(allFrames).includes(line.frameId.toString())) {
 
@@ -48,7 +48,7 @@ export class ScenarioFactory {
         break;
       }
     }
-    return {allFrames, block : blockToAddLine};
+    return { allFrames, block : blockToAddLine };
   }
 
   /**

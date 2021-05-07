@@ -316,9 +316,14 @@ class EventRecorder {
       (window as any).eventRecorder
     );
 
-    for (const mutation of mutationList) {
+    for (let i = 0 ; i < mutationList.length ; i++) {
 
-      for (const child of mutation.addedNodes) {
+      const mutation = mutationList[i];
+
+      for (let j = 0 ; j < mutation.addedNodes.length; j++ ) {
+
+        const child = mutation.addedNodes[j];
+
         // Si on a une iframe on rajoute les listener car de base il n'y en pas
         if (child.tagName === elementsTagName.IFRAME.toUpperCase() && child.contentDocument) {
 
@@ -393,7 +398,7 @@ class EventRecorder {
   /**
    * Mise à jour des options
    */
-  private _updateOptions(options : {[key : string] : any}) : void {
+  private _updateOptions(options : { [key : string] : any }) : void {
     const dataAttribute = options.dataAttribute;
     const useRegexForDataAttribute = options.useRegexForDataAttribute;
     if (dataAttribute) {
