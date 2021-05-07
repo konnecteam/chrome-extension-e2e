@@ -20,16 +20,16 @@ export class SelectorService {
     && !UtilityService.isStringStartInTab(element.id, this._ID_TO_IGNORE) ) {
 
       return '#' + element.id.split(':').join('\\:');
-    }
+    } else {
+      try {
 
-    try {
+        // Si présent dans le dom on le récupère
+        return this._finderSelector(document, element);
+      } catch (e) {
 
-      // Si présent dans le dom on le récupère
-      return this._finderSelector(document, element);
-    } catch (e) {
-
-      // Dans le cas contraire on vérifie dans la sauvegarde du dom
-      return this._findSelectorElementInSavedDocument(element);
+        // Dans le cas contraire on vérifie dans la sauvegarde du dom
+        return this._findSelectorElementInSavedDocument(element);
+      }
     }
   }
 
@@ -94,6 +94,9 @@ export class SelectorService {
 
   /**
    * Permet de formater les données d'un sélecteur
+   * Entré : element : un element qui a la propriété attribute passée en paramètre
+   * et attribute : click.delegate
+   * Sortie : [click\.delegate="modalGdprVM.close()"]
    */
   public static formatDataOfSelector(element : HTMLElement, attribute : string) : string {
     return `[${attribute.replace(/[.]/g, '\\\.')}="${element.getAttribute(attribute).replace(/[']/g, '\\\'')}"]`;
@@ -101,6 +104,8 @@ export class SelectorService {
 
   /**
    * Permet de standardiser un sélecteur
+   * Entré : collapse-panel > div > div > div > div:nth-child(2) > div > input
+   * Sortie : collapse-panel > div > div > div > div\:nth-child(2) > div > input
    */
   public static standardizeSelector(selector : string) : string {
     return selector.replace(/\\\./g, '\\\\.').replace('\n', '\\"').split('\:').join('\\\:');

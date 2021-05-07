@@ -52,7 +52,7 @@ export class ScenarioFactory {
   }
 
   /**
-   * Génère une ligne blanche
+   * Génère une ligne blanche, utilisée pour faire un saut de ligne entre les blocs de code
    */
   public static generateBlankLineBlock() : Block {
 
