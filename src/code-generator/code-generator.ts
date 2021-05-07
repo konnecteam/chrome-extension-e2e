@@ -4,7 +4,6 @@ import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
 import { IOption } from '../interfaces/i-options';
-import { defaults } from '../constants/default-options';
 import { FooterFactory } from '../factory/code-generator/footer-factory';
 import { HeaderFactory } from '../factory/code-generator/header-factory';
 
@@ -39,7 +38,7 @@ export default class CodeGenerator {
   private _lastScrollX =  0;
 
   constructor(options : IOption ) {
-    this._options = Object.assign(defaults, options);
+    this._options = options;
     this._blocks = [];
   }
 

@@ -1,4 +1,3 @@
-import { defaults } from './../constants/default-options';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
 import 'jest';
 import * as puppeteer from 'puppeteer';
@@ -9,10 +8,31 @@ import { IMessage } from '../interfaces/i-message';
 import controlActions from '../constants/control/control-actions';
 import { Server } from 'http';
 import {EBadgeState} from '../enum/e-badge-states';
+import { IOption } from 'interfaces/i-options';
 
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
+
+/**
+ * Options
+ */
+const optionsDefault : IOption = {
+  wrapAsync: true,
+  headless: false,
+  waitForNavigation: true,
+  waitForSelectorOnClick: true,
+  blankLinesBetweenBlocks: true,
+  dataAttribute: '',
+  useRegexForDataAttribute: false,
+  customLineAfterClick: '',
+  recordHttpRequest: true,
+  regexHTTPrequest: '',
+  customLinesBeforeEvent: `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
+  deleteSiteData: true,
+};
 
 /**
  * Récupère l'état du badge pour savoir
@@ -223,7 +243,7 @@ describe('Test de Recording Controller', () => {
         (window as any).ddlFile = true;
       };
 
-    }, { chrome, options: defaults, controlActions , badgeStates : EBadgeState});
+    }, { chrome, options: optionsDefault, controlActions , badgeStates : EBadgeState});
 
     // On ajoute le background dans la page
     await page.evaluate(scriptText => {

@@ -1,6 +1,5 @@
 import { ChangeFactory } from './change-factory';
 import { Block } from '../../../code-generator/block';
-import { defaults } from '../../../constants/default-options';
 import 'jest';
 import domEventsToRecord from '../../../constants/events/events-dom';
 import customEvents from '../../../constants/events/events-custom';
@@ -17,17 +16,34 @@ const INPUT_ID = '#input';
 const INPUT_NUN_ID = '#inputNum';
 const SELECTOR = '#id';
 
-/** frame et options utilisées pour les tests */
+/** frame et optionsDefault utilisées pour les tests */
 let frame : string;
 let frameId : number;
-let options : IOption;
+/**
+ * Options
+ */
+const optionsDefault : IOption = {
+  wrapAsync: true,
+  headless: false,
+  waitForNavigation: true,
+  waitForSelectorOnClick: true,
+  blankLinesBetweenBlocks: true,
+  dataAttribute: '',
+  useRegexForDataAttribute: false,
+  customLineAfterClick: '',
+  recordHttpRequest: true,
+  regexHTTPrequest: '',
+  customLinesBeforeEvent: `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
+  deleteSiteData: true,
+};
 
 describe('Test de Change Block Factory', () => {
 
   // Initialisation des attributs de change-block-factory
   beforeAll(() => {
 
-    options = JSON.parse(JSON.stringify(defaults));
     frameId = 0;
     frame = 'page';
   });
@@ -130,7 +146,7 @@ describe('Test de Change Block Factory', () => {
         eventMessage ,
         frameId,
         frame,
-        defaults
+        optionsDefault
       )
     ).toEqual(
       ChangeFactory.buildChangeBlockInputNumericBlock(
@@ -157,7 +173,7 @@ describe('Test de Change Block Factory', () => {
         eventMessage ,
         frameId,
         frame,
-        defaults
+        optionsDefault
       )
     ).toEqual(
       ChangeFactory.buildChangeBlock(
@@ -183,7 +199,7 @@ describe('Test de Change Block Factory', () => {
         eventMessage ,
         frameId,
         frame,
-        defaults
+        optionsDefault
       )
     ).toEqual(
       ChangeFactory.buildSelectChangeBlock(
@@ -211,7 +227,7 @@ describe('Test de Change Block Factory', () => {
         eventMessage ,
         frameId,
         frame,
-        defaults
+        optionsDefault
       )
     ).toEqual(
       ChangeFactory.buildAcceptUploadFileChangeBlock(

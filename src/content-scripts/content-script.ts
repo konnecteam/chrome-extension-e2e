@@ -135,7 +135,7 @@ class EventRecorder {
       this._updateOptions(data.options);
 
       // Si On record les requests on initialise et inject le script polly
-      if (data.options.code.recordHttpRequest) {
+      if (data.options.recordHttpRequest) {
         this._init();
       } else {
         // On dit au startup config que pollyJS est prêt et que les modules peuvent être chargé
@@ -394,8 +394,8 @@ class EventRecorder {
    * Mise à jour des options
    */
   private _updateOptions(options : {[key : string] : any}) : void {
-    const dataAttribute = options.code.dataAttribute;
-    const useRegexForDataAttribute = options.code.useRegexForDataAttribute;
+    const dataAttribute = options.dataAttribute;
+    const useRegexForDataAttribute = options.useRegexForDataAttribute;
     if (dataAttribute) {
       this._dataAttributes = dataAttribute.split(' ').filter(f => f !== '').map(f => {
         if (useRegexForDataAttribute) {

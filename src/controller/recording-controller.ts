@@ -1,6 +1,6 @@
+import { IOption } from 'interfaces/i-options';
 import { DataURLFactory } from './../factory/data-url/data-url-factory';
 import { StorageService } from '../services/storage/storage-service';
-import { defaults as code } from '../constants/default-options';
 import { ZipService } from '../services/zip/zip-service';
 import { FileService } from '../services/file/file-service';
 import { ChromeService } from '../services/chrome/chrome-service';
@@ -110,7 +110,24 @@ class RecordingController {
    * Initialisation du storage
    */
   private _initStorageOptions() {
-    StorageService.setData({ 'options' : { code } });
+    const defaults : IOption = {
+      wrapAsync: true,
+      headless: false,
+      waitForNavigation: true,
+      waitForSelectorOnClick: true,
+      blankLinesBetweenBlocks: true,
+      dataAttribute: '',
+      useRegexForDataAttribute: false,
+      customLineAfterClick: '',
+      recordHttpRequest: true,
+      regexHTTPrequest: '',
+      customLinesBeforeEvent: `await page.evaluate(async() => {
+        await konnect.engineStateService.Instance.waitForAsync(1);
+      });`,
+      deleteSiteData: true,
+    };
+
+    StorageService.setData({ 'options' :  defaults });
   }
 
   /**
@@ -337,8 +354,8 @@ class RecordingController {
     // 2 - On récupère les options
     const data = await StorageService.getDataAsync(['options']);
     if  (data) {
-      this._recordHttpRequest = data.options.code.recordHttpRequest;
-      this._deleteSiteData = data.options.code.deleteSiteData;
+      this._recordHttpRequest = data.options.recordHttpRequest;
+      this._deleteSiteData = data.options.deleteSiteData;
     }
 
     // Si l'option deleteSiteDate est activé, on supprime les données du site

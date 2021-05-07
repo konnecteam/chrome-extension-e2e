@@ -1,5 +1,4 @@
 import { IMessage } from '../interfaces/i-message';
-import { defaults } from './../constants/default-options';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
 import 'jest';
 import * as puppeteer from 'puppeteer';
@@ -8,10 +7,32 @@ import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/
 import * as chrome from 'sinon-chrome';
 import { Server } from 'http';
 import controlMessage from '../constants/control/control-message';
+import { IOption } from '../interfaces/i-options';
 
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
+
+
+/**
+ * Options
+ */
+const optionsDefault : IOption = {
+  wrapAsync: true,
+  headless: false,
+  waitForNavigation: true,
+  waitForSelectorOnClick: true,
+  blankLinesBetweenBlocks: true,
+  dataAttribute: '',
+  useRegexForDataAttribute: false,
+  customLineAfterClick: '',
+  recordHttpRequest: true,
+  regexHTTPrequest: '',
+  customLinesBeforeEvent: `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
+  deleteSiteData: true,
+};
 
 /**
  * Selecteurs
@@ -118,7 +139,7 @@ describe('Test Content script ', () => {
         window.addEventListener('OnMessage', fct);
       };
 
-    }, { chrome, options: defaults });
+    }, { chrome, options: optionsDefault });
 
     // On ajoute le content script dans la page
     await page.evaluate(scriptText => {

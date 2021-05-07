@@ -1,4 +1,3 @@
-import { defaults } from './../constants/default-options';
 import domEventsToRecord from '../constants/events/events-dom';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { FooterFactory } from '../factory/code-generator/footer-factory';
@@ -25,7 +24,22 @@ const frame = 'page';
  * Sauvegarde les options par défauts
  * car elles vont être modifiés
  */
-const optionsDefault = JSON.parse(JSON.stringify(defaults));
+const optionsDefault : IOption = {
+  wrapAsync: true,
+  headless: false,
+  waitForNavigation: true,
+  waitForSelectorOnClick: true,
+  blankLinesBetweenBlocks: true,
+  dataAttribute: '',
+  useRegexForDataAttribute: false,
+  customLineAfterClick: '',
+  recordHttpRequest: true,
+  regexHTTPrequest: '',
+  customLinesBeforeEvent: `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
+  deleteSiteData: true,
+};
 
 /**
  * Transforme une liste de Block en string
@@ -115,14 +129,6 @@ describe('Test de Code Generator', () => {
     messageList.push(
       {typeEvent: domEventsToRecord.CHANGE, action: eventsDom.CHANGE, selector: '#idInput', value: 'change de value input'}
     );
-  });
-
-  /**
-   * On fait cela car dans code generator
-   * On change les valeurs par défauts par celles passer en paramètres
-   */
-  afterAll(() => {
-    Object.assign(defaults, optionsDefault);
   });
 
   test('Test avec les options par défauts', () => {
