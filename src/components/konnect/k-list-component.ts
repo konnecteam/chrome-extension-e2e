@@ -17,11 +17,11 @@ export class KListComponent {
   private static readonly _MULTISELECT = 'Multiselect';
 
   /**
-   * Récupère un component konnect list
+   * Récupère un IComponent konnect list
    * @param element
    * @param previousElement
    */
-  public static getKList(
+  public static getElement(
     element : HTMLElement,
     previousElement : { selector : string; typeList : string; element : Element; }
     ) : IComponent {
@@ -90,7 +90,7 @@ export class KListComponent {
    * @param event
    * @param component
    */
-  public static editKlistMessage(event : IMessage, component : IComponent) : IMessage {
+  public static editKlistComponentMessage(event : IMessage, component : IComponent) : IMessage {
 
     // Si click list item
     if (ElementService.getUlListElement(component.element)) {

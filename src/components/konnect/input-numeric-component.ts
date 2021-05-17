@@ -12,9 +12,9 @@ import { IMessage } from '../../interfaces/i-message';
 export class InputNumericComponent {
 
   /**
-   * Récupère le component input numeric
+   * Récupère le IComponent input numeric
    */
-  public static getInputNumeric(element : HTMLElement) : IComponent  {
+  public static getElement(element : HTMLElement) : IComponent  {
 
     if (ElementService.getNumericElement(element)) {
 
@@ -31,7 +31,7 @@ export class InputNumericComponent {
   /**
    * Modification de l'event pour un input numeric
    */
-  public static editInputNumericMessage(event : IMessage, component : IComponent) : IMessage {
+  public static editInputNumericComponentMessage(event : IMessage, component : IComponent) : IMessage {
 
     event.selectorFocus = SelectorService.find(component.element);
     event.action = customEvents.CHANGE_INPUT_NUMERIC;

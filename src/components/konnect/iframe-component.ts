@@ -10,9 +10,9 @@ import { ElementService } from '../../services/element/element-service';
 export class IframeComponent {
 
   /**
-   * Récupère le component Iframe
+   * Récupère le IComponent Iframe
    */
-  public static getIframe(element : HTMLElement) : IComponent {
+  public static getElement(element : HTMLElement) : IComponent {
 
     const iframeElement = ElementService.getIframeElement(element);
     // Si c'est un iframe on retourne le composant associé
@@ -26,7 +26,7 @@ export class IframeComponent {
   /**
    * Modifier l'event et retourne les modifications liées à l'iframe
    */
-  public static editIframeMessage(event : IMessage, component : IComponent) : IMessage {
+  public static editIframeComponentMessage(event : IMessage, component : IComponent) : IMessage {
 
     event.iframe = SelectorService.find(component.element);
     return event;

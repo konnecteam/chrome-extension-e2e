@@ -18,9 +18,9 @@ export class FileDropZoneComponent {
   private static readonly _TITLE_ATTRIBUTE_VALUE = 'Ajouter un document';
 
   /**
-   * Récupère le component filedropzone
+   * Récupère le IComponent filedropzone
    */
-  public static getFileDropZone(element : HTMLElement) : IComponent {
+  public static getElement(element : HTMLElement) : IComponent {
     const fileDropzoneElement = ElementService.findParentElementWithTagName(
       element,
       elementsTagName.FILE_DROPZONE.toUpperCase()
@@ -50,7 +50,7 @@ export class FileDropZoneComponent {
   /**
    * Edit et retourne l'event pour le file dropzone event
    */
-  public static editFileDropZoneMessage(event : IMessage, files : FileList) : IMessage {
+  public static editFileDropZoneComponentMessage(event : IMessage, files : FileList) : IMessage {
     const newMessage = event;
 
     /* Si il y a des fichiers à uplaoder
@@ -71,7 +71,7 @@ export class FileDropZoneComponent {
   /**
    * Edit et retourne l'event pour le click sur le bouton ajouter des fichiers
    */
-  public static editFileDropZoneButtonMessage(event : IMessage) : IMessage {
+  public static editFileDropZoneButtonComponentMessage(event : IMessage) : IMessage {
     event.action = customEvents.CLICK_DROPZONE;
     return event;
   }

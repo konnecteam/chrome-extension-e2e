@@ -245,7 +245,7 @@ describe('Test du get click event', () => {
         element as HTMLElement,
         null
       )
-    ).toEqual(FileDropZoneComponent.getFileDropZone(element as HTMLElement));
+    ).toEqual(FileDropZoneComponent.getElement(element as HTMLElement));
   });
 
 
@@ -261,7 +261,7 @@ describe('Test du get click event', () => {
         element as HTMLElement,
         null
       )
-    ).toEqual(KSelectComponent.getKSelect(element as HTMLElement));
+    ).toEqual(KSelectComponent.getElement(element as HTMLElement));
 
   });
 
@@ -277,7 +277,7 @@ describe('Test du get click event', () => {
         element as HTMLElement,
         null
       )
-    ).toEqual(KmSwitchComponent.getKmSwitch(element as HTMLElement));
+    ).toEqual(KmSwitchComponent.getElement(element as HTMLElement));
   });
 
   test('Determiner click d\'un KListComponent', async () => {
@@ -301,7 +301,7 @@ describe('Test du get click event', () => {
         element as HTMLElement,
         previousElement
       )
-    ).toEqual(KListComponent.getKList(element as HTMLElement, previousElement));
+    ).toEqual(KListComponent.getElement(element as HTMLElement, previousElement));
 
   });
 });
@@ -316,7 +316,7 @@ describe('Test de get drop event', () => {
     const element = document.querySelector(FILE_DROP_ZONE_SELECTOR);
     expect(
       ElementService.getDropComponent(element as HTMLElement)
-    ).toEqual(FileDropZoneComponent.getFileDropZone(element as HTMLElement));
+    ).toEqual(FileDropZoneComponent.getElement(element as HTMLElement));
   });
 });
 
@@ -351,7 +351,7 @@ describe('Test de get keydown event', () => {
     // on doit trouver un component iframe
     expect(
       ElementService.getKeydownComponent(element)
-    ).toEqual(IframeComponent.getIframe(element));
+    ).toEqual(IframeComponent.getElement(element));
   });
 });
 
@@ -372,7 +372,7 @@ describe('Test du get change event', () => {
     // On doit trouver que l'on est sur un input file
     expect(
       ElementService.getChangeComponent(element as HTMLInputElement)
-    ).toEqual(InputFilesComponent.getInputFile(element as HTMLInputElement)
+    ).toEqual(InputFilesComponent.getElement(element as HTMLInputElement)
     );
   });
 
@@ -382,7 +382,7 @@ describe('Test du get change event', () => {
     // On doit trouver que l'on est dans un input numeric
     expect(
       ElementService.getChangeComponent(element as HTMLElement)
-    ).toEqual(InputNumericComponent.getInputNumeric(element as HTMLElement)
+    ).toEqual(InputNumericComponent.getElement(element as HTMLElement)
     );
   });
 });

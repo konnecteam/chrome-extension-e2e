@@ -22,34 +22,34 @@ export class EventMessageFactory {
 
       // Si c'est un file drop zone component
       case componentName.FILE_DROPZONE :
-        return FileDropZoneComponent.editFileDropZoneMessage(event, filesUpload);
+        return FileDropZoneComponent.editFileDropZoneComponentMessage(event, filesUpload);
       // Si c'est le bouton ajouter des fichiers
       case componentName.BUTTON_ADD_FILE_DROPZONE :
-        return FileDropZoneComponent.editFileDropZoneButtonMessage(event);
+        return FileDropZoneComponent.editFileDropZoneButtonComponentMessage(event);
       // Si c'est un input de fichier
       case componentName.INPUT_FILE :
-        return InputFilesComponent.editInputFileMessage(event, (component.element as HTMLInputElement).files);
+        return InputFilesComponent.editInputFileComponentMessage(event, (component.element as HTMLInputElement).files);
       // Si c'est un input numeric
       case componentName.INPUT_NUMERIC :
-        return InputNumericComponent.editInputNumericMessage(event, component);
+        return InputNumericComponent.editInputNumericComponentMessage(event, component);
       // Si c'est un k select (les flêches à coté de l'input numeric)
       case componentName.K_SELECT :
-        return KSelectComponent.editKSelectMessage(event);
+        return KSelectComponent.editKSelectComponentMessage(event);
       // Si c'est un switch
       case componentName.KM_SWITCH :
-        return KmSwitchComponent.editKmSwitchMessage(event, component);
+        return KmSwitchComponent.editKmSwitchComponentMessage(event, component);
       // Si c'est une frame
       case componentName.IFRAME :
-        return IframeComponent.editIframeMessage(event, component);
+        return IframeComponent.editIframeComponentMessage(event, component);
       // Si c'est une konnect liste
       case componentName.KLIST :
-        return KListComponent.editKlistMessage(event, component);
+        return KListComponent.editKlistComponentMessage(event, component);
       // Si c'est un checkbox
       case componentName.CHECKBOX :
-        return CheckboxComponent.editCheckboxMessage(event);
+        return CheckboxComponent.editCheckboxComponentMessage(event);
       // Si c'est un radio group
       case componentName.RADIO_GROUP :
-        return RadioGroupComponent.editRadioGroupMessage(event);
+        return RadioGroupComponent.editRadioGroupComponentMessage(event);
       default :
         return null;
     }

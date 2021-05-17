@@ -37,18 +37,18 @@ describe('Test de Iframe Component', () => {
 
   });
 
-  test('Test de getIframe', () => {
+  test('Test de getElement', () => {
 
     // on selectionne le titre qui ce trouve dans l'iframe
     const element  = document.querySelector(IFRAME_SELECTOR).contentWindow.document.querySelector('h1');
 
     // On doit trouver que c'est une iframe
     expect(
-      IframeComponent.getIframe(element).component
+      IframeComponent.getElement(element).component
     ).toEqual(componentName.IFRAME);
   });
 
-  test('Test de editIframeMessage', () => {
+  test('Test de editIframeComponentMessage', () => {
     // Event model qui contient les infos utiles
     const eventCatched : IMessage = {
       selector: 'selector'
@@ -63,7 +63,7 @@ describe('Test de Iframe Component', () => {
 
     // On doit avoir la propriété iframe
     expect(
-      IframeComponent.editIframeMessage(eventCatched, component).iframe
+      IframeComponent.editIframeComponentMessage(eventCatched, component).iframe
     ).toBeDefined();
   });
 });

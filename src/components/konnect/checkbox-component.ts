@@ -11,10 +11,10 @@ import eventsDom from '../../constants/events/events-dom';
 export class CheckboxComponent {
 
   /**
-   * Récupère le component Checkbox
+   * Récupère le IComponent Checkbox
    * @param element
    */
-  public static getCheckboxComponent(element : HTMLElement) : IComponent {
+  public static getElement(element : HTMLElement) : IComponent {
 
     if (ElementService.findParentElementWithTagName(
       element,
@@ -31,7 +31,7 @@ export class CheckboxComponent {
   /**
    * Modification de l'event pour un checkbox
    */
-  public static editCheckboxMessage(event : IMessage) : IMessage {
+  public static editCheckboxComponentMessage(event : IMessage) : IMessage {
     event.action = eventsDom.CLICK;
     return event;
   }

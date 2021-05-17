@@ -9,9 +9,9 @@ import { IMessage } from '../../interfaces/i-message';
 export class InputFilesComponent {
 
   /**
-   * Récupère le component input file
+   * Récupère le IComponent input file
    */
-  public static getInputFile(element : HTMLInputElement) : IComponent {
+  public static getElement(element : HTMLInputElement) : IComponent {
     if (element.files && element.files[0]) {
       return { component : componentName.INPUT_FILE, element };
     }
@@ -22,7 +22,7 @@ export class InputFilesComponent {
    * Modifie l'event et
    * envoie les fichiers au background pour les ajouter dans le zip
    */
-  public static editInputFileMessage(event : IMessage, filesUpload : FileList) : IMessage {
+  public static editInputFileComponentMessage(event : IMessage, filesUpload : FileList) : IMessage {
 
     event.files = FileService.Instance.prepareFilesForScenario(filesUpload);
     return event;

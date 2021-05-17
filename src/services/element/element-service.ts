@@ -301,8 +301,8 @@ export class ElementService {
    */
   public static getChangeComponent(element : HTMLElement) : IComponent {
 
-    return InputFilesComponent.getInputFile(element as HTMLInputElement) || InputNumericComponent.getInputNumeric(element)
-    || CheckboxComponent.getCheckboxComponent(element) || RadioGroupComponent.getRadioGroupComponent(element);
+    return InputFilesComponent.getElement(element as HTMLInputElement) || InputNumericComponent.getElement(element)
+    || CheckboxComponent.getElement(element) || RadioGroupComponent.getElement(element);
   }
 
   /**
@@ -310,9 +310,9 @@ export class ElementService {
    */
   public static getClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : IComponent {
 
-    return FileDropZoneComponent.getFileDropZone(element) ||
-    KSelectComponent.getKSelect(element) || KmSwitchComponent.getKmSwitch(element) ||
-    KListComponent.getKList(element, previousElement);
+    return FileDropZoneComponent.getElement(element) ||
+    KSelectComponent.getElement(element) || KmSwitchComponent.getElement(element) ||
+    KListComponent.getElement(element, previousElement);
   }
 
   /**
@@ -320,7 +320,7 @@ export class ElementService {
    */
   public static getDropComponent(element : HTMLElement) : IComponent {
 
-    return FileDropZoneComponent.getFileDropZone(element);
+    return FileDropZoneComponent.getElement(element);
   }
 
 
@@ -329,7 +329,7 @@ export class ElementService {
    */
   public static getKeydownComponent(element : HTMLElement) : IComponent {
 
-    return IframeComponent.getIframe(element);
+    return IframeComponent.getElement(element);
   }
 
 }
