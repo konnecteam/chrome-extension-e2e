@@ -114,6 +114,11 @@ export default class CodeGenerator {
       }
 
     }
+    // On rajoute une custome ligne avant la fin pour attendre des dernières interactions
+    if (this._options.customLinesBeforeEvent) {
+
+      this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
+    }
 
     /* Si il y a eu une navigation et que l'option pour wait la navigation est activée
        Alors on rajoute le block de navigation

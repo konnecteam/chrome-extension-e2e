@@ -30,8 +30,8 @@ class EventRecorder {
   /** Service qui permet de gérer les keydown */
   private _keyDownService : KeyDownService;
 
-  /** Liste des data attributes */
-  private _dataAttributes : any = [];
+  /** Service qui permet de trouver le selecteur d'un élément */
+  private _selectorService : SelectorService;
 
   /** Liste des events à ecouter */
   private _events;
@@ -74,6 +74,7 @@ class EventRecorder {
 
     // Service
     this._keyDownService = KeyDownService.Instance;
+    this._selectorService = SelectorService.Instance;
     this._events = Object.values(eventsToRecord);
 
     // Enregistre les informations avant un click d'un item de list
@@ -238,34 +239,21 @@ class EventRecorder {
       durationClick = Date.now() - this._startMouseDown;
     }
 
-    // Si un evènement précédent est toujours en cours on ne fait rien
-    if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp) {
+    /**
+     * On verifie si l'element qui a déclenché le submit
+     * et le même que celui de l'event précédant
+     * si c'est le cas c'est qu'il n'y a pas besoin
+     * de garder le submit car il y a eu une detection de clique
+     * sur l'event précédant donc on le traite pas
+     */
+    if (e.type === eventsToRecord.SUBMIT && this._previousEvent.type === eventsToRecord.CLICK
+      && e.submitter === this._previousEvent.target) {
       return;
     }
 
-    let customAttribute = null;
-
-    // Gestion des cutom attributes
-    if (this._dataAttributes && this._dataAttributes.length && e.target.hasAttribute) {
-      // On recherche les custom attributes
-      const targetAttributes = e.target.attributes;
-      // Ordre des patterns sont important
-      this._dataAttributes.find(patternAttr => {
-        const regexp = RegExp(patternAttr);
-        // On test chaque attribute avec le pattern
-        for (let i = 0; i < targetAttributes.length; i++) {
-          // Regex ou string test
-          if (this._useRegexForDataAttribute ? regexp.test(targetAttributes[i].name) : patternAttr === targetAttributes[i].name) {
-            customAttribute = targetAttributes[i].name;
-
-            // La recherche est terminée
-            // On traite les cas spéciaux des customs attributes
-            customAttribute = SelectorService.manageSpecialCase(customAttribute);
-            return true;
-          }
-        }
-        return false;
-      });
+    // Si un evènement précédent est toujours en cours on ne fait rien
+    if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp) {
+      return;
     }
 
     // définition du selecteur
@@ -273,21 +261,19 @@ class EventRecorder {
     if (e.target.type === 'file' && e.target.tagName === elementsTagName.INPUT.toUpperCase() && e.type === eventsToRecord.CHANGE) {
       selector = this._previousSelector;
     } else {
-      selector = customAttribute
-        ? SelectorService.formatDataOfSelector(e.target, customAttribute)
-        : SelectorService.find(e.target);
+      selector = this._selectorService.find(e.target);
     }
 
     let comments = '';
 
     // On vérifie si le sélecteur est ambigu (plus de deux réponses)
-    if (customAttribute && document.querySelectorAll(selector).length > 1) {
+    if (document.querySelectorAll(selector).length > 1) {
       comments = `/!\\ Le sélécteur a retourné plus d'un élément, il risque d'y avoir une erreur`;
     }
 
     // construction du message: IMessage
     let message : IMessage = {
-      selector: SelectorService.standardizeSelector(selector),
+      selector: this._selectorService.standardizeSelector(selector),
       comments,
       value: value ? value : e.target.value,
       tagName: e.target.tagName,
@@ -299,7 +285,8 @@ class EventRecorder {
       durancyClick: durationClick ? durationClick : 0,
       clickCoordinates: this._keyDownService.getClickCoordinates(e),
       scrollY: window.pageYOffset,
-      scrollX: window.pageXOffset
+      scrollX: window.pageXOffset,
+      submitterSelector : e.submitter ? this._selectorService.find(e.submitter) : ''
     };
 
     // On vérifie si un composant est concerné par l'event
@@ -417,22 +404,9 @@ class EventRecorder {
    * Mise à jour des options
    */
   private _updateOptions(options : {[key : string] : any}) : void {
-    const dataAttribute = options.code.dataAttribute;
-    const useRegexForDataAttribute = options.code.useRegexForDataAttribute;
-    if (dataAttribute) {
-      this._dataAttributes = dataAttribute.split(' ').filter(f => f !== '').map(f => {
-        if (useRegexForDataAttribute) {
-          return new RegExp(f);
-        } else {
-          return f;
-        }
-      });
-    }
-
-    this._useRegexForDataAttribute = useRegexForDataAttribute;
 
     StorageService.setData({
-      useRegexForDataAttribute: this._useRegexForDataAttribute
+      useRegexForDataAttribute: options.code.useRegexForDataAttribute
     });
   }
 

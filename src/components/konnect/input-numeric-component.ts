@@ -33,7 +33,7 @@ export class InputNumericComponent {
    */
   public static editInputNumericMessage(event : IMessage, component : IComponent) : IMessage {
 
-    event.selectorFocus = SelectorService.find(component.element);
+    event.selectorFocus = SelectorService.Instance.find(component.element);
     event.action = customEvents.CHANGE_INPUT_NUMERIC;
     return event;
   }

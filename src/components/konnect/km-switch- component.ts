@@ -28,7 +28,7 @@ export class KmSwitchComponent {
    */
   public static editKmSwitchMessage(event : IMessage, component : IComponent) : IMessage {
 
-    event.selector = SelectorService.find(component.element);
+    event.selector = SelectorService.Instance.find(component.element);
     event.action = customEvents.CLICK_MOUSE;
     return event;
   }
