@@ -7,7 +7,7 @@ export class RegExpFactory {
    * Permet de construire une regexp à partir d'une chaîne de caractères
    * Exemple : /*.localhost.*\/g => regexp : *.localhost.*, flag : g
    */
-  public static getRegexpAndFlag(userRegexp : string) : { regexp : string, flag : string } {
+  public static buildRegexpAndFlag(userRegexp : string) : { regexp : string, flag : string } {
 
     const object = { regexp: '', flag: ''};
 
