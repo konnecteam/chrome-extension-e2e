@@ -196,7 +196,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(simpleClickLineBlock());
 
       expect(
-        ClickFactory.buildClickBlock(
+        ClickFactory.buildBlock(
           optionsDefault,
           frameId,
           frame,
@@ -216,7 +216,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(simpleClickLineBlock());
 
       expect(
-        ClickFactory.buildClickBlock(
+        ClickFactory.buildBlock(
           optionsDefault,
           frameId,
           frame,
@@ -242,7 +242,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(customeLineLineBlock());
 
       expect(
-        ClickFactory.buildClickBlock(
+        ClickFactory.buildBlock(
           optionsDefault,
           frameId,
           frame,
@@ -531,7 +531,7 @@ describe('Test de Click Block Factory', () => {
           optionsDefault
         )
       ).toEqual(
-        ClickFactory.buildClickBlock(
+        ClickFactory.buildBlock(
           optionsDefault,
           frameId,
           frame,

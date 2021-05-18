@@ -1,8 +1,9 @@
+import { ClickFactory } from './click-factory';
+import { IOption } from '../../../interfaces/i-options';
 import { IMessage } from '../../../interfaces/i-message';
 import { SubmitFactory } from './submit-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
-import domEventsToRecord from '../../../constants/events/events-dom';
 import customEvents from '../../../constants/events/events-custom';
 import elementsTagName from '../../../constants/elements/tag-name';
 
@@ -30,22 +31,24 @@ const optionsDefault = {
   deleteSiteData: true,
 };
 
+/**
+ * Selecteur d'un element
+ */
+let selector : string;
 describe('Test de Submit Block Factory', () => {
 
   // Initialisation
   beforeAll(() => {
     frameId = 0;
     frame = 'page';
+    selector = 'button';
   });
 
   test('Créer un submit', () => {
-    const exceptedResult = new  Block(frameId, {
-      type: domEventsToRecord.CHANGE,
-      value: `await ${frame}.keyboard.press('Enter');`
-    });
+    const exceptedResult = ClickFactory.buildBlock(optionsDefault, frameId, frame, selector);
 
     expect(
-      SubmitFactory.buildSubmitBlock(frameId, frame)
+      SubmitFactory.buildBlock(frameId, frame, optionsDefault, selector)
     ).toEqual(
       exceptedResult
     );
@@ -54,13 +57,14 @@ describe('Test de Submit Block Factory', () => {
   test('généré un block pour submit dans un formulaire', () => {
     const eventMessage : IMessage = {
       tagName : elementsTagName.FORM.toUpperCase(),
-      action : customEvents.SUBMIT
+      action : customEvents.SUBMIT,
+      submitterSelector : selector
     };
 
     expect(
       SubmitFactory.generateBlock(eventMessage , frameId, frame, optionsDefault )
     ).toEqual(
-      SubmitFactory.buildSubmitBlock(frameId, frame)
+      SubmitFactory.buildBlock(frameId, frame, optionsDefault, selector)
     );
 
   });

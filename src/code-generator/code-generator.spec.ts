@@ -98,6 +98,10 @@ function createScenario(options : IOption) {
       }
     }
   }
+  if (options.customLinesBeforeEvent) {
+
+    listBlock.push(ScenarioFactory.generateCustomLineBlock(frameId, options.customLinesBeforeEvent));
+  }
 
   // Insertion des lignes vide entre deux Block
   if (options.blankLinesBetweenBlocks && listBlock.length > 0) {

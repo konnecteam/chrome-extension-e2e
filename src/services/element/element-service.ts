@@ -179,7 +179,7 @@ export class ElementService {
    * Verifie si c'est une iframe et la retourne
    */
   public static getIframeElement(element : HTMLElement) : Element  {
-    const selector = SelectorService.findSelectorIframeElement(element);
+    const selector = SelectorService.Instance.findSelectorIframeElement(element);
     if (selector) {
 
       return this.findElementChildWithSelector(document.body, selector);

@@ -157,7 +157,7 @@ page.on('load', async () => {
     })
   });\n`,
 
-  LISTENER_PAGE : `   await page.setRequestInterception(true);
+  LISTENER_PAGE_RECORDED_REQUEST : `   await page.setRequestInterception(true);
   await page.setBypassCSP(true);
   await page.setOfflineMode(true);
 
@@ -255,6 +255,18 @@ page.on('load', async () => {
       let event = new CustomEvent('${controlMSG.POLLY_READY_EVENT}');
       window.dispatchEvent(event);
     })
+  });
+`,
+  LISTENER_PAGE_LIVE_REQUEST : `await page.setRequestInterception(true);
+  page.on('request', (req) => {
+    let url = req.url();
+
+    if(req != undefined **httpregex**){
+      req.continue();
+    }
+    else {
+      req.abort();
+    }
   });
 `
 };

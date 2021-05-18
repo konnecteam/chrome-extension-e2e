@@ -17,7 +17,7 @@ export default class CodeGenerator {
   private _options : IOption;
 
   /** Liste des Block du scénario */
-  private _blocks : Block[];
+  private _blocks : Block[] = [];
 
   /** Frame courante */
   private _frame : string = 'page';
@@ -39,7 +39,6 @@ export default class CodeGenerator {
 
   constructor(options : IOption ) {
     this._options = options;
-    this._blocks = [];
   }
 
   public generate(events : IMessage[]) : string {
@@ -112,6 +111,11 @@ export default class CodeGenerator {
         this._hasNavigation = true;
       }
 
+    }
+    // On rajoute une custome ligne avant la fin pour attendre des dernières interactions
+    if (this._options.customLinesBeforeEvent) {
+
+      this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
     }
 
     /* Si il y a eu une navigation et que l'option pour wait la navigation est activée

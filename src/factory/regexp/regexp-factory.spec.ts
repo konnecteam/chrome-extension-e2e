@@ -7,9 +7,9 @@ describe('Test de RegExp Factory', () => {
   test('RegExp bien formatée', () => {
 
     expect(
-      RegExpFactory.buildRegeExp('/*.localhost.*/g')
+      RegExpFactory.buildRegexpAndFlag('/*.localhost.*/g')
     ).toEqual(
-      { regexp: '*.localhost.*', flags: 'g'}
+      { regexp: '*.localhost.*', flag: 'g'}
 
     );
   });
@@ -18,9 +18,9 @@ describe('Test de RegExp Factory', () => {
   test('RegExp mal formatée', () => {
 
     expect(
-      RegExpFactory.buildRegeExp('/*.localhost.*')
+      RegExpFactory.buildRegexpAndFlag('/*.localhost.*')
     ).toEqual(
-      { regexp: '', flags: ''}
+      { regexp: '', flag: ''}
     );
   });
 
@@ -28,9 +28,9 @@ describe('Test de RegExp Factory', () => {
   test('RegExp sans flag', () => {
 
     expect(
-      RegExpFactory.buildRegeExp('/*.localhost.*/')
+      RegExpFactory.buildRegexpAndFlag('/*.localhost.*/')
     ).toEqual(
-      { regexp: '*.localhost.*', flags: ''}
+      { regexp: '*.localhost.*', flag: ''}
     );
   });
 });

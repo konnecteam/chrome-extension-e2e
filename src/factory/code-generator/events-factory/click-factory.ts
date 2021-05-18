@@ -28,7 +28,7 @@ export class ClickFactory {
 
       // Si c'est un click basique
       case eventsDom.CLICK:
-        return this.buildClickBlock(options, frameId, frame, selector);
+        return this.buildBlock(options, frameId, frame, selector);
       // Si c'est un click sur un dropzone element
       case customEvents.CLICK_DROPZONE:
         return this.buildclickFileDropZoneBlock(options, frameId, frame, selector);
@@ -51,7 +51,7 @@ export class ClickFactory {
 /**
  * Génère le click d'un simple click
  */
-  public static buildClickBlock(
+  public static buildBlock(
     options : IOption,
     frameId : number,
     frame : string,

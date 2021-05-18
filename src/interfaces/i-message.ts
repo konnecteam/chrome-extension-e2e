@@ -100,4 +100,10 @@ export class IMessage {
 
   /** Coordonées du click */
   clickCoordinates? : { x : number, y : number };
+
+  /**
+   * Quand on traite un submit on a besoin de l'emetteur de l'event,
+   * donc on va garder le selecteur de l'emetteur
+   */
+  submitterSelector? : string;
 }
