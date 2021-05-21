@@ -10,7 +10,7 @@ export class ComponentManager {
   /**
    * Détermine sur quel composant se passe l'événement
    */
-  public static determineComponent(
+  public static getComponent(
     event : string,
     element : HTMLElement,
     previousElement : {selector : string, element : Element, typeList : string

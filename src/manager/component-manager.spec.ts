@@ -39,7 +39,7 @@ describe('Test du Component Manager' , () => {
 
     // ON doit trouver un compoenent model de file dropzone
     expect(
-      ComponentManager.determineComponent(
+      ComponentManager.getComponent(
         domEventsToRecord.CLICK,
         element as HTMLElement,
         null
@@ -58,7 +58,7 @@ describe('Test du Component Manager' , () => {
     const element = document.querySelector(FILE_DROP_ZONE_SELECTOR);
     // ON doit trouver un component model de file dropzone
     expect(
-      ComponentManager.determineComponent(
+      ComponentManager.getComponent(
         domEventsToRecord.DROP,
         element as HTMLElement,
         null
@@ -74,7 +74,7 @@ describe('Test du Component Manager' , () => {
     const element = document.querySelector(INPUT_NUMERIC_SELECTOR);
     // ON doit trouver un component model d'input numeric
     expect(
-      ComponentManager.determineComponent(
+      ComponentManager.getComponent(
         domEventsToRecord.CHANGE,
         element as HTMLElement,
         null
@@ -98,7 +98,7 @@ describe('Test du Component Manager' , () => {
     const element = document.querySelector('iframe').contentWindow.document.querySelector('h1');
     // ON doit trouver un component model d'iframe
     expect(
-      ComponentManager.determineComponent(
+      ComponentManager.getComponent(
         domEventsToRecord.KEYDOWN,
         element,
         null

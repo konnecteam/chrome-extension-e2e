@@ -12,9 +12,7 @@
           <h4 class="settings-block-title">Code Recorder settings</h4>
           <div class="settings-block-main">
             <div class="settings-group">
-              <label class="settings-label"
-                >custom attribute(s) (separate with spaces)</label
-              >
+              <label class="settings-label">custom attribute(s) (separate with spaces)</label>
               <input
                 id="options-code-dataAttribute"
                 type="text"
@@ -25,8 +23,8 @@
               <small
                 >Define a <code>data-*</code> attribute(s) that we'll attempt to
                 use when selecting the elements. This is handy when React or Vue
-                based apps generate random class names.</small
-              >
+                based apps generate random class names.
+              </small>
             </div>
             <div class="settings-group">
               <label>
@@ -37,8 +35,8 @@
                   @change="save"
                 />
                 Use regular expression <code>Regex</code> for each custom
-                attribute. </label
-              ><br />
+                attribute. 
+              </label><br />
               <small>Example : <code>^id$ ^[a-z]\.bind$</code></small>
             </div>
             <div class="settings-group">
@@ -52,8 +50,8 @@
               />
               <small
                 >Use regex to filter http request that you wouldn't
-                record</small
-              >
+                record
+              </small>
             </div>
             <div class="settings-group">
               <label>
@@ -139,9 +137,7 @@
               </label>
             </div>
             <div class="settings-group">
-              <label class="settings-label">
-                add custom lines after every <code>page.click()</code></label
-              >
+              <label class="settings-label">add custom lines after every <code>page.click()</code></label>
               <input
                 id="options-code-customLineAfterClick"
                 type="text"
@@ -150,9 +146,7 @@
               />
             </div>
             <div class="settings-group">
-              <label class="settings-label">
-                add custom lines before every <code>Event</code></label
-              >
+              <label class="settings-label">add custom lines before every <code>Event</code></label>
               <textarea
                 id="options-code-customLineAfterClick"
                 rows="7"

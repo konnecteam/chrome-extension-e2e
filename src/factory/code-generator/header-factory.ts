@@ -48,21 +48,21 @@ export class HeaderFactory {
       header = header.replace(this._LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
       header = header.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
 
-      let addRegexHTTP : string;
+      let addHttpRegexp : string;
 
       // Si il y a une regex on la met
       if (codeRegExp) {
 
-        addRegexHTTP = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
+        addHttpRegexp = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
             this._HTTP_REQUEST_REGEX_KEY,
             `&& !new RegExp(${codeRegExp}).test(url) `);
       }
       // Si il n'y a pas de Regexp alors on remplace par rien
       else {
-        addRegexHTTP = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
+        addHttpRegexp = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
       }
 
-      header += addRegexHTTP;
+      header += addHttpRegexp;
 
       // Si on une regex et pas l'option de record activé, on utilise le listener de la page pour les requêtes en live
     } else if (codeRegExp) {
