@@ -30,4 +30,20 @@ export class ObjectService {
 
     return false;
   }
+
+  /**
+   * Verifie si une string inclut les strings du tableau
+   * @param value
+   * @param tab
+   * @returns
+   */
+  public static isStringIncludesTabString(value : string, tab : string[]) : boolean {
+
+    for (let i = 0; i < tab.length; i++) {
+      if (!value.includes(tab[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

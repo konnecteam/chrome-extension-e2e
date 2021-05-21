@@ -1,3 +1,4 @@
+import { ObjectService } from './../../../services/object/object-service';
 import { WindowService } from '../../../services/window/window-service';
 import { Polly } from '@pollyjs/core';
 import * as  FetchAdapter from '@pollyjs/adapter-fetch';
@@ -23,6 +24,8 @@ export class PollyRecorder {
 
   /** Requête qui ne sont pas traçables à partir de Performance  */
   private static readonly _requestNotRecorded = [
+    'favicon.ico',
+    window.location.pathname,
     '',
     'node_modules/konnect-web-theme/dist/font-awesome5/webfonts/fa-brands-400.woff',
     'node_modules/konnect-web-theme/dist/font-awesome5/webfonts/fa-regular-400.woff',
@@ -33,7 +36,10 @@ export class PollyRecorder {
     'node_modules/konnect-web-theme/dist/font-awesome5/webfonts/fa-regular-400.ttf',
   ];
 
-  // Contient les chemins de l'url pour récupérer les informations d'un produit
+  /** Strings qui caractérise une requête google maps */
+  private static readonly _googleMapsStrings = ['google', 'maps'];
+
+  /** Contient les chemins de l'url pour récupérer les informations d'un produit */
   private static readonly _catalaogProductUrl = [ 'picture/obj' ];
 
   /** Liste des requêtes enreigstrées */
@@ -72,15 +78,28 @@ export class PollyRecorder {
     this._listRequestPromise = [];
 
     this._polly = this._createPollyInstance();
+    const { server } = this._polly;
+
+    // On utilise le server de Polly pour filtrer des requêtes
+    server
+    .any()
+    .filter(req => {
+      if (ObjectService.isStringIncludesTabString(req.url, PollyRecorder._googleMapsStrings)) {
+        return true;
+      }
+    })
+    .passthrough();
+
     this.recordingId = this._polly.recordingId;
     this._start();
 
     // On send au startup condig que PollyJS est prêt et qu'il peut donc charger les modules
     this._dispatchPollyReadyEvent();
 
-    // On enregistre des requêtes que l'on a pas
-    this._fetchRequest('favicon.ico');
-    this._fetchRequest(window.location.pathname);
+    // On enregistre des requêtes que l'on peut pas tracer
+    for (let i = 0; i < PollyRecorder._requestNotRecorded.length; i++) {
+      this._fetchRequest(PollyRecorder._requestNotRecorded[i]);
+    }
 
     // le startup config nous dit quand il a exporté les modules
     WindowService.addEventListener(controlMSG.SETUP_READY_EVENT, this._dispatchPollyReadyEvent, false);
@@ -91,14 +110,16 @@ export class PollyRecorder {
 
     PollyRecorder.observer = new PerformanceObserver(list => {
       list.getEntries().forEach(entry => {
-        /* Si la requêtes n'est pas initiée par un fetch ou xmlhttprequest et
-          que l'enregistrement n'est pas en pause,
-          Polly ne la détécte pas donc on fetch pour qu'il l'enregistre
+        /* Si la requête n'est pas initiée par un fetch ou xmlhttprequest et
+          que l'enregistrement n'est pas en pause et si ce n'est pas une requête google maps alors on fetch.
+          Polly détecte que les requêtes initiées par un fetch ou xmlhttprequest donc pas besoin de les fetch
         */
         if ((entry as PerformanceResourceTiming).initiatorType !== PollyRecorder.FETCH
-        && (entry as PerformanceNavigationTiming).initiatorType !== PollyRecorder.XMLHTTREQUEST
-        && !this._paused
-      ) {
+          && (entry as PerformanceNavigationTiming).initiatorType !== PollyRecorder.XMLHTTREQUEST
+          && !ObjectService.isStringIncludesTabString(entry.name, PollyRecorder._googleMapsStrings)
+          && !this._paused
+        ) {
+
           fetch(entry.name);
           this.requestRecorded.push(entry.name);
           /**
@@ -239,17 +260,13 @@ export class PollyRecorder {
 
       currentReq = listRequest[i].toJSON();
 
-      if (currentReq.initiatorType !== PollyRecorder.XMLHTTREQUEST &&
-         currentReq.initiatorType !== PollyRecorder.FETCH &&
-          !this.requestRecorded.includes(currentReq.name)
+      if (currentReq.initiatorType !== PollyRecorder.XMLHTTREQUEST
+        && currentReq.initiatorType !== PollyRecorder.FETCH
+        && !this.requestRecorded.includes(currentReq.name)
+        && !ObjectService.isStringIncludesTabString(currentReq.name, PollyRecorder._googleMapsStrings)
       ) {
-
         this._addToRequestList(currentReq.name);
       }
-    }
-    // Requête qu'on doit fech car on ne les a pas fetch
-    for (let i = 0; i < PollyRecorder._requestNotRecorded.length; i++) {
-      this._fetchRequest(PollyRecorder._requestNotRecorded[i]);
     }
 
     await Promise.all(this._listRequestPromise);
