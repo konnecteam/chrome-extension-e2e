@@ -110,24 +110,25 @@ class RecordingController {
    * Initialisation du storage
    */
   private _initStorageOptions() {
-    const defaults : IOption = {
-      wrapAsync: true,
-      headless: false,
-      waitForNavigation: true,
-      waitForSelectorOnClick: true,
-      blankLinesBetweenBlocks: true,
-      dataAttribute: '',
-      useRegexForDataAttribute: false,
-      customLineAfterClick: '',
-      recordHttpRequest: true,
-      regexHTTPrequest: '',
-      customLinesBeforeEvent: `await page.evaluate(async() => {
+
+    StorageService.setData( {
+      options :  {
+        wrapAsync: true,
+        headless: false,
+        waitForNavigation: true,
+        waitForSelectorOnClick: true,
+        blankLinesBetweenBlocks: true,
+        dataAttribute: '',
+        useRegexForDataAttribute: false,
+        customLineAfterClick: '',
+        recordHttpRequest: true,
+        regexHTTPrequest: '',
+        customLinesBeforeEvent: `await page.evaluate(async() => {
         await konnect.engineStateService.Instance.waitForAsync(1);
       });`,
-      deleteSiteData: true,
-    };
-
-    StorageService.setData( { 'options' :  defaults } );
+        deleteSiteData: true,
+      }
+    });
   }
 
   /**

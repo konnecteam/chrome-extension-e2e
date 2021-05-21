@@ -17,7 +17,7 @@ let page : puppeteer.Page;
 /**
  * Options
  */
-const optionsDefault : IOption = {
+const defaultOptions : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -243,7 +243,7 @@ describe('Test de Recording Controller', () => {
         (window as any).ddlFile = true;
       };
 
-    }, { chrome, options: optionsDefault, controlActions , badgeStates : EBadgeState});
+    }, { chrome, options: defaultOptions, controlActions , badgeStates : EBadgeState});
 
     // On ajoute le background dans la page
     await page.evaluate(scriptText => {

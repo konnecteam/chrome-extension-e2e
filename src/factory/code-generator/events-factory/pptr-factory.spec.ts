@@ -5,14 +5,14 @@ import { Block } from '../../../code-generator/block';
 import 'jest';
 import pptrActions from '../../../constants/pptr-actions';
 
-/** frame et optionsDefaultDefault utilisées pour les tests */
+/** frame et defaultOptionsDefault utilisées pour les tests */
 let frame : string;
 let frameId : number;
 
 /**
  * Options
  */
-const optionsDefault = {
+const defaultOptions = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -83,7 +83,7 @@ describe('Test de Pptr Action Block Factory', () => {
   });
 
   test('Test de build WaitForNavigation avec option WaitForNavigation activée', () => {
-    optionsDefault.waitForNavigation = true;
+    defaultOptions.waitForNavigation = true;
 
     const exceptedResult = new Block(frameId, {
       type: pptrActions.NAVIGATION,
@@ -92,7 +92,7 @@ describe('Test de Pptr Action Block Factory', () => {
 
     expect(
       PPtrFactory.buildWaitForNavigationBlock(
-        optionsDefault,
+        defaultOptions,
         frameId,
         frame
       )
@@ -102,13 +102,13 @@ describe('Test de Pptr Action Block Factory', () => {
   });
 
   test('Test de build WaitForNavigation avec option WaitForNavigation desactivée', () => {
-    optionsDefault.waitForNavigation = false;
+    defaultOptions.waitForNavigation = false;
 
     const exceptedResult = new Block(frameId);
 
     expect(
       PPtrFactory.buildWaitForNavigationBlock(
-        optionsDefault,
+        defaultOptions,
         frameId,
         frame
       )
@@ -125,7 +125,7 @@ describe('Test de Pptr Action Block Factory', () => {
     };
 
     expect(
-      PPtrFactory.generateBlock(eventMessage , frameId, frame, optionsDefault)
+      PPtrFactory.generateBlock(eventMessage , frameId, frame, defaultOptions)
     ).toEqual(
       PPtrFactory.buildGotoBlock(
         frameId,
@@ -142,7 +142,7 @@ describe('Test de Pptr Action Block Factory', () => {
     };
 
     expect(
-      PPtrFactory.generateBlock(eventMessage , frameId, frame, optionsDefault)
+      PPtrFactory.generateBlock(eventMessage , frameId, frame, defaultOptions)
     ).toEqual(
       PPtrFactory.buildViewportBlock(
         frameId,
@@ -159,10 +159,10 @@ describe('Test de Pptr Action Block Factory', () => {
     };
 
     expect(
-      PPtrFactory.generateBlock(eventMessage , frameId, frame, optionsDefault)
+      PPtrFactory.generateBlock(eventMessage , frameId, frame, defaultOptions)
     ).toEqual(
       PPtrFactory.buildWaitForNavigationBlock(
-        optionsDefault,
+        defaultOptions,
         frameId,
         frame
       )

@@ -14,7 +14,7 @@ let frame = 'page';
 /**
  * Options
  */
-const optionsDefault = {
+const defaultOptions = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -45,10 +45,10 @@ describe('Test de Submit Block Factory', () => {
   });
 
   test('Créer un submit', () => {
-    const exceptedResult = ClickFactory.buildBlock(optionsDefault, frameId, frame, selector);
+    const exceptedResult = ClickFactory.buildBlock(defaultOptions, frameId, frame, selector);
 
     expect(
-      SubmitFactory.buildBlock(frameId, frame, optionsDefault, selector)
+      SubmitFactory.buildBlock(frameId, frame, defaultOptions, selector)
     ).toEqual(
       exceptedResult
     );
@@ -62,9 +62,9 @@ describe('Test de Submit Block Factory', () => {
     };
 
     expect(
-      SubmitFactory.generateBlock(eventMessage , frameId, frame, optionsDefault )
+      SubmitFactory.generateBlock(eventMessage , frameId, frame, defaultOptions )
     ).toEqual(
-      SubmitFactory.buildBlock(frameId, frame, optionsDefault, selector)
+      SubmitFactory.buildBlock(frameId, frame, defaultOptions, selector)
     );
 
   });

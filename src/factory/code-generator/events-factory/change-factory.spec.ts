@@ -16,13 +16,13 @@ const INPUT_ID = '#input';
 const INPUT_NUN_ID = '#inputNum';
 const SELECTOR = '#id';
 
-/** frame et optionsDefault utilisées pour les tests */
+/** frame et defaultOptions utilisées pour les tests */
 let frame : string;
 let frameId : number;
 /**
  * Options
  */
-const optionsDefault : IOption = {
+const defaultOptions : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -146,7 +146,7 @@ describe('Test de Change Block Factory', () => {
         eventMessage ,
         frameId,
         frame,
-        optionsDefault
+        defaultOptions
       )
     ).toEqual(
       ChangeFactory.buildChangeBlockInputNumericBlock(
@@ -173,7 +173,7 @@ describe('Test de Change Block Factory', () => {
         eventMessage ,
         frameId,
         frame,
-        optionsDefault
+        defaultOptions
       )
     ).toEqual(
       ChangeFactory.buildChangeBlock(
@@ -199,7 +199,7 @@ describe('Test de Change Block Factory', () => {
         eventMessage ,
         frameId,
         frame,
-        optionsDefault
+        defaultOptions
       )
     ).toEqual(
       ChangeFactory.buildSelectChangeBlock(
@@ -227,7 +227,7 @@ describe('Test de Change Block Factory', () => {
         eventMessage ,
         frameId,
         frame,
-        optionsDefault
+        defaultOptions
       )
     ).toEqual(
       ChangeFactory.buildAcceptUploadFileChangeBlock(

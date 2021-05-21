@@ -135,7 +135,7 @@ export default class CodeGenerator {
 
       const lines = this._blocks[i].getLines();
       for (let j = 0; j < lines.length; j++) {
-        result += indent + lines[j].value + newLine;
+        result += `${indent}${lines[j].value}${newLine}`;
       }
     }
     return result;

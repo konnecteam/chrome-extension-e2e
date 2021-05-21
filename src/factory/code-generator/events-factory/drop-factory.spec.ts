@@ -13,7 +13,7 @@ let frameId : number;
 /**
  * Options
  */
-const optionsDefault : IOption = {
+const defaultOptions : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -47,7 +47,7 @@ describe('Test de Drop Block Factory', () => {
 
     // On rajoute d'abord la partie du click du file dropzone
     const exceptedResult = ClickFactory.buildclickFileDropZoneBlock(
-      optionsDefault,
+      defaultOptions,
       frameId,
       frame,
       eventMessage.selector
@@ -64,7 +64,7 @@ describe('Test de Drop Block Factory', () => {
         eventMessage,
         frameId,
         frame,
-        optionsDefault
+        defaultOptions
       )
     ).toEqual(
       exceptedResult

@@ -4,13 +4,13 @@ import { Block } from '../../../code-generator/block';
 import 'jest';
 import domEventsToRecord from '../../../constants/events/events-dom';
 
-/** frame et optionsDefault utilisées pour les tests */
+/** frame et defaultOptions utilisées pour les tests */
 let frame : string;
 let frameId : number;
 /**
  * Options
  */
-const optionsDefault = {
+const defaultOptions = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -40,7 +40,7 @@ describe('Test de Keydown Block Factory', () => {
   });
 
   test('Test de build ListKeydown dans une iframe', () => {
-    optionsDefault.waitForSelectorOnClick = false;
+    defaultOptions.waitForSelectorOnClick = false;
     const exceptedResult = new Block(frameId);
 
     exceptedResult.addLine({
@@ -59,7 +59,7 @@ describe('Test de Keydown Block Factory', () => {
 
     expect(
       KeydownFactory.buildListKeydownBlock(
-        optionsDefault,
+        defaultOptions,
         frameId,
         frame,
         selector,
@@ -97,7 +97,7 @@ describe('Test de Keydown Block Factory', () => {
 
     expect(
       KeydownFactory.buildListKeydownBlock(
-        optionsDefault,
+        defaultOptions,
         frameId,
         frame,
         selector,
@@ -111,7 +111,7 @@ describe('Test de Keydown Block Factory', () => {
 
   test('Test de build ListKeydown avec l\'option waitForSelectorOnClick', () => {
 
-    optionsDefault.waitForSelectorOnClick = true;
+    defaultOptions.waitForSelectorOnClick = true;
 
     const exceptedResult = new Block(frameId);
 
@@ -142,7 +142,7 @@ describe('Test de Keydown Block Factory', () => {
 
     expect(
       KeydownFactory.buildListKeydownBlock(
-        optionsDefault,
+        defaultOptions,
         frameId,
         frame,
         selector,

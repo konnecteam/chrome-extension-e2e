@@ -17,7 +17,7 @@ let page : puppeteer.Page;
 /**
  * Options
  */
-const optionsDefault : IOption = {
+const defaultOptions : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -139,7 +139,7 @@ describe('Test Content script ', () => {
         window.addEventListener('OnMessage', fct);
       };
 
-    }, { chrome, options: optionsDefault });
+    }, { chrome, options: defaultOptions });
 
     // On ajoute le content script dans la page
     await page.evaluate(scriptText => {

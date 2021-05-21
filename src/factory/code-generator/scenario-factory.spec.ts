@@ -20,7 +20,7 @@ const frame = 'page';
 /**
  * Options
  */
-const optionsDefault = {
+const defaultOptions = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -167,9 +167,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, optionsDefault)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      ClickFactory.generateBlock(eventMessage, frameId, frame, optionsDefault)
+      ClickFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -182,9 +182,9 @@ describe('Test de Scenario Factory', () => {
       value: 'content'
     };
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, optionsDefault)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      ChangeFactory.generateBlock(eventMessage, frameId, frame, optionsDefault)
+      ChangeFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -198,9 +198,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, optionsDefault)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      DropFactory.generateBlock(eventMessage, frameId, frame, optionsDefault)
+      DropFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -212,9 +212,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, optionsDefault)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      SubmitFactory.generateBlock(eventMessage, frameId, frame, optionsDefault)
+      SubmitFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -228,9 +228,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, optionsDefault)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      KeydownFactory.generateBlock(eventMessage, frameId, frame, optionsDefault)
+      KeydownFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -243,9 +243,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, optionsDefault)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      PPtrFactory.generateBlock(eventMessage, frameId, frame, optionsDefault)
+      PPtrFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 });

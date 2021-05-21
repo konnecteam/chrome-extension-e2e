@@ -24,7 +24,7 @@ const frame = 'page';
  * Sauvegarde les options par défauts
  * car elles vont être modifiés
  */
-const optionsDefault : IOption = {
+const defaultOptions : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -140,15 +140,15 @@ describe('Test de Code Generator', () => {
   test('Test avec les options par défauts', () => {
 
     expect(
-      new CodeGenerator(optionsDefault).generate(messageList))
+      new CodeGenerator(defaultOptions).generate(messageList))
       .toEqual(
-      createScenario(optionsDefault)
+      createScenario(defaultOptions)
     );
   });
 
   test('Test avec les options de base et la custom ligne après chaque click', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.customLineAfterClick = 'ligne custom 2';
 
     expect(
@@ -160,7 +160,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec les options de  base et la custom ligne après chaque event', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.customLinesBeforeEvent = 'line before event';
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -171,7 +171,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec l\'option des requetes http activé', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.recordHttpRequest = true;
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -182,7 +182,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec l\'option des requetes http desactivé', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.recordHttpRequest = false;
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -193,7 +193,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec le scénario dans une fonction async', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.wrapAsync = true;
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -204,7 +204,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec le scénario en dehors de la fonction async', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.wrapAsync = false;
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -219,9 +219,9 @@ describe('Test de Code Generator', () => {
     messageList = messageList.splice(0, 1);
 
     expect(
-      new CodeGenerator(optionsDefault).generate(messageList))
+      new CodeGenerator(defaultOptions).generate(messageList))
       .toEqual(
-      createScenario(optionsDefault)
+      createScenario(defaultOptions)
     );
   });
 
@@ -229,9 +229,9 @@ describe('Test de Code Generator', () => {
 
     messageList = [];
     expect(
-      new CodeGenerator(optionsDefault).generate(messageList))
+      new CodeGenerator(defaultOptions).generate(messageList))
       .toEqual(
-      createScenario(optionsDefault)
+      createScenario(defaultOptions)
     );
   });
 
