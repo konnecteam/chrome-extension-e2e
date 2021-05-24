@@ -133,7 +133,7 @@
           console.debug('loaded options', options)
 
           this.recording = recording
-          const codeOptions = options ? options.code : {}
+          const codeOptions = options ? options : {}
 
           const codeGen = new CodeGenerator(codeOptions)
           this.code = codeGen.generate(this.recording)

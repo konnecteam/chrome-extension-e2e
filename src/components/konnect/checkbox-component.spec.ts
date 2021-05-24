@@ -22,18 +22,18 @@ describe('Test de Checkbox', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de getCheckboxComponent', () => {
+  test('Test de getElement', () => {
 
     // Selecteur du label qui est dans la checkbox
     const element = document.getElementById(CHECKBOX_ID);
 
     // On doit trouver la Checkbox
     expect(
-      CheckboxComponent.getCheckboxComponent(element).component
+      CheckboxComponent.getElement(element).component
     ).toEqual(componentName.CHECKBOX);
   });
 
-  test('Test de editCheckboxMessage', () => {
+  test('Test de editCheckboxComponentMessage', () => {
     // On créé un event model qui contient les infos dont on a besoin
     const eventCatched : IMessage = {
       action : 'change'
@@ -42,7 +42,7 @@ describe('Test de Checkbox', () => {
     // On doit trouver l'action Click
     expect(
       CheckboxComponent.
-      editCheckboxMessage(eventCatched).action
+      editCheckboxComponentMessage(eventCatched).action
     ).toEqual(eventsDom.CLICK);
   });
 });

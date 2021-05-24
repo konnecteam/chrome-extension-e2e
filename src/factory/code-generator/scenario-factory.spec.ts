@@ -4,7 +4,6 @@ import { SubmitFactory } from './events-factory/submit-factory';
 import { DropFactory } from './events-factory/drop-factory';
 import { ChangeFactory } from './events-factory/change-factory';
 import { ClickFactory } from './events-factory/click-factory';
-import { defaults } from './../../constants/default-options';
 import customEvents from '../../constants/events/events-custom';
 import domEventsToRecord from '../../constants/events/events-dom';
 import { IMessage } from '../../interfaces/i-message';
@@ -17,6 +16,26 @@ import eventsDom from '../../constants/events/events-dom';
 /** Frame définie pour les tests */
 const frameId = 0;
 const frame = 'page';
+
+/**
+ * Options
+ */
+const defaultOptions = {
+  wrapAsync: true,
+  headless: false,
+  waitForNavigation: true,
+  waitForSelectorOnClick: true,
+  blankLinesBetweenBlocks: true,
+  dataAttribute: '',
+  useRegexForDataAttribute: false,
+  customLineAfterClick: '',
+  recordHttpRequest: true,
+  regexHTTPrequest: '',
+  customLinesBeforeEvent: `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
+  deleteSiteData: true,
+};
 
 describe('Test de Scenario Factory', () => {
 
@@ -118,7 +137,6 @@ describe('Test de Scenario Factory', () => {
     );
   });
 
-
   test('Test de generate comments', () => {
     const block = new Block(frameId, {
       value : 'test de comment',
@@ -149,9 +167,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      ClickFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      ClickFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -164,9 +182,9 @@ describe('Test de Scenario Factory', () => {
       value: 'content'
     };
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      ChangeFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      ChangeFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -180,9 +198,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      DropFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      DropFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -194,9 +212,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      SubmitFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      SubmitFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -210,9 +228,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      KeydownFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      KeydownFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
@@ -225,9 +243,9 @@ describe('Test de Scenario Factory', () => {
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaults)
+      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      PPtrFactory.generateBlock(eventMessage, frameId, frame, defaults)
+      PPtrFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 });

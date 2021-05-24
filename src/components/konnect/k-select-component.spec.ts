@@ -25,24 +25,24 @@ describe('Test de k select Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de getKSelect', () => {
+  test('Test de getElement', () => {
 
     // On doit trouver que l'on se trouve dans un kselect
     const element = document.querySelector(K_SELECT_SELETOR);
     expect(
-      KSelectComponent.getKSelect(element as HTMLElement).component
+      KSelectComponent.getElement(element as HTMLElement).component
     ).toEqual(componentName.K_SELECT);
   });
 
 
-  test('Test de editKSelectMessage', () => {
+  test('Test de editKSelectComponentMessage', () => {
     const eventMessage : IMessage = {
       selector: '#id'
     };
 
     // on doit trouver un click sur un input numeric
     expect(
-      KSelectComponent.editKSelectMessage(eventMessage).action
+      KSelectComponent.editKSelectComponentMessage(eventMessage).action
     ).toEqual(customEvents.CLICK_MOUSE_INPUT_NUMERIC);
   });
 });

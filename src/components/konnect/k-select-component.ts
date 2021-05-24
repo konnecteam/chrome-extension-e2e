@@ -11,9 +11,9 @@ import componentName from '../../constants/component-name';
 export class KSelectComponent {
 
   /**
-   * Récupère le component kselect
+   * Récupère le IComponent kselect
    */
-  public static getKSelect(element : HTMLElement) : IComponent {
+  public static getElement(element : HTMLElement) : IComponent {
 
     // Si c'est un k select qui se situe dans input numeric
     if (ElementService.getNumericElement(element) &&
@@ -27,7 +27,7 @@ export class KSelectComponent {
   /**
    * Edit le message pour les k select
    */
-  public static editKSelectMessage(event : IMessage) : IMessage {
+  public static editKSelectComponentMessage(event : IMessage) : IMessage {
     event.action = customEvents.CLICK_MOUSE_INPUT_NUMERIC;
     return event;
   }

@@ -43,7 +43,7 @@ function testKList(elementSelector : string,
 
   // On doit trouver que l'on est dans une konnect liste
   expect(
-    KListComponent.getKList(element as HTMLElement, previousElement).component
+    KListComponent.getElement(element as HTMLElement, previousElement).component
   ).toEqual(componentName.KLIST);
 }
 
@@ -56,29 +56,29 @@ describe('Test de k list Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de getKList pour konnect DROPDOWN', () => {
+  test('Test de getElement pour konnect DROPDOWN', () => {
 
     // On doit trouver que l'on est dans une konnect liste
     testKList(elementsTagName.KONNECT_DROPDOWNLIST, null, null);
   });
 
-  test('Test de getKList pour konnect multiselect', () => {
+  test('Test de getElement pour konnect multiselect', () => {
     // On doit trouver que l'on est dans une konnect liste
     testKList(elementsTagName.KONNECT_MULTISELECT, null, null);
   });
 
-  test('Test de getKList pour input de liste', () => {
+  test('Test de getElement pour input de liste', () => {
     // On doit trouver que l'on est dans un input de liste
     testKList(INPUT_LIST_SELECTOR, elementsTagName.KONNECT_DROPDOWNLIST, DROPDOWN);
   });
 
-  test('Test de getKList pour un item de liste', () => {
+  test('Test de getElement pour un item de liste', () => {
 
     // On doit trouver que l'on est dans une konnect liste
     testKList(ITEM_LIST_SELECTOR,  elementsTagName.KONNECT_DROPDOWNLIST, DROPDOWN);
   });
 
-  test('Test de editKlistMessage pour un item de konnect liste', () => {
+  test('Test de editKlistComponentMessage pour un item de konnect liste', () => {
 
     const element = document.querySelector(ITEM_LIST_SELECTOR);
 
@@ -106,11 +106,11 @@ describe('Test de k list Component', () => {
 
     // On doit trouver l'action click sur un item de la liste
     expect(
-      KListComponent.editKlistMessage(eventMessage, component).action
+      KListComponent.editKlistComponentMessage(eventMessage, component).action
     ).toEqual(customEvents.CLICK_LIST_ITEM);
   });
 
-  test('Test de editKlistMessage pour un input de list', () => {
+  test('Test de editKlistComponentMessage pour un input de list', () => {
 
     const element = document.querySelector(INPUT_LIST_SELECTOR);
 
@@ -134,7 +134,7 @@ describe('Test de k list Component', () => {
 
     // On doit trouver l'action click mouse
     expect(
-      KListComponent.editKlistMessage(eventMessage, component).action
+      KListComponent.editKlistComponentMessage(eventMessage, component).action
     ).toEqual(customEvents.CLICK_MOUSE);
 
   });

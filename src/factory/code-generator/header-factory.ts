@@ -16,7 +16,7 @@ export class HeaderFactory {
   /**
    * Génère le header du scénario
    */
-  public static getHeader(
+  public static generateHeader(
     recordHttpRequest : boolean,
     wrapAsync : boolean,
     headless : boolean,
@@ -24,8 +24,8 @@ export class HeaderFactory {
   ) : string {
 
     const importPackage = this.getImport(recordHttpRequest);
-    let hdr = wrapAsync ? HeaderCode.WRAPPED_HEADER : HeaderCode.HEADER;
-    hdr = headless ? hdr : hdr.replace(this._LAUNCH_KEY, 'launch({ headless: false })');
+    let header = wrapAsync ? HeaderCode.WRAPPED_HEADER : HeaderCode.HEADER;
+    header = headless ? header : header.replace(this._LAUNCH_KEY, 'launch({ headless: false })');
 
     let codeRegExp = '';
 
@@ -45,37 +45,36 @@ export class HeaderFactory {
 
 
     if (recordHttpRequest) {
-      hdr = hdr.replace(this._LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
-      hdr = hdr.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
+      header = header.replace(this._LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
+      header = header.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
 
-      let addRegexHTTP : string;
+      let addHttpRegexp : string;
 
       // Si il y a une regex on la met
       if (codeRegExp) {
 
-        addRegexHTTP = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
+        addHttpRegexp = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
             this._HTTP_REQUEST_REGEX_KEY,
             `&& !new RegExp(${codeRegExp}).test(url) `);
       }
       // Si il n'y a pas de Regexp alors on remplace par rien
       else {
-        addRegexHTTP = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
+        addHttpRegexp = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
       }
 
-      hdr += addRegexHTTP;
+      header += addHttpRegexp;
 
       // Si on une regex et pas l'option de record activé, on utilise le listener de la page pour les requêtes en live
     } else if (codeRegExp) {
-      hdr += HeaderCode.LISTENER_PAGE_LIVE_REQUEST.replace(
+      header += HeaderCode.LISTENER_PAGE_LIVE_REQUEST.replace(
         this._HTTP_REQUEST_REGEX_KEY,
         `&& !new RegExp(${codeRegExp}).test(url) `);
     }
-
-    return importPackage + hdr;
+    return importPackage + header;
   }
 
   /**
-   * Si on prends en compte les requêtes on rajoute les inputs nécéssaires
+   * Récupère les imports nécessaire au fonctionnment du scénario
    */
   private static getImport(recordHttpRequest : boolean) : string {
     return recordHttpRequest ? HeaderCode.IMPORT_HTTP_REQUEST : HeaderCode.IMPORT_PUPPETEER;

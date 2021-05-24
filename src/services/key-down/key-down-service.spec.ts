@@ -108,7 +108,7 @@ describe('Test de Keydown Service', () => {
     };
 
     expect(keyDownService.getClickCoordinates(event)
-    ).toEqual({ x : event.clientX, y : event.clientY});
+    ).toEqual({ x : event.clientX, y : event.clientY });
   });
 
   test('Test de get Coordinates avec un event non prise en charge ', () => {
