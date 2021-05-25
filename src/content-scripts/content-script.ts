@@ -137,7 +137,7 @@ class EventRecorder {
       this._updateOptions(data.options);
 
       // Si On record les requests on initialise et inject le script polly
-      if (data.options.code.recordHttpRequest) {
+      if (data.options.recordHttpRequest) {
         this._init();
       } else {
         // On dit au startup config que pollyJS est prêt et que les modules peuvent être chargé
@@ -162,7 +162,7 @@ class EventRecorder {
    * Permet de rediriger les messages dans la bonne méthode
    * @param message
    */
-  private _messageControl(message : IMessage) : void {
+  private _redirectMessage(message : IMessage) : void {
 
     if (message && message.hasOwnProperty('control')) {
 
@@ -290,7 +290,7 @@ class EventRecorder {
     };
 
     // On vérifie si un composant est concerné par l'event
-    const component = ComponentManager.determinateComponent(message.typeEvent, e.target, this._previousKList);
+    const component = ComponentManager.getComponent(message.typeEvent, e.target, this._previousKList);
 
     /* Si c'est le cas et qu'on a un previousElement
        c'est que on a une konnect liste, on update donc la value des k list
@@ -326,9 +326,14 @@ class EventRecorder {
       (window as any).eventRecorder
     );
 
-    for (const mutation of mutationList) {
+    for (let i = 0 ; i < mutationList.length ; i++) {
 
-      for (const child of mutation.addedNodes) {
+      const mutation = mutationList[i];
+
+      for (let j = 0 ; j < mutation.addedNodes.length; j++ ) {
+
+        const child = mutation.addedNodes[j];
+
         // Si on a une iframe on rajoute les listener car de base il n'y en pas
         if (child.tagName === elementsTagName.IFRAME.toUpperCase() && child.contentDocument) {
 
@@ -356,7 +361,7 @@ class EventRecorder {
 
     (window as any).document.pptRecorderAddedControlListeners = true;
 
-    this._boundedMessageControl = this._messageControl.bind(this);
+    this._boundedMessageControl = this._redirectMessage.bind(this);
     ChromeService.addOnMessageListener(this._boundedMessageControl);
 
     this._boundedSendPollyResult = this._sendPollyResult.bind(this);
@@ -404,9 +409,8 @@ class EventRecorder {
    * Mise à jour des options
    */
   private _updateOptions(options : {[key : string] : any}) : void {
-
     StorageService.setData({
-      useRegexForDataAttribute: options.code.useRegexForDataAttribute
+      useRegexForDataAttribute: options.useRegexForDataAttribute
     });
   }
 

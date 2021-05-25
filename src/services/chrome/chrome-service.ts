@@ -86,7 +86,7 @@ export class ChromeService {
   public static async getBadgeText() : Promise<string> {
     const currentTab = await this.getCurrentTabId();
     return new Promise((resolve, err) => {
-      chrome.browserAction.getBadgeText({tabId : currentTab.id}, result => {
+      chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
         resolve(result);
       });
     });

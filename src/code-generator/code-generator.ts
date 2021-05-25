@@ -1,10 +1,9 @@
-import { ObjectService } from '../services/object/object-service';
+import { UtilityService } from '../services/utility/utility-service';
 import { default as pptrActions} from '../constants/pptr-actions';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
 import { IOption } from '../interfaces/i-options';
-import { defaults } from '../constants/default-options';
 import { FooterFactory } from '../factory/code-generator/footer-factory';
 import { HeaderFactory } from '../factory/code-generator/header-factory';
 
@@ -18,7 +17,7 @@ export default class CodeGenerator {
   private _options : IOption;
 
   /** Liste des Block du scénario */
-  private _blocks : Block[];
+  private _blocks : Block[] = [];
 
   /** Frame courante */
   private _frame : string = 'page';
@@ -39,12 +38,11 @@ export default class CodeGenerator {
   private _lastScrollX =  0;
 
   constructor(options : IOption ) {
-    this._options = Object.assign(defaults, options);
-    this._blocks = [];
+    this._options = options;
   }
 
   public generate(events : IMessage[]) : string {
-    return HeaderFactory.getHeader(
+    return HeaderFactory.generateHeader(
       this._options.recordHttpRequest,
       this._options.wrapAsync,
       this._options.headless,
@@ -95,7 +93,7 @@ export default class CodeGenerator {
            Alors on rajoute la ligne customisé
         */
         if (this._options.customLinesBeforeEvent &&
-          !ObjectService.isValueInObject(pptrActions, currentEvent.action)) {
+          !UtilityService.isValueInObject(pptrActions, currentEvent.action)) {
 
           this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
         }
@@ -133,11 +131,11 @@ export default class CodeGenerator {
     const indent = this._options.wrapAsync ? '  ' : '';
     const newLine = `\n`;
     // 3- on récupère le result
-    for (const block of this._blocks) {
-      const lines = block.getLines();
+    for (let i = 0; i < this._blocks.length; i++) {
 
-      for (const line of lines) {
-        result += indent + line.value + newLine;
+      const lines = this._blocks[i].getLines();
+      for (let j = 0; j < lines.length; j++) {
+        result += `${indent}${lines[j].value}${newLine}`;
       }
     }
     return result;

@@ -1,10 +1,10 @@
-import { ObjectService } from './../../../services/object/object-service';
-import { WindowService } from '../../../services/window/window-service';
+import { UtilityService } from './../../../src/services/utility/utility-service';
+import { WindowService } from '../../../src/services/window/window-service';
 import { Polly } from '@pollyjs/core';
 import * as  FetchAdapter from '@pollyjs/adapter-fetch';
 import * as XHRAdapter from '@pollyjs/adapter-xhr';
 import inMemoryPersister from '../../persister/polly/in-memory-persister';
-import controlMSG from '../../../constants/control/control-message';
+import controlMSG from '../../../src/constants/control/control-message';
 
 // On prrécise à polly les adapter et persister utilisés
 Polly.register(XHRAdapter);
@@ -84,7 +84,7 @@ export class PollyRecorder {
     server
     .any()
     .filter(req => {
-      if (ObjectService.isStringIncludesTabString(req.url, PollyRecorder._googleMapsStrings)) {
+      if (UtilityService.isStringIncludesTabString(req.url, PollyRecorder._googleMapsStrings)) {
         return true;
       }
     })
@@ -116,7 +116,7 @@ export class PollyRecorder {
         */
         if ((entry as PerformanceResourceTiming).initiatorType !== PollyRecorder.FETCH
           && (entry as PerformanceNavigationTiming).initiatorType !== PollyRecorder.XMLHTTREQUEST
-          && !ObjectService.isStringIncludesTabString(entry.name, PollyRecorder._googleMapsStrings)
+          && !UtilityService.isStringIncludesTabString(entry.name, PollyRecorder._googleMapsStrings)
           && !this._paused
         ) {
 
@@ -127,8 +127,8 @@ export class PollyRecorder {
            * pour récupérer un produit qui n'est pas visible sur notre page mais quand même charger dans le dom
            * on récupêre donc sa requête car quand on rejoue le scénario, il nous l'a faut.
            */
-          for (const catalogURL of  PollyRecorder._catalaogProductUrl) {
-
+          for (let i = 0 ; i < PollyRecorder._requestNotRecorded.length; i++) {
+            const catalogURL = PollyRecorder._requestNotRecorded[i];
             if ((entry.name.includes(catalogURL) || new RegExp(/autoroute\/obj\/+\d/g).test(entry.name)) && entry.name ) {
 
               this._fetchProductCatalogRequest(entry.name);
@@ -263,7 +263,7 @@ export class PollyRecorder {
       if (currentReq.initiatorType !== PollyRecorder.XMLHTTREQUEST
         && currentReq.initiatorType !== PollyRecorder.FETCH
         && !this.requestRecorded.includes(currentReq.name)
-        && !ObjectService.isStringIncludesTabString(currentReq.name, PollyRecorder._googleMapsStrings)
+        && !UtilityService.isStringIncludesTabString(currentReq.name, PollyRecorder._googleMapsStrings)
       ) {
         this._addToRequestList(currentReq.name);
       }

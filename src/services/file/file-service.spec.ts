@@ -15,7 +15,7 @@ describe('Test de File Service', () => {
   test('Test de addfile', () => {
 
     fileService.addfile('file.txt', `data:plain/text;base64,ZmRmZGZkZmRkZg==`);
-    expect(fileService.getFilesList().length).toBeGreaterThan(0);
+    expect(fileService.getUploadedFiles().length).toBeGreaterThan(0);
   });
 
   test('Test de buildFile', () => {
@@ -27,9 +27,9 @@ describe('Test de File Service', () => {
 
   test('Test de clearList', () => {
 
-    fileService.clearList();
+    fileService.clearUploadedFiles();
     expect(
-      fileService.getFilesList().length
+      fileService.getUploadedFiles().length
     ).toStrictEqual(0);
   });
 

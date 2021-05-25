@@ -1,4 +1,3 @@
-import { defaults } from './../constants/default-options';
 import { runBuild } from './../../static/test/extension-builder/extension-builder';
 import 'jest';
 import * as puppeteer from 'puppeteer';
@@ -8,11 +7,32 @@ import * as chrome from 'sinon-chrome';
 import { IMessage } from '../interfaces/i-message';
 import controlActions from '../constants/control/control-actions';
 import { Server } from 'http';
-import {EBadgeState} from '../enum/e-badge-states';
+import { EBadgeState } from '../enum/e-badge-states';
+import { IOption } from 'interfaces/i-options';
 
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
+
+/**
+ * Options
+ */
+const defaultOptions : IOption = {
+  wrapAsync: true,
+  headless: false,
+  waitForNavigation: true,
+  waitForSelectorOnClick: true,
+  blankLinesBetweenBlocks: true,
+  dataAttribute: '',
+  useRegexForDataAttribute: false,
+  customLineAfterClick: '',
+  recordHttpRequest: true,
+  regexHTTPrequest: '',
+  customLinesBeforeEvent: `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
+  deleteSiteData: true,
+};
 
 /**
  * Récupère l'état du badge pour savoir
@@ -173,7 +193,7 @@ describe('Test de Recording Controller', () => {
         * On overwrite la méthode seticon pour connaitre l'état de l'icon
         */
       (window as any).badgeIcon = '';
-      chrome.browserAction.setIcon = (badge : { path : string}) => {
+      chrome.browserAction.setIcon = (badge : { path : string }) => {
         (window as any).badgeIcon = badge.path;
       };
 
@@ -181,7 +201,7 @@ describe('Test de Recording Controller', () => {
        * On overwrite la méthode seticon pour connaitre l'état du background
        */
       (window as any).badgeColor = '';
-      chrome.browserAction.setBadgeBackgroundColor = (badge : { color : string}) => {
+      chrome.browserAction.setBadgeBackgroundColor = (badge : { color : string }) => {
         (window as any).badgeIcon = badge.color;
       };
 
@@ -223,7 +243,7 @@ describe('Test de Recording Controller', () => {
         (window as any).ddlFile = true;
       };
 
-    }, { chrome, options: defaults, controlActions , badgeStates : EBadgeState});
+    }, { chrome, options: defaultOptions, controlActions , badgeStates : EBadgeState});
 
     // On ajoute le background dans la page
     await page.evaluate(scriptText => {
@@ -291,7 +311,7 @@ describe('Test de Recording Controller', () => {
 
     // On met du contenu dans code
     await page.evaluate(() => {
-      window.chrome.storage.local.set({code : 'code exemple'});
+      window.chrome.storage.local.set( { code : 'code exemple' });
       Promise.resolve();
     });
     // Dispatch event

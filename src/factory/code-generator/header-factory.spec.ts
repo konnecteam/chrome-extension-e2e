@@ -39,7 +39,7 @@ describe('Test du Header Factory', () => {
       exceptedResult = exceptedResult.replace(LAUNCH_KEY, 'launch({ headless: false })');
 
       expect(
-        HeaderFactory.getHeader(
+        HeaderFactory.generateHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
@@ -59,7 +59,7 @@ describe('Test du Header Factory', () => {
       exceptedResult = exceptedResult.replace(LAUNCH_KEY, 'launch({ headless: false })');
 
       expect(
-        HeaderFactory.getHeader(
+        HeaderFactory.generateHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
@@ -85,7 +85,7 @@ describe('Test du Header Factory', () => {
       exceptedResult += HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(HTTP_REQUEST_REGEX_KEY, ``);
 
       expect(
-        HeaderFactory.getHeader(
+        HeaderFactory.generateHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
@@ -103,7 +103,7 @@ describe('Test du Header Factory', () => {
       const exceptedResult = HeaderCode.IMPORT_PUPPETEER + HeaderCode.HEADER;
 
       expect(
-        HeaderFactory.getHeader(
+        HeaderFactory.generateHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
@@ -138,7 +138,7 @@ describe('Test du Header Factory', () => {
       );
 
       expect(
-        HeaderFactory.getHeader(
+        HeaderFactory.generateHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
@@ -158,7 +158,7 @@ describe('Test du Header Factory', () => {
       const exceptedResult = HeaderCode.IMPORT_PUPPETEER + HeaderCode.WRAPPED_HEADER;
 
       expect(
-        HeaderFactory.getHeader(
+        HeaderFactory.generateHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
@@ -191,7 +191,7 @@ describe('Test du Header Factory', () => {
       );
 
       expect(
-        HeaderFactory.getHeader(
+        HeaderFactory.generateHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
@@ -217,7 +217,7 @@ describe('Test du Header Factory', () => {
       // On enlève la condition de filtrage des requètes
       exceptedResult += HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(HTTP_REQUEST_REGEX_KEY, ``);
       expect(
-        HeaderFactory.getHeader(
+        HeaderFactory.generateHeader(
          recordHttpRequest,
          wrapAsync,
          headless,
@@ -250,8 +250,8 @@ describe('Test du Header Factory', () => {
        );
 
       expect(
-        HeaderFactory.getHeader(
-         recordHttpRequest,
+        HeaderFactory.generateHeader(
+        recordHttpRequest,
          wrapAsync,
          headless,
          regexHttp
@@ -261,6 +261,5 @@ describe('Test du Header Factory', () => {
       );
     });
   });
-
 
 });

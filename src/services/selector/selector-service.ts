@@ -1,4 +1,4 @@
-import { ObjectService } from '../object/object-service';
+import { UtilityService } from '../utility/utility-service';
 import finder from '@medv/finder';
 import { StorageService } from '../../services/storage/storage-service';
 
@@ -15,7 +15,7 @@ export class SelectorService {
    * Data attribute contient les customs attribute que l'utilisateur veut utiliser
    * C'est soit des string soit des RegExp
    */
-  private _dataAttributes : RegExp[] | string[];
+  private _dataAttributes : RegExp[] | string[] = null;
 
   /**
    * Ce boolean permet de savoir si on utilise des regexp ou des strings
@@ -26,7 +26,6 @@ export class SelectorService {
   public static instance : SelectorService;
 
   constructor() {
-    this._dataAttributes = null;
     this._useRegex = false;
     this._getOption();
   }
@@ -38,9 +37,9 @@ export class SelectorService {
   private async _getOption() : Promise<void> {
     const opt = await StorageService.getDataAsync(['options']);
     if (opt) {
-      this._useRegex = opt.options.code.useRegexForDataAttribute;
+      this._useRegex = opt.options.useRegexForDataAttribute;
 
-      this._dataAttributes = opt.options.code.dataAttribute.split(' ').filter(f => f !== '').map(f => {
+      this._dataAttributes = opt.options.dataAttribute.split(' ').filter(f => f !== '').map(f => {
         if (this._useRegex) {
           return new RegExp(f);
         } else {
@@ -142,18 +141,19 @@ export class SelectorService {
   private _findStandardSelector(element : HTMLElement) : string {
     // Gestion de l'id
     if (element.id  && !SelectorService._ID_TO_IGNORE_REG.test(element.id)
-     && !ObjectService.isStringStartInTab(element.id, SelectorService._ID_TO_IGNORE) ) {
+     && !UtilityService.isStringStartInTab(element.id, SelectorService._ID_TO_IGNORE) ) {
 
       return '#' + element.id.split(':').join('\\:');
-    }
+    } else {
+      try {
 
-    try {
+        // Si présent dans le dom on le récupère
+        return this._finderSelector(document, element);
+      } catch (e) {
 
-       // Si présent dans le dom on le récupère
-      return this._finderSelector(document, element);
-    } catch (e) {
-       // Dans le cas contraire on vérifie dans la sauvegarde du dom
-      return this._findSelectorElementInSavedDocument(element);
+        // Dans le cas contraire on vérifie dans la sauvegarde du dom
+        return this._findSelectorElementInSavedDocument(element);
+      }
     }
   }
 
@@ -196,7 +196,7 @@ export class SelectorService {
       element, {
         root : document.body,
         className: name => false, tagName: name => true ,
-        idName: name => !ObjectService.isStringStartInTab(name, SelectorService._ID_TO_IGNORE)
+        idName: name => !UtilityService.isStringStartInTab(name, SelectorService._ID_TO_IGNORE)
          && !name.match(SelectorService._ID_TO_IGNORE_REG) && !SelectorService._ID_TO_IGNORE_REG.test(name),
         seedMinLength : 7,
         optimizedMinLength : 12,
@@ -218,6 +218,9 @@ export class SelectorService {
 
   /**
    * Permet de formater les données d'un sélecteur
+   * Entré : element : un element qui a la propriété attribute passée en paramètre
+   * et attribute : click.delegate
+   * Sortie : [click\.delegate="modalGdprVM.close()"]
    */
   private _formatDataOfSelector(element : HTMLElement, attribute : string) : string {
     return `[${attribute.replace(/[.]/g, '\\\.')}="${element.getAttribute(attribute).replace(/[']/g, '\\\'').replace(/["]/g, '\\\"')}"]`;
@@ -225,6 +228,8 @@ export class SelectorService {
 
   /**
    * Permet de standardiser un sélecteur
+   * Entré : collapse-panel > div > div > div > div:nth-child(2) > div > input
+   * Sortie : collapse-panel > div > div > div > div\:nth-child(2) > div > input
    */
   public standardizeSelector(selector : string) : string {
     return selector.replace(/\\\./g, '\\\\.')

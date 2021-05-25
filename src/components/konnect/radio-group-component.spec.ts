@@ -25,18 +25,18 @@ describe('Test de RadioGroup', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de is RadioGroupComponent', () => {
+  test('Test de getElement', () => {
 
     // Selecteur du label qui est dans la RadioGroup
     const element = document.getElementById(RADIO_GROUP_ID);
 
     // On doit trouver la RadioGroup
     expect(
-       RadioGroupComponent.getRadioGroupComponent(element).component
+       RadioGroupComponent.getElement(element).component
     ).toEqual(componentName.RADIO_GROUP);
   });
 
-  test('Test de editRadioGroupMessage', () => {
+  test('Test de editRadioGroupComponentMessage', () => {
     // On créé un event model qui contient les infos dont on a besoin
     const eventCatched : IMessage = {
       action : 'change'
@@ -45,7 +45,7 @@ describe('Test de RadioGroup', () => {
     // On doit trouver l'action Click
     expect(
        RadioGroupComponent.
-      editRadioGroupMessage(eventCatched).action
+      editRadioGroupComponentMessage(eventCatched).action
     ).toEqual(eventsDom.CLICK);
   });
 });

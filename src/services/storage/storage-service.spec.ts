@@ -8,8 +8,8 @@ const DATAVALUE = 'test de data';
 let dataStorage : { [keys : string] : any; };
 
 let getStorage : { [keys : string] : any; };
-chrome.storage.local.set.withArgs({data : DATAVALUE }).callsFake(() => {
-  dataStorage = { test : DATAVALUE};
+chrome.storage.local.set.withArgs({ data : DATAVALUE }).callsFake(() => {
+  dataStorage = { test : DATAVALUE };
 });
 
 chrome.storage.local.get.withArgs(['data']).callsFake(() => {
@@ -29,7 +29,7 @@ describe('Test de Storage Service', () => {
 
   test('Test de set data', () => {
 
-    StorageService.setData({data : 'test de data'});
+    StorageService.setData({ data : 'test de data'});
     expect(dataStorage.test).toEqual(DATAVALUE);
   });
 

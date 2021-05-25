@@ -1,12 +1,12 @@
 /**
- * Service qui permet de comparer des objets
+ * Service utilitaire qui permet de verifier le contenu des objets
  */
-export class ObjectService {
+export class UtilityService {
 
   /**
-   * Vérifie si object contient la value
+   * Vérifie si un object quelconque contient une value quelconque
    */
-  public static isValueInObject(object : any, value : any) {
+  public static isValueInObject(object : any, value : any) : boolean {
 
     for (const property in object) {
       if (object[property] === value) {
@@ -20,7 +20,7 @@ export class ObjectService {
   /**
    * Vérifie si la value commence par une des string du tableau
    */
-  public static isStringStartInTab(value : string, tab : string[]) {
+  public static isStringStartInTab(value : string, tab : string[]) : boolean {
 
     for (let index = 0; index < tab.length; index++) {
       const element = tab[index];
