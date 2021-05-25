@@ -1,3 +1,4 @@
+import { ScrollFactory } from './events-factory/scroll-factory';
 import { KeydownFactory } from './events-factory/keydown-factory';
 import { SubmitFactory } from './events-factory/submit-factory';
 import { DropFactory } from './events-factory/drop-factory';
@@ -127,6 +128,9 @@ export class ScenarioFactory {
       // Si c'est un keydown
       case domEventsToRecord.KEYDOWN:
         return KeydownFactory.generateBlock(event, frameId, frame, options);
+      // Si c'est un scroll
+      case domEventsToRecord.SCROLL:
+        return ScrollFactory.generateBlock(event, frameId, frame);
       // Si c'est une action pupeteer
       case pptrActions.PPTR:
         return PPtrFactory.generateBlock(event, frameId, frame, options);

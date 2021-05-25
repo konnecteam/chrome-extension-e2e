@@ -10,5 +10,6 @@ export default {
   UNLOAD: 'unload',
   KEYDOWN : 'keydown',
   DROP : 'drop',
-  MOUSEDOWN : 'mousedown'
+  MOUSEDOWN : 'mousedown',
+  SCROLL : 'scroll'
 };

@@ -1,3 +1,4 @@
+import { ScrollService } from './../services/scroll/scroll-service';
 import { PasswordService } from '../services/password/password-service';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
@@ -33,6 +34,9 @@ class EventRecorder {
   /** Service qui permet de trouver le selecteur d'un élément */
   private _selectorService : SelectorService;
 
+  /** Service qui permet de gérer le scroll */
+  private _scrollService : ScrollService;
+
   /** Liste des events à ecouter */
   private _events;
 
@@ -44,6 +48,9 @@ class EventRecorder {
 
   /** Fonction qui permet d'écouter les events */
   private _boundedRecordEvent : () => void = null;
+
+  /** Fonction qui permet d'écouter les events scroll */
+  private _boundedScrollEvent : () => void = null;
 
   /** Fonction qui permet d'ecouter l'event onbeforeunload */
   private _boundedOnBeforeUnload : () => void = null;
@@ -75,6 +82,7 @@ class EventRecorder {
     // Service
     this._keyDownService = KeyDownService.Instance;
     this._selectorService = SelectorService.Instance;
+    this._scrollService = ScrollService.Instance;
     this._events = Object.values(eventsToRecord);
 
     // Enregistre les informations avant un click d'un item de list
@@ -147,7 +155,7 @@ class EventRecorder {
 
       // Ajout d'un listener afin d'écouter les messages du background
       if (!(window.document as any).pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
-        this._addAllListeners(this._events);
+        this._addAllListeners();
       }
 
       // On observe les changement et on ajoute un listener sur les inputs
@@ -352,7 +360,7 @@ class EventRecorder {
    * Ajout des listeners
    *
    */
-  private _addAllListeners(events) : void {
+  private _addAllListeners() : void {
 
     (window as any).document.pptRecorderAddedControlListeners = true;
 
@@ -368,9 +376,16 @@ class EventRecorder {
     WindowService.addEventListener('beforeunload', this._boundedOnBeforeUnload);
 
     this._boundedRecordEvent = this._recordEvent.bind(this);
-    events.forEach(type => {
-      WindowService.addEventListener(type, this._boundedRecordEvent, true);
-    });
+    this._boundedScrollEvent = this._scrollService.handleEvent.bind(this);
+
+    for (let index = 0; index < this._events.length; index++) {
+      const type = this._events[index];
+      if (type !== eventsToRecord.SCROLL) {
+        WindowService.addEventListener(type, this._boundedRecordEvent, true);
+      } else {
+        WindowService.addEventListener(type, this._boundedScrollEvent, true);
+      }
+    }
   }
 
   /**
@@ -378,9 +393,14 @@ class EventRecorder {
    */
   private _deleteAllListeners() : void {
 
-    this._events.forEach(type => {
-      WindowService.removeEventListener(type, this._boundedRecordEvent, true);
-    });
+    for (let index = 0; index < this._events.length; index++) {
+      const type = this._events[index];
+      if (type !== eventsToRecord.SCROLL) {
+        WindowService.removeEventListener(type, this._boundedRecordEvent, true);
+      } else {
+        WindowService.removeEventListener(type, this._boundedScrollEvent, true);
+      }
+    }
 
     ChromeService.removeOnMessageListener(this._boundedMessageControl);
     WindowService.removeEventListener('message', this._boundedSendPollyResult, false);

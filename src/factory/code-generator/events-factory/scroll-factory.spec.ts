@@ -11,12 +11,12 @@ describe('Test de Scroll Block factory', () => {
     const frameId = 0;
     const scrollX = 150;
     const scrollY = 200;
-
+    const selector = '#test';
     const excpetedResult = new Block(frameId);
     excpetedResult.addLine({
       type: 'scroll',
       value: ` await ${frame}.evaluate( async function(){
-        window.scroll(${scrollX}, ${scrollY});
+        document.querySelector('${selector}').scroll(${scrollX}, ${scrollY});
       });`
     });
 
@@ -24,6 +24,7 @@ describe('Test de Scroll Block factory', () => {
       ScrollFactory.buildScrollBlock(
         frame,
         frameId,
+        selector,
         scrollX,
         scrollY
       )

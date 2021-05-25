@@ -32,12 +32,6 @@ export default class CodeGenerator {
   /** Permet de savoir si il y a eu une navigation */
   private _hasNavigation = false;
 
-  /** Dernière position du scroll verticale */
-  private _lastScrollY = 0;
-
-  /** Dernière position du scroll horizontale */
-  private _lastScrollX =  0;
-
   constructor(options : IOption ) {
     this._options = Object.assign(defaults, options);
     this._blocks = [];
@@ -66,23 +60,6 @@ export default class CodeGenerator {
     for (let i = 0; i < events.length; i++) {
 
       const currentEvent = events[i];
-      // Si le scroll de le page a changé, alors on le change aussi
-      if (!isNaN(currentEvent.scrollX) && !isNaN(currentEvent.scrollY)) {
-
-        if (this._lastScrollX !== currentEvent.scrollX || this._lastScrollY !== currentEvent.scrollY) {
-          this._lastScrollX = currentEvent.scrollX;
-          this._lastScrollY = currentEvent.scrollY;
-
-          // Si on a une ligne customisé avant chaque event, on l'a rajoute
-          if (this._options.customLinesBeforeEvent) {
-            this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
-          }
-
-          this._blocks.push(
-            ScenarioFactory.generateScrollBlock(this._frameId, this._frame, currentEvent.scrollX, currentEvent.scrollY)
-          );
-        }
-      }
 
       // On update les frames
       this._setFrames(currentEvent.frameId, currentEvent.frameUrl);
