@@ -37,7 +37,7 @@ export class UtilityService {
    * @param tab
    * @returns
    */
-  public static isStringIncludesTabString(value : string, tab : string[]) : boolean {
+  public static isStringInTab(value : string, tab : string[]) : boolean {
 
     for (let i = 0; i < tab.length; i++) {
       if (!value.includes(tab[i])) {

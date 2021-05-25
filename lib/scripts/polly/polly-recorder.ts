@@ -84,7 +84,7 @@ export class PollyRecorder {
     server
     .any()
     .filter(req => {
-      if (UtilityService.isStringIncludesTabString(req.url, PollyRecorder._googleMapsStrings)) {
+      if (UtilityService.isStringInTab(req.url, PollyRecorder._googleMapsStrings)) {
         return true;
       }
     })
@@ -116,7 +116,7 @@ export class PollyRecorder {
         */
         if ((entry as PerformanceResourceTiming).initiatorType !== PollyRecorder.FETCH
           && (entry as PerformanceNavigationTiming).initiatorType !== PollyRecorder.XMLHTTREQUEST
-          && !UtilityService.isStringIncludesTabString(entry.name, PollyRecorder._googleMapsStrings)
+          && !UtilityService.isStringInTab(entry.name, PollyRecorder._googleMapsStrings)
           && !this._paused
         ) {
 
@@ -263,7 +263,7 @@ export class PollyRecorder {
       if (currentReq.initiatorType !== PollyRecorder.XMLHTTREQUEST
         && currentReq.initiatorType !== PollyRecorder.FETCH
         && !this.requestRecorded.includes(currentReq.name)
-        && !UtilityService.isStringIncludesTabString(currentReq.name, PollyRecorder._googleMapsStrings)
+        && !UtilityService.isStringInTab(currentReq.name, PollyRecorder._googleMapsStrings)
       ) {
         this._addToRequestList(currentReq.name);
       }
