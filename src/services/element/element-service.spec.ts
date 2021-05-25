@@ -232,7 +232,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
   });
 });
 
-describe('Test du determinate click event', () => {
+describe('Test du get click event', () => {
   test('Determiner click d\'un FileDropZoneComponent', async () => {
     // on init le body
     await changeBodyDocumentAsync(FILE_DROP_ZONE_PATH);
@@ -241,11 +241,11 @@ describe('Test du determinate click event', () => {
 
     // On doit trouver que l'on est dans un file dropzone
     expect(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
         element as HTMLElement,
         null
       )
-    ).toEqual(FileDropZoneComponent.getFileDropZone(element as HTMLElement));
+    ).toEqual(FileDropZoneComponent.getElement(element as HTMLElement));
   });
 
 
@@ -257,11 +257,11 @@ describe('Test du determinate click event', () => {
 
     // on doit trouver un component model de k selct
     expect(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
         element as HTMLElement,
         null
       )
-    ).toEqual(KSelectComponent.getKSelect(element as HTMLElement));
+    ).toEqual(KSelectComponent.getElement(element as HTMLElement));
 
   });
 
@@ -273,11 +273,11 @@ describe('Test du determinate click event', () => {
 
     // on doit trouver le component model d'un km switch
     expect(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
         element as HTMLElement,
         null
       )
-    ).toEqual(KmSwitchComponent.getKmSwitch(element as HTMLElement));
+    ).toEqual(KmSwitchComponent.getElement(element as HTMLElement));
   });
 
   test('Determiner click d\'un KListComponent', async () => {
@@ -297,16 +297,16 @@ describe('Test du determinate click event', () => {
 
     // On doit trouver un component model qui fait référence à une k list
     expect(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
         element as HTMLElement,
         previousElement
       )
-    ).toEqual(KListComponent.getKList(element as HTMLElement, previousElement));
+    ).toEqual(KListComponent.getElement(element as HTMLElement, previousElement));
 
   });
 });
 
-describe('Test de determinate drop event', () => {
+describe('Test de get drop event', () => {
 
   test('Determiner drop d\'un FileDropZoneComponent', async () => {
     // on init le body
@@ -315,12 +315,12 @@ describe('Test de determinate drop event', () => {
     // On doit trouver un component file dropzone
     const element = document.querySelector(FILE_DROP_ZONE_SELECTOR);
     expect(
-      ElementService.determinateDropComponent(element as HTMLElement)
-    ).toEqual(FileDropZoneComponent.getFileDropZone(element as HTMLElement));
+      ElementService.getDropComponent(element as HTMLElement)
+    ).toEqual(FileDropZoneComponent.getElement(element as HTMLElement));
   });
 });
 
-describe('Test de determinate keydown event', () => {
+describe('Test de get keydown event', () => {
 
   beforeAll(() => {
     // on init un body pour le test
@@ -350,12 +350,12 @@ describe('Test de determinate keydown event', () => {
     const element = document.querySelector('iframe').contentWindow.document.querySelector('h1');
     // on doit trouver un component iframe
     expect(
-      ElementService.determinateKeydownComponent(element)
-    ).toEqual(IframeComponent.getIframe(element));
+      ElementService.getKeydownComponent(element)
+    ).toEqual(IframeComponent.getElement(element));
   });
 });
 
-describe('Test du determinate change event', () => {
+describe('Test du get change event', () => {
 
   beforeAll(async () => {
     // On init le body
@@ -371,8 +371,8 @@ describe('Test du determinate change event', () => {
 
     // On doit trouver que l'on est sur un input file
     expect(
-      ElementService.determinateChangeComponent(element as HTMLInputElement)
-    ).toEqual(InputFilesComponent.getInputFile(element as HTMLInputElement)
+      ElementService.getChangeComponent(element as HTMLInputElement)
+    ).toEqual(InputFilesComponent.getElement(element as HTMLInputElement)
     );
   });
 
@@ -381,8 +381,8 @@ describe('Test du determinate change event', () => {
     const element = document.querySelector(INPUT_NUMERIC_SELECTOR);
     // On doit trouver que l'on est dans un input numeric
     expect(
-      ElementService.determinateChangeComponent(element as HTMLElement)
-    ).toEqual(InputNumericComponent.getInputNumeric(element as HTMLElement)
+      ElementService.getChangeComponent(element as HTMLElement)
+    ).toEqual(InputNumericComponent.getElement(element as HTMLElement)
     );
   });
 });

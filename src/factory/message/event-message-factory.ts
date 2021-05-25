@@ -16,55 +16,42 @@ import { KListComponent } from '../../components/konnect/k-list-component';
  */
 export class EventMessageFactory {
 
-  // Créér un IMessage en fonction des paramètre donné
+  // Créér un IMessage en fonction des paramètres donnés
   public static buildMessageEvent (component : IComponent, event : IMessage, filesUpload : FileList) : IMessage {
-    let newMessage : IMessage;
     switch (component.component) {
 
       // Si c'est un file drop zone component
       case componentName.FILE_DROPZONE :
-        newMessage = FileDropZoneComponent.editFileDropZoneMessage(event, filesUpload);
-        break;
+        return FileDropZoneComponent.editFileDropZoneComponentMessage(event, filesUpload);
       // Si c'est le bouton ajouter des fichiers
       case componentName.BUTTON_ADD_FILE_DROPZONE :
-        newMessage = FileDropZoneComponent.editFileDropZoneButtonMessage(event);
-        break;
+        return FileDropZoneComponent.editFileDropZoneButtonComponentMessage(event);
       // Si c'est un input de fichier
       case componentName.INPUT_FILE :
-        newMessage = InputFilesComponent.editInputFileMessage(event, (component.element as HTMLInputElement).files);
-        break;
+        return InputFilesComponent.editInputFileComponentMessage(event, (component.element as HTMLInputElement).files);
       // Si c'est un input numeric
       case componentName.INPUT_NUMERIC :
-        newMessage = InputNumericComponent.editInputNumericMessage(event, component);
-        break;
+        return InputNumericComponent.editInputNumericComponentMessage(event, component);
       // Si c'est un k select (les flêches à coté de l'input numeric)
       case componentName.K_SELECT :
-        newMessage = KSelectComponent.editKSelectMessage(event);
-        break;
+        return KSelectComponent.editKSelectComponentMessage(event);
       // Si c'est un switch
       case componentName.KM_SWITCH :
-        newMessage = KmSwitchComponent.editKmSwitchMessage(event, component);
-        break;
+        return KmSwitchComponent.editKmSwitchComponentMessage(event, component);
       // Si c'est une frame
       case componentName.IFRAME :
-        newMessage = IframeComponent.editIframeMessage(event, component);
-        break;
+        return IframeComponent.editIframeComponentMessage(event, component);
       // Si c'est une konnect liste
       case componentName.KLIST :
-        newMessage = KListComponent.editKlistMessage(event, component);
-        break;
+        return KListComponent.editKlistComponentMessage(event, component);
       // Si c'est un checkbox
       case componentName.CHECKBOX :
-        newMessage = CheckboxComponent.editCheckboxMessage(event);
-        break;
+        return CheckboxComponent.editCheckboxComponentMessage(event);
       // Si c'est un radio group
       case componentName.RADIO_GROUP :
-        newMessage = RadioGroupComponent.editRadioGroupMessage(event);
-        break;
+        return RadioGroupComponent.editRadioGroupComponentMessage(event);
       default :
-        newMessage = null;
+        return null;
     }
-    return newMessage;
-
   }
 }

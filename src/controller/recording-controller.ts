@@ -1,6 +1,6 @@
+import { IOption } from 'interfaces/i-options';
 import { DataURLFactory } from './../factory/data-url/data-url-factory';
 import { StorageService } from '../services/storage/storage-service';
-import { defaults as code } from '../constants/default-options';
 import { ZipService } from '../services/zip/zip-service';
 import { FileService } from '../services/file/file-service';
 import { ChromeService } from '../services/chrome/chrome-service';
@@ -98,10 +98,6 @@ class RecordingController {
    * Constructeur
    */
   constructor() {
-
-    this._recording = [];
-    this._zipContent = null;
-
     // Service
     this._zipService = ZipService.Instance;
     this._fileService = FileService.Instance;
@@ -114,7 +110,25 @@ class RecordingController {
    * Initialisation du storage
    */
   private _initStorageOptions() {
-    StorageService.setData({ 'options' : { code } });
+
+    StorageService.setData( {
+      options :  {
+        wrapAsync: true,
+        headless: false,
+        waitForNavigation: true,
+        waitForSelectorOnClick: true,
+        blankLinesBetweenBlocks: true,
+        dataAttribute: '',
+        useRegexForDataAttribute: false,
+        customLineAfterClick: '',
+        recordHttpRequest: true,
+        regexHTTPrequest: '',
+        customLinesBeforeEvent: `await page.evaluate(async() => {
+        await konnect.engineStateService.Instance.waitForAsync(1);
+      });`,
+        deleteSiteData: true,
+      }
+    });
   }
 
   /**
@@ -167,7 +181,7 @@ class RecordingController {
       });
 
       ChromeService.download(this._zipContent, RecordingController._FILENAME);
-      return Promise.resolve();
+      return;
     }
 
     // 3 - Recupération du code dans le local storage
@@ -188,7 +202,7 @@ class RecordingController {
       });
 
       // Recupère la liste des fichiers qui seront dans le zip
-      const files = this._fileService.getFilesList();
+      const files = this._fileService.getUploadedFiles();
       for (let i = 0; i < files.length; i++) {
         this._zipService.addFileInFolder(`recordings/files/${files[i].name}`, files[i]);
       }
@@ -330,7 +344,7 @@ class RecordingController {
 
     this._zipContent = null;
     this._isResult = false;
-    this._fileService.clearList();
+    this._fileService.clearUploadedFiles();
     this._recording = [];
     this._zipService.resetZip();
     this._pollyService.flush();
@@ -341,8 +355,8 @@ class RecordingController {
     // 2 - On récupère les options
     const data = await StorageService.getDataAsync(['options']);
     if  (data) {
-      this._recordHttpRequest = data.options.code.recordHttpRequest;
-      this._deleteSiteData = data.options.code.deleteSiteData;
+      this._recordHttpRequest = data.options.recordHttpRequest;
+      this._deleteSiteData = data.options.deleteSiteData;
     }
 
     // Si l'option deleteSiteDate est activé, on supprime les données du site

@@ -13,7 +13,7 @@ export class StorageService {
   /**
    * Permet de récupérer un objet
    */
-  public static getDataAsync(keys : string[]) : Promise<{ [keys : string] : any}> {
+  public static getDataAsync(keys : string[]) : Promise<{ [keys : string] : any }> {
     return new Promise((resolve, reject) => {
       chrome.storage.local.get(keys, data => {
         resolve(data);

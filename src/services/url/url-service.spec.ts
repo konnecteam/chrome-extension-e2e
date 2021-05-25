@@ -7,7 +7,7 @@ import { launchPuppeteerWithExtension } from '../../../static/test/lauch-puppete
 import { Server } from 'http';
 
 let urlLink = '';
-const obj = {hello: 'world'};
+const obj = { hello: 'world' };
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
@@ -43,7 +43,7 @@ describe('Test de du Service UrlService', function() {
     urlLink = await page.evaluate(async (urlObject : any) => {
       // tslint:disable-next-line: no-eval
       eval('window.createUrl = function ' + urlObject.urlCreate);
-      return (window as any).createUrl(new Blob([JSON.stringify(urlObject.obj, null, 2)], {type : 'application/json'}));
+      return (window as any).createUrl(new Blob([JSON.stringify(urlObject.obj, null, 2)], { type : 'application/json' }));
     }, {
       obj, urlCreate: URLService.createURLObject.toString()
     });

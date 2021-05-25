@@ -26,18 +26,18 @@ describe('Test de km switch Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de getKmSwitch', () => {
+  test('Test de getElement', () => {
 
     const element = document.querySelector(KM_SWITCH_SELECTOR);
 
     // on doit trouver le km switch
     expect(
-      KmSwitchComponent.getKmSwitch(element as HTMLElement).component
+      KmSwitchComponent.getElement(element as HTMLElement).component
     ).toEqual(componentName.KM_SWITCH);
   });
 
 
-  test('Test de editKmSwitchMessage', () => {
+  test('Test de editKmSwitchComponentMessage', () => {
 
     const element = document.querySelector(KM_SWITCH_SELECTOR);
 
@@ -52,7 +52,7 @@ describe('Test de km switch Component', () => {
 
     // On doit trouver l'action click mouse
     expect(
-      KmSwitchComponent.editKmSwitchMessage(eventMessage, component).action
+      KmSwitchComponent.editKmSwitchComponentMessage(eventMessage, component).action
     ).toEqual(customEvents.CLICK_MOUSE);
   });
 });

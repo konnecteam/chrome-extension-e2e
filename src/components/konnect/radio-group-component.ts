@@ -11,10 +11,10 @@ import eventsDom from '../../constants/events/events-dom';
 export class RadioGroupComponent {
 
   /**
-   * Récupère le component radiogroup
+   * Récupère le IComponent radiogroup
    * @param element
    */
-  public static getRadioGroupComponent(element : HTMLElement) : IComponent {
+  public static getElement(element : HTMLElement) : IComponent {
 
     if (ElementService.findParentElementWithTagName(
       element,
@@ -31,7 +31,7 @@ export class RadioGroupComponent {
   /**
    * Modification de l'event pour un RadioGroup
    */
-  public static editRadioGroupMessage(event : IMessage) : IMessage {
+  public static editRadioGroupComponentMessage(event : IMessage) : IMessage {
     event.action = eventsDom.CLICK;
     return event;
   }

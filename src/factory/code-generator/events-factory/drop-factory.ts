@@ -21,9 +21,8 @@ export class DropFactory {
 
       // On rajoute la partie acceptation du fichier
       const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(frameId, files);
-
-      for (const line of chooserFile.getLines()) {
-        newBlock.addLine(line);
+      for (let i = 0; i < chooserFile.getLines().length; i++ ) {
+        newBlock.addLine(chooserFile.getLines()[i]);
       }
       return newBlock;
 

@@ -12,19 +12,19 @@ describe('Test de input file Component', () => {
    </div>`;
   });
 
-  test('Test de getInputFile pour un input sans files', () => {
+  test('Test de getElement pour un input sans files', () => {
 
     // On selectione l'input file
     const element  = document.getElementById('inFile') as HTMLInputElement;
 
     // On doit trouver null car l'input file n'as pas de fichier (files)
     expect(
-      InputFilesComponent.getInputFile(element)
+      InputFilesComponent.getElement(element)
     ).toBeNull();
   });
 
 
-  test('Test de editInputFileMessage pour un input sans files', () => {
+  test('Test de editInputFileComponentMessage pour un input sans files', () => {
 
     const element  = document.getElementById('inFile') as HTMLInputElement;
 
@@ -36,7 +36,7 @@ describe('Test de input file Component', () => {
      *  car la propriété file de l'input est vide
      */
     expect(
-      InputFilesComponent.editInputFileMessage(event, element.files).files
+      InputFilesComponent.editInputFileComponentMessage(event, element.files).files
     ).toBeDefined();
   });
 });

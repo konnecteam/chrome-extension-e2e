@@ -1,9 +1,9 @@
-import { WindowService } from '../../../services/window/window-service';
+import { WindowService } from '../../../src/services/window/window-service';
 import { Polly } from '@pollyjs/core';
 import * as  FetchAdapter from '@pollyjs/adapter-fetch';
 import * as XHRAdapter from '@pollyjs/adapter-xhr';
 import inMemoryPersister from '../../persister/polly/in-memory-persister';
-import controlMSG from '../../../constants/control/control-message';
+import controlMSG from '../../../src/constants/control/control-message';
 
 // On prrécise à polly les adapter et persister utilisés
 Polly.register(XHRAdapter);
@@ -106,8 +106,8 @@ export class PollyRecorder {
            * pour récupérer un produit qui n'est pas visible sur notre page mais quand même charger dans le dom
            * on récupêre donc sa requête car quand on rejoue le scénario, il nous l'a faut.
            */
-          for (const catalogURL of  PollyRecorder._catalaogProductUrl) {
-
+          for (let i = 0 ; i < PollyRecorder._requestNotRecorded.length; i++) {
+            const catalogURL = PollyRecorder._requestNotRecorded[i];
             if ((entry.name.includes(catalogURL) || new RegExp(/autoroute\/obj\/+\d/g).test(entry.name)) && entry.name ) {
 
               this._fetchProductCatalogRequest(entry.name);
