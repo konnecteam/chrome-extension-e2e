@@ -20,7 +20,7 @@ export class RegExpFactory {
 
     const flag = splittedRegex[splittedRegex.length - 1 ];
 
-    // on enlève le premier '/' et le dernier '/'et on la regexp
+    // on enlève le premier '/' et le dernier '/'et on a la regexp
     const regex = splittedRegex.splice(1 , splittedRegex.length - 2).join('/');
 
     if (flag) {

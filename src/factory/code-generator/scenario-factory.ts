@@ -67,24 +67,6 @@ export class ScenarioFactory {
   }
 
   /**
-   * Génère le scroll
-   */
-  public static generateScrollBlock(frameId : number, frame : string,
-     scrollX : number, scrollY : number) : Block {
-
-    const block = new Block(frameId);
-    block.addLine({
-      type: 'scroll',
-      value: ` await ${frame}.evaluate( async function(){
-        window.scroll(${scrollX}, ${scrollY});
-        return Promise.resolve('finish');
-      });`
-    });
-
-    return block;
-  }
-
-  /**
    * Génère la variable navigationPromise en cas de navigation
    */
   public static generateVarNavigationBlock(frameId : number) : Block {

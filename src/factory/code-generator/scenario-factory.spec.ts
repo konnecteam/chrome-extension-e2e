@@ -108,23 +108,6 @@ describe('Test de Scenario Factory', () => {
     );
   });
 
-  test('Test de generate Scroll', () => {
-    const scrollX = 150;
-    const scrollY = 250;
-
-    expect(
-      ScenarioFactory.generateScrollBlock(frameId, frame, scrollX, scrollY)
-    ).toEqual(
-      new Block(frameId, {
-        type: 'scroll',
-        value: ` await ${frame}.evaluate( async function(){
-        window.scroll(${scrollX}, ${scrollY});
-        return Promise.resolve('finish');
-      });`
-      })
-    );
-  });
-
   test('Test de generate NavigationVar', () => {
 
     expect(
