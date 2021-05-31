@@ -1,4 +1,3 @@
-import { defaults } from './../constants/default-options';
 import domEventsToRecord from '../constants/events/events-dom';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { FooterFactory } from '../factory/code-generator/footer-factory';
@@ -9,7 +8,7 @@ import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
 import 'jest';
 import CodeGenerator from './code-generator';
-import { ObjectService } from '../services/object/object-service';
+import { UtilityService } from '../services/utility/utility-service';
 import eventsDom from '../constants/events/events-dom';
 
 /** Frame dans laquelle on se situe */
@@ -25,7 +24,22 @@ const frame = 'page';
  * Sauvegarde les options par défauts
  * car elles vont être modifiés
  */
-const optionsDefault = JSON.parse(JSON.stringify(defaults));
+const defaultOptions : IOption = {
+  wrapAsync: true,
+  headless: false,
+  waitForNavigation: true,
+  waitForSelectorOnClick: true,
+  blankLinesBetweenBlocks: true,
+  dataAttribute: '',
+  useRegexForDataAttribute: false,
+  customLineAfterClick: '',
+  recordHttpRequest: true,
+  regexHTTPrequest: '',
+  customLinesBeforeEvent: `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
+  deleteSiteData: true,
+};
 
 /**
  * Transforme une liste de Block en string
@@ -36,10 +50,10 @@ function blocksToString(listBlock : Block[], wrapAsync : boolean) {
   const indent = wrapAsync ? '  ' : '';
   const newLine = `\n`;
   let result = '';
-  for (const block of listBlock) {
-    const lines = block.getLines();
-
-    for (const line of lines) {
+  for (let i = 0 ; i < listBlock.length; i++) {
+    const lines = listBlock[i].getLines();
+    for (let j = 0; j < lines.length; j++) {
+      const line = lines[j];
       result += indent + line.value + newLine;
     }
   }
@@ -52,7 +66,7 @@ function blocksToString(listBlock : Block[], wrapAsync : boolean) {
  */
 function createScenario(options : IOption) {
   // Header du scénario
-  let scenarioExcepted = HeaderFactory.getHeader(
+  let scenarioExcepted = HeaderFactory.generateHeader(
     options.recordHttpRequest,
     options.wrapAsync,
     options.headless,
@@ -61,7 +75,9 @@ function createScenario(options : IOption) {
 
   const listBlock = [];
   // Scénario
-  for (const currentEvent of messageList) {
+  for (let i = 0; i < messageList.length; i++) {
+    const currentEvent = messageList[i];
+
     const block = ScenarioFactory.parseEvent(
       currentEvent,
       frameId,
@@ -71,7 +87,7 @@ function createScenario(options : IOption) {
 
     if (block) {
 
-      if (options.customLinesBeforeEvent && !ObjectService.isValueInObject(pptrActions, currentEvent.action)) {
+      if (options.customLinesBeforeEvent && !UtilityService.isValueInObject(pptrActions, currentEvent.action)) {
         listBlock.push(ScenarioFactory.generateCustomLineBlock(frameId, options.customLinesBeforeEvent));
       }
 
@@ -81,6 +97,10 @@ function createScenario(options : IOption) {
         listBlock.push(block);
       }
     }
+  }
+  if (options.customLinesBeforeEvent) {
+
+    listBlock.push(ScenarioFactory.generateCustomLineBlock(frameId, options.customLinesBeforeEvent));
   }
 
   // Insertion des lignes vide entre deux Block
@@ -105,38 +125,30 @@ describe('Test de Code Generator', () => {
   beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
     messageList.push(
-      {typeEvent: pptrActions.PPTR , action: pptrActions.GOTO, value: 'localhost'}
+      { typeEvent: pptrActions.PPTR , action: pptrActions.GOTO, value: 'localhost' }
     );
 
     messageList.push(
-      {typeEvent: domEventsToRecord.CLICK, action: eventsDom.CLICK, selector: '#idInput'}
+      { typeEvent: domEventsToRecord.CLICK, action: eventsDom.CLICK, selector: '#idInput' }
     );
 
     messageList.push(
-      {typeEvent: domEventsToRecord.CHANGE, action: eventsDom.CHANGE, selector: '#idInput', value: 'change de value input'}
+      { typeEvent: domEventsToRecord.CHANGE, action: eventsDom.CHANGE, selector: '#idInput', value: 'change de value input' }
     );
-  });
-
-  /**
-   * On fait cela car dans code generator
-   * On change les valeurs par défauts par celles passer en paramètres
-   */
-  afterAll(() => {
-    Object.assign(defaults, optionsDefault);
   });
 
   test('Test avec les options par défauts', () => {
 
     expect(
-      new CodeGenerator(optionsDefault).generate(messageList))
+      new CodeGenerator(defaultOptions).generate(messageList))
       .toEqual(
-      createScenario(optionsDefault)
+      createScenario(defaultOptions)
     );
   });
 
   test('Test avec les options de base et la custom ligne après chaque click', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.customLineAfterClick = 'ligne custom 2';
 
     expect(
@@ -148,7 +160,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec les options de  base et la custom ligne après chaque event', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.customLinesBeforeEvent = 'line before event';
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -159,7 +171,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec l\'option des requetes http activé', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.recordHttpRequest = true;
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -170,7 +182,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec l\'option des requetes http desactivé', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.recordHttpRequest = false;
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -181,7 +193,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec le scénario dans une fonction async', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.wrapAsync = true;
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -192,7 +204,7 @@ describe('Test de Code Generator', () => {
 
   test('Test avec le scénario en dehors de la fonction async', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.wrapAsync = false;
     expect(
       new CodeGenerator(options).generate(messageList))
@@ -207,9 +219,9 @@ describe('Test de Code Generator', () => {
     messageList = messageList.splice(0, 1);
 
     expect(
-      new CodeGenerator(optionsDefault).generate(messageList))
+      new CodeGenerator(defaultOptions).generate(messageList))
       .toEqual(
-      createScenario(optionsDefault)
+      createScenario(defaultOptions)
     );
   });
 
@@ -217,9 +229,9 @@ describe('Test de Code Generator', () => {
 
     messageList = [];
     expect(
-      new CodeGenerator(optionsDefault).generate(messageList))
+      new CodeGenerator(defaultOptions).generate(messageList))
       .toEqual(
-      createScenario(optionsDefault)
+      createScenario(defaultOptions)
     );
   });
 

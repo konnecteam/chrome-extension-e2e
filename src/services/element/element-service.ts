@@ -20,7 +20,7 @@ export class ElementService {
   private static readonly _TITLE_ATTRIBUTE = 'title';
 
   /** Id d'un HTMLElement */
-  private static readonly _ID_ATTRIBUTE = 'ID';
+  private static readonly _ID_ATTRIBUTE = 'id';
 
   /** Attribut Role d'un HTMLElement */
   private static readonly  _ROLE_ATTRIBUTE = 'role';
@@ -84,8 +84,9 @@ export class ElementService {
 
       if (currentElement.tagName === tagName && currentElement.getAttribute(attribute)) {
         return currentElement;
+      } else {
+        currentElement = currentElement.parentElement;
       }
-      currentElement = currentElement.parentElement;
 
     }
 
@@ -112,10 +113,9 @@ export class ElementService {
         && currentElement.getAttribute(attribute).includes(attributeValue)) {
 
         return currentElement;
+      } else {
+        currentElement = currentElement.parentElement;
       }
-
-      currentElement = currentElement.parentElement;
-
     }
 
     return null;
@@ -152,15 +152,16 @@ export class ElementService {
     attribute : string
   ) : Element {
 
-    let currentElement = document.querySelector(selector);
+    let currentElement = this.findElementChildWithSelector(document.body, selector);
 
     while (currentElement) {
 
       if (currentElement.getAttribute(attribute)) {
         return currentElement;
+      } else {
+        currentElement = currentElement.parentElement;
       }
 
-      currentElement = currentElement.parentElement;
     }
 
     return null;
@@ -178,7 +179,7 @@ export class ElementService {
    * Verifie si c'est une iframe et la retourne
    */
   public static getIframeElement(element : HTMLElement) : Element  {
-    const selector = SelectorService.findSelectorIframeElement(element);
+    const selector = SelectorService.Instance.findSelectorIframeElement(element);
     if (selector) {
 
       return this.findElementChildWithSelector(document.body, selector);
@@ -298,37 +299,37 @@ export class ElementService {
   /**
    * Permet determiner sur quel élément est le change
    */
-  public static determinateChangeComponent(element : HTMLElement) : IComponent {
+  public static getChangeComponent(element : HTMLElement) : IComponent {
 
-    return InputFilesComponent.getInputFile(element as HTMLInputElement) || InputNumericComponent.getInputNumeric(element)
-    || CheckboxComponent.getCheckboxComponent(element) || RadioGroupComponent.getRadioGroupComponent(element);
+    return InputFilesComponent.getElement(element as HTMLInputElement) || InputNumericComponent.getElement(element)
+    || CheckboxComponent.getElement(element) || RadioGroupComponent.getElement(element);
   }
 
   /**
    * Permet de déterminer sur quel composant on a cliqué
    */
-  public static determinateClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : IComponent {
+  public static getClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : IComponent {
 
-    return FileDropZoneComponent.getFileDropZone(element) ||
-    KSelectComponent.getKSelect(element) || KmSwitchComponent.getKmSwitch(element) ||
-    KListComponent.getKList(element, previousElement);
+    return FileDropZoneComponent.getElement(element) ||
+    KSelectComponent.getElement(element) || KmSwitchComponent.getElement(element) ||
+    KListComponent.getElement(element, previousElement);
   }
 
   /**
    * Détermine sur quel composant il y a eu un drop
    */
-  public static determinateDropComponent(element : HTMLElement) : IComponent {
+  public static getDropComponent(element : HTMLElement) : IComponent {
 
-    return FileDropZoneComponent.getFileDropZone(element);
+    return FileDropZoneComponent.getElement(element);
   }
 
 
   /**
    * Détermine sur quel composant il y a eu un keydown
    */
-  public static determinateKeydownComponent(element : HTMLElement) : IComponent {
+  public static getKeydownComponent(element : HTMLElement) : IComponent {
 
-    return IframeComponent.getIframe(element);
+    return IframeComponent.getElement(element);
   }
 
 }

@@ -16,12 +16,14 @@ export class KListComponent {
 
   private static readonly _MULTISELECT = 'Multiselect';
 
+  private static readonly _selectorService = SelectorService.Instance;
+
   /**
-   * Récupère un component konnect list
+   * Récupère un IComponent konnect list
    * @param element
    * @param previousElement
    */
-  public static getKList(
+  public static getElement(
     element : HTMLElement,
     previousElement : { selector : string; typeList : string; element : Element; }
     ) : IComponent {
@@ -36,7 +38,7 @@ export class KListComponent {
       return this._getKListComponent(
         dropdownElement as HTMLElement,
         {
-          selector : SelectorService.find(dropdownElement as HTMLElement),
+          selector : this._selectorService.find(dropdownElement as HTMLElement),
           element : dropdownElement,
           typeList: this._DROPDOWN
         }
@@ -49,7 +51,7 @@ export class KListComponent {
       return this._getKListComponent(
         multiselectListElement as HTMLElement,
         {
-          selector : SelectorService.find(multiselectListElement as HTMLElement),
+          selector : this._selectorService.find(multiselectListElement as HTMLElement),
           element : multiselectListElement,
           typeList: this._MULTISELECT
         }
@@ -77,7 +79,7 @@ export class KListComponent {
    * @param element
    * @param previousElement
    */
-  private static _getKListComponent(element : HTMLElement, previousElement : {selector : string, element : Element, typeList : string }) : IComponent {
+  private static _getKListComponent(element : HTMLElement, previousElement : { selector : string, element : Element, typeList : string }) : IComponent {
     return {
       component : componentName.KLIST,
       element,
@@ -90,13 +92,13 @@ export class KListComponent {
    * @param event
    * @param component
    */
-  public static editKlistMessage(event : IMessage, component : IComponent) : IMessage {
+  public static editKlistComponentMessage(event : IMessage, component : IComponent) : IMessage {
 
     // Si click list item
     if (ElementService.getUlListElement(component.element)) {
 
       event.action = customEvents.CLICK_LIST_ITEM;
-      event.scrollElement = SelectorService.find(component.element);
+      event.scrollElement = this._selectorService.find(component.element);
       event.scrollXElement = component.element.parentElement.scrollLeft;
       event.scrollYElement = component.element.parentElement.scrollTop;
       return event;

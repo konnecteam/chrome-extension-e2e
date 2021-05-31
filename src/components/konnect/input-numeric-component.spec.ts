@@ -24,19 +24,19 @@ describe('Test de Input numeric Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de getInputNumeric', () => {
+  test('Test de getElement', () => {
 
     // On selectionne l'input du composant input numeric qui change de valeur
     const element = document.querySelector(INPUT_NUMERIC_SELECTOR);
 
     // On doit trouver qur l'on est dans une input numeric
     expect(
-      InputNumericComponent.getInputNumeric(element as HTMLElement).component
+      InputNumericComponent.getElement(element as HTMLElement).component
     ).toEqual(componentName.INPUT_NUMERIC);
   });
 
 
-  test('Test de editInputFeditInputNumericMessage', () => {
+  test('Test de editInputNumericComponentMessage', () => {
 
     const element = document.querySelector(INPUT_NUMERIC_SELECTOR);
 
@@ -53,7 +53,7 @@ describe('Test de Input numeric Component', () => {
 
     // On doit trouver que c'est un change input numeric
     expect(
-      InputNumericComponent.editInputNumericMessage(event, component).action
+      InputNumericComponent.editInputNumericComponentMessage(event, component).action
     ).toEqual(customEvents.CHANGE_INPUT_NUMERIC);
   });
 });

@@ -1,7 +1,7 @@
+import { ClickFactory } from './click-factory';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
 import customEvents from '../../../constants/events/events-custom';
-import domEventsToRecord from '../../../constants/events/events-dom';
 import { Block } from '../../../code-generator/block';
 import elementsTagName from '../../../constants/elements/tag-name';
 
@@ -15,12 +15,12 @@ export class SubmitFactory {
    */
   public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
 
-    const { action, tagName} = event;
+    const { action, tagName, submitterSelector} = event;
 
     // Si l'event est un submit
     if (action === customEvents.SUBMIT) {
       if (tagName === elementsTagName.FORM.toUpperCase()) {
-        return this.buildSubmitBlock(frameId, frame);
+        return this.buildBlock(frameId, frame, options, submitterSelector);
       }
     }
   }
@@ -28,15 +28,9 @@ export class SubmitFactory {
   /**
    * Généré un submit
    */
-  public static buildSubmitBlock(frameId : number, frame : string) : Block {
+  public static buildBlock(frameId : number, frame : string, options : IOption, selector : string) : Block {
 
-    const block = new Block(frameId);
-
-    block.addLine({
-      type: domEventsToRecord.CHANGE,
-      value: `await ${frame}.keyboard.press('Enter');`
-    });
-    return block;
+    return ClickFactory.buildBlock(options, frameId, frame, selector);
   }
 
 }

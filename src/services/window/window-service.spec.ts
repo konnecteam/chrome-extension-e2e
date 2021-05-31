@@ -29,14 +29,14 @@ describe('Test de Window Service', () => {
   });
 
   test('Get current Url', () => {
-    WindowService.getCurrentUrl({control: controlMessage.GET_CURRENT_URL_EVENT});
+    WindowService.getCurrentUrl({ control: controlMessage.GET_CURRENT_URL_EVENT });
     expect(message).toEqual('is send url');
 
   });
 
 
   test('Get View Port Size', () => {
-    WindowService.getViewPortSize({control: controlMessage.GET_VIEWPORT_SIZE_EVENT});
+    WindowService.getViewPortSize({ control: controlMessage.GET_VIEWPORT_SIZE_EVENT });
     expect(message).toEqual('is send view port size');
   });
 
@@ -45,7 +45,7 @@ describe('Test de Window Service', () => {
     delete window.location;
     (window.location as any) = { reload: jest.fn() };
 
-    WindowService.reload({control: 'reload-page'});
+    WindowService.reload({ control: 'reload-page' });
     expect(window.location.reload).toHaveBeenCalled();
   });
 

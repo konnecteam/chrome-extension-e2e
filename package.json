@@ -12,7 +12,7 @@
     "unit-test": "jest __tests__/.*.spec.js --silent",
     "e2e-test": "jest __e2e-tests__ --runInBand --silent",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test-jest": "node_modules/jest/bin/jest.js --runInBand src/*/*.spec.ts src/*/*/*.spec.ts src/*/*/*/*.spec.ts"
+    "test-jest": "node_modules/jest/bin/jest.js --runInBand lib/*/*/*.spec.ts src/*/*.spec.ts src/*/*/*.spec.ts src/*/*/*/*.spec.ts"
   },
   "pre-commit": [
     "lint"
@@ -87,21 +87,5 @@
     "globals": [
       "chrome"
     ]
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "^vue$": "vue/dist/vue.common.js"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "vue",
-      "json",
-      "ts"
-    ],
-    "transform": {
-      ".(ts|tsx)": "ts-jest",
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
-      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor"
-    }
   }
 }

@@ -54,7 +54,7 @@ describe('Test de event message factory', () => {
       files : 'text.txt'
     };
     const element = document.querySelector(FILE_DROP_ZONE_SELECTOR);
-    const component = FileDropZoneComponent.getFileDropZone(element as HTMLElement);
+    const component = FileDropZoneComponent.getElement(element as HTMLElement);
 
     // On doit trouver un event model de file drop zone
     expect(
@@ -64,7 +64,7 @@ describe('Test de event message factory', () => {
         null
       )
     ).toEqual(FileDropZoneComponent.
-      editFileDropZoneMessage(eventCatched, (component.element as HTMLInputElement).files));
+      editFileDropZoneComponentMessage(eventCatched, (component.element as HTMLInputElement).files));
   });
 
   test('Test de FileDropZone add button component message', async () => {
@@ -77,7 +77,7 @@ describe('Test de event message factory', () => {
     // On doit trouver un event model du bouton ajouter fichier du file drop zone
 
     const element = document.querySelector(FILE_DROP_ZONE_BUTTON_SELECTOR);
-    const component = FileDropZoneComponent.getFileDropZone(element as HTMLElement);
+    const component = FileDropZoneComponent.getElement(element as HTMLElement);
 
     expect(
       EventMessageFactory.buildMessageEvent(
@@ -86,7 +86,7 @@ describe('Test de event message factory', () => {
         null
       )
     ).toEqual(FileDropZoneComponent.
-      editFileDropZoneButtonMessage(eventCatched)
+      editFileDropZoneButtonComponentMessage(eventCatched)
     );
   });
 
@@ -100,7 +100,7 @@ describe('Test de event message factory', () => {
       selector : '#id'
     };
 
-    const component = InputNumericComponent.getInputNumeric(element as HTMLElement);
+    const component = InputNumericComponent.getElement(element as HTMLElement);
 
     // On doit trouver un event model d'input numeric
     expect(
@@ -110,7 +110,7 @@ describe('Test de event message factory', () => {
         null
       )
     ).toEqual(InputNumericComponent.
-      editInputNumericMessage(event, component)
+      editInputNumericComponentMessage(event, component)
     );
   });
 
@@ -119,7 +119,7 @@ describe('Test de event message factory', () => {
     await changeBodyDocumentAsync(K_SELECT_DOM);
 
     const element = document.querySelector(K_SELECT_SELETOR);
-    const component = KSelectComponent.getKSelect(element as HTMLElement);
+    const component = KSelectComponent.getElement(element as HTMLElement);
     const event : IMessage = {
       selector: '#id'
     };
@@ -133,7 +133,7 @@ describe('Test de event message factory', () => {
       )
     )
     .toEqual(InputNumericComponent.
-      editInputNumericMessage(event, component)
+      editInputNumericComponentMessage(event, component)
     );
 
   });
@@ -152,7 +152,7 @@ describe('Test de event message factory', () => {
 
     const element = document.querySelector('iframe').contentWindow.document.querySelector('h1');
 
-    const component =  IframeComponent.getIframe(element);
+    const component =  IframeComponent.getElement(element);
 
     const event : IMessage = {
       selector: 'selector'
@@ -167,7 +167,7 @@ describe('Test de event message factory', () => {
       )
     )
     .toEqual(IframeComponent.
-      editIframeMessage(event, component)
+      editIframeComponentMessage(event, component)
     );
 
 
@@ -194,7 +194,7 @@ describe('Test de event message factory', () => {
       selector : K_ITEM_LIST_SELECTOR
     };
 
-    const component = KListComponent.getKList(
+    const component = KListComponent.getElement(
       element as HTMLElement,
       previousElement
     );
@@ -207,7 +207,7 @@ describe('Test de event message factory', () => {
       )
     )
     .toEqual(KListComponent.
-      editKlistMessage(event, component)
+      editKlistComponentMessage(event, component)
     );
   });
 
@@ -217,7 +217,7 @@ describe('Test de event message factory', () => {
 
     const element = document.getElementById(CHECKBOX_ID);
 
-    const component = CheckboxComponent.getCheckboxComponent(element);
+    const component = CheckboxComponent.getElement(element);
 
     const event : IMessage =  {
       action : '',
@@ -231,7 +231,7 @@ describe('Test de event message factory', () => {
       )
     )
     .toEqual(CheckboxComponent.
-      editCheckboxMessage(event)
+      editCheckboxComponentMessage(event)
     );
   });
 
@@ -241,7 +241,7 @@ describe('Test de event message factory', () => {
 
     const element = document.getElementById(RADIO_GROUP_ID);
 
-    const component = RadioGroupComponent.getRadioGroupComponent(element);
+    const component = RadioGroupComponent.getElement(element);
 
     const event : IMessage =  {
       action : '',
@@ -255,7 +255,7 @@ describe('Test de event message factory', () => {
       )
     )
     .toEqual(RadioGroupComponent.
-      editRadioGroupMessage(event)
+      editRadioGroupComponentMessage(event)
     );
   });
 });

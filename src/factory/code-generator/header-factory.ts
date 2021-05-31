@@ -16,55 +16,65 @@ export class HeaderFactory {
   /**
    * Génère le header du scénario
    */
-  public static getHeader(
+  public static generateHeader(
     recordHttpRequest : boolean,
     wrapAsync : boolean,
     headless : boolean,
-    regexHttp : string
+    httpRegex : string
   ) : string {
 
     const importPackage = this.getImport(recordHttpRequest);
-    let hdr = wrapAsync ? HeaderCode.WRAPPED_HEADER : HeaderCode.HEADER;
-    hdr = headless ? hdr : hdr.replace(this._LAUNCH_KEY, 'launch({ headless: false })');
+    let header = wrapAsync ? HeaderCode.WRAPPED_HEADER : HeaderCode.HEADER;
+    header = headless ? header : header.replace(this._LAUNCH_KEY, 'launch({ headless: false })');
+
+    let codeRegExp = '';
+
+    // Si les options contiennent un regex alors on la build
+    if (httpRegex) {
+
+      // On la build
+      const regexObject = RegExpFactory.buildRegexpAndFlag(httpRegex);
+
+      if (regexObject && regexObject.regexp) {
+        // On créé les paramètres pour l'objet RegExp
+
+        codeRegExp += `'${regexObject.regexp}'`;
+        codeRegExp += regexObject.flag ? `, '${regexObject.flag}'` : '';
+      }
+    }
+
 
     if (recordHttpRequest) {
-      hdr = hdr.replace(this._LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
-      hdr = hdr.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
+      header = header.replace(this._LAUNCH_KEY, 'launch({ignoreHTTPSErrors: true})');
+      header = header.replace('headless: false', 'headless: false, ignoreHTTPSErrors: true');
+
+      let addHttpRegexp : string;
 
       // Si il y a une regex on la met
-      if (regexHttp) {
+      if (codeRegExp) {
 
-        // On la build
-        const regexpBuild = RegExpFactory.buildRegeExp(regexHttp);
-        let addRegexHTTP : string;
-
-        if (regexpBuild && regexpBuild.regexp) {
-          // On créé les paramètres pour l'objet RegExp
-          let codeRegExp = '';
-
-          codeRegExp += `'${regexpBuild.regexp}'`;
-          codeRegExp += regexpBuild.flags ? `, '${regexpBuild.flags}'` : '';
-          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace(
+        addHttpRegexp = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
             this._HTTP_REQUEST_REGEX_KEY,
             `&& !new RegExp(${codeRegExp}).test(url) `);
-        }
-        // Si il n'y a pas de Regexp alors on remplace par rien
-        else {
-          addRegexHTTP = HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
-        }
-
-        hdr += addRegexHTTP;
-
-      } else {
-        hdr += HeaderCode.LISTENER_PAGE.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
+      }
+      // Si il n'y a pas de Regexp alors on remplace par rien
+      else {
+        addHttpRegexp = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(this._HTTP_REQUEST_REGEX_KEY, ``);
       }
 
+      header += addHttpRegexp;
+
+      // Si on une regex et pas l'option de record activé, on utilise le listener de la page pour les requêtes en live
+    } else if (codeRegExp) {
+      header += HeaderCode.LISTENER_PAGE_LIVE_REQUEST.replace(
+        this._HTTP_REQUEST_REGEX_KEY,
+        `&& !new RegExp(${codeRegExp}).test(url) `);
     }
-    return importPackage + hdr;
+    return importPackage + header;
   }
 
   /**
-   * Si on prends en compte les requêtes on rajoute les inputs nécéssaires
+   * Récupère les imports nécessaire au fonctionnment du scénario
    */
   private static getImport(recordHttpRequest : boolean) : string {
     return recordHttpRequest ? HeaderCode.IMPORT_HTTP_REQUEST : HeaderCode.IMPORT_PUPPETEER;

@@ -27,30 +27,30 @@ describe('Test de File DopZone Component', () => {
     document.body.innerHTML = content;
   });
 
-  test('Test de getFileDropZone pour une zone de drop', () => {
+  test('Test de getElement pour une zone de drop', () => {
 
     // Selecteur de l'element de la file dropzone
     const element = document.querySelector(FILE_DROP_ZONE_SELECTOR);
 
-    // On doit trouver la file dropzone
+    // On doit trouver le file dropzone
     expect(
-      FileDropZoneComponent.getFileDropZone(element as HTMLElement).component
+      FileDropZoneComponent.getElement(element as HTMLElement).component
     ).toEqual(componentName.FILE_DROPZONE);
   });
 
-  test('Test de getFileDropZone pour le bouton ajouter des fichiers de la zone', () => {
+  test('Test de getElement pour le bouton ajouter des fichiers de la zone', () => {
 
     // Selecteur du bouton ajouter fichier de la file dropzone
     const element = document.querySelector(FILE_DROP_ZONE_BUTTON_SELECTOR);
 
     // On doit trouver le bouton de la file dropzone
     expect(
-      FileDropZoneComponent.getFileDropZone(element as HTMLElement).component
+      FileDropZoneComponent.getElement(element as HTMLElement).component
     ).toEqual(componentName.BUTTON_ADD_FILE_DROPZONE);
 
   });
 
-  test('Test de editFileDropZoneMessage', () => {
+  test('Test de editFileDropZoneComponentMessage', () => {
     // On créé un event model qui contient les infos dont on a besoin
     const eventCatched : IMessage = {
       files : 'text.txt'
@@ -59,11 +59,11 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver l'action DROP_FILE
     expect(
       FileDropZoneComponent.
-      editFileDropZoneMessage(eventCatched, (document.getElementById(FILE_ITEM_SELECTOR) as HTMLInputElement).files).action
+      editFileDropZoneComponentMessage(eventCatched, (document.getElementById(FILE_ITEM_SELECTOR) as HTMLInputElement).files).action
     ).toEqual(customEvents.DROP_FILE);
   });
 
-  test('Test de editFileDropZoneMessage sans files', () => {
+  test('Test de editFileDropZoneComponentMessage sans files', () => {
 
     const eventCatched : IMessage = {
       selector : 'test',
@@ -72,12 +72,12 @@ describe('Test de File DopZone Component', () => {
 
     // On doit trouver l'action click sur une dropzone
     expect(
-      FileDropZoneComponent.editFileDropZoneMessage(eventCatched, undefined).action
+      FileDropZoneComponent.editFileDropZoneComponentMessage(eventCatched, undefined).action
     ).toEqual(customEvents.CLICK_DROPZONE);
 
   });
 
-  test('Test de editFileDropZoneButtonMessage sans files', () => {
+  test('Test de editFileDropZoneButtonComponentMessage sans files', () => {
 
     const eventCatched : IMessage = {
       files : 'text.txt'
@@ -85,7 +85,7 @@ describe('Test de File DopZone Component', () => {
 
     // On doit trouver l'action click sur une dropzone
     expect(
-      FileDropZoneComponent.editFileDropZoneButtonMessage(eventCatched).action
+      FileDropZoneComponent.editFileDropZoneButtonComponentMessage(eventCatched).action
     ).toEqual(customEvents.CLICK_DROPZONE);
   });
 });

@@ -39,13 +39,13 @@ describe('Test du Component Manager' , () => {
 
     // ON doit trouver un compoenent model de file dropzone
     expect(
-      ComponentManager.determinateComponent(
+      ComponentManager.getComponent(
         domEventsToRecord.CLICK,
         element as HTMLElement,
         null
         )
     ).toEqual(
-      ElementService.determinateClickComponent(
+      ElementService.getClickComponent(
       element as HTMLElement,
       null
     ));
@@ -58,13 +58,13 @@ describe('Test du Component Manager' , () => {
     const element = document.querySelector(FILE_DROP_ZONE_SELECTOR);
     // ON doit trouver un component model de file dropzone
     expect(
-      ComponentManager.determinateComponent(
+      ComponentManager.getComponent(
         domEventsToRecord.DROP,
         element as HTMLElement,
         null
         )
     ).toEqual(
-      ElementService.determinateDropComponent(element as HTMLElement));
+      ElementService.getDropComponent(element as HTMLElement));
   });
 
   test('Determiner component à partir d\'un change', async () => {
@@ -74,12 +74,12 @@ describe('Test du Component Manager' , () => {
     const element = document.querySelector(INPUT_NUMERIC_SELECTOR);
     // ON doit trouver un component model d'input numeric
     expect(
-      ComponentManager.determinateComponent(
+      ComponentManager.getComponent(
         domEventsToRecord.CHANGE,
         element as HTMLElement,
         null
       )
-    ).toEqual(ElementService.determinateChangeComponent(element as HTMLElement)
+    ).toEqual(ElementService.getChangeComponent(element as HTMLElement)
     );
   });
 
@@ -98,12 +98,12 @@ describe('Test du Component Manager' , () => {
     const element = document.querySelector('iframe').contentWindow.document.querySelector('h1');
     // ON doit trouver un component model d'iframe
     expect(
-      ComponentManager.determinateComponent(
+      ComponentManager.getComponent(
         domEventsToRecord.KEYDOWN,
         element,
         null
       )
-    ).toEqual(ElementService.determinateKeydownComponent(element));
+    ).toEqual(ElementService.getKeydownComponent(element));
   });
 
 });
