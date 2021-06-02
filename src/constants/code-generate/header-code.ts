@@ -23,7 +23,9 @@ function manageUrl(urlM) {
     'document/cnt',
     'document/rqt',
     'calendar/addDays',
-    'autoroute/agowdte'
+    'autoroute/agowdte',
+    'document/cpyaddr',
+    'module/calendar'
   ];
 
   for(let request of requestURL) {
@@ -40,6 +42,12 @@ function manageUrl(urlM) {
         if(d && !isNaN(d) && d > 100000000) {
           // On supprime le paramètre
           parseURL.searchParams.delete(pair[0]);
+        }
+
+        if(pair[0] === 'date') {
+          // On supprime la fin de la date car elle contient l'heure
+          parseURL.searchParams.set(pair[0], pair[1].split('T')[0]);
+
         }
       }
       return parseURL.href;
@@ -169,7 +177,7 @@ page.on('load', async () => {
     if(urlSplit.length > 1){
        let firstPart = urlSplit.shift();
        let secondPart= urlSplit.shift();
-       url = \`\${firstPart}:\${secondPart}:\${urlSplit.join('%3A')}\`;
+       url = \`\${firstPart}:\${secondPart}\${urlSplit.length !==0 ? \`:\${urlSplit.join(':')}\` : ''}\`;
     }
 
     for(let i = 0; i < notNormalizeChar.length;i++){
