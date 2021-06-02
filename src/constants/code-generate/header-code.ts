@@ -63,7 +63,7 @@ function manageTokenFind(currentToken) {
   let token = '';
   for (let c = 0; c < currentToken.length; c++) {
 
-    if(currentToken.charAt(c).match(/[a-zA-Z0-9_]/g) || currentToken.charAt(c) == '.') {
+    if(currentToken.charAt(c).match(/[a-zA-Z0-9_%=]/g)) {
       token+= currentToken.charAt(c);
     }
     else {
@@ -89,7 +89,7 @@ for (let i=1; i < listToken.length;i++) {
   // On verifie la validitée du token :
   try {
     let t = atob(token);
-    if (token.match(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/) && t.split('|').length == 3) {
+    if (t.split('|').length == 3) {
       harContent = harContent.split(token).join(Buffer.from('anonymous|_MASTER_|0').toString('base64'));
       isFind=true;
     }
