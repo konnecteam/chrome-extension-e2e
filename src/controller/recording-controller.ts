@@ -372,6 +372,10 @@ class RecordingController {
       isRemovedListener: false
     });
 
+    StorageService.setData({
+      isRemovedListener: false
+    });
+
     // 4 - On récupère le contenu du fichier fake-timer-service build
     this._getFakeTimeScriptContent();
 
