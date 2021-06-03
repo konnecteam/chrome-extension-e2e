@@ -130,6 +130,15 @@ class EventRecorder {
       loadingPage: false
     });
 
+    /**
+     * Quand on start,
+     * On met loadingPage à flase
+     * car on n'a pas reload
+     * et il faut le définir
+     */
+    StorageService.setData({
+      loadingPage: false
+    });
     // Récupération des options
     const data = await StorageService.getDataAsync(['options']);
     if (data) {
