@@ -134,7 +134,7 @@ describe('Test du Header Factory', () => {
       codeRegExp += `, '${regexp.flag}'`;
       exceptedResult += HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
         HTTP_REQUEST_REGEX_KEY,
-        `&& !new RegExp(${codeRegExp}).test(url) `
+        `, new RegExp(${codeRegExp})`
       );
 
       expect(
@@ -187,7 +187,7 @@ describe('Test du Header Factory', () => {
       // On ajoute la regex
       exceptedResult += HeaderCode.LISTENER_PAGE_LIVE_REQUEST.replace(
          HTTP_REQUEST_REGEX_KEY,
-         `&& !new RegExp(${codeRegExp}).test(url) `
+         `, new RegExp(${codeRegExp})`
       );
 
       expect(
@@ -246,7 +246,7 @@ describe('Test du Header Factory', () => {
       codeRegExp += `, '${regexp.flag}'`;
       exceptedResult += HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
            HTTP_REQUEST_REGEX_KEY,
-           `&& !new RegExp(${codeRegExp}).test(url) `
+           `, new RegExp(${codeRegExp})`
        );
 
       expect(

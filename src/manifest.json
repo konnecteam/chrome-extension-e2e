@@ -33,6 +33,7 @@
   },
   "web_accessible_resources": [
     "lib/scripts/polly/polly.js",
-    "lib/scripts/fake-time/fake-time.js"
+    "lib/scripts/fake-time/fake-time.js",
+    "services/scenario/*"
   ]
 }

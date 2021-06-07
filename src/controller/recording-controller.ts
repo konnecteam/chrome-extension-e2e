@@ -1,4 +1,3 @@
-import { IOption } from 'interfaces/i-options';
 import { DataURLFactory } from './../factory/data-url/data-url-factory';
 import { StorageService } from '../services/storage/storage-service';
 import { ZipService } from '../services/zip/zip-service';
@@ -95,6 +94,21 @@ class RecordingController {
   private _pollyService : PollyService;
 
   /**
+   * Path du dossier qui contient les services du scénario
+   */
+  private static _pathService = 'services/scenario/';
+
+  /** Nom des fichiers de services du scenario */
+  private static _filenameScenarioServices = [
+    `request-service.js`,
+    `page-service.js`,
+    `token-service.js`,
+    `url-service.js`,
+  ];
+
+  /** Contenu des fichiers de services du scénario */
+  private _contentScenarioServices : string[] = [];
+  /**
    * Constructeur
    */
   constructor() {
@@ -124,8 +138,8 @@ class RecordingController {
         recordHttpRequest: true,
         regexHTTPrequest: '',
         customLinesBeforeEvent: `await page.evaluate(async() => {
-        await konnect.engineStateService.Instance.waitForAsync(1);
-      });`,
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
         deleteSiteData: true,
       }
     });
@@ -214,6 +228,15 @@ class RecordingController {
       // On ajoute le fake script permettant de fake le time dans le zip
       this._zipService.addFileInFolder(`recordings/scripts-build/${buildFakeTimeScript.name}`, buildFakeTimeScript);
 
+      // On parcourt tous les services pour les ajouter au zip
+      for (let index = 0; index < RecordingController._filenameScenarioServices.length; index++) {
+        const filename = RecordingController._filenameScenarioServices[index];
+        const contentFile = this._contentScenarioServices[index];
+        const file = new File([contentFile], filename );
+        // On ajoute le service au zip
+        this._zipService.addFileInFolder(`recordings/services/${file.name}`, file);
+      }
+
       // changement de la barre de progression
       ChromeService.sendMessage({
         valueLoad: 35
@@ -291,9 +314,13 @@ class RecordingController {
 
     this._recording = [];
     this._contentFakeTimeServiceBuild = '';
+    ChromeService.removeOnMessageListener(this._boundedMessageHandler);
     ChromeService.setBadgeText('');
     await StorageService.removeDataAsync('recording');
-    callback();
+
+    if (callback) {
+      callback();
+    }
   }
 
   /**
@@ -377,7 +404,7 @@ class RecordingController {
     });
 
     // 4 - On récupère le contenu du fichier fake-timer-service build
-    this._getFakeTimeScriptContent();
+    this._getScenarioFilesContent();
 
     // 5 - Inject le script
     await ChromeService.executeScript({
@@ -410,9 +437,9 @@ class RecordingController {
   }
 
   /**
-   * Permet de récupérer le contenu du fake time script buildé
+   * Permet de récupérer le contenu du fake time script buildé et des services utilisés par le scénario
    */
-  private _getFakeTimeScriptContent() : void {
+  private _getScenarioFilesContent() : void {
     /* Pour lire un fichier dans un plugin chrome
        il faut qu'il soit accessible et
        il faut fetch l'url pour récupérer le résultat
@@ -422,6 +449,18 @@ class RecordingController {
     .then(value => {
       this._contentFakeTimeServiceBuild = value;
     });
+
+    /**
+     * On récupère les services utilisés par le scénario
+     */
+    for (let i = 0; i < RecordingController._filenameScenarioServices.length; i++) {
+      const filename = RecordingController._filenameScenarioServices[i];
+      fetch(ChromeService.getUrl(`${RecordingController._pathService}${filename}`))
+      .then(response => response.text())
+      .then(value => {
+        this._contentScenarioServices[i] = value;
+      });
+    }
   }
 
   /**
@@ -557,7 +596,6 @@ class RecordingController {
 
     // Si on a le résultat du record
     if (badge === EBadgeState.RESULT_NOT_EMPTY || badge === '') {
-      ChromeService.removeOnMessageListener(this._boundedMessageHandler);
       // On stock que l'on a supprimé le listener
       StorageService.setData({
         isRemovedListener: true
