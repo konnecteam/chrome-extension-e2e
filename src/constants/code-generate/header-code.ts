@@ -30,8 +30,8 @@ TokenService.replaceToken(listToken, harContent);
 const page = await browser.newPage()
 page.setDefaultTimeout('100000')
 let fileChooser = null;
-/** On met en place les handles de la page */
-PageService.addLoadPageHandle(page);
+/** On met en place le handle du chargement de la page */
+PageService.addLoadHandler(page);
 \n`,
 
   WRAPPED_HEADER : `(async () => {
@@ -39,17 +39,17 @@ PageService.addLoadPageHandle(page);
   const page = await browser.newPage()
   page.setDefaultTimeout('100000')
   let fileChooser = null;
-  /** On met en place les handles de la page */
-  PageService.addLoadPageHandle(page);
+  /** On met en place le handle du chargement de la page */
+  PageService.addLoadHandler(page);
   \n`,
 
-  LISTENER_PAGE_RECORDED_REQUEST : `   await page.setRequestInterception(true);
+  LISTENER_PAGE_RECORDED_REQUEST : `  await page.setRequestInterception(true);
   await page.setBypassCSP(true);
   await page.setOfflineMode(true);
-  /** On met en place les handles de la page */
-  PageService.addRequestSavedPageHandler(page **httpregex**);
+  /** On met en place le handle requests de la page */
+  PageService.addSavedRequestHandler(page **httpregex**);
 `,
-  LISTENER_PAGE_LIVE_REQUEST : `await page.setRequestInterception(true);
-  PageService.addRequestLivePageHandler(page **httpregex**);
+  LISTENER_PAGE_LIVE_REQUEST : `  await page.setRequestInterception(true);
+  PageService.addLiveRequestHandler(page **httpregex**);
 `
 };

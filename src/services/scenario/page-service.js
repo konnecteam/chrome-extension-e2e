@@ -12,7 +12,7 @@ class PageService {
    * @param {*} page 
    * @returns 
    */
-  static addRequestSavedPageHandler(page, regexp = null) {
+  static addSavedRequestHandler(page, regexp = null) {
     /**
      * Quand une requête est détéctée on la traite
      */
@@ -79,7 +79,7 @@ class PageService {
     );
   }
 
-  static addRequestLivePageHandler(page, regexp = null) {
+  static addLiveRequestHandler(page, regexp = null) {
     page.on('request', (req) => {
       let url = req.url();
   
@@ -95,7 +95,7 @@ class PageService {
    * Ajout le handle pour le load d'un page puppeteer
    * @param {*} page 
    */
-  static addLoadPageHandle(page) {
+  static addLoadHandler(page) {
     const fakeTimeScriptContent = fs.readFileSync(path.join(__dirname, '../scripts-build/fake-time-script.js'), 'utf-8');
 
     /**
