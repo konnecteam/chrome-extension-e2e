@@ -32,7 +32,7 @@ export class UtilityService {
   }
 
   /**
-   * Verifie si une string inclut les strings du tableau
+   * Vérifie si la value passée en paramètre contient tous les éléments du tableau
    * @param value
    * @param tab
    * @returns

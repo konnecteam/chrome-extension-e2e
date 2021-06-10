@@ -260,6 +260,12 @@ export class PollyRecorder {
 
       currentReq = listRequest[i].toJSON();
 
+      /**
+       *  Si la requête n'est pas initiée par un fetch ou xmlhttprequest
+       *  , si on a pas la request
+       *  et si ce n'est pas une requête google maps alors on fetch.
+       *  Polly détecte que les requêtes initiées par un fetch ou xmlhttprequest donc pas besoin de les fetch
+       */
       if (currentReq.initiatorType !== PollyRecorder.XMLHTTREQUEST
         && currentReq.initiatorType !== PollyRecorder.FETCH
         && !this.requestRecorded.includes(currentReq.name)
