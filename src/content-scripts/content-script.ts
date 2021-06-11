@@ -1,4 +1,4 @@
-import { ScrollService } from './../services/scroll/scroll-service';
+import { DebounceService } from '../services/debounce/debounce-service';
 import { PasswordService } from '../services/password/password-service';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
@@ -33,9 +33,6 @@ class EventRecorder {
 
   /** Service qui permet de trouver le selecteur d'un élément */
   private _selectorService : SelectorService;
-
-  /** Service qui permet de gérer le scroll */
-  private _scrollService : ScrollService;
 
   /** Liste des events à ecouter */
   private _events;
@@ -82,7 +79,6 @@ class EventRecorder {
     // Service
     this._keyDownService = KeyDownService.Instance;
     this._selectorService = SelectorService.Instance;
-    this._scrollService = ScrollService.Instance;
     this._events = Object.values(eventsToRecord);
 
     // Enregistre les informations avant un click d'un item de list
@@ -390,7 +386,18 @@ class EventRecorder {
     WindowService.addEventListener('beforeunload', this._boundedOnBeforeUnload);
 
     this._boundedRecordEvent = this._recordEvent.bind(this);
-    this._boundedScrollEvent = this._scrollService.handleEvent.bind(this);
+    this._boundedScrollEvent = DebounceService.debounce(event => {
+      // Envoi du scroll
+      ChromeService.sendMessage({
+        selector: this._selectorService.standardizeSelector(this._selectorService.find(event.target)),
+        tagName: event.target.tagName,
+        action: event.type,
+        typeEvent: event.type,
+        // Si on a un scrollLeft c'est que c'est un element et sinon c'est la window donc on utilise pageXOffset
+        scrollX: event.target.scrollLeft ? event.target.scrollLeft : window.pageXOffset,
+        scrollY: event.target.scrollTop ? event.target.scrollTop : window.pageYOffset,
+      });
+    }, 200);
 
     for (let index = 0; index < this._events.length; index++) {
       const type = this._events[index];

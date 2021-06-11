@@ -1,18 +1,9 @@
-import { ScrollService } from './scroll-service';
+import { DebounceService } from './debounce-service';
 import 'jest';
-import * as chrome from 'sinon-chrome';
 import domEventsToRecord from '../../constants/events/events-dom';
-
-let messageSend = '';
-chrome.runtime.sendMessage.withArgs().callsFake(() => {
-  messageSend = 'is send';
-});
 
 describe('Test de Scroll Service', () => {
   beforeAll(() => {
-
-    // mock chrome
-    global.chrome = chrome;
 
     // on init le body
     document.body.innerHTML = `<div>
@@ -24,13 +15,26 @@ describe('Test de Scroll Service', () => {
     </div>`;
   });
 
-  test('Test de la fonction handleEvent', () => {
+  test('Test de la fonction handleEvent', async () => {
+    // On créé l'event qui sera catché
     const eventObject = {
       target  : document.getElementById('DivTitle'),
       type : domEventsToRecord.SCROLL,
       typeEvent : domEventsToRecord.SCROLL,
     };
-    ScrollService.Instance.handleEvent(eventObject);
-    expect(messageSend).toBeDefined();
+    let eventCatch = null;
+
+    // On ajoute un event listerner test
+    window.addEventListener('test', DebounceService.debounce(e => {
+      eventCatch = eventObject;
+    }, 150), false);
+
+    // On lance l'event
+    window.dispatchEvent(new Event('test'));
+    // On utilise un timeout pour attendre que le catch se fasse
+    const pause = setTimeout(() => {
+      expect(eventCatch).toEqual(eventObject);
+      clearTimeout(pause);
+    }, 250);
   });
 });

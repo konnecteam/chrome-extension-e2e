@@ -14,7 +14,7 @@ export class ScrollFactory {
    * @param frame
    * @returns
    */
-  static generateBlock(event : IMessage, frameId : number, frame : string) : Block {
+  public static generateBlock(event : IMessage, frameId : number, frame : string) : Block {
     const { action, selector, scrollX, scrollY } = event;
 
     // Si c'est une action event de scroll
