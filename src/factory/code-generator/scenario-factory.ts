@@ -1,3 +1,4 @@
+import { ScrollFactory } from './events-factory/scroll-factory';
 import { KeydownFactory } from './events-factory/keydown-factory';
 import { SubmitFactory } from './events-factory/submit-factory';
 import { DropFactory } from './events-factory/drop-factory';
@@ -66,24 +67,6 @@ export class ScenarioFactory {
   }
 
   /**
-   * Génère le scroll
-   */
-  public static generateScrollBlock(frameId : number, frame : string,
-     scrollX : number, scrollY : number) : Block {
-
-    const block = new Block(frameId);
-    block.addLine({
-      type: 'scroll',
-      value: ` await ${frame}.evaluate( async function(){
-        window.scroll(${scrollX}, ${scrollY});
-        return Promise.resolve('finish');
-      });`
-    });
-
-    return block;
-  }
-
-  /**
    * Génère la variable navigationPromise en cas de navigation
    */
   public static generateVarNavigationBlock(frameId : number) : Block {
@@ -127,6 +110,9 @@ export class ScenarioFactory {
       // Si c'est un keydown
       case domEventsToRecord.KEYDOWN:
         return KeydownFactory.generateBlock(event, frameId, frame, options);
+      // Si c'est un scroll
+      case domEventsToRecord.SCROLL:
+        return ScrollFactory.generateBlock(event, frameId, frame);
       // Si c'est une action pupeteer
       case pptrActions.PPTR:
         return PPtrFactory.generateBlock(event, frameId, frame, options);

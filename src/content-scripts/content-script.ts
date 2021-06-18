@@ -1,3 +1,4 @@
+import { DebounceService } from '../services/debounce/debounce-service';
 import { PasswordService } from '../services/password/password-service';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
@@ -44,6 +45,9 @@ class EventRecorder {
 
   /** Fonction qui permet d'écouter les events */
   private _boundedRecordEvent : () => void = null;
+
+  /** Fonction qui permet d'écouter les events scroll */
+  private _boundedScrollEvent : () => void = null;
 
   /** Fonction qui permet d'ecouter l'event onbeforeunload */
   private _boundedOnBeforeUnload : () => void = null;
@@ -156,7 +160,7 @@ class EventRecorder {
 
       // Ajout d'un listener afin d'écouter les messages du background
       if (!(window.document as any).pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
-        this._addAllListeners(this._events);
+        this._addAllListeners();
       }
 
       // On observe les changement et on ajoute un listener sur les inputs
@@ -366,7 +370,7 @@ class EventRecorder {
    * Ajout des listeners
    *
    */
-  private _addAllListeners(events) : void {
+  private _addAllListeners() : void {
 
     (window as any).document.pptRecorderAddedControlListeners = true;
 
@@ -382,9 +386,27 @@ class EventRecorder {
     WindowService.addEventListener('beforeunload', this._boundedOnBeforeUnload);
 
     this._boundedRecordEvent = this._recordEvent.bind(this);
-    events.forEach(type => {
-      WindowService.addEventListener(type, this._boundedRecordEvent, true);
-    });
+    this._boundedScrollEvent = DebounceService.debounce(event => {
+      // Envoi du scroll
+      ChromeService.sendMessage({
+        selector: this._selectorService.standardizeSelector(this._selectorService.find(event.target)),
+        tagName: event.target.tagName,
+        action: event.type,
+        typeEvent: event.type,
+        // Si on a un scrollLeft c'est que c'est un element et sinon c'est la window donc on utilise pageXOffset
+        scrollX: event.target.scrollLeft ? event.target.scrollLeft : window.pageXOffset,
+        scrollY: event.target.scrollTop ? event.target.scrollTop : window.pageYOffset,
+      });
+    }, 200);
+
+    for (let index = 0; index < this._events.length; index++) {
+      const type = this._events[index];
+      if (type !== eventsToRecord.SCROLL) {
+        WindowService.addEventListener(type, this._boundedRecordEvent, true);
+      } else {
+        WindowService.addEventListener(type, this._boundedScrollEvent, true);
+      }
+    }
   }
 
   /**
@@ -392,9 +414,14 @@ class EventRecorder {
    */
   private _deleteAllListeners() : void {
 
-    this._events.forEach(type => {
-      WindowService.removeEventListener(type, this._boundedRecordEvent, true);
-    });
+    for (let index = 0; index < this._events.length; index++) {
+      const type = this._events[index];
+      if (type !== eventsToRecord.SCROLL) {
+        WindowService.removeEventListener(type, this._boundedRecordEvent, true);
+      } else {
+        WindowService.removeEventListener(type, this._boundedScrollEvent, true);
+      }
+    }
 
     ChromeService.removeOnMessageListener(this._boundedMessageControl);
     WindowService.removeEventListener('message', this._boundedSendPollyResult, false);
