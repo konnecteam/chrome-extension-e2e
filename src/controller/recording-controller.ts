@@ -99,7 +99,7 @@ class RecordingController {
   private static _pathService = 'services/scenario/';
 
   /** Nom des fichiers de services du scenario */
-  private static _filenameScenarioServices = [
+  private static _scenarioFilesService = [
     `request-service.js`,
     `page-service.js`,
     `token-service.js`,
@@ -107,7 +107,7 @@ class RecordingController {
   ];
 
   /** Contenu des fichiers de services du scénario */
-  private _contentScenarioServices : string[] = [];
+  private _scenarioServiceContent : string[] = [];
   /**
    * Constructeur
    */
@@ -229,9 +229,9 @@ class RecordingController {
       this._zipService.addFileInFolder(`recordings/scripts-build/${buildFakeTimeScript.name}`, buildFakeTimeScript);
 
       // On parcourt tous les services pour les ajouter au zip
-      for (let index = 0; index < RecordingController._filenameScenarioServices.length; index++) {
-        const filename = RecordingController._filenameScenarioServices[index];
-        const contentFile = this._contentScenarioServices[index];
+      for (let index = 0; index < RecordingController._scenarioFilesService.length; index++) {
+        const filename = RecordingController._scenarioFilesService[index];
+        const contentFile = this._scenarioServiceContent[index];
         const file = new File([contentFile], filename );
         // On ajoute le service au zip
         this._zipService.addFileInFolder(`recordings/services/${file.name}`, file);
@@ -453,12 +453,12 @@ class RecordingController {
     /**
      * On récupère les services utilisés par le scénario
      */
-    for (let i = 0; i < RecordingController._filenameScenarioServices.length; i++) {
-      const filename = RecordingController._filenameScenarioServices[i];
+    for (let i = 0; i < RecordingController._scenarioFilesService.length; i++) {
+      const filename = RecordingController._scenarioFilesService[i];
       fetch(ChromeService.getUrl(`${RecordingController._pathService}${filename}`))
       .then(response => response.text())
       .then(value => {
-        this._contentScenarioServices[i] = value;
+        this._scenarioServiceContent[i] = value;
       });
     }
   }

@@ -8,7 +8,7 @@ const RequestService = require('./request-service');
  */
 class PageService {
   /**
-   * Ajouter le request handle à la page donnée
+   * Ajouter le requete handle à la page donnée
    * @param {*} page 
    * @returns 
    */
@@ -92,7 +92,7 @@ class PageService {
     });
   }
   /**
-   * Ajout le handle pour le load d'un page puppeteer
+   * Ajout le handle pour le load d'une page puppeteer
    * @param {*} page 
    */
   static addLoadHandler(page) {
