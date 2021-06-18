@@ -9,7 +9,6 @@
     "webNavigation",
     "browsingData",
     "tabs",
-    "activeTab",
     "*://*/*"
   ],
   "icons" : {
