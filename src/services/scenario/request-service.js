@@ -23,7 +23,8 @@ class RequestInstance {
   */
   getRequestMap(jsonHAR) {
     let requestMap = new Map();
-    for (let index = 0; index < jsonHAR.log.entries.length; index++) {
+
+    for (let index = 0 ; index < jsonHAR.log.entries.length ; index++) {
       const req = jsonHAR.log.entries[index];
       let url = UrlService.deleteDateTime(req.request.url);
       // On supprime le token de l'url
@@ -42,18 +43,22 @@ class RequestInstance {
     return requestMap;
   }
 }
+
 /**
  * Classe qui permet de faire le singleton
  */
 class RequestService {
+
   constructor() {
       throw new Error('Use RequestService.getInstance()');
   }
+
   static getInstance() {
-      if (!RequestService.instance) {
-        RequestService.instance = new RequestInstance();
-      }
-      return RequestService.instance;
+    if (!RequestService.instance) {
+      RequestService.instance = new RequestInstance();
+    }
+    return RequestService.instance;
   }
 }
+
 module.exports = RequestService;

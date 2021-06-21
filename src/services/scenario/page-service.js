@@ -16,7 +16,7 @@ class PageService {
     /**
      * Quand une requête est détéctée on la traite
      */
-    page.on('request',(req) => {
+    page.on('request', (req) => {
       let url = UrlService.deleteDateTime(req.url());
       // On supprime le token de l'url
       url = UrlService.deleteToken(url);
@@ -25,22 +25,24 @@ class PageService {
       let requestMap = RequestService.getInstance().mapRequests.get(url);
       let requete = undefined;
 
-      if(requestMap != undefined){
+      if (requestMap !== undefined){
     
-        if(requestMap.currentOrder > requestMap.order ){
+        if (requestMap.currentOrder > requestMap.order ){
           requestMap.currentOrder = 0;
         }
-        requete = requestMap.listReq[requestMap.currentOrder];
-    
+
+        requete = requestMap.listReq[requestMap.currentOrder];    
         requestMap.currentOrder++;
+
         RequestService.getInstance().mapRequests.set(url ,requestMap);
       }
     
-      if(requete != undefined && (!regexp || regexp && !regexp.test(url)) ){
+      if (requete !== undefined && (!regexp || regexp && !regexp.test(url)) ){
     
         let responseTosend = requete.response.content.text;
         let responseMimeType = requete.response.content.mimeType;
-        if(responseMimeType.includes('image') || responseMimeType.includes('font') ){
+
+        if (responseMimeType.includes('image') || responseMimeType.includes('font') ){
           let extensionFile = responseMimeType.split('/')[1];
     
           let fileName= `./imageTosend.${extensionFile}`;
@@ -52,17 +54,17 @@ class PageService {
         }
     
         let responseHeaders = {}
-        for(let i =0; i< requete.response.headers.length; i++){
+        for(let i = 0 ; i < requete.response.headers.length ; i++){
           let head = requete.response.headers[i];
     
           let attribute = head.name.split('-');
-          for(let j=0; j< attribute.length; j++){
+          for(let j = 0 ; j < attribute.length ; j++){
             attribute[j]= attribute[j].charAt(0).toUpperCase() + attribute[j].slice(1);
           }
     
           head.name = attribute.join('-');
     
-          if(head.name ==='X-Konnect-Id'){
+          if (head.name ==='X-Konnect-Id'){
             head.name = 'X-Konnect-ID'
           }
           responseHeaders[head.name] = head.value;
@@ -85,7 +87,7 @@ class PageService {
     page.on('request', (req) => {
       let url = req.url();
   
-      if(req != undefined && (!regexp || regexp && !regexp.test(url))){
+      if (req !== undefined && (!regexp || regexp && !regexp.test(url))){
         req.continue();
       }
       else {

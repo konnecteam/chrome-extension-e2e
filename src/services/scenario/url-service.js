@@ -1,6 +1,7 @@
 const notNormalizeChar = [',', '(', ')', '{', '}', '[', ']', '|', '!', '*'];
 const normalizeChar = ['%2C', '%28', '%29', '%7B', '%7D', '%5B', '%5D', '%7C', '%21', '%2A'];
 const TokenService = require('./token-service');
+
 /**
  * Service qui permet de modifier une url
  */
@@ -55,7 +56,7 @@ class UrlService {
    */
   static deleteToken(url) {
     let splitURL = url.split('token=');
-    if(splitURL.length > 1) {
+    if (splitURL.length > 1) {
       // On remplace le token de l'url par ''
       splitURL[1] = splitURL[1].replace(TokenService.findToken(splitURL[1]), '');
       return splitURL.join('token=');
@@ -71,6 +72,7 @@ class UrlService {
   static getURLEncode(url) {
     let urlFinal = '';
     let urlSplit = url.split(':');
+
     if (urlSplit.length > 1) {
       let firstPart = urlSplit.shift();
       let secondPart = urlSplit.shift();
@@ -78,7 +80,7 @@ class UrlService {
         `${firstPart}:${secondPart}${urlSplit.length !== 0 ? `:${urlSplit.join('%3A')}` : ''}`;
     }
 
-    for (let i = 0; i < notNormalizeChar.length; i++) {
+    for (let i = 0 ; i < notNormalizeChar.length ; i++) {
       urlFinal = urlFinal.split(notNormalizeChar[i]).join(normalizeChar[i]);
     }
     return urlFinal;

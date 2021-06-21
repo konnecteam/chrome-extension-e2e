@@ -1,5 +1,5 @@
 /**
- * Ce service permet de modifier des tokens
+ * Ce service permet de trouver les tokens
  */
 class TokenService {
 
@@ -8,7 +8,7 @@ class TokenService {
 
     // On cherche le token
     let token = '';
-    for (let c = 0; c < currentToken.length; c++) {
+    for (let c = 0 ; c < currentToken.length ; c++) {
 
       if (currentToken.charAt(c).match(/[a-zA-Z0-9_%=]/g)) {
         token += currentToken.charAt(c);
