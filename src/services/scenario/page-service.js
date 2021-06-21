@@ -18,8 +18,10 @@ class PageService {
      */
     page.on('request',(req) => {
       let url = UrlService.deleteDateTime(req.url());
-
+      // On supprime le token de l'url
+      url = UrlService.deleteToken(url);
       url = UrlService.getURLEncode(url);
+
       let requestMap = RequestService.getInstance().mapRequests.get(url);
       let requete = undefined;
 

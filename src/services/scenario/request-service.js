@@ -26,6 +26,9 @@ class RequestInstance {
     for (let index = 0; index < jsonHAR.log.entries.length; index++) {
       const req = jsonHAR.log.entries[index];
       let url = UrlService.deleteDateTime(req.request.url);
+      // On supprime le token de l'url
+      url = UrlService.deleteToken(url);
+      
       if (requestMap.get(url)) {
         let hashmapReq = requestMap.get(url);
         hashmapReq.listReq.push({ request: req.request, response: req.response });

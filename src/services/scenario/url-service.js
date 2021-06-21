@@ -1,6 +1,6 @@
 const notNormalizeChar = [',', '(', ')', '{', '}', '[', ']', '|', '!', '*'];
 const normalizeChar = ['%2C', '%28', '%29', '%7B', '%7D', '%5B', '%5D', '%7C', '%21', '%2A'];
-
+const TokenService = require('./token-service');
 /**
  * Service qui permet de modifier une url
  */
@@ -46,6 +46,21 @@ class UrlService {
     }
 
     return urlM;
+  }
+
+  /**
+   * Permet de supprimer le token de l'url
+   * @param {*} url 
+   * @returns 
+   */
+  static deleteToken(url) {
+    let splitURL = url.split('token=');
+    if(splitURL.length > 1) {
+      // On remplace le token de l'url par ''
+      splitURL[1] = splitURL[1].replace(TokenService.findToken(splitURL[1]), '');
+      return splitURL.join('token=');
+    }
+    return url;
   }
 
   /**

@@ -5,13 +5,12 @@ export default {
   IMPORT_PUPPETEER: `const puppeteer = require('puppeteer');
   const fs = require('fs');
   const path = require('path');
-  const PageService = require('./recordings/services/page-service');
-  const fakeTimeScriptContent = fs.readFileSync(path.join(__dirname, './recordings/scripts-build/fake-time-script.js'), 'utf-8');\n`,
+  const PageService = require('./recordings/services/page-service');\n`,
 
   IMPORT_HTTP_REQUEST : `const puppeteer = require('puppeteer');
 const fs = require('fs');
-const TokenService  = require('./recordings/services/token-service');
 const PageService = require('./recordings/services/page-service');
+const RequestService = require('./recordings/services/request-service');
 
 /** On commence par lire le har qui contient les requêtes et le faketimescript qui permet de faker la date */
 let nameFolder = '';
@@ -21,11 +20,9 @@ fs.readdirSync(\`\${__dirname}/recordings\`).forEach(folder => {
 
 const harFileContent = fs.readFileSync(\`\${__dirname}/recordings/\${nameFolder}/recording.har\`);
 let harContent = JSON.stringify(JSON.parse(harFileContent));
-let listToken = harContent.split('token=');
 
-// On remplace les tokens par les bons
-TokenService.replaceToken(listToken, harContent);
-`,
+RequestService.getInstance().setHarContent(harContent);\n`,
+
   HEADER : `const browser = await puppeteer.launch()
 const page = await browser.newPage()
 page.setDefaultTimeout('100000')
