@@ -83,6 +83,15 @@ class UrlService {
     for (let i = 0 ; i < notNormalizeChar.length ; i++) {
       urlFinal = urlFinal.split(notNormalizeChar[i]).join(normalizeChar[i]);
     }
+
+    const regexForPercent = /%[^a-zA-Z,^0-9]{1}/gm;
+    const foundMatchPercent = urlFinal.match(regexForPercent);
+
+    if (foundMatchPercent) {
+      for (let i = 0 ; i < foundMatchPercent.length ; i++) {
+        urlFinal = urlFinal.replace(foundMatchPercent[i], `%25${foundMatchPercent[i].slice(1)}`);
+      }
+    }
     return urlFinal;
   }
 }

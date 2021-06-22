@@ -13,6 +13,12 @@ class PageService {
    * @returns 
    */
   static addSavedRequestHandler(page, regexp = null) {
+    
+    // Permet de savoir si on a déjà catch la requête qui se lance en double
+    let isCatched = false;
+    // Permet de savoir l'url de la page
+    let currentURL = page.url();
+
     /**
      * Quand une requête est détéctée on la traite
      */
@@ -22,17 +28,34 @@ class PageService {
       url = UrlService.deleteToken(url);
       url = UrlService.getURLEncode(url);
 
+      if (currentURL !== page.url()) {
+        currentURL = page.url();
+        isCatched = false;
+      }
+
       let requestMap = RequestService.getInstance().mapRequests.get(url);
       let requete = undefined;
 
       if (requestMap !== undefined){
     
-        if (requestMap.currentOrder > requestMap.order ){
+        if (requestMap.currentOrder > requestMap.order){
           requestMap.currentOrder = 0;
         }
 
-        requete = requestMap.listReq[requestMap.currentOrder];    
-        requestMap.currentOrder++;
+        requete = requestMap.listReq[requestMap.currentOrder];
+
+        // Si c'est une requete de document il faut gérer la double requete
+        // Les requêtes qui contiennent svg ne sont pas à traiter
+        if (url.includes('/api/v1.0/autoroute/doc?') && !url.includes('svg')) {
+          if (currentURL === page.url()) {
+
+            if (!isCatched) {
+              isCatched = true;
+            } else {
+              requestMap.currentOrder++;
+            }
+          }
+        }
 
         RequestService.getInstance().mapRequests.set(url ,requestMap);
       }
