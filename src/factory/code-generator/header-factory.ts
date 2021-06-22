@@ -55,7 +55,7 @@ export class HeaderFactory {
 
         addHttpRegexp = HeaderCode.LISTENER_PAGE_RECORDED_REQUEST.replace(
             this._HTTP_REQUEST_REGEX_KEY,
-            `&& !new RegExp(${codeRegExp}).test(url) `);
+            `, new RegExp(${codeRegExp})`);
       }
       // Si il n'y a pas de Regexp alors on remplace par rien
       else {
@@ -68,7 +68,7 @@ export class HeaderFactory {
     } else if (codeRegExp) {
       header += HeaderCode.LISTENER_PAGE_LIVE_REQUEST.replace(
         this._HTTP_REQUEST_REGEX_KEY,
-        `&& !new RegExp(${codeRegExp}).test(url) `);
+        `, new RegExp(${codeRegExp})`);
     }
     return importPackage + header;
   }

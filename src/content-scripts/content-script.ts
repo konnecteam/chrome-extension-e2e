@@ -27,6 +27,9 @@ class EventRecorder {
   /** Utilisation de la regex pour les data attribute */
   private _useRegexForDataAttribute : boolean;
 
+  /** Permet de savoir si il faut enregistrer les requêtes http */
+  private _recordHttpRequest : boolean;
+
   // services
   /** Service qui permet de gérer les keydown */
   private _keyDownService : KeyDownService;
@@ -75,6 +78,7 @@ class EventRecorder {
 
     // Boolean
     this._useRegexForDataAttribute = false;
+    this._recordHttpRequest = false;
 
     // Service
     this._keyDownService = KeyDownService.Instance;
@@ -149,6 +153,7 @@ class EventRecorder {
       // Mise à jour des options
       this._updateOptions(data.options);
 
+      this._recordHttpRequest = data.options.recordHttpRequest;
       // Si On record les requests on initialise et inject le script polly
       if (data.options.recordHttpRequest) {
         this._init();
@@ -478,6 +483,10 @@ class EventRecorder {
     WindowService.dispatchEvent(
       new CustomEvent(controlMSG.GET_HAR_EVENT)
     );
+    // Si on n'enregistre pas les requêtes on peut directement supprimer les listeners
+    if (!this._recordHttpRequest) {
+      this._deleteAllListeners();
+    }
 
   }
 

@@ -146,7 +146,7 @@
         this.$chrome.storage.local.get(['isRemovedListener', 'loadingPage'], ({ isRemovedListener, loadingPage }) => {
           if(isRemovedListener || loadingPage) {
             this.cleanUp()
-            this.bus.postMessage({ action: controlAction.CLEAN })
+            this.bus.postMessage({ action: controlAction.CLEANUP })
           } else {
             alert('We must waiting for recording to be stopped before restart process')
           }
