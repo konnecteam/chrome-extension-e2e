@@ -10,7 +10,9 @@ import 'jest';
 import { KSelectComponent } from '../../components/konnect/k-select-component';
 import { KListComponent } from '../../components/konnect/k-list-component';
 import { FileService } from '../../services/file/file-service';
-import elementsTagName from '../../constants/elements/tag-name';
+
+// Constant
+import TAG_NAME from '../../constants/elements/tag-name';
 
 /**
  * Permet de changer le contenu du body
@@ -180,7 +182,7 @@ describe('Test de event message factory', () => {
     const element = document.querySelector(K_ITEM_LIST_SELECTOR);
 
     // Selector de la liste déroulante
-    const previousSelector : string = elementsTagName.KONNECT_DROPDOWNLIST;
+    const previousSelector : string = TAG_NAME.KONNECT_DROPDOWNLIST;
 
     // infos sur l'element klist
     const previousElement  = {

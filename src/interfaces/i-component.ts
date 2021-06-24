@@ -13,7 +13,7 @@ export interface IComponent {
   previousSelector? : string;
 
   /** Utile pour déterminer dans quel type de konnect liste on se situe */
-  previousElement? : {
+  kListElement? : {
     selector : string,
     element : Element,
     typeList : string

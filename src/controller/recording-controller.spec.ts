@@ -5,10 +5,13 @@ import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as chrome from 'sinon-chrome';
 import { IMessage } from '../interfaces/i-message';
-import controlActions from '../constants/control/control-actions';
 import { Server } from 'http';
 import { EBadgeState } from '../enum/e-badge-states';
 import { IOption } from 'interfaces/i-options';
+
+
+// Constant
+import CONTROL from '../constants/control/control-actions';
 
 let server : Server;
 let browser : puppeteer.Browser;
@@ -243,7 +246,7 @@ describe('Test de Recording Controller', () => {
         (window as any).ddlFile = true;
       };
 
-    }, { chrome, options: defaultOptions, controlActions , badgeStates : EBadgeState});
+    }, { chrome, options: defaultOptions, controlActions: CONTROL , badgeStates : EBadgeState});
 
     // On ajoute le background dans la page
     await page.evaluate(scriptText => {
@@ -266,35 +269,35 @@ describe('Test de Recording Controller', () => {
 
   test('Test de start', async () => {
 
-    const badge = await verfiyBadgeContentAsync(controlActions.START);
+    const badge = await verfiyBadgeContentAsync(CONTROL.START);
     // Verifier si il est égale à 'rec' car il n'y a pas d'event à save
     expect(badge).toEqual(EBadgeState.REC);
 
   });
 
   test('Test de stop', async () => {
-    const badge = await verfiyBadgeContentAsync(controlActions.STOP);
+    const badge = await verfiyBadgeContentAsync(CONTROL.STOP);
     // Verifier si il est égale à '' car il n'y a pas d'event à save
     expect(badge).toEqual('');
   });
 
   test('Test de cleanUp', async () => {
 
-    const badge = await verfiyBadgeContentAsync(controlActions.CLEANUP);
+    const badge = await verfiyBadgeContentAsync(CONTROL.CLEANUP);
     // Verifier si il est égale à '' car il n'y a pas d'event à save
     expect(badge).toEqual('');
   });
 
   test('Test de pause', async () => {
 
-    const badge = await verfiyBadgeContentAsync(controlActions.PAUSE);
+    const badge = await verfiyBadgeContentAsync(CONTROL.PAUSE);
     // Verifier si il est égale à '❚❚' car on est en pause
     expect(badge).toEqual(EBadgeState.PAUSE);
   });
 
   test('Test de unpause', async () => {
 
-    const badge = await verfiyBadgeContentAsync(controlActions.UNPAUSE);
+    const badge = await verfiyBadgeContentAsync(CONTROL.UNPAUSE);
     // Verifier si il est égale à 'rec' car on record
     expect(badge).toEqual(EBadgeState.REC);
   });
@@ -315,7 +318,7 @@ describe('Test de Recording Controller', () => {
       Promise.resolve();
     });
     // Dispatch event
-    await dispatchEventAsync('OnMessage', { action: controlActions.EXPORT_SCRIPT });
+    await dispatchEventAsync('OnMessage', { action: CONTROL.EXPORT_SCRIPT });
 
     // On fait une pause pour laisser exportScript le temps de finir
     await page.waitFor(40);

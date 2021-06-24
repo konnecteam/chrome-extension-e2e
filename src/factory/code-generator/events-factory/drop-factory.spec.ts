@@ -2,9 +2,11 @@ import { IOption } from 'interfaces/i-options';
 import { IMessage } from '../../../interfaces/i-message';
 import { DropFactory } from './drop-factory';
 import 'jest';
-import customEvents from '../../../constants/events/events-custom';
 import { ClickFactory } from './click-factory';
 import { ChangeFactory } from './change-factory';
+
+// Constant
+import CUSTOM_EVENT from '../../../constants/events/events-custom';
 
 /** frame utilisée pour les tests */
 let frame : string;
@@ -29,6 +31,7 @@ const defaultOptions : IOption = {
   });`,
   deleteSiteData: true,
 };
+
 describe('Test de Drop Block Factory', () => {
 
   // Initialisation
@@ -40,13 +43,13 @@ describe('Test de Drop Block Factory', () => {
 
   test('Généré un Drop Block', () => {
     const eventMessage : IMessage = {
-      action : customEvents.DROP_FILE,
+      action : CUSTOM_EVENT.DROP_FILE,
       selector: '#test',
       files : 'text.txt'
     };
 
     // On rajoute d'abord la partie du click du file dropzone
-    const exceptedResult = ClickFactory.buildclickFileDropZoneBlock(
+    const exceptedResult = ClickFactory.buildFileDropZoneClickBlock(
       defaultOptions,
       frameId,
       frame,
@@ -60,7 +63,7 @@ describe('Test de Drop Block Factory', () => {
     exceptedResult.addLine(chooserFile.getLines()[0]);
 
     expect(
-      DropFactory.generateBlock(
+      DropFactory.buildBlock(
         eventMessage,
         frameId,
         frame,

@@ -1,10 +1,12 @@
 import {  RadioGroupComponent } from './radio-group-component';
 import 'jest';
 import * as path from 'path';
-import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-import eventsDom from '../../constants/events/events-dom';
+
+// Constant
+import COMPONENT from '../../constants/component-name';
+import DOM_EVENT from '../../constants/events/events-dom';
 
 /**
  * chemin du fichier html qui contient le body
@@ -33,7 +35,7 @@ describe('Test de RadioGroup', () => {
     // On doit trouver la RadioGroup
     expect(
        RadioGroupComponent.getElement(element).component
-    ).toEqual(componentName.RADIO_GROUP);
+    ).toEqual(COMPONENT.RADIO_GROUP);
   });
 
   test('Test de editRadioGroupComponentMessage', () => {
@@ -46,6 +48,6 @@ describe('Test de RadioGroup', () => {
     expect(
        RadioGroupComponent.
       editRadioGroupComponentMessage(eventCatched).action
-    ).toEqual(eventsDom.CLICK);
+    ).toEqual(DOM_EVENT.CLICK);
   });
 });

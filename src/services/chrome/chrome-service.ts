@@ -103,7 +103,7 @@ export class ChromeService {
    * Permet de récupérer l'id du tab courrant
    */
   public static async getCurrentTabId() : Promise<{id : number, url : string}> {
-    return new Promise(async (resolve, err) => {
+    return new Promise(async (resolve, reject) => {
       const tabs = await this._query({
         active: true,
         currentWindow: true
@@ -111,7 +111,7 @@ export class ChromeService {
       if (tabs && tabs[0]) {
         resolve({id : tabs[0].id, url: tabs[0].url});
       } else {
-        err('tabs is undefined');
+        reject('tabs is undefined');
       }
     });
   }
@@ -120,7 +120,7 @@ export class ChromeService {
    * Permet d'exécuter un script
    */
   public static executeScript(details : chrome.tabs.InjectDetails) : Promise<boolean> {
-    return new Promise((resolve, err) => {
+    return new Promise((resolve, reject) => {
       chrome.tabs.executeScript(details, () => {
         resolve(true);
       });
@@ -131,7 +131,7 @@ export class ChromeService {
    * Permet de récupérer des info via une query
    */
   private static async _query(queryInfo : chrome.tabs.QueryInfo) : Promise<chrome.tabs.Tab[]> {
-    return new Promise((resolve, err) => {
+    return new Promise((resolve, reject) => {
       chrome.tabs.query(queryInfo, (result : chrome.tabs.Tab[]) => {
         resolve(result);
       });

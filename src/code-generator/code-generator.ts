@@ -1,12 +1,11 @@
-import { UtilityService } from '../services/utility/utility-service';
-import { default as pptrActions} from '../constants/pptr-actions';
-import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
 import { IOption } from '../interfaces/i-options';
-import { FooterFactory } from '../factory/code-generator/footer-factory';
-import { HeaderFactory } from '../factory/code-generator/header-factory';
+import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
+import { ScenarioService } from '../services/scenario/scenario-service';
 
+// Constant
+import PPTR_ACTIONS from '../constants/pptr-actions';
 
 /**
  * Classe qui permet de générer le scénario à partir des événements enregistrés
@@ -35,15 +34,17 @@ export default class CodeGenerator {
     this._options = options;
   }
 
+  /** Génération du code du scenario */
   public generate(events : IMessage[]) : string {
-    return HeaderFactory.generateHeader(
+
+    const header = ScenarioFactory.buildHeader(
       this._options.recordHttpRequest,
       this._options.wrapAsync,
       this._options.headless,
       this._options.regexHTTPrequest
-      )
-     + this._parseEvents(events)
-     + FooterFactory.generateFooter(this._options.wrapAsync);
+    );
+
+    return `${header}${this._parseEvents(events)}${ScenarioService.getFooter(this._options.wrapAsync)}`;
   }
 
   /**
@@ -54,6 +55,7 @@ export default class CodeGenerator {
     let result = '';
 
     let newBlock : Block;
+
     // 1- On parcourt la liste de tous les event sauvegardés pour générer les blocks
     for (let i = 0; i < events.length; i++) {
 
@@ -61,45 +63,52 @@ export default class CodeGenerator {
 
       // On update les frames
       this._setFrames(currentEvent.frameId, currentEvent.frameUrl);
-      // On parse l'event en block
-      newBlock = ScenarioFactory.parseEvent(currentEvent, this._frameId, this._frame, this._options);
+
+      // On contruit le block de code à partir de l'évènement enregistré
+      newBlock = ScenarioFactory.buildBlock(currentEvent, this._frameId, this._frame, this._options);
 
       if (newBlock) {
 
-        /* Si l'option custom Line before event est utilisée et que ce n'est pas un action puppeteer
-           Alors on rajoute la ligne customisé
-        */
-        if (this._options.customLinesBeforeEvent &&
-          !UtilityService.isValueInObject(pptrActions, currentEvent.action)) {
+        /**
+         * Si l'option custom Line before event est utilisée et que ce n'est pas un action puppeteer
+         * Alors on rajoute la ligne customisé
+         */
+        if (this._options.customLinesBeforeEvent && Object.values(PPTR_ACTIONS).indexOf(currentEvent.action) === -1) {
 
-          this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
+          this._blocks.push(ScenarioFactory.buildCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
         }
 
         /* Si l'event contient un commentaire alors on rajoute un block de commentaire */
         if (currentEvent.comments) {
-          this._blocks.push(ScenarioFactory.generateCommentsBlock(newBlock, currentEvent.comments));
+
+          this._blocks.push(ScenarioFactory.buildCommentBlock(newBlock, currentEvent.comments));
         } else {
+
           this._blocks.push(newBlock);
         }
       }
 
       // Si l'action détéctée est un navigation alors on met la navigation à true
-      if  (currentEvent.action === pptrActions.NAVIGATION) {
+      if (currentEvent.action === PPTR_ACTIONS.NAVIGATION) {
         this._hasNavigation = true;
       }
-
     }
-    // On rajoute une custome ligne avant la fin pour attendre des dernières interactions
+
+    /**
+     * Ici on rajoute un await afin de pouvoir visualiser la fin du scénario
+     * Note : Peut être supprimé si options non nécessaire
+     */
     if (this._options.customLinesBeforeEvent) {
 
-      this._blocks.push(ScenarioFactory.generateCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
+      this._blocks.push(ScenarioFactory.buildCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
     }
 
-    /* Si il y a eu une navigation et que l'option pour wait la navigation est activée
-       Alors on rajoute le block de navigation
-    */
+    /**
+     * Si une navigation à eu lieux et que l'option 'attendre la navigation est activé'
+     * alors on rajoute un block de code permettant de gérer la naviation
+     */
     if (this._hasNavigation && this._options.waitForNavigation) {
-      this._blocks.unshift(ScenarioFactory.generateVarNavigationBlock(this._frameId));
+      this._blocks.unshift(ScenarioFactory.buildNavigationBlock(this._frameId));
     }
 
     // 2- on effectue les opération post processs
@@ -107,6 +116,7 @@ export default class CodeGenerator {
 
     const indent = this._options.wrapAsync ? '  ' : '';
     const newLine = `\n`;
+
     // 3- on récupère le result
     for (let i = 0; i < this._blocks.length; i++) {
 
@@ -115,6 +125,7 @@ export default class CodeGenerator {
         result += `${indent}${lines[j].value}${newLine}`;
       }
     }
+
     return result;
   }
 
@@ -138,6 +149,7 @@ export default class CodeGenerator {
    * pour set les frames et ajouter une ligne blanche
    */
   private _postProcess() {
+
     // quand les event sont record à partir des différentes frames, on va ajouter la bonne frame
     if (Object.keys(this._allFrames).length > 0) {
       this._postProcessSetFrames();
@@ -149,12 +161,13 @@ export default class CodeGenerator {
   }
 
   /**
-   *  Set les frames
+   * Set les frames
    */
   private _postProcessSetFrames() : void {
+
     for (const [i, block] of this._blocks.entries()) {
 
-      const result = ScenarioFactory.generateSetFrame(block, block[i], this._allFrames);
+      const result = ScenarioFactory.buildSetFrame(block, block[i], this._allFrames);
       this._allFrames = result.allFrames ;
       block[i] = result.block;
     }
@@ -165,13 +178,10 @@ export default class CodeGenerator {
    */
   private _postProcessAddBlankLines() : void {
 
-    let i = 0;
-    while (i <= this._blocks.length) {
-
-      const blankLine = ScenarioFactory.generateBlankLineBlock();
+    // On utilise i+2 éviter de séparer les lignes de code
+    for (let i = 0; i <= this._blocks.length; i += 2) {
+      const blankLine = ScenarioFactory.buildBlankLineBlock();
       this._blocks.splice(i, 0, blankLine);
-      i += 2;
     }
   }
-
 }

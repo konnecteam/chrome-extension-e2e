@@ -1,3 +1,5 @@
+import { ChromeService } from '../../services/chrome/chrome-service';
+
 /**
  * Service qui permet la gestion des enregistrements depuis le background
  */
@@ -8,6 +10,9 @@ export class PollyService {
 
   /** Instance de classe */
   public static instance : PollyService;
+
+  /** PollyJS déjà injecté ? */
+  private _scriptAlreadyInjected : boolean = false;
 
   /**
    * Contient le résultat de l'enregistrement de polly
@@ -61,5 +66,19 @@ export class PollyService {
    */
   public listen(window : Window, callback : () => void) : void {
     window.addEventListener('message', callback, false);
+  }
+
+  /** Injection du script pollyJS dans la page */
+  public injectScript() {
+
+    if (chrome && chrome.extension && !this._scriptAlreadyInjected) {
+
+      const script = document.createElement('script');
+      script.async = false;
+      script.defer = false;
+      script.setAttribute('src', ChromeService.getUrl(PollyService.POLLY_SCRIPT_PATH));
+      (document.head || document.documentElement).prepend(script);
+      this._scriptAlreadyInjected = true;
+    }
   }
 }

@@ -3,7 +3,7 @@ import { ChromeService } from './../chrome/chrome-service';
 import * as fs from 'fs';
 
 /**
- * Service Global qui permet la gestion des enregistrements depuis le background
+ * Service de gestion de fichier
  */
 export class FileService {
 
@@ -92,6 +92,7 @@ export class FileService {
       this._control = 'get-newFile';
       this._reader.readAsDataURL(file);
     }
+
     return this._filename;
   }
 
@@ -101,7 +102,9 @@ export class FileService {
   public prepareFilesForScenario(files : FileList) : string {
 
     const listFiles : string[] = [];
+
     if (files) {
+
       for (let i = 0; i < files.length; i++) {
 
         listFiles.push(this._getFileToSend(files[i]));

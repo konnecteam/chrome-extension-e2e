@@ -4,22 +4,24 @@ import { ZipService } from '../services/zip/zip-service';
 import { FileService } from '../services/file/file-service';
 import { ChromeService } from '../services/chrome/chrome-service';
 import { IMessage } from '../interfaces/i-message';
-import pptrActions from '../constants/pptr-actions';
 import { PollyService } from '../services/polly/polly-service';
-import { PollyFactory } from '../factory/polly/polly-factory';
-import packageJsonZip from '../constants/package-json-zip';
 import { HttpService } from '../services/http/http-service';
-import controlActions from '../constants/control/control-actions';
-import controlMSG from '../constants/control/control-message';
-import {EBadgeState} from '../enum/e-badge-states';
+import { EBadgeState } from '../enum/e-badge-states';
+import { ScenarioService } from '../services/scenario/scenario-service';
+
+// Constant
+import ACTION from '../constants/control/control-actions';
+import MESSAGE from '../constants/events/events-message';
+import ZIP_CONTENT from '../constants/package-json-zip';
+import PPTR_ACTION from '../constants/pptr-actions';
+
 /**
  * Background du Plugin qui permet de gérer le recording
  */
 class RecordingController {
 
-  // Constante
   /** Nom du fichier scénario que l'on va exporter */
-  private static readonly _FILENAME : string = 'scenario.zip';
+  private static readonly _SCENARIO_ZIP_NAME : string = 'scenario.zip';
 
   /** Mime type du fichier zip */
   private static readonly _MIMETYPE : string = 'application/zip';
@@ -27,25 +29,21 @@ class RecordingController {
   /** type de data utilisé pour créé le data url du fichier zip */
   private static readonly _TYPEDATA : string = 'base64';
 
-  /** Path du script fake time buildé et qui se situe dans dist */
-  private static readonly _FAKE_TIME_SCRIPT_PATH : string = './lib/scripts/fake-time/fake-time.js';
-
   /** Nom du fichier content script */
-  private static readonly _CONTENT_SCRIPT_FILENAME = 'content-script.js';
+  private static readonly _CONTENT_SCRIPT_FILENAME : string = 'content-script.js';
 
   /** Nom du fichier qui contiendra les requêtes http */
-  private static readonly _RECORDING_FILENAME = 'recording.har';
+  private static readonly _RECORDING_FILENAME : string = 'recording.har';
 
   /** Nom du fichier qui contiendra le scénario */
-  private static readonly _SCENARIO_FILNAME = 'script.js';
+  private static readonly _SCENARIO_FILNAME : string = 'script.js';
 
   /** Nom du fichier qui contiendra le package json */
-  private static readonly _PACKAGE_JSON = 'package.json';
+  private static readonly _PACKAGE_JSON : string = 'package.json';
 
   /** Nom du fichier qui contiendra le script pour fake le temps */
-  private static readonly _FAKE_TIME_FILNAME = 'fake-time-script.js';
+  private static readonly _FAKE_TIME_SCRIPT_FILNAME : string = 'fake-time-script.js';
 
-  // Modèle custom
   /** évenements récéptionnés */
   private _recording : IMessage[] = [];
 
@@ -63,14 +61,12 @@ class RecordingController {
   /** Bind de la méthode handleScript */
   private _boundedScriptHandler : () => void = null;
 
-  // String
-
   /** Contient le contenu du scéario à exporter */
   private _zipContent : File;
 
   /** Contenu du fichier Fake Time service buildé */
-  private _contentFakeTimeServiceBuild : string;
-  // Boolean
+  private _contentFakeTimeServiceBuilded : string;
+
   /** Permet de savoir si on est en pause ou non */
   private _isPaused : boolean = false;
 
@@ -83,7 +79,6 @@ class RecordingController {
   /** Permet de savoir si il faut supprimer le cache du site */
   private _deleteSiteData : boolean = false;
 
-  // Services
   /** Permet de faire la gestion du fichier zip que l'on va exporter  */
   private _zipService : ZipService;
 
@@ -93,21 +88,9 @@ class RecordingController {
   /** Permet de faire la gestion des enregistrements PollyJS */
   private _pollyService : PollyService;
 
-  /**
-   * Path du dossier qui contient les services du scénario
-   */
-  private static _pathService = 'services/scenario/';
-
-  /** Nom des fichiers de services du scenario */
-  private static _scenarioFilesService = [
-    `request-service.js`,
-    `page-service.js`,
-    `token-service.js`,
-    `url-service.js`,
-  ];
-
   /** Contenu des fichiers de services du scénario */
-  private _scenarioServiceContent : string[] = [];
+  private _scenarioDependencies : string[] = [];
+
   /**
    * Constructeur
    */
@@ -152,25 +135,24 @@ class RecordingController {
     (chrome.extension as any).onConnect.addListener(port => {
       port.onMessage.addListener(msg => {
         switch (msg.action) {
-          case controlActions.START :
+          case ACTION.START :
             this._start();
             break;
-          case controlActions.STOP :
+          case ACTION.STOP :
             this._stop();
             break;
-          case controlActions.CLEANUP:
+          case ACTION.CLEANUP:
             this._cleanUp();
             break;
-          case controlActions.PAUSE :
+          case ACTION.PAUSE :
             this._pause();
             break;
-          case controlActions.UNPAUSE :
+          case ACTION.UNPAUSE :
             this._unPause();
             break;
-          case controlActions.EXPORT_SCRIPT :
+          case ACTION.EXPORT_SCRIPT :
             this._exportScriptAsync();
             break;
-          // default
         }
       });
     });
@@ -189,31 +171,29 @@ class RecordingController {
 
     // 2 - On vérifie que le contenu du zip n'est pas vide
     if (this._zipContent) {
-      // Mise à jour de la barre de progression
-      ChromeService.sendMessage({
-        valueLoad: 100
-      });
 
-      ChromeService.download(this._zipContent, RecordingController._FILENAME);
+      // Mise à jour de la barre de progression
+      ChromeService.sendMessage({ valueLoad: 100 });
+
+      ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
       return;
     }
 
     // 3 - Recupération du code dans le local storage
     const result  = await StorageService.getDataAsync(['code', 'dateTimeStart']);
     if (result) {
+
       // Ajout du fichier script.js dans l'archive
       this._zipService.addFileInFolder(RecordingController._SCENARIO_FILNAME, result.code);
 
       // Ajout du package Json
       this._zipService.addFileInFolder(
         RecordingController._PACKAGE_JSON,
-        new File([packageJsonZip.PACKAGE_JSON_CONTENT], RecordingController._PACKAGE_JSON)
+        new File([ZIP_CONTENT.PACKAGE_JSON_CONTENT], RecordingController._PACKAGE_JSON)
       );
 
       // changement de la barre de progression
-      ChromeService.sendMessage({
-        valueLoad: 15
-      });
+      ChromeService.sendMessage({ valueLoad: 15 });
 
       // Recupère la liste des fichiers qui seront dans le zip
       const files = this._fileService.getUploadedFiles();
@@ -222,28 +202,35 @@ class RecordingController {
       }
 
       // On remplace 0 par la time de départ du record
-      const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuild.replace('now:0', `now:${result.dateTimeStart}`);
-      // On créé le fil à ajouter dans le zip
-      const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], RecordingController._FAKE_TIME_FILNAME );
+      const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuilded.replace('now:0', `now:${result.dateTimeStart}`);
+
+      // On créé le fichier à ajouter dans le zip
+      const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], RecordingController._FAKE_TIME_SCRIPT_FILNAME);
+
       // On ajoute le fake script permettant de fake le time dans le zip
       this._zipService.addFileInFolder(`recordings/scripts-build/${buildFakeTimeScript.name}`, buildFakeTimeScript);
 
+
       // On parcourt tous les services pour les ajouter au zip
-      for (let index = 0; index < RecordingController._scenarioFilesService.length; index++) {
-        const filename = RecordingController._scenarioFilesService[index];
-        const contentFile = this._scenarioServiceContent[index];
+      for (let index = 0; index < ScenarioService.SCENARIO_SERVICE_DEPENDENCIES.length; index++) {
+
+        const filename = ScenarioService.SCENARIO_SERVICE_DEPENDENCIES[index];
+        const contentFile = this._scenarioDependencies[index];
         const file = new File([contentFile], filename );
+
         // On ajoute le service au zip
         this._zipService.addFileInFolder(`recordings/services/${file.name}`, file);
       }
 
       // changement de la barre de progression
-      ChromeService.sendMessage({
-        valueLoad: 35
-      });
+      ChromeService.sendMessage({ valueLoad: 35 });
 
       if (this._recordHttpRequest) {
-        const recording = PollyFactory.buildResultObject();
+
+        const recording = {
+          folderName : this._pollyService.getRecordId() !== '' ? this._pollyService.getRecordId() : 'emptyResult',
+          har : this._pollyService.getRecordHar() !== '' ? this._pollyService.getRecordHar() : 'No request recorded'
+        };
 
         // changement de la barre de progression
         ChromeService.sendMessage({
@@ -258,28 +245,26 @@ class RecordingController {
       }
 
       // changement de la barre de progression
-      ChromeService.sendMessage({
-        valueLoad: 75
-      });
+      ChromeService.sendMessage({ valueLoad: 75 });
 
       try {
+
         const zipInNodeBuffer = await this._zipService.generateAsync();
 
         // changement de la barre de progression
-        ChromeService.sendMessage({
-          valueLoad: 100
-        });
+        ChromeService.sendMessage({ valueLoad: 100 });
 
         // Création d'un data url pour pouvoir transformer en File
         const dataURLZip = DataURLFactory.buildDataURL(
           RecordingController._MIMETYPE,
           RecordingController._TYPEDATA,
-          zipInNodeBuffer.toString(RecordingController._TYPEDATA)
+          zipInNodeBuffer.toString((RecordingController._TYPEDATA) as BufferEncoding)
         );
 
-        this._zipContent = FileService.Instance.buildFile(RecordingController._FILENAME, dataURLZip);
+        this._zipContent = FileService.Instance.buildFile(RecordingController._SCENARIO_ZIP_NAME, dataURLZip);
+
         // Téléchargement du fichier
-        ChromeService.download(this._zipContent, RecordingController._FILENAME);
+        ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
       } catch (e) {
         throw new Error(e);
       }
@@ -293,7 +278,7 @@ class RecordingController {
 
     ChromeService.setBadgeText(EBadgeState.REC);
     this._isPaused = false;
-    ChromeService.sendMessageToContentScript(controlMSG.UNPAUSE_EVENT);
+    ChromeService.sendMessageToContentScript(MESSAGE.UNPAUSE);
   }
 
   /**
@@ -303,17 +288,16 @@ class RecordingController {
 
     ChromeService.setBadgeText(EBadgeState.PAUSE);
     this._isPaused = true;
-    ChromeService.sendMessageToContentScript(controlMSG.PAUSE_EVENT);
+    ChromeService.sendMessageToContentScript(MESSAGE.PAUSE);
   }
 
   /**
    * Clean des données
-   * @param callback
    */
   private async _cleanUp(callback? : () => void) : Promise<void> {
 
     this._recording = [];
-    this._contentFakeTimeServiceBuild = '';
+    this._contentFakeTimeServiceBuilded = '';
     ChromeService.removeOnMessageListener(this._boundedMessageHandler);
     ChromeService.setBadgeText('');
     await StorageService.removeDataAsync('recording');
@@ -344,13 +328,11 @@ class RecordingController {
     StorageService.setData({ recording : this._recording });
 
     // 5 - On récupère le résultat
-    ChromeService.sendMessageToContentScript(controlMSG.GET_RESULT_EVENT);
+    ChromeService.sendMessageToContentScript(MESSAGE.GET_RESULT);
 
     // 6 - Si on record pas les requêtes on peut mettre à true isRemovedListener
     if (!this._recordHttpRequest) {
-      StorageService.setData({
-        isRemovedListener: true
-      });
+      StorageService.setData({ isRemovedListener: true });
     }
   }
 
@@ -359,7 +341,6 @@ class RecordingController {
    */
   private async _start() : Promise<void> {
 
-    // 1 - On clean les data et remove le message listerner
     /**
      * Si l'utilisateur à reload alors
      * on n'a pas les données de pollyJS
@@ -369,6 +350,7 @@ class RecordingController {
       ChromeService.removeOnMessageListener(this._boundedMessageHandler);
     }
 
+    // 1 - On clean les data et remove le message listerner
     this._zipContent = null;
     this._isResult = false;
     this._fileService.clearUploadedFiles();
@@ -379,9 +361,10 @@ class RecordingController {
     chrome.browserAction.setBadgeText({ text : '' });
 
     const currentTab = await ChromeService.getCurrentTabId();
+
     // 2 - On récupère les options
     const data = await StorageService.getDataAsync(['options']);
-    if  (data) {
+    if (data) {
       this._recordHttpRequest = data.options.recordHttpRequest;
       this._deleteSiteData = data.options.deleteSiteData;
     }
@@ -392,19 +375,13 @@ class RecordingController {
     }
 
     // 3 - Suppression du recording en local storage
-    // On met isRemovedListener à false car on démarre le record
     await StorageService.removeDataAsync('recording');
 
-    StorageService.setData({
-      isRemovedListener: false
-    });
+    StorageService.setData({ isRemovedListener: false });
 
-    StorageService.setData({
-      isRemovedListener: false
-    });
-
-    // 4 - On récupère le contenu du fichier fake-timer-service build
-    this._getScenarioFilesContent();
+    // 4 - On récupère les fichiers liées au scénario
+    this._scenarioDependencies = ScenarioService.getScenarioFilesContent();
+    this._contentFakeTimeServiceBuilded = await ScenarioService.getFakeTimeScriptContentAsync();
 
     // 5 - Inject le script
     await ChromeService.executeScript({
@@ -415,13 +392,15 @@ class RecordingController {
 
     // Récupération du viewport
     chrome.tabs.sendMessage(currentTab.id, {
-      control: controlMSG.GET_VIEWPORT_SIZE_EVENT
-    });
-    // Récupération de l'url
-    chrome.tabs.sendMessage(currentTab.id, {
-      control: controlMSG.GET_CURRENT_URL_EVENT
+      control: MESSAGE.GET_VIEWPORT_SIZE
     });
 
+    // Récupération de l'url
+    chrome.tabs.sendMessage(currentTab.id, {
+      control: MESSAGE.GET_CURRENT_URL
+    });
+
+    // Binding
     this._boundedMessageHandler = this._handleMessage.bind(this);
     this._boundedNavigationHandler = this._handleNavigation.bind(this);
     this._boundedWaitHandler = this._handleAction.bind(this, this._handleWait.bind(this));
@@ -434,33 +413,6 @@ class RecordingController {
     ChromeService.setIcon('../assets/images/icon-green.png');
     ChromeService.setBadgeText(EBadgeState.REC);
     ChromeService.setBadgeBackgroundColor('#FF0000');
-  }
-
-  /**
-   * Permet de récupérer le contenu du fake time script buildé et des services utilisés par le scénario
-   */
-  private _getScenarioFilesContent() : void {
-    /* Pour lire un fichier dans un plugin chrome
-       il faut qu'il soit accessible et
-       il faut fetch l'url pour récupérer le résultat
-    */
-    fetch(ChromeService.getUrl(RecordingController._FAKE_TIME_SCRIPT_PATH))
-    .then(response => response.text())
-    .then(value => {
-      this._contentFakeTimeServiceBuild = value;
-    });
-
-    /**
-     * On récupère les services utilisés par le scénario
-     */
-    for (let i = 0; i < RecordingController._scenarioFilesService.length; i++) {
-      const filename = RecordingController._scenarioFilesService[i];
-      fetch(ChromeService.getUrl(`${RecordingController._pathService}${filename}`))
-      .then(response => response.text())
-      .then(value => {
-        this._scenarioServiceContent[i] = value;
-      });
-    }
   }
 
   /**
@@ -498,7 +450,10 @@ class RecordingController {
       allFrames : false,
       runAt : 'document-start'
     });
-    callback();
+
+    if (callback) {
+      callback();
+    }
   }
 
   /**
@@ -506,10 +461,10 @@ class RecordingController {
    */
   private _recordNavigation() : void {
     this._handleMessage({
-      typeEvent : pptrActions.PPTR,
+      typeEvent : PPTR_ACTION.PPTR,
       selector: undefined,
       value: undefined,
-      action: pptrActions.NAVIGATION
+      action: PPTR_ACTION.NAVIGATION
     });
   }
 
@@ -541,19 +496,19 @@ class RecordingController {
    */
   private _handleControlMessage(message : IMessage) : void {
     switch (message?.control) {
-      case controlMSG.EVENT_RECORDER_STARTED_EVENT :
+      case MESSAGE.EVENT_RECORDER_STARTED :
         ChromeService.setBadgeText(EBadgeState.REC);
         break;
-      case controlMSG.GET_VIEWPORT_SIZE_EVENT :
-        this._recordCurrentViewportSizeAsync(message.coordinates);
+      case MESSAGE.GET_VIEWPORT_SIZE :
+        this._recordCurrentViewportSize(message.coordinates);
         break;
-      case controlMSG.GET_CURRENT_URL_EVENT :
-        this._recordCurrentUrlAsync(message.frameUrl);
+      case MESSAGE.GET_CURRENT_URL :
+        this._recordCurrentUrl(message.frameUrl);
         break;
-      case controlMSG.GET_RESULT_EVENT :
-        this._getHARcontent(message);
+      case MESSAGE.GET_RESULT :
+        this._getHARcontentAsync(message);
         break;
-      case controlMSG.GET_NEW_FILE_EVENT :
+      case MESSAGE.GET_NEW_FILE :
         this._recordNewFile(message);
       // default
     }
@@ -562,33 +517,37 @@ class RecordingController {
   /**
    * Enregistre la taille de l'écran
    */
-  private _recordCurrentViewportSizeAsync(value : { width : number, height : number }) : void {
-    this._handleMessage({ typeEvent: pptrActions.PPTR, selector: undefined, value, action: pptrActions.VIEWPORT });
+  private _recordCurrentViewportSize(value : { width : number, height : number }) : void {
+    this._handleMessage({ typeEvent: PPTR_ACTION.PPTR, selector: undefined, value, action: PPTR_ACTION.VIEWPORT });
   }
 
   /**
    * Enregistre l'url courante
    */
-  private _recordCurrentUrlAsync(value : string) : void {
-    this._handleMessage({ typeEvent: pptrActions.PPTR, selector: undefined, value, action: pptrActions.GOTO });
+  private _recordCurrentUrl(value : string) : void {
+    this._handleMessage({ typeEvent: PPTR_ACTION.PPTR, selector: undefined, value, action: PPTR_ACTION.GOTO });
   }
 
   /**
    * Permet de récupérer le fichier HAR généré
    * (fichier contient toutes les requêtes enregistrées)
    */
-  private async _getHARcontent(message : IMessage) : Promise<void> {
+  private async _getHARcontentAsync(message : IMessage) : Promise<void> {
 
     // on vérifie si on a le résultat de la séquence et on affecte à polly
     if (message.resultURL) {
+
       this._pollyService.record.id = message.recordingId;
 
-      const recordHAR = await HttpService.getRequest(message.resultURL);
+      // Récupération du fichier har
+      const har = await HttpService.getRequest(message.resultURL);
 
-      if (recordHAR) {
-        this._pollyService.record.har = recordHAR;
+      if (har) {
+        this._pollyService.record.har = har;
       }
+
       URL.revokeObjectURL(message.resultURL);
+
       this._isResult = true;
     }
 
@@ -596,10 +555,9 @@ class RecordingController {
 
     // Si on a le résultat du record
     if (badge === EBadgeState.RESULT_NOT_EMPTY || badge === '') {
+
       // On stock que l'on a supprimé le listener
-      StorageService.setData({
-        isRemovedListener: true
-      });
+      StorageService.setData({ isRemovedListener: true});
     }
   }
 

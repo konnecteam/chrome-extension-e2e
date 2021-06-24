@@ -1,10 +1,12 @@
 import { FileDropZoneComponent } from './file-drop-zone-component';
 import 'jest';
 import * as path from 'path';
-import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
+
+// Constant
+import COMPONENT from '../../constants/component-name';
+import CUTOM_EVENT from '../../constants/events/events-custom';
 
 /**
  * chemin du fichier html qui contient le body
@@ -35,7 +37,7 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver le file dropzone
     expect(
       FileDropZoneComponent.getElement(element as HTMLElement).component
-    ).toEqual(componentName.FILE_DROPZONE);
+    ).toEqual(COMPONENT.FILE_DROPZONE);
   });
 
   test('Test de getElement pour le bouton ajouter des fichiers de la zone', () => {
@@ -46,7 +48,7 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver le bouton de la file dropzone
     expect(
       FileDropZoneComponent.getElement(element as HTMLElement).component
-    ).toEqual(componentName.BUTTON_ADD_FILE_DROPZONE);
+    ).toEqual(COMPONENT.BUTTON_ADD_FILE_DROPZONE);
 
   });
 
@@ -60,7 +62,7 @@ describe('Test de File DopZone Component', () => {
     expect(
       FileDropZoneComponent.
       editFileDropZoneComponentMessage(eventCatched, (document.getElementById(FILE_ITEM_SELECTOR) as HTMLInputElement).files).action
-    ).toEqual(customEvents.DROP_FILE);
+    ).toEqual(CUTOM_EVENT.DROP_FILE);
   });
 
   test('Test de editFileDropZoneComponentMessage sans files', () => {
@@ -73,7 +75,7 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver l'action click sur une dropzone
     expect(
       FileDropZoneComponent.editFileDropZoneComponentMessage(eventCatched, undefined).action
-    ).toEqual(customEvents.CLICK_DROPZONE);
+    ).toEqual(CUTOM_EVENT.CLICK_DROPZONE);
 
   });
 
@@ -86,6 +88,6 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver l'action click sur une dropzone
     expect(
       FileDropZoneComponent.editFileDropZoneButtonComponentMessage(eventCatched).action
-    ).toEqual(customEvents.CLICK_DROPZONE);
+    ).toEqual(CUTOM_EVENT.CLICK_DROPZONE);
   });
 });

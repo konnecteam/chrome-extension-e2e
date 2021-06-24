@@ -2,10 +2,12 @@ import { InputNumericComponent } from './input-numeric-component';
 import 'jest';
 import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
-import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
+
+// Constant
+import CUSTOM_EVENT from '../../constants/events/events-custom';
+import COMPONENT from '../../constants/component-name';
 
 // Path pour acceder au contenu du body que l'on va utiliser
 const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-input-numeric.html');
@@ -32,7 +34,7 @@ describe('Test de Input numeric Component', () => {
     // On doit trouver qur l'on est dans une input numeric
     expect(
       InputNumericComponent.getElement(element as HTMLElement).component
-    ).toEqual(componentName.INPUT_NUMERIC);
+    ).toEqual(COMPONENT.INPUT_NUMERIC);
   });
 
 
@@ -54,6 +56,6 @@ describe('Test de Input numeric Component', () => {
     // On doit trouver que c'est un change input numeric
     expect(
       InputNumericComponent.editInputNumericComponentMessage(event, component).action
-    ).toEqual(customEvents.CHANGE_INPUT_NUMERIC);
+    ).toEqual(CUSTOM_EVENT.CHANGE_INPUT_NUMERIC);
   });
 });

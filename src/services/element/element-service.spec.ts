@@ -9,8 +9,9 @@ import { KmSwitchComponent } from '../../components/konnect/km-switch- component
 import { IframeComponent } from '../../components/konnect/iframe-component';
 import { InputFilesComponent } from '../../components/components/input-file-component';
 import { InputNumericComponent } from '../../components/konnect/input-numeric-component';
-import tagName from '../../constants/elements/tag-name';
 
+// Constant
+import TAG_NAME from '../../constants/elements/tag-name';
 
 const FILE_DROP_ZONE_PATH = '/static/test/dom/dom-filedropzone.html';
 const K_SELECT_PATH = '/static/test/dom/dom-k-select.html';
@@ -166,7 +167,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
 
     expect(
       ElementService.getNumericElement(
-        document.querySelector(tagName.NUMERIC)))
+        document.querySelector(TAG_NAME.NUMERIC)))
     .toBeDefined();
   });
 
@@ -177,7 +178,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
 
     expect(
       ElementService.findListComponent(
-        document.querySelector(tagName.KONNECT_DROPDOWNLIST), 'Dropdown'))
+        document.querySelector(TAG_NAME.KONNECT_DROPDOWNLIST), 'Dropdown'))
     .toBeDefined();
   });
 
@@ -287,7 +288,7 @@ describe('Test du get click event', () => {
     const element = document.querySelector(K_ITEM_LIST_SELECTOR);
 
     // Selector de la liste déroulante
-    const previousSelector : string = tagName.KONNECT_DROPDOWNLIST;
+    const previousSelector : string = TAG_NAME.KONNECT_DROPDOWNLIST;
 
     const previousElement  = {
       selector : previousSelector,

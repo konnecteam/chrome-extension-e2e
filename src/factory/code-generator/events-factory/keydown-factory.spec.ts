@@ -2,7 +2,9 @@ import { IOption } from 'interfaces/i-options';
 import { KeydownFactory } from './keydown-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
-import domEventsToRecord from '../../../constants/events/events-dom';
+
+// Constant
+import DOM_EVENT from '../../../constants/events/events-dom';
 
 /** frame et defaultOptions utilisées pour les tests */
 let frame : string;
@@ -10,7 +12,7 @@ let frameId : number;
 /**
  * Options
  */
-const defaultOptions = {
+const defaultOptions : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -45,7 +47,7 @@ describe('Test de Keydown Block Factory', () => {
 
     exceptedResult.addLine({
 
-      type: domEventsToRecord.KEYDOWN,
+      type: DOM_EVENT.KEYDOWN,
       value: ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
           let element = iframeElement.contentDocument.querySelector('${selector}');
@@ -116,7 +118,7 @@ describe('Test de Keydown Block Factory', () => {
     const exceptedResult = new Block(frameId);
 
     exceptedResult.addLine({
-      type: domEventsToRecord.CLICK,
+      type: DOM_EVENT.CLICK,
       value: ` await ${frame}.waitForSelector('${selector}')`
     });
 

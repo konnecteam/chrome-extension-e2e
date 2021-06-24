@@ -6,8 +6,10 @@ import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as chrome from 'sinon-chrome';
 import { Server } from 'http';
-import controlMessage from '../constants/control/control-message';
 import { IOption } from '../interfaces/i-options';
+
+// Constant
+import EVENT_MSG from '../constants/events/events-message';
 
 let server : Server;
 let browser : puppeteer.Browser;
@@ -183,7 +185,7 @@ describe('Test Content script ', () => {
 
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control: controlMessage.GET_CURRENT_URL_EVENT });
+    await dispatchEventAsync('OnMessage', { control: EVENT_MSG.GET_CURRENT_URL });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();
@@ -202,7 +204,7 @@ describe('Test Content script ', () => {
      */
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control: controlMessage.GET_VIEWPORT_SIZE_EVENT });
+    await dispatchEventAsync('OnMessage', { control: EVENT_MSG.GET_VIEWPORT_SIZE });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();

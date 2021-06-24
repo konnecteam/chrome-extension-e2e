@@ -1,10 +1,11 @@
 import { ElementService } from './../services/element/element-service';
 import { ComponentManager } from './component-manager';
 import * as path from 'path';
-import domEventsToRecord from '../constants/events/events-dom';
 import 'jest';
 import { FileService } from '../services/file/file-service';
 
+// Constant
+import DOM_EVENT from '../constants/events/events-dom';
 
 /**
  * Permet de changer le contenu du body
@@ -40,7 +41,7 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un compoenent model de file dropzone
     expect(
       ComponentManager.getComponent(
-        domEventsToRecord.CLICK,
+        DOM_EVENT.CLICK,
         element as HTMLElement,
         null
         )
@@ -59,7 +60,7 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un component model de file dropzone
     expect(
       ComponentManager.getComponent(
-        domEventsToRecord.DROP,
+        DOM_EVENT.DROP,
         element as HTMLElement,
         null
         )
@@ -75,7 +76,7 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un component model d'input numeric
     expect(
       ComponentManager.getComponent(
-        domEventsToRecord.CHANGE,
+        DOM_EVENT.CHANGE,
         element as HTMLElement,
         null
       )
@@ -99,7 +100,7 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un component model d'iframe
     expect(
       ComponentManager.getComponent(
-        domEventsToRecord.KEYDOWN,
+        DOM_EVENT.KEYDOWN,
         element,
         null
       )

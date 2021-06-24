@@ -7,10 +7,12 @@ export class Block {
 
   /** Numéro de la frame */
   private _frameId : number;
+
   /** Ligne du Block */
   private _lines : ILineBlock[];
 
   constructor(frameId? : number, line? : ILineBlock) {
+
     this._lines = [];
     this._frameId = frameId;
 

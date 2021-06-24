@@ -1,7 +1,7 @@
 /**
  * Interface représentant les messages de communication entre background et content-script
  */
-export class IMessage {
+export interface IMessage {
 
   /** Label identifiant l'événement */
   control? : string;

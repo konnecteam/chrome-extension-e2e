@@ -2,10 +2,11 @@ import { ClickFactory } from './click-factory';
 import { IOption } from '../../../interfaces/i-options';
 import { IMessage } from '../../../interfaces/i-message';
 import { SubmitFactory } from './submit-factory';
-import { Block } from '../../../code-generator/block';
 import 'jest';
-import customEvents from '../../../constants/events/events-custom';
-import elementsTagName from '../../../constants/elements/tag-name';
+
+// Constant
+import CUSTOM_EVENT from '../../../constants/events/events-custom';
+import TAG_NAME from '../../../constants/elements/tag-name';
 
 /** Frame définie pour les tests */
 let frameId = 0;
@@ -14,7 +15,7 @@ let frame = 'page';
 /**
  * Options
  */
-const defaultOptions = {
+const defaultOptions : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -44,27 +45,17 @@ describe('Test de Submit Block Factory', () => {
     selector = 'button';
   });
 
-  test('Créer un submit', () => {
-    const exceptedResult = ClickFactory.buildBlock(defaultOptions, frameId, frame, selector);
-
-    expect(
-      SubmitFactory.buildBlock(frameId, frame, defaultOptions, selector)
-    ).toEqual(
-      exceptedResult
-    );
-  });
-
   test('généré un block pour submit dans un formulaire', () => {
     const eventMessage : IMessage = {
-      tagName : elementsTagName.FORM.toUpperCase(),
-      action : customEvents.SUBMIT,
+      tagName : TAG_NAME.FORM.toUpperCase(),
+      action : CUSTOM_EVENT.SUBMIT,
       submitterSelector : selector
     };
 
     expect(
-      SubmitFactory.generateBlock(eventMessage , frameId, frame, defaultOptions )
+      SubmitFactory.buildBlock(eventMessage , frameId, frame, defaultOptions )
     ).toEqual(
-      SubmitFactory.buildBlock(frameId, frame, defaultOptions, selector)
+      ClickFactory.buildSimpleClickBlock(defaultOptions, frameId, frame, selector)
     );
 
   });

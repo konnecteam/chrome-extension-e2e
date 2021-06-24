@@ -8,11 +8,12 @@ import { KSelectComponent } from '../../components/konnect/k-select-component';
 import { KmSwitchComponent } from '../../components/konnect/km-switch- component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { IComponent } from '../../interfaces/i-component';
-import elementsTagName from '../../constants/elements/tag-name';
 import { SelectorService } from '../selector/selector-service';
 
+import TAG_NAME from '../../constants/elements/tag-name';
+
 /**
- * Service global permetant de trouver les éléments dans le dom
+ * Service permettant de gérer les elements HTML
  */
 export class ElementService {
 
@@ -63,7 +64,6 @@ export class ElementService {
       } else {
         currentElement = currentElement.parentElement;
       }
-
     }
 
     return null;
@@ -152,7 +152,7 @@ export class ElementService {
     attribute : string
   ) : Element {
 
-    let currentElement = this.findElementChildWithSelector(document.body, selector);
+    let currentElement = document.body.querySelector(selector);
 
     while (currentElement) {
 
@@ -179,10 +179,11 @@ export class ElementService {
    * Verifie si c'est une iframe et la retourne
    */
   public static getIframeElement(element : HTMLElement) : Element  {
+
     const selector = SelectorService.Instance.findSelectorIframeElement(element);
     if (selector) {
 
-      return this.findElementChildWithSelector(document.body, selector);
+      return document.body.querySelector(selector);
     } else {
       return null;
     }
@@ -195,7 +196,7 @@ export class ElementService {
 
     return this.findElementChildWithTagNameAndAttribute(
       element.parentElement,
-      elementsTagName.INPUT.toUpperCase(),
+      TAG_NAME.INPUT.toUpperCase(),
       this._TITLE_ATTRIBUTE
     );
   }
@@ -207,7 +208,7 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagName(
       element,
-      elementsTagName.NUMERIC.toUpperCase()
+      TAG_NAME.NUMERIC.toUpperCase()
     );
   }
 
@@ -229,7 +230,7 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
-      elementsTagName.LIST_ELEMENT.toUpperCase(),
+      TAG_NAME.LIST_ELEMENT.toUpperCase(),
       this._ID_ATTRIBUTE,
       this._ID_ATTRIBUTE_LIST_VALUE
     );
@@ -242,7 +243,7 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
-      elementsTagName.INPUT.toUpperCase(),
+      TAG_NAME.INPUT.toUpperCase(),
       this._ROLE_ATTRIBUTE,
       this._ROLE_ATTRIBUTE_LIST_VALUE
     );
@@ -255,7 +256,7 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
-      elementsTagName.SPAN.toUpperCase(),
+      TAG_NAME.SPAN.toUpperCase(),
       this._CLASS_ATTIBUTE,
       this._CLASS_ATTIBUTE_K_SELECT
     );
@@ -267,7 +268,7 @@ export class ElementService {
   public static getKmSwitchElement(element : HTMLElement) : Element {
 
     if (ElementService.findParentElementWithTagNameAndValueAttribute(
-      element, elementsTagName.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
+      element, TAG_NAME.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
     )) {
 
       return element;
@@ -282,15 +283,16 @@ export class ElementService {
   public static findKmSwitchElement(element : HTMLElement) : Element {
 
     const parentElement = element.parentElement;
-    if (ElementService.findParentElementWithTagNameAndValueAttribute(
-      parentElement, elementsTagName.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH
-    )) {
 
-      const container = ElementService.findElementChildWithSelector(parentElement, `.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER}`);
-      if (container) {
+    const parentOfParent = ElementService.findParentElementWithTagNameAndValueAttribute(
+      parentElement,
+      TAG_NAME.SPAN.toUpperCase(),
+      this._CLASS_ATTIBUTE,
+      this._CLASS_ATTIBUTE_KMSWITCH
+    );
 
-        return ElementService.findElementChildWithSelector(container as HTMLElement, `.${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`);
-      }
+    if (parentOfParent) {
+      return parentElement.querySelector(`.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER} .${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`);
     } else {
       return null;
     }
@@ -319,7 +321,6 @@ export class ElementService {
    * Détermine sur quel composant il y a eu un drop
    */
   public static getDropComponent(element : HTMLElement) : IComponent {
-
     return FileDropZoneComponent.getElement(element);
   }
 
@@ -328,7 +329,6 @@ export class ElementService {
    * Détermine sur quel composant il y a eu un keydown
    */
   public static getKeydownComponent(element : HTMLElement) : IComponent {
-
     return IframeComponent.getElement(element);
   }
 

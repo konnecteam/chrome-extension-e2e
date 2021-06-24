@@ -1,8 +1,10 @@
 import { Block } from '../../../code-generator/block';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
-import customEvents from '../../../constants/events/events-custom';
-import domEventsToRecord from '../../../constants/events/events-dom';
+
+// Constant
+import CUSTOM_EVENT from '../../../constants/events/events-custom';
+import DOM_EVENT from '../../../constants/events/events-dom';
 
 /**
  * Factory qui permet de créér des objets liés à l'event keydown
@@ -12,12 +14,12 @@ export class KeydownFactory {
   /**
    * Génère un block de l'event keydown
    */
-  public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
+  public static buildBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
+
     const { action, selector, value, iframe } = event;
 
-
     // Si c'est une action event de liste keydown
-    if (action === customEvents.LIST_KEYDOWN) {
+    if (action === CUSTOM_EVENT.LIST_KEYDOWN) {
       return this.buildListKeydownBlock(options, frameId, frame, selector, value, iframe);
     }
   }
@@ -37,7 +39,7 @@ export class KeydownFactory {
 
     if (options.waitForSelectorOnClick) {
       block.addLine({
-        type: domEventsToRecord.CLICK,
+        type: DOM_EVENT.CLICK,
         value: ` await ${frame}.waitForSelector('${iframe ? iframe : selector}')`
       });
     }
@@ -45,8 +47,7 @@ export class KeydownFactory {
     if (iframe) {
 
       block.addLine({
-
-        type: domEventsToRecord.KEYDOWN,
+        type: DOM_EVENT.KEYDOWN,
         value: ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
           let element = iframeElement.contentDocument.querySelector('${selector}');
@@ -77,9 +78,8 @@ export class KeydownFactory {
           }
         });`
       });
-
     }
+
     return block;
   }
-
 }

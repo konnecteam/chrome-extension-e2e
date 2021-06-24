@@ -1,10 +1,12 @@
 import { KSelectComponent } from './k-select-component';
 import 'jest';
 import * as path from 'path';
-import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
+
+// Constant
+import CUSTOM_EVENT from '../../constants/events/events-custom';
+import COMPONENT from '../../constants/component-name';
 
 /**
  * Path du fichier qui contient le body
@@ -31,7 +33,7 @@ describe('Test de k select Component', () => {
     const element = document.querySelector(K_SELECT_SELETOR);
     expect(
       KSelectComponent.getElement(element as HTMLElement).component
-    ).toEqual(componentName.K_SELECT);
+    ).toEqual(COMPONENT.K_SELECT);
   });
 
 
@@ -43,6 +45,6 @@ describe('Test de k select Component', () => {
     // on doit trouver un click sur un input numeric
     expect(
       KSelectComponent.editKSelectComponentMessage(eventMessage).action
-    ).toEqual(customEvents.CLICK_MOUSE_INPUT_NUMERIC);
+    ).toEqual(CUSTOM_EVENT.CLICK_MOUSE_INPUT_NUMERIC);
   });
 });

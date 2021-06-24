@@ -3,7 +3,9 @@ import { IMessage } from '../../../interfaces/i-message';
 import { PPtrFactory } from './pptr-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
-import pptrActions from '../../../constants/pptr-actions';
+
+// Constant
+import PPTR_ACTION from '../../../constants/pptr-actions';
 
 /** frame et defaultOptionsDefault utilisées pour les tests */
 let frame : string;
@@ -12,7 +14,7 @@ let frameId : number;
 /**
  * Options
  */
-const defaultOptions = {
+const defaultOptions : IOption = {
   wrapAsync: true,
   headless: false,
   waitForNavigation: true,
@@ -42,12 +44,12 @@ describe('Test de Pptr Action Block Factory', () => {
     const href = 'localhost';
 
     const exceptedResult = new Block(frameId, {
-      type: pptrActions.GOTO,
+      type: PPTR_ACTION.GOTO,
       value: `await ${frame}.goto('${href}');`
     });
 
     exceptedResult.addLine({
-      type: pptrActions.GOTO,
+      type: PPTR_ACTION.GOTO,
       value: `await page.waitForTimeout(1000);
   await page.evaluate( () => {
     window.konnect.engineStateService.Instance.start();
@@ -65,7 +67,7 @@ describe('Test de Pptr Action Block Factory', () => {
     const width = 1920;
     const height = 1080;
     const exceptedResult = new Block(frameId, {
-      type: pptrActions.VIEWPORT,
+      type: PPTR_ACTION.VIEWPORT,
       value: `await ${frame}.setViewport({ width: ${width}, height: ${height} });`
     });
 
@@ -86,7 +88,7 @@ describe('Test de Pptr Action Block Factory', () => {
     defaultOptions.waitForNavigation = true;
 
     const exceptedResult = new Block(frameId, {
-      type: pptrActions.NAVIGATION,
+      type: PPTR_ACTION.NAVIGATION,
       value: `await navigationPromise`
     });
 
@@ -120,12 +122,12 @@ describe('Test de Pptr Action Block Factory', () => {
   test('Test de generate d\'un GOTO ', () => {
 
     const eventMessage : IMessage = {
-      action : pptrActions.GOTO,
+      action : PPTR_ACTION.GOTO,
       value : 'localhost'
     };
 
     expect(
-      PPtrFactory.generateBlock(eventMessage , frameId, frame, defaultOptions)
+      PPtrFactory.buildBlock(eventMessage , frameId, frame, defaultOptions)
     ).toEqual(
       PPtrFactory.buildGotoBlock(
         frameId,
@@ -137,12 +139,12 @@ describe('Test de Pptr Action Block Factory', () => {
 
   test('Test de generate d\'un ViewPort ', () => {
     const eventMessage  = {
-      action : pptrActions.VIEWPORT,
+      action : PPTR_ACTION.VIEWPORT,
       value : { width : 1920, height : 1080}
     };
 
     expect(
-      PPtrFactory.generateBlock(eventMessage , frameId, frame, defaultOptions)
+      PPtrFactory.buildBlock(eventMessage , frameId, frame, defaultOptions)
     ).toEqual(
       PPtrFactory.buildViewportBlock(
         frameId,
@@ -155,11 +157,11 @@ describe('Test de Pptr Action Block Factory', () => {
 
   test('Test de generate d\'un WaitForNavigation ', () => {
     const eventMessage  = {
-      action : pptrActions.NAVIGATION,
+      action : PPTR_ACTION.NAVIGATION,
     };
 
     expect(
-      PPtrFactory.generateBlock(eventMessage , frameId, frame, defaultOptions)
+      PPtrFactory.buildBlock(eventMessage , frameId, frame, defaultOptions)
     ).toEqual(
       PPtrFactory.buildWaitForNavigationBlock(
         defaultOptions,

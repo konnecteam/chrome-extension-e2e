@@ -1,7 +1,9 @@
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
 import { Block } from '../../../code-generator/block';
-import pptrActions from '../../../constants/pptr-actions';
+
+// Constant
+import PPTR_ACTION from '../../../constants/pptr-actions';
 
 /**
  * Factory qui permet de créér des objets lié aux actions puppeteer
@@ -11,22 +13,20 @@ export class PPtrFactory {
   /**
    * Génère le block lié à une action pupeteer
    */
-  public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
+  public static buildBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
 
     const { action, value} = event;
-
 
     // En fonction de l'action de l'event
     switch (action) {
       // Si l'action est un goto
-      case pptrActions.GOTO:
+      case PPTR_ACTION.GOTO:
         return this.buildGotoBlock(frameId, frame, value);
       // Si l'action est la récupération du viewport
-      case pptrActions.VIEWPORT:
-        return this.buildViewportBlock(
-          frameId, frame, value.width, value.height);
+      case PPTR_ACTION.VIEWPORT:
+        return this.buildViewportBlock(frameId, frame, value.width, value.height);
       // Si l'action est une navigation
-      case pptrActions.NAVIGATION:
+      case PPTR_ACTION.NAVIGATION:
         return this.buildWaitForNavigationBlock(options, frameId, frame);
       default : return null;
     }
@@ -42,18 +42,19 @@ export class PPtrFactory {
   ) : Block {
 
     const block =  new Block(frameId, {
-      type: pptrActions.GOTO,
+      type: PPTR_ACTION.GOTO,
       value: `await ${frame}.goto('${href}');`
     });
 
     // On wait une seconde pour attendre konnect
     block.addLine({
-      type: pptrActions.GOTO,
+      type: PPTR_ACTION.GOTO,
       value: `await page.waitForTimeout(1000);
   await page.evaluate( () => {
     window.konnect.engineStateService.Instance.start();
   });`
     });
+
     return block;
   }
 
@@ -68,7 +69,7 @@ export class PPtrFactory {
   ) : Block {
 
     return new Block(frameId, {
-      type: pptrActions.VIEWPORT,
+      type: PPTR_ACTION.VIEWPORT,
       value: `await ${frame}.setViewport({ width: ${width}, height: ${height} });`
     });
   }
@@ -81,13 +82,17 @@ export class PPtrFactory {
     frameId : number,
     frame : string
   ) : Block {
+
     const block = new Block(frameId);
+
     if (options.waitForNavigation) {
+
       block.addLine({
-        type: pptrActions.NAVIGATION,
+        type: PPTR_ACTION.NAVIGATION,
         value: `await navigationPromise`
       });
     }
+
     return block;
   }
 }

@@ -1,7 +1,7 @@
 /**
  * Interface représentant une ligne du Block
  */
-export class ILineBlock {
+export interface ILineBlock {
 
   /** FrameId du block */
   frameId? : number;

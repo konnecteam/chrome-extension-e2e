@@ -3,21 +3,17 @@
  */
 export class HttpService {
 
-  /**
-   * Permet d'exécuter une requête XMLHttpRequest
-   * @param url
-   * @param loadhandle
-   */
-  public static async getRequest(url : string) : Promise<string> {
+  /** Permet d'exécuter une requête XMLHttpRequest de type GET */
+  public static async getRequest(url : string, type : XMLHttpRequestResponseType = 'text') : Promise<string> {
     const xhr = new XMLHttpRequest();
-    return new Promise((resolve, err) => {
+    return new Promise((resolve, reject) => {
       xhr.open('GET', url, true);
-      xhr.responseType = 'text';
+      xhr.responseType = type;
       xhr.onload = ( ) => {
         if (xhr.status === 200) {
           resolve(xhr.response);
         } else {
-          err('empty response');
+          reject('empty response');
         }
       };
       xhr.send();

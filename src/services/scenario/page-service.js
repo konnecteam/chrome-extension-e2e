@@ -55,6 +55,8 @@ class PageService {
               requestMap.currentOrder++;
             }
           }
+        } else {
+          requestMap.currentOrder++;
         }
 
         RequestService.getInstance().mapRequests.set(url ,requestMap);

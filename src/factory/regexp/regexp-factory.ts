@@ -18,10 +18,10 @@ export class RegExpFactory {
       return object;
     }
 
-    const flag = splittedRegex[splittedRegex.length - 1 ];
+    const flag = splittedRegex[splittedRegex.length - 1];
 
     // on enlève le premier '/' et le dernier '/'et on a la regexp
-    const regex = splittedRegex.splice(1 , splittedRegex.length - 2).join('/');
+    const regex = splittedRegex.splice(1, splittedRegex.length - 2).join('/');
 
     if (flag) {
       object.flag = flag;
@@ -29,8 +29,8 @@ export class RegExpFactory {
 
     if (regex) {
       object.regexp = regex;
-
     }
+
     return object;
   }
 }

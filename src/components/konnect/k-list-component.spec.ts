@@ -2,11 +2,13 @@ import { KListComponent } from './k-list-component';
 import 'jest';
 import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
-import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
-import elementsTagName from '../../constants/elements/tag-name';
+
+// Constant
+import TAG_NAME from '../../constants/elements/tag-name';
+import CUSTOM_EVENT from '../../constants/events/events-custom';
+import COMPONENT from '../../constants/component-name';
 
 // Path du fichier qui contient le body
 const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-k-list.html');
@@ -35,7 +37,7 @@ function testKList(elementSelector : string,
 
   // Selector de l'item d'une liste
   const element = document.querySelector(elementSelector);
-  const previousElement  = {
+  const   kListElement  = {
     selector : previousSelector,
     typeList,
     element: document.querySelector(previousSelector)
@@ -43,8 +45,8 @@ function testKList(elementSelector : string,
 
   // On doit trouver que l'on est dans une konnect liste
   expect(
-    KListComponent.getElement(element as HTMLElement, previousElement).component
-  ).toEqual(componentName.KLIST);
+    KListComponent.getElement(element as HTMLElement,   kListElement).component
+  ).toEqual(COMPONENT.KLIST);
 }
 
 describe('Test de k list Component', () => {
@@ -59,23 +61,23 @@ describe('Test de k list Component', () => {
   test('Test de getElement pour konnect DROPDOWN', () => {
 
     // On doit trouver que l'on est dans une konnect liste
-    testKList(elementsTagName.KONNECT_DROPDOWNLIST, null, null);
+    testKList(TAG_NAME.KONNECT_DROPDOWNLIST, null, null);
   });
 
   test('Test de getElement pour konnect multiselect', () => {
     // On doit trouver que l'on est dans une konnect liste
-    testKList(elementsTagName.KONNECT_MULTISELECT, null, null);
+    testKList(TAG_NAME.KONNECT_MULTISELECT, null, null);
   });
 
   test('Test de getElement pour input de liste', () => {
     // On doit trouver que l'on est dans un input de liste
-    testKList(INPUT_LIST_SELECTOR, elementsTagName.KONNECT_DROPDOWNLIST, DROPDOWN);
+    testKList(INPUT_LIST_SELECTOR, TAG_NAME.KONNECT_DROPDOWNLIST, DROPDOWN);
   });
 
   test('Test de getElement pour un item de liste', () => {
 
     // On doit trouver que l'on est dans une konnect liste
-    testKList(ITEM_LIST_SELECTOR,  elementsTagName.KONNECT_DROPDOWNLIST, DROPDOWN);
+    testKList(ITEM_LIST_SELECTOR,  TAG_NAME.KONNECT_DROPDOWNLIST, DROPDOWN);
   });
 
   test('Test de editKlistComponentMessage pour un item de konnect liste', () => {
@@ -83,10 +85,10 @@ describe('Test de k list Component', () => {
     const element = document.querySelector(ITEM_LIST_SELECTOR);
 
     // Selector de la liste déroulante
-    const previousSelector : string = elementsTagName.KONNECT_DROPDOWNLIST;
+    const previousSelector : string = TAG_NAME.KONNECT_DROPDOWNLIST;
 
     // contient les informations previous element donc de la liste
-    const previousElement = {
+    const   kListElement = {
       selector : previousSelector,
       typeList : DROPDOWN,
       element: document.querySelector(previousSelector)
@@ -98,16 +100,16 @@ describe('Test de k list Component', () => {
 
     // On est dans un component Dropdown liste
     const component : IComponent = {
-      component : componentName.KLIST,
+      component : COMPONENT.KLIST,
       element: element as HTMLElement,
       previousSelector,
-      previousElement
+      kListElement
     };
 
     // On doit trouver l'action click sur un item de la liste
     expect(
       KListComponent.editKlistComponentMessage(eventMessage, component).action
-    ).toEqual(customEvents.CLICK_LIST_ITEM);
+    ).toEqual(CUSTOM_EVENT.CLICK_LIST_ITEM);
   });
 
   test('Test de editKlistComponentMessage pour un input de list', () => {
@@ -115,7 +117,7 @@ describe('Test de k list Component', () => {
     const element = document.querySelector(INPUT_LIST_SELECTOR);
 
     // Selector de la liste déroulante
-    const previousElement  = {
+    const   kListElement  = {
       selector : INPUT_LIST_SELECTOR,
       typeList : '',
       element: document.querySelector(INPUT_LIST_SELECTOR)
@@ -126,16 +128,16 @@ describe('Test de k list Component', () => {
     };
 
     const component : IComponent = {
-      component : componentName.KLIST,
+      component : COMPONENT.KLIST,
       element: element as HTMLElement,
       previousSelector: INPUT_LIST_SELECTOR,
-      previousElement
+      kListElement
     };
 
     // On doit trouver l'action click mouse
     expect(
       KListComponent.editKlistComponentMessage(eventMessage, component).action
-    ).toEqual(customEvents.CLICK_MOUSE);
+    ).toEqual(CUSTOM_EVENT.CLICK_MOUSE);
 
   });
 });

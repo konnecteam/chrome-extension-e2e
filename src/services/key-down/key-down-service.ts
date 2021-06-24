@@ -1,8 +1,10 @@
 import { ChromeService } from './../chrome/chrome-service';
 import { IMessage } from '../../interfaces/i-message';
-import domEventsToRecord from '../../constants/events/events-dom';
-import customEvents from '../../constants/events/events-custom';
-import elementsTagName from '../../constants/elements/tag-name';
+
+// Constant
+import DOM_EVENT from '../../constants/events/events-dom';
+import CUSTOM_EVENT from '../../constants/events/events-custom';
+import TAG_NAME from '../../constants/elements/tag-name';
 
 /**
  * Service qui permet de gérer les keydown pour un sélecteur
@@ -40,22 +42,22 @@ export class KeyDownService {
    * Permet de gérer les evènement keydown
    */
   public handleEvent(msg : IMessage, element : HTMLElement) : void {
+
     // On vérifie que l'event est un keydown
-    if (msg.action === domEventsToRecord.KEYDOWN) {
+    if (msg.action === DOM_EVENT.KEYDOWN) {
 
       // On gère le cas ou si c'est un user qui appuie sur la touche Entrer sur un bouton
-      if (element.tagName === elementsTagName.BUTTON.toUpperCase() && msg.key === KeyDownService._ENTER_KEY) {
+      if (element.tagName === TAG_NAME.BUTTON.toUpperCase() && msg.key === KeyDownService._ENTER_KEY) {
 
         // Si c'est le cas on tranforme le keydown en click
-        msg.action = domEventsToRecord.CLICK;
-        msg.typeEvent = domEventsToRecord.CLICK;
+        msg.action = DOM_EVENT.CLICK;
+        msg.typeEvent = DOM_EVENT.CLICK;
         return;
       }
 
       // On verifie si c'est un body car les textes areas sont parfois dans un body qui se trouve dans une iframe
-
-      if (!msg.value && element.tagName === elementsTagName.BODY.toUpperCase() || element.tagName === elementsTagName.TEXTAREA.toUpperCase()
-       ||  this._isInputList(element)) {
+      if (!msg.value && element.tagName === TAG_NAME.BODY.toUpperCase() || element.tagName === TAG_NAME.TEXTAREA.toUpperCase()
+          || this._isInputList(element)) {
 
         // On récupère l'event
         this._handleKeyDownEvent(msg);
@@ -77,7 +79,7 @@ export class KeyDownService {
 
       // Si le premier élément à le même action et même sélecteur on enregistre tous les évènements
       // Pour ce même sélecteur
-      if (this._listsKeyDown[0].action === domEventsToRecord.KEYDOWN && this._listsKeyDown[0].selector !== msg.selector) {
+      if (this._listsKeyDown[0].action === DOM_EVENT.KEYDOWN && this._listsKeyDown[0].selector !== msg.selector) {
 
         // dans le cas contraire on envoie la liste qu'on à déja
         // et on traite la liste des keydown
@@ -106,7 +108,7 @@ export class KeyDownService {
       // Si le keydown event contient uniquement une touche
       if (currentMsg.key.length === 1) {
         // On concataine la valeur
-        value += currentMsg.key;
+        value = `${value}${currentMsg.key}`;
       } else {
 
         // Gestion du backspace
@@ -116,14 +118,14 @@ export class KeyDownService {
 
         // Gestion de la touche entrée
         if (currentMsg.key === KeyDownService._ENTER_KEY) {
-          value += '<br/>';
+          value = `${value}<br/>`;
         }
       }
     }
 
     // On définit le premier élément
     this._listsKeyDown[0].value = value;
-    this._listsKeyDown[0].action = customEvents.LIST_KEYDOWN;
+    this._listsKeyDown[0].action = CUSTOM_EVENT.LIST_KEYDOWN;
     return this._listsKeyDown[0];
   }
 
@@ -131,14 +133,20 @@ export class KeyDownService {
    * Verifie si c'est un input de list
    */
   private _isInputList(element : HTMLElement) : boolean {
+
     let listbox = '';
+
     // On verifié si c'est un input d'une dropdown list
     listbox = element.getAttribute('aria-owns');
 
     if (!listbox) {
+
       // On vérifie si c'est le input d'une liste multiple select liste
       listbox = element.getAttribute('aria-describedby');
-      if (!listbox) return false;
+
+      if (!listbox) {
+        return false;
+      }
     }
 
     return listbox && listbox.includes('kdp');
@@ -154,6 +162,6 @@ export class KeyDownService {
       mousemove: true,
       mouseover: true
     };
-    return eventsWithCoordinates[evt.type] ? { x: evt.clientX, y: evt.clientY } : null;
+    return eventsWithCoordinates[evt.type] ? { x : evt.clientX, y : evt.clientY } : null;
   }
 }

@@ -40,13 +40,13 @@ PageService.addLoadHandler(page);
   PageService.addLoadHandler(page);
   \n`,
 
-  LISTENER_PAGE_RECORDED_REQUEST : `  await page.setRequestInterception(true);
+  REQUEST_LISTENER : `  await page.setRequestInterception(true);
   await page.setBypassCSP(true);
   await page.setOfflineMode(true);
   /** On met en place le handle requests de la page */
   PageService.addSavedRequestHandler(page **httpregex**);
 `,
-  LISTENER_PAGE_LIVE_REQUEST : `  await page.setRequestInterception(true);
+  LIVE_REQUEST_LISTENER : `  await page.setRequestInterception(true);
   PageService.addLiveRequestHandler(page **httpregex**);
 `
 };

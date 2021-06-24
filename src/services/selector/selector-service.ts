@@ -1,4 +1,3 @@
-import { UtilityService } from '../utility/utility-service';
 import finder from '@medv/finder';
 import { StorageService } from '../../services/storage/storage-service';
 
@@ -35,15 +34,18 @@ export class SelectorService {
    * custom selectors
    */
   private async _getOption() : Promise<void> {
+
     const opt = await StorageService.getDataAsync(['options']);
+
     if (opt) {
+
       this._useRegex = opt.options.useRegexForDataAttribute;
 
-      this._dataAttributes = opt.options.dataAttribute.split(' ').filter(f => f !== '').map(f => {
+      this._dataAttributes = opt.options.dataAttribute.split(' ').filter(element => element !== '').map(element => {
         if (this._useRegex) {
-          return new RegExp(f);
+          return new RegExp(element);
         } else {
-          return f;
+          return element;
         }
       });
     }
@@ -51,11 +53,10 @@ export class SelectorService {
 
   /**
    * Cherche les custom attributs d'un element pour les utiliser en tant que selecteur
-   * @param element
-   * @returns
    */
   private _getCustomAttributes(element : HTMLElement) : string[] {
-    const listCustomAttribute = [];
+
+    const customAttributes = [];
 
     // Gestion des cutom attributes
     if (this._dataAttributes && this._dataAttributes.length && element.hasAttribute) {
@@ -64,24 +65,26 @@ export class SelectorService {
       const targetAttributes = element.attributes;
 
       for (let i = 0;  i < this._dataAttributes.length; i++) {
+
         const patternAttr = this._dataAttributes[i];
 
-        const regexp = RegExp(patternAttr);
+        const regexp = patternAttr instanceof RegExp ? patternAttr : RegExp(patternAttr);
 
         // On test chaque attribute avec le pattern
         for (let j = 0; j < targetAttributes.length; j++) {
+
           // Regex ou string test
           if (this._useRegex ? regexp.test(targetAttributes[j].name) : patternAttr === targetAttributes[j].name) {
 
             // La recherche est terminée
             // On traite les cas spéciaux des customs attributes
-            listCustomAttribute.push(this.manageSpecialCase(targetAttributes[j].name));
+            customAttributes.push(this.manageSpecialCase(targetAttributes[j].name));
           }
         }
       }
     }
 
-    return listCustomAttribute;
+    return customAttributes;
   }
 
   /**
@@ -98,11 +101,13 @@ export class SelectorService {
    * Récupère le selector d'un élément html
    */
   public find(element : HTMLElement) : string {
+
     // On récupère les custom attributs d'un élément si il y en a
     const customAttributes : string[] = this._getCustomAttributes(element);
 
     // On verifie si on peut utiliser ses custom attribut pour faire le selecteur
     if (this._dataAttributes && this._useRegex && customAttributes.length > 0) {
+
       const customSelector = this._findCustomSelector(element, customAttributes);
 
       // Si on trouve plus d'un element avec le customSelector alors on utilise le standard
@@ -140,11 +145,11 @@ export class SelectorService {
    */
   private _findStandardSelector(element : HTMLElement) : string {
     // Gestion de l'id
-    if (element.id  && !SelectorService._ID_TO_IGNORE_REG.test(element.id)
-     && !UtilityService.isStringStartInTab(element.id, SelectorService._ID_TO_IGNORE) ) {
+    if (element.id && !SelectorService._ID_TO_IGNORE_REG.test(element.id) && !SelectorService._ID_TO_IGNORE.some(v => element.id.includes(v))) {
 
-      return '#' + element.id.split(':').join('\\:');
+      return `#${element.id.split(':').join('\\:')}`;
     } else {
+
       try {
 
         // Si présent dans le dom on le récupère
@@ -162,14 +167,18 @@ export class SelectorService {
    */
   private _findSelectorElementInSavedDocument(element : HTMLElement) : string {
 
-    if (!element.tagName) return '';
+    if (!element.tagName) {
+      return '';
+    }
 
     // Récupération du tagName
     let selector = element.tagName.toLowerCase();
 
     // On parcourt la liste des attributs et on construit le sélecteur à la main
     for (let i = 0; i < element.attributes.length; i++) {
+
       const currentAttribute = element.attributes[i];
+
       if (currentAttribute.value) {
         // Construction du selecteur
         selector += `[${currentAttribute.name.replace('.', '\\\.')}="${currentAttribute.value}"]`;
@@ -196,8 +205,7 @@ export class SelectorService {
       element, {
         root : document.body,
         className: name => false, tagName: name => true ,
-        idName: name => !UtilityService.isStringStartInTab(name, SelectorService._ID_TO_IGNORE)
-         && !name.match(SelectorService._ID_TO_IGNORE_REG) && !SelectorService._ID_TO_IGNORE_REG.test(name),
+        idName: name => !SelectorService._ID_TO_IGNORE.some(v => name.includes(v)) && !name.match(SelectorService._ID_TO_IGNORE_REG) && !SelectorService._ID_TO_IGNORE_REG.test(name),
         seedMinLength : 7,
         optimizedMinLength : 12,
         threshold : 1500,

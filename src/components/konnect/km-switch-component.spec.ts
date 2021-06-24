@@ -2,10 +2,12 @@ import { KmSwitchComponent } from './km-switch- component';
 import 'jest';
 import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
-import componentName from '../../constants/component-name';
 import { IMessage } from '../../interfaces/i-message';
-import customEvents from '../../constants/events/events-custom';
 import { FileService } from '../../services/file/file-service';
+
+// Constant
+import COMPONENT from '../../constants/component-name';
+import CUSTOM_EVENT from '../../constants/events/events-custom';
 
 /**
  * Path du fichier qui contient le body
@@ -33,7 +35,7 @@ describe('Test de km switch Component', () => {
     // on doit trouver le km switch
     expect(
       KmSwitchComponent.getElement(element as HTMLElement).component
-    ).toEqual(componentName.KM_SWITCH);
+    ).toEqual(COMPONENT.KM_SWITCH);
   });
 
 
@@ -46,13 +48,13 @@ describe('Test de km switch Component', () => {
     };
 
     const component : IComponent = {
-      component : componentName.KM_SWITCH,
+      component : COMPONENT.KM_SWITCH,
       element : element as HTMLElement
     };
 
     // On doit trouver l'action click mouse
     expect(
       KmSwitchComponent.editKmSwitchComponentMessage(eventMessage, component).action
-    ).toEqual(customEvents.CLICK_MOUSE);
+    ).toEqual(CUSTOM_EVENT.CLICK_MOUSE);
   });
 });

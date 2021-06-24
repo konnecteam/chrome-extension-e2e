@@ -1,7 +1,7 @@
 /**
  * Interface représentant les options de l'utilisateur
  */
-export class IOption {
+export interface IOption {
 
   /** Mettre le scénario dans une fonction async */
   wrapAsync : boolean;
