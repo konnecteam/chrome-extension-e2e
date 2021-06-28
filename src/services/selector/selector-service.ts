@@ -8,7 +8,7 @@ export class SelectorService {
 
   /** Id à ignorer */
   private static readonly _ID_TO_IGNORE_REG  = new RegExp('([A-Za-z0-9]+-){4}', 'g');
-  private static readonly _ID_TO_IGNORE = ['formv', 'kdp', 'mv', 'tabs'];
+  private static readonly _ID_TO_IGNORE = ['formv', 'kdp', 'mv', 'tabs', 'rg', 'ckb'];
 
   /**
    * Data attribute contient les customs attribute que l'utilisateur veut utiliser
