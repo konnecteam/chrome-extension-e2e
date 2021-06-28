@@ -15,6 +15,7 @@ import { EventMessageFactory } from '../factory/message/event-message-factory';
 import EVENT_MSG from '../constants/events/events-message';
 import TAG_NAME from '../constants/elements/tag-name';
 import DOM_EVENT from '../constants/events/events-dom';
+import CUSTOM_EVENT from '../constants/events/events-custom';
 
 /**
  * Enregistre les intéractions de l'utilisateur avec la page
@@ -59,6 +60,9 @@ class EventRecorder {
 
   /** Time de départ d'un mousesdown */
   private _startMouseDown : number;
+
+  /** Message précédemment envoyé */
+  private _previousMessage : IMessage;
 
   constructor() {
 
@@ -237,10 +241,34 @@ class EventRecorder {
       return;
     }
 
+    /* Si on récupère un lien directement dans un body
+     * Alors c'est qu'on a utilisé un window.open et ouvert un autre onglet
+     * donc on l'ignore car l'élement n'existe pas
+    */
+    if (e.target.tagName === TAG_NAME.LINK.toUpperCase()
+        && e.target.getAttribute('target') === '_blank'
+      ) {
+      return;
+    }
+
     // définition du selecteur
     let selector = '';
-    if (e.target.type === 'file' && e.target.tagName === TAG_NAME.INPUT.toUpperCase() && e.type === DOM_EVENT.CHANGE) {
-      selector = this._previousSelector;
+
+    if (e.target.type === 'file' && e.target.tagName === TAG_NAME.INPUT.toUpperCase()) {
+
+      if (e.type === DOM_EVENT.CHANGE) {
+        selector = this._previousSelector;
+      }
+
+      /**
+       * Dans les file drop zone lors d'un change input file
+       * un click est catché mais on ne veut pas du click car il n'est pas utile
+       */
+      else if (e.type === DOM_EVENT.CLICK &&
+        this._previousMessage.action === CUSTOM_EVENT.CLICK_DROPZONE
+      ) {
+        return;
+      }
     } else {
       selector = this._selectorService.find(e.target);
     }
@@ -285,6 +313,7 @@ class EventRecorder {
     this._previousSelector = selector;
 
     ChromeService.sendMessage(message);
+    this._previousMessage = message;
 
     this._isEventProcessed = true;
   }

@@ -28,5 +28,8 @@ export default {
   LIST_ELEMENT : 'ul',
   DATE : 'date',
   CHECKBOX: 'checkbox',
-  RADIOGROUP: 'radio-group'
+  RADIOGROUP: 'radio-group',
+  KIMOCE_DOCUMENTS : 'kimoce-documents',
+  ANCHOR : 'a',
+  PART_OF_TEXT : 'i'
 };

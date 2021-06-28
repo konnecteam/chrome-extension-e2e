@@ -3,7 +3,7 @@
  */
 export default {
   FILE_DROPZONE: 'file-dropzone',
-  BUTTON_ADD_FILE_DROPZONE: 'file-dropzone-button',
+  KIMOCE_DOCUMENTS_ADD_BUTTON: 'konnect-documents-add-button',
   INPUT_FILE: 'input-file',
   INPUT_NUMERIC: 'input-numeric',
   K_SELECT: 'k-select',
@@ -12,5 +12,6 @@ export default {
   INPUT_LIST : 'input-list',
   CHECKBOX: 'checkbox',
   RADIO_GROUP: 'radio-group',
-  POPOVER: 'popover'
+  POPOVER: 'popover',
+  KIMOCE_DOCUMENTS : 'kimoce-documents'
 };

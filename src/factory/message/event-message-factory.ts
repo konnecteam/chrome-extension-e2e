@@ -1,3 +1,4 @@
+import { KimoceDocumentsComponent } from '../../components/components/kimoce-documents-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { CheckboxComponent } from '../../components/konnect/checkbox-component';
@@ -27,8 +28,8 @@ export class EventMessageFactory {
       case COMPONENT.FILE_DROPZONE :
         return FileDropZoneComponent.editFileDropZoneComponentMessage(event, filesUpload);
       // Si c'est le bouton ajouter des fichiers
-      case COMPONENT.BUTTON_ADD_FILE_DROPZONE :
-        return FileDropZoneComponent.editFileDropZoneButtonComponentMessage(event);
+      case COMPONENT.KIMOCE_DOCUMENTS_ADD_BUTTON :
+        return KimoceDocumentsComponent.editKimoceDocumentsComponentMessage(event, component);
       // Si c'est un input de fichier
       case COMPONENT.INPUT_FILE :
         return InputFilesComponent.editInputFileComponentMessage(event, (component.element as HTMLInputElement).files);

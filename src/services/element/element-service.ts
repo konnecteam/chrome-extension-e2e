@@ -1,3 +1,4 @@
+import { KimoceDocumentsComponent } from '../../components/components/kimoce-documents-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import { InputFilesComponent } from '../../components/components/input-file-component';
@@ -11,6 +12,7 @@ import { RadioGroupComponent } from '../../components/konnect/radio-group-compon
 import { IComponent } from '../../interfaces/i-component';
 import { SelectorService } from '../selector/selector-service';
 
+// Constant
 import TAG_NAME from '../../constants/elements/tag-name';
 
 /**
@@ -283,6 +285,14 @@ export class ElementService {
   }
 
   /**
+   * Trouve le bouton ajouter des fichiers du Kimoce Documents
+   */
+  public static findAddButtonElement(element : HTMLElement) {
+    return (element.tagName === TAG_NAME.ANCHOR.toUpperCase() && element.querySelector(TAG_NAME.PART_OF_TEXT))
+    || element.tagName === TAG_NAME.PART_OF_TEXT.toUpperCase() ? element : null;
+  }
+
+  /**
    * Permet determiner sur quel élément est le change
    */
   public static getChangeComponent(element : HTMLElement) : IComponent {
@@ -298,7 +308,8 @@ export class ElementService {
 
     return FileDropZoneComponent.getElement(element) ||
     KSelectComponent.getElement(element) || KmSwitchComponent.getElement(element) ||
-    PopoverComponent.getElement(element) || InputListComponent.getElement(element);
+    PopoverComponent.getElement(element) || InputListComponent.getElement(element) ||
+    KimoceDocumentsComponent.getElement(element);
   }
 
   /**

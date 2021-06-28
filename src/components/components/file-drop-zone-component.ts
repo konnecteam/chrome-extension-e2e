@@ -13,12 +13,6 @@ import CUSTOM_EVENT from '../../constants/events/events-custom';
  */
 export class FileDropZoneComponent {
 
-  /** Attribut titre d'un HTMLElement */
-  private static readonly  _TITLE_ATTRIBUTE = 'title';
-
-  /** Valeur de l'attribut titre */
-  private static readonly _TITLE_ATTRIBUTE_VALUE = 'Ajouter un document';
-
   /**
    * Récupère le IComponent filedropzone
    */
@@ -29,23 +23,12 @@ export class FileDropZoneComponent {
       TAG_NAME.FILE_DROPZONE.toUpperCase()
     );
 
-    const addButtonElement = ElementService.findParentElementWithTagNameAndValueAttribute(
-      element,
-      TAG_NAME.LINK.toUpperCase(),
-      this._TITLE_ATTRIBUTE,
-      this._TITLE_ATTRIBUTE_VALUE
-    );
-
     // Si c'est un file dropzone
     if (fileDropzoneElement) {
 
       return { component : COMPONENT.FILE_DROPZONE , element: fileDropzoneElement };
-
-    } else if (addButtonElement) {
-      // Si c'est un le bouton ajouter un fichier du file dropzone
-      return { component : COMPONENT.BUTTON_ADD_FILE_DROPZONE , element: addButtonElement };
-
     } else {
+
       return null;
     }
   }
@@ -70,13 +53,4 @@ export class FileDropZoneComponent {
 
     return newMessage;
   }
-
-  /**
-   * Edit et retourne l'event pour le click sur le bouton ajouter des fichiers
-   */
-  public static editFileDropZoneButtonComponentMessage(event : IMessage) : IMessage {
-    event.action = CUSTOM_EVENT.CLICK_DROPZONE;
-    return event;
-  }
-
 }
