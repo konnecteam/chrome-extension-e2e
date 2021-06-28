@@ -613,7 +613,7 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    test('Test de buildBlock pour une liste à choix multiples', () => {
+    test('Test de buildBlock pour un input list', () => {
       const eventI = {
         selector,
         scrollElement,
@@ -638,6 +638,29 @@ describe('Test de Click Block Factory', () => {
           scrollElement,
           scrollXElement,
           scrollYElement
+        )
+      );
+    });
+
+    test('Test de buildBlock pour un popover', () => {
+      const eventI = {
+        selector,
+        action : CUSTOM_EVENT.CLICK_MOUSE_ENTER
+      };
+
+      expect(
+        ClickFactory.buildBlock(
+          eventI,
+          frameId,
+          frame,
+          defaultOptions
+        )
+      ).toEqual(
+        ClickFactory.buildClickMouseEnter(
+          defaultOptions,
+          frameId,
+          frame,
+          selector
         )
       );
     });

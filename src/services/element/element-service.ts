@@ -1,9 +1,10 @@
+import { PopoverComponent } from './../../components/konnect/popover-component';
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import { InputFilesComponent } from '../../components/components/input-file-component';
 import { CheckboxComponent } from '../../components/konnect/checkbox-component';
 import { IframeComponent } from '../../components/konnect/iframe-component';
 import { InputNumericComponent } from '../../components/konnect/input-numeric-component';
-import { KListComponent } from '../../components/konnect/k-list-component';
+import { InputListComponent } from '../../components/konnect/input-list-component';
 import { KSelectComponent } from '../../components/konnect/k-select-component';
 import { KmSwitchComponent } from '../../components/konnect/km-switch- component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
@@ -20,20 +21,11 @@ export class ElementService {
   /** Attribut titre d'un HTMLELement */
   private static readonly _TITLE_ATTRIBUTE = 'title';
 
-  /** Id d'un HTMLElement */
-  private static readonly _ID_ATTRIBUTE = 'id';
-
-  /** Attribut Role d'un HTMLElement */
-  private static readonly  _ROLE_ATTRIBUTE = 'role';
-
   /** Attribut class d'un HTMLElement */
   private static readonly _CLASS_ATTIBUTE = 'class';
 
-  /** Valeur de l'id d'une konnect list */
-  private static readonly _ID_ATTRIBUTE_LIST_VALUE = 'kdp';
-
   /** Valeur de l'attribut role d'une liste */
-  private static readonly _ROLE_ATTRIBUTE_LIST_VALUE = 'listbox';
+  private static readonly _CLASS_ATTRIBUTE_INPUT_LIST = 'konnect-dropdown-search-input';
 
   /** Class d'un composant KSelect  */
   private static readonly _CLASS_ATTIBUTE_K_SELECT = 'k-select';
@@ -46,6 +38,9 @@ export class ElementService {
 
   /**  Contenu de class d'un KmSwitch conteneur */
   private static readonly _CLASS_ATTIBUTE_KMSWITCH_CONTAINER = 'km-switch-container';
+
+  /** Contenu de la class d'un popover */
+  private static readonly _CLASS_ATTRIBUTE_POPOVER = 'konnect-popover';
 
   /**
    * Trouver le parent avec son tagname
@@ -213,39 +208,28 @@ export class ElementService {
   }
 
   /**
-   * Trouve l'element liste si on a clické sur une liste
-   * @param element
-   */
-  public static findListComponent(element : HTMLElement, listTagname : string) : Element {
-
-    return ElementService.findParentElementWithTagName(
-      element, listTagname.toUpperCase()
-    );
-  }
-
-  /**
-   * Vérifie si on a cliqué sur un item de la liste
-   */
-  public static getUlListElement(element : HTMLElement) : HTMLElement {
-
-    return ElementService.findParentElementWithTagNameAndValueAttribute(
-      element,
-      TAG_NAME.LIST_ELEMENT.toUpperCase(),
-      this._ID_ATTRIBUTE,
-      this._ID_ATTRIBUTE_LIST_VALUE
-    );
-  }
-
-  /**
    * Vérifie si on a cliqué sur l'input d'une liste
    */
-  public static getInputKList(element : HTMLElement) : Element {
+  public static getInputList(element : HTMLElement) : Element {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
       TAG_NAME.INPUT.toUpperCase(),
-      this._ROLE_ATTRIBUTE,
-      this._ROLE_ATTRIBUTE_LIST_VALUE
+      this._CLASS_ATTIBUTE,
+      this._CLASS_ATTRIBUTE_INPUT_LIST
+    );
+  }
+
+  /**
+   * Vérifie si l'element se trouve dans un popover
+   */
+  public static getPopover(element : HTMLElement) {
+
+    return ElementService.findParentElementWithTagNameAndValueAttribute(
+      element,
+      TAG_NAME.DIVISION.toUpperCase(),
+      this._CLASS_ATTIBUTE,
+      this._CLASS_ATTRIBUTE_POPOVER
     );
   }
 
@@ -310,11 +294,11 @@ export class ElementService {
   /**
    * Permet de déterminer sur quel composant on a cliqué
    */
-  public static getClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : IComponent {
+  public static getClickComponent(element : HTMLElement) : IComponent {
 
     return FileDropZoneComponent.getElement(element) ||
     KSelectComponent.getElement(element) || KmSwitchComponent.getElement(element) ||
-    KListComponent.getElement(element, previousElement);
+    PopoverComponent.getElement(element) || InputListComponent.getElement(element);
   }
 
   /**

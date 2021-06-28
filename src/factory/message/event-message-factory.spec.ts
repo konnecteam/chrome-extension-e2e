@@ -1,3 +1,4 @@
+import { PopoverComponent } from './../../components/konnect/popover-component';
 import { IMessage } from '../../interfaces/i-message';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { CheckboxComponent } from '../../components/konnect/checkbox-component';
@@ -8,11 +9,8 @@ import { FileDropZoneComponent } from '../../components/components/file-drop-zon
 import * as path from 'path';
 import 'jest';
 import { KSelectComponent } from '../../components/konnect/k-select-component';
-import { KListComponent } from '../../components/konnect/k-list-component';
+import { InputListComponent } from '../../components/konnect/input-list-component';
 import { FileService } from '../../services/file/file-service';
-
-// Constant
-import TAG_NAME from '../../constants/elements/tag-name';
 
 /**
  * Permet de changer le contenu du body
@@ -31,7 +29,8 @@ async function changeBodyDocumentAsync(pathDoc : string) {
 const FILE_DROP_ZONE_DOM = '/static/test/dom/dom-filedropzone.html';
 const INPUT_NUMERIC_DOM = '/static/test/dom/dom-input-numeric.html';
 const K_SELECT_DOM = '/static/test/dom/dom-k-select.html';
-const K_LIST_DOM = '/static/test/dom/dom-k-list.html';
+const INPUT_LIST_DOM = '/static/test/dom/dom-input-list.html';
+const POPOVER_DOM = '/static/test/dom/dom-popover.html';
 const CHECKBOX_DOM = '/static/test/dom/dom-checkbox.html';
 const RADIO_GROUP_DOM = '/static/test/dom/dom-radio-group.html';
 
@@ -42,10 +41,10 @@ const FILE_DROP_ZONE_BUTTON_SELECTOR = 'div > div > div > span > a';
 const FILE_DROP_ZONE_SELECTOR = 'div > file-dropzone > div > div > span\:nth-child(3)';
 const INPUT_NUMERIC_SELECTOR = 'numeric > div > span > span > input\:nth-child(2)';
 const K_SELECT_SELETOR = 'span > span > span > span\:nth-child(1) > span';
-const K_ITEM_LIST_SELECTOR = 'div\:nth-child(1) > div > div > ul > li\:nth-child(2)';
+const INPUT_LIST = 'input';
 const CHECKBOX_ID = 'ckb146';
 const RADIO_GROUP_ID = 'rg168_0';
-
+const POPOVER = '.konnect-popover-content-margin-neg';
 
 describe('Test de event message factory', () => {
 
@@ -59,14 +58,9 @@ describe('Test de event message factory', () => {
     const component = FileDropZoneComponent.getElement(element as HTMLElement);
 
     // On doit trouver un event model de file drop zone
-    expect(
-      EventMessageFactory.buildMessageEvent(
-        component,
-        eventCatched,
-        null
-      )
-    ).toEqual(FileDropZoneComponent.
-      editFileDropZoneComponentMessage(eventCatched, (component.element as HTMLInputElement).files));
+    expect(EventMessageFactory.buildMessageEvent(component, eventCatched, null))
+    .toEqual(FileDropZoneComponent.editFileDropZoneComponentMessage(eventCatched, (component.element as HTMLInputElement).files));
+
   });
 
   test('Test de FileDropZone add button component message', async () => {
@@ -81,15 +75,9 @@ describe('Test de event message factory', () => {
     const element = document.querySelector(FILE_DROP_ZONE_BUTTON_SELECTOR);
     const component = FileDropZoneComponent.getElement(element as HTMLElement);
 
-    expect(
-      EventMessageFactory.buildMessageEvent(
-        component,
-        eventCatched,
-        null
-      )
-    ).toEqual(FileDropZoneComponent.
-      editFileDropZoneButtonComponentMessage(eventCatched)
-    );
+    expect(EventMessageFactory.buildMessageEvent(component, eventCatched, null))
+    .toEqual(FileDropZoneComponent.editFileDropZoneButtonComponentMessage(eventCatched));
+
   });
 
   test('Test de INPUT NUMERIC component message', async () => {
@@ -105,15 +93,9 @@ describe('Test de event message factory', () => {
     const component = InputNumericComponent.getElement(element as HTMLElement);
 
     // On doit trouver un event model d'input numeric
-    expect(
-      EventMessageFactory.buildMessageEvent(
-        component,
-        event,
-        null
-      )
-    ).toEqual(InputNumericComponent.
-      editInputNumericComponentMessage(event, component)
-    );
+    expect(EventMessageFactory.buildMessageEvent(component, event, null))
+    .toEqual(InputNumericComponent.editInputNumericComponentMessage(event, component));
+
   });
 
   test('Test de K select component message', async () => {
@@ -127,16 +109,8 @@ describe('Test de event message factory', () => {
     };
     // On doit trouver un event model de k select
 
-    expect(
-      EventMessageFactory.buildMessageEvent(
-        component,
-        event,
-        null
-      )
-    )
-    .toEqual(InputNumericComponent.
-      editInputNumericComponentMessage(event, component)
-    );
+    expect(EventMessageFactory.buildMessageEvent(component, event, null))
+    .toEqual(InputNumericComponent.editInputNumericComponentMessage(event, component));
 
   });
 
@@ -161,56 +135,30 @@ describe('Test de event message factory', () => {
     };
 
     // On doit trouver un event model d'iframe
-    expect(
-      EventMessageFactory.buildMessageEvent(
-        component,
-        event,
-        null
-      )
-    )
-    .toEqual(IframeComponent.
-      editIframeComponentMessage(event, component)
-    );
-
+    expect(EventMessageFactory.buildMessageEvent(component, event, null))
+    .toEqual(IframeComponent. editIframeComponentMessage(event, component));
 
   });
 
-  test('Test de KLIST component message', async () => {
+  test('Test de input list component message', async () => {
     // On doit trouver un event model de file drop zone
-    await changeBodyDocumentAsync(K_LIST_DOM);
+    await changeBodyDocumentAsync(INPUT_LIST_DOM);
 
-    const element = document.querySelector(K_ITEM_LIST_SELECTOR);
-
-    // Selector de la liste déroulante
-    const previousSelector : string = TAG_NAME.KONNECT_DROPDOWNLIST;
-
-    // infos sur l'element klist
-    const previousElement  = {
-      selector : previousSelector,
-      typeList : 'Dropdown',
-      element: document.querySelector(previousSelector)
-    };
+    const element = document.querySelector(INPUT_LIST);
 
     // event model de base
     const event : IMessage = {
-      selector : K_ITEM_LIST_SELECTOR
+      selector : INPUT_LIST
     };
 
-    const component = KListComponent.getElement(
-      element as HTMLElement,
-      previousElement
+    const component = InputListComponent.getElement(
+      element
     );
-    // On doit trouver un event model de klist
-    expect(
-      EventMessageFactory.buildMessageEvent(
-        component,
-        event,
-        null
-      )
-    )
-    .toEqual(KListComponent.
-      editKlistComponentMessage(event, component)
-    );
+
+    // On doit trouver un event model de input list
+    expect(EventMessageFactory.buildMessageEvent(component, event, null))
+    .toEqual(InputListComponent.editInputListComponentMessage(event, component));
+
   });
 
   test('Test de Checkbox component message', async () => {
@@ -224,17 +172,11 @@ describe('Test de event message factory', () => {
     const event : IMessage =  {
       action : '',
     };
+
     // On doit trouver un event model d'input calendar
-    expect(
-      EventMessageFactory.buildMessageEvent(
-        component,
-        event,
-        null
-      )
-    )
-    .toEqual(CheckboxComponent.
-      editCheckboxComponentMessage(event)
-    );
+    expect(EventMessageFactory.buildMessageEvent(component, event, null))
+    .toEqual(CheckboxComponent.editCheckboxComponentMessage(event));
+
   });
 
   test('Test de radio group component message', async () => {
@@ -248,16 +190,28 @@ describe('Test de event message factory', () => {
     const event : IMessage =  {
       action : '',
     };
+
     // On doit trouver un event model d'input calendar
-    expect(
-      EventMessageFactory.buildMessageEvent(
-        component,
-        event,
-        null
-      )
-    )
-    .toEqual(RadioGroupComponent.
-      editRadioGroupComponentMessage(event)
-    );
+    expect(EventMessageFactory.buildMessageEvent(component, event, null))
+    .toEqual(RadioGroupComponent.editRadioGroupComponentMessage(event));
+
+  });
+
+
+  test('Test de popover component message', async () => {
+    // on init le body
+    await changeBodyDocumentAsync(POPOVER_DOM);
+
+    const element : HTMLElement = document.querySelector(POPOVER);
+
+    const component = PopoverComponent.getElement(element);
+
+    const event : IMessage =  {
+      action : '',
+    };
+    // On doit trouver un component model qui fait référence à un popover
+    expect(EventMessageFactory.buildMessageEvent(component, event, null))
+    .toEqual(PopoverComponent.editPopoverComponentMessage(event));
+
   });
 });

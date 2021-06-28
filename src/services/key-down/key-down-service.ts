@@ -1,3 +1,4 @@
+import { ElementService } from './../element/element-service';
 import { ChromeService } from './../chrome/chrome-service';
 import { IMessage } from '../../interfaces/i-message';
 
@@ -57,7 +58,7 @@ export class KeyDownService {
 
       // On verifie si c'est un body car les textes areas sont parfois dans un body qui se trouve dans une iframe
       if (!msg.value && element.tagName === TAG_NAME.BODY.toUpperCase() || element.tagName === TAG_NAME.TEXTAREA.toUpperCase()
-          || this._isInputList(element)) {
+          || ElementService.getInputList(element)) {
 
         // On récupère l'event
         this._handleKeyDownEvent(msg);
@@ -66,6 +67,7 @@ export class KeyDownService {
 
       // On récupère la liste des keydowns
       ChromeService.sendMessage(this._processListsKeydown());
+
       this._listsKeyDown = [];
     }
   }
@@ -127,29 +129,6 @@ export class KeyDownService {
     this._listsKeyDown[0].value = value;
     this._listsKeyDown[0].action = CUSTOM_EVENT.LIST_KEYDOWN;
     return this._listsKeyDown[0];
-  }
-
-  /**
-   * Verifie si c'est un input de list
-   */
-  private _isInputList(element : HTMLElement) : boolean {
-
-    let listbox = '';
-
-    // On verifié si c'est un input d'une dropdown list
-    listbox = element.getAttribute('aria-owns');
-
-    if (!listbox) {
-
-      // On vérifie si c'est le input d'une liste multiple select liste
-      listbox = element.getAttribute('aria-describedby');
-
-      if (!listbox) {
-        return false;
-      }
-    }
-
-    return listbox && listbox.includes('kdp');
   }
 
   /**

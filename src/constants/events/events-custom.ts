@@ -9,5 +9,6 @@ export default {
   CLICK_MOUSE_INPUT_NUMERIC : 'click-mouse-input-numeric',
   DROP_FILE: 'drop-dropzone-file',
   CHANGE_INPUT_NUMERIC : 'change-input-numeric',
-  CLICK_LIST_ITEM: 'click-list-item'
+  CLICK_LIST_ITEM: 'click-list-item',
+  CLICK_MOUSE_ENTER : 'click-mouse-enter'
 };

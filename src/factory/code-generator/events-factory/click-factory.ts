@@ -44,9 +44,48 @@ export class ClickFactory {
         return this.buildClickKListItemBlock(
           options, frameId, frame, selector, scrollElement, scrollXElement, scrollYElement
         );
+      case CUSTOM_EVENT.CLICK_MOUSE_ENTER:
+        return this.buildClickMouseEnter(options, frameId, frame, selector);
       default : return null;
 
     }
+  }
+
+  /**
+   * On constuit un click qui va contenir un mouseenter
+   */
+  public static buildClickMouseEnter(options : IOption, frameId : number, frame : string, selector : string) : Block {
+
+    const block = new Block(frameId);
+
+    if (options.waitForSelectorOnClick) {
+
+      block.addLine({
+        type: DOM_EVENT.CLICK,
+        value: `await ${frame}.waitForSelector('${selector}');`
+      });
+    }
+
+    block.addLine({
+      type: DOM_EVENT.CLICK,
+      value: ` await ${frame}.evaluate( async function(){
+        let e = document.querySelector('${selector}');
+        var docEvent = document.createEvent('MouseEvents');
+        docEvent.initEvent('mouseenter', true, true);
+        e.dispatchEvent(docEvent);
+        e.click();
+      });`
+    });
+
+    if (options.customLineAfterClick) {
+
+      block.addLine({
+        type: DOM_EVENT.CLICK,
+        value: `${options.customLineAfterClick}`
+      });
+    }
+
+    return block;
   }
 
 /**

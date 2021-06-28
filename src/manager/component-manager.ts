@@ -14,15 +14,14 @@ export class ComponentManager {
    */
   public static getComponent(
     event : string,
-    element : HTMLElement,
-    kListElement : { selector : string, element : Element, typeList : string }
+    element : HTMLElement
   ) : IComponent {
 
     // En fonction de l'événement déclancheur
     switch (event) {
       // Si c'est un click
       case DOM_EVENT.CLICK:
-        return ElementService.getClickComponent(element, kListElement);
+        return ElementService.getClickComponent(element);
       // Si c'est un drop
       case DOM_EVENT.DROP:
         return ElementService.getDropComponent(element);

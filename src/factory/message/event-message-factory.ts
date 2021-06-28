@@ -1,3 +1,4 @@
+import { PopoverComponent } from './../../components/konnect/popover-component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { CheckboxComponent } from '../../components/konnect/checkbox-component';
 import { IframeComponent } from '../../components/konnect/iframe-component';
@@ -8,7 +9,7 @@ import { InputFilesComponent } from '../../components/components/input-file-comp
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
-import { KListComponent } from '../../components/konnect/k-list-component';
+import { InputListComponent } from '../../components/konnect/input-list-component';
 
 // Constant
 import  COMPONENT from '../../constants/component-name';
@@ -43,15 +44,17 @@ export class EventMessageFactory {
       // Si c'est une frame
       case COMPONENT.IFRAME :
         return IframeComponent.editIframeComponentMessage(event, component);
-      // Si c'est une konnect liste
-      case COMPONENT.KLIST :
-        return KListComponent.editKlistComponentMessage(event, component);
+      // Si c'est un input list
+      case COMPONENT.INPUT_LIST :
+        return InputListComponent.editInputListComponentMessage(event, component);
       // Si c'est un checkbox
       case COMPONENT.CHECKBOX :
         return CheckboxComponent.editCheckboxComponentMessage(event);
       // Si c'est un radio group
       case COMPONENT.RADIO_GROUP :
         return RadioGroupComponent.editRadioGroupComponentMessage(event);
+      case COMPONENT.POPOVER :
+        return PopoverComponent.editPopoverComponentMessage(event);
       default :
         return null;
     }

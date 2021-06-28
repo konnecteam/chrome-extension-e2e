@@ -42,13 +42,11 @@ describe('Test du Component Manager' , () => {
     expect(
       ComponentManager.getComponent(
         DOM_EVENT.CLICK,
-        element as HTMLElement,
-        null
+        element as HTMLElement
         )
     ).toEqual(
       ElementService.getClickComponent(
-      element as HTMLElement,
-      null
+      element as HTMLElement
     ));
   });
 
@@ -61,8 +59,7 @@ describe('Test du Component Manager' , () => {
     expect(
       ComponentManager.getComponent(
         DOM_EVENT.DROP,
-        element as HTMLElement,
-        null
+        element as HTMLElement
         )
     ).toEqual(
       ElementService.getDropComponent(element as HTMLElement));
@@ -77,8 +74,7 @@ describe('Test du Component Manager' , () => {
     expect(
       ComponentManager.getComponent(
         DOM_EVENT.CHANGE,
-        element as HTMLElement,
-        null
+        element as HTMLElement
       )
     ).toEqual(ElementService.getChangeComponent(element as HTMLElement)
     );
@@ -101,8 +97,7 @@ describe('Test du Component Manager' , () => {
     expect(
       ComponentManager.getComponent(
         DOM_EVENT.KEYDOWN,
-        element,
-        null
+        element
       )
     ).toEqual(ElementService.getKeydownComponent(element));
   });

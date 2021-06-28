@@ -25,8 +25,6 @@ export default {
   FORM: 'form',
   FILE_DROPZONE : 'file-dropzone',
   NUMERIC: 'numeric',
-  KONNECT_DROPDOWNLIST: 'konnect-dropdownlist',
-  KONNECT_MULTISELECT: 'konnect-multiselect',
   LIST_ELEMENT : 'ul',
   DATE : 'date',
   CHECKBOX: 'checkbox',

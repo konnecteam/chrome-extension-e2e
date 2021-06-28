@@ -9,7 +9,8 @@ export default {
   K_SELECT: 'k-select',
   KM_SWITCH: 'km-switch',
   IFRAME: 'iframe',
-  KLIST : 'k-list',
+  INPUT_LIST : 'input-list',
   CHECKBOX: 'checkbox',
   RADIO_GROUP: 'radio-group',
+  POPOVER: 'popover'
 };

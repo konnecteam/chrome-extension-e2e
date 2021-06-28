@@ -57,13 +57,6 @@ class EventRecorder {
   /** Selecteur de l'élément de l'event précédant */
   private _previousSelector = null;
 
-  /** Contient les informations de la dernière K list détéctée */
-  private _previousKList : {
-    selector : string;
-    typeList : string;
-    element : Element;
-  } = { selector : '', typeList : '', element : null };
-
   /** Time de départ d'un mousesdown */
   private _startMouseDown : number;
 
@@ -278,14 +271,10 @@ class EventRecorder {
     };
 
     // On vérifie si un composant est concerné par l'event
-    const component = ComponentManager.getComponent(message.typeEvent, e.target, this._previousKList);
+    const component = ComponentManager.getComponent(message.typeEvent, e.target);
 
     // Si c'est le cas et qu'on a un previousElement, c'est que on a une konnect liste, on update donc la value des k list
     if (component) {
-
-      if (component.kListElement) {
-        this._previousKList = component.kListElement;
-      }
 
       message = EventMessageFactory.buildMessageEvent(component, message, filesUpload);
     }
@@ -360,8 +349,9 @@ class EventRecorder {
 
     // Debounce du scroll
     this._boundedScrollEvent = DebounceService.debounce(event => {
-      // Envoi du scroll
-      ChromeService.sendMessage({
+
+      // Message pour un event scoll
+      const message : IMessage = {
         selector: this._selectorService.standardizeSelector(this._selectorService.find(event.target)),
         tagName: event.target.tagName,
         action: event.type,
@@ -369,8 +359,15 @@ class EventRecorder {
         // Si on a un scrollLeft c'est que c'est un element et sinon c'est la window donc on utilise pageXOffset
         scrollX: event.target.scrollLeft ? event.target.scrollLeft : window.pageXOffset,
         scrollY: event.target.scrollTop ? event.target.scrollTop : window.pageYOffset,
-      });
-    }, 200);
+      };
+
+      // On verfie si il y a eu un keydown avant pour envoyer l'event list keydown si le keydown est fini
+      this._keyDownService.handleEvent(message, event.target);
+
+      // Envoi du scroll
+      ChromeService.sendMessage(message);
+
+    }, 150);
 
     Object.keys(DOM_EVENT).forEach(key => {
       const type = DOM_EVENT[key];
