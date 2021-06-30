@@ -252,35 +252,9 @@ export class ElementService {
    */
   public static getKmSwitchElement(element : HTMLElement) : Element {
 
-    if (ElementService.findParentElementWithTagNameAndValueAttribute(
+    return ElementService.findParentElementWithTagNameAndValueAttribute(
       element, TAG_NAME.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
-    )) {
-
-      return element;
-    } else {
-      return this.findKmSwitchElement(element);
-    }
-  }
-
-  /**
-   * Trouve le km switch si le click est tout proche de lui
-   */
-  public static findKmSwitchElement(element : HTMLElement) : Element {
-
-    const parentElement = element.parentElement;
-
-    const parentOfParent = ElementService.findParentElementWithTagNameAndValueAttribute(
-      parentElement,
-      TAG_NAME.SPAN.toUpperCase(),
-      this._CLASS_ATTIBUTE,
-      this._CLASS_ATTIBUTE_KMSWITCH
-    );
-
-    if (parentOfParent) {
-      return parentElement.querySelector(`.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER} .${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`);
-    } else {
-      return null;
-    }
+    ) ? element : element.parentElement.querySelector(`.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER} .${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`);
   }
 
   /**

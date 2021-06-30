@@ -59,7 +59,7 @@ export class SelectorService {
     const customAttributes = [];
 
     // Gestion des cutom attributes
-    if (this._dataAttributes && this._dataAttributes.length && element.hasAttribute) {
+    if (this._dataAttributes && this._dataAttributes.length) {
 
       // On recherche les custom attributes
       const targetAttributes = element.attributes;
@@ -67,15 +67,11 @@ export class SelectorService {
       for (let i = 0;  i < this._dataAttributes.length; i++) {
 
         const patternAttr = this._dataAttributes[i];
-
-        const regexp = patternAttr instanceof RegExp ? patternAttr : RegExp(patternAttr);
-
         // On test chaque attribute avec le pattern
         for (let j = 0; j < targetAttributes.length; j++) {
 
           // Regex ou string test
-          if (this._useRegex ? regexp.test(targetAttributes[j].name) : patternAttr === targetAttributes[j].name) {
-
+          if (this._useRegex ? (patternAttr as RegExp).test(targetAttributes[j].name) : patternAttr === targetAttributes[j].name) {
             // La recherche est terminée
             // On traite les cas spéciaux des customs attributes
             customAttributes.push(this.manageSpecialCase(targetAttributes[j].name));
@@ -102,16 +98,17 @@ export class SelectorService {
    */
   public find(element : HTMLElement) : string {
 
-    // On récupère les custom attributs d'un élément si il y en a
-    const customAttributes : string[] = this._getCustomAttributes(element);
-
     // On verifie si on peut utiliser ses custom attribut pour faire le selecteur
-    if (this._dataAttributes && this._useRegex && customAttributes.length > 0) {
+    if (this._dataAttributes && this._dataAttributes.length > 0) {
 
-      const customSelector = this._findCustomSelector(element, customAttributes);
+      // On récupère les custom attributs d'un élément si il y en a
+      const customAttributes : string[] = this._getCustomAttributes(element);
 
-      // Si on trouve plus d'un element avec le customSelector alors on utilise le standard
-      if (document.querySelectorAll(customSelector).length > 1) {
+      // On construit le custom selector
+      const customSelector = customAttributes.length > 0 ? this._findCustomSelector(element, customAttributes) : '';
+
+      // Si le customSelector est vide ou qu'on trouve plus d'un element alors on utilise le standard
+      if (customSelector === '' || document.querySelectorAll(customSelector).length > 1) {
 
         return this._findStandardSelector(element);
       } else {
@@ -133,7 +130,7 @@ export class SelectorService {
   private _findCustomSelector(element : HTMLElement, customAttributes : string[]) : string {
     let selector = '';
     for (const customAttribute of customAttributes) {
-      selector += this._formatDataOfSelector(element, customAttribute);
+      selector += `${this._formatDataOfSelector(element, customAttribute)}`;
     }
     return selector;
   }

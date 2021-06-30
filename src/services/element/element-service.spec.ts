@@ -213,15 +213,6 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     .toBeDefined();
 
   });
-
-  test('Test de la fonction findKmSwitchElement', async () => {
-
-    await changeBodyDocumentAsync(KM_SWITCH_PATH);
-
-    expect(ElementService.findKmSwitchElement(document.querySelector(KM_SWITCH_CONTAINER)))
-    .toBeDefined();
-
-  });
 });
 
 describe('Test du get click event', () => {
