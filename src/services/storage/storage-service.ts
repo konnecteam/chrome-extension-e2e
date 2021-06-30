@@ -15,8 +15,15 @@ export class StorageService {
    */
   public static getDataAsync(keys : string[]) : Promise<{ [keys : string] : any }> {
     return new Promise((resolve, reject) => {
+
       chrome.storage.local.get(keys, data => {
-        resolve(data);
+        if (chrome.runtime.lastError) {
+
+          reject(chrome.runtime.lastError);
+        } else {
+
+          resolve(data);
+        }
       });
     });
   }
@@ -27,7 +34,13 @@ export class StorageService {
   public static removeDataAsync(key : string) : Promise<void> {
     return new Promise((resolve, reject) => {
       chrome.storage.local.remove(key, () => {
-        resolve();
+        if (chrome.runtime.lastError) {
+
+          reject(chrome.runtime.lastError);
+        } else {
+
+          resolve();
+        }
       });
     });
   }

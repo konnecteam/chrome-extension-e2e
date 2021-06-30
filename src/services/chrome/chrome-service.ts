@@ -85,9 +85,16 @@ export class ChromeService {
    */
   public static async getBadgeText() : Promise<string> {
     const currentTab = await this.getCurrentTabId();
-    return new Promise((resolve, err) => {
+    return new Promise((resolve, reject) => {
+
       chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
-        resolve(result);
+        if (result === 'non-tab-specific') {
+
+          reject('problem with tabId');
+        } else {
+
+          resolve(result);
+        }
       });
     });
   }
@@ -183,11 +190,23 @@ export class ChromeService {
   /**
    * Permet de télécharger un fichier
    */
-  public static download(content : File, filename : string) : void {
-    chrome.downloads.download({
-      url: URL.createObjectURL(content),
-      filename,
-      saveAs: true
+  public static download(content : File, filename : string) : Promise<void> {
+
+    return new Promise((resolve, reject) => {
+      chrome.downloads.download({
+        url: URL.createObjectURL(content),
+        filename,
+        saveAs: true
+      }, (downloadId : number) => {
+
+        if (downloadId) {
+
+          resolve();
+        } else {
+          // chrome.runtime.lastError contient la raison de l'erreur
+          reject(chrome.runtime.lastError);
+        }
+      });
     });
   }
 

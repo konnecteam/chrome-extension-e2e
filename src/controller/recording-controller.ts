@@ -175,7 +175,7 @@ class RecordingController {
       // Mise à jour de la barre de progression
       ChromeService.sendMessage({ valueLoad: 100 });
 
-      ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
+      await ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
       return;
     }
 
@@ -264,7 +264,7 @@ class RecordingController {
         this._zipContent = FileService.Instance.buildFile(RecordingController._SCENARIO_ZIP_NAME, dataURLZip);
 
         // Téléchargement du fichier
-        ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
+        await ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
       } catch (e) {
         throw new Error(e);
       }
