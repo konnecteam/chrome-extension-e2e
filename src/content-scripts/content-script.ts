@@ -265,7 +265,7 @@ class EventRecorder {
        * un click est catché mais on ne veut pas du click car il n'est pas utile
        */
       else if (e.type === DOM_EVENT.CLICK &&
-        this._previousMessage.action === CUSTOM_EVENT.CLICK_DROPZONE
+        this._previousMessage.action === DOM_EVENT.CLICK
       ) {
         return;
       }

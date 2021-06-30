@@ -169,7 +169,7 @@ describe('Test de Scenario Factory', () => {
     expect(
       ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      ChangeFactory.buildBlock(eventMessage, frameId, frame)
+      ChangeFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 

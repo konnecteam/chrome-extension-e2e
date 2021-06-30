@@ -1,3 +1,4 @@
+import { ClickFactory } from './click-factory';
 import { ChangeFactory } from './change-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
@@ -119,14 +120,18 @@ describe('Test de Change Block Factory', () => {
     // Attributs utilisés pour générer le block
     const files = '\"./recordings/files/test.txt\"';
 
-    const exceptedBlock = new Block(frameId);
+    const exceptedBlock = ClickFactory.buildFileDropZoneClickBlock(defaultOptions, frameId, frame, SELECTOR);
+
     exceptedBlock.addLine({
       type: DOM_EVENT.DROP,
       value: ` await fileChooser.accept([${files}]);`
     });
 
     const result = ChangeFactory.buildAcceptUploadFileChangeBlock(
+      defaultOptions,
       frameId,
+      frame,
+      SELECTOR,
       'test.txt'
     );
 
@@ -146,7 +151,8 @@ describe('Test de Change Block Factory', () => {
       ChangeFactory.buildBlock(
         eventMessage ,
         frameId,
-        frame
+        frame,
+        defaultOptions
       )
     ).toEqual(
       ChangeFactory.buildInputNumericChangedBlock(
@@ -172,7 +178,8 @@ describe('Test de Change Block Factory', () => {
       ChangeFactory.buildBlock(
         eventMessage ,
         frameId,
-        frame
+        frame,
+        defaultOptions
       )
     ).toEqual(
       ChangeFactory.buildChangeBlock(
@@ -197,7 +204,8 @@ describe('Test de Change Block Factory', () => {
       ChangeFactory.buildBlock(
         eventMessage ,
         frameId,
-        frame
+        frame,
+        defaultOptions
       )
     ).toEqual(
       ChangeFactory.buildSelectChangeBlock(
@@ -224,11 +232,15 @@ describe('Test de Change Block Factory', () => {
       ChangeFactory.buildBlock(
         eventMessage ,
         frameId,
-        frame
+        frame,
+        defaultOptions
       )
     ).toEqual(
       ChangeFactory.buildAcceptUploadFileChangeBlock(
+        defaultOptions,
         frameId,
+        frame,
+        SELECTOR,
         files
       )
     );

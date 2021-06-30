@@ -6,6 +6,7 @@ import { ScenarioService } from '../services/scenario/scenario-service';
 
 // Constant
 import PPTR_ACTIONS from '../constants/pptr-actions';
+import DOM_EVENT from '../constants/events/events-dom';
 
 /**
  * Classe qui permet de générer le scénario à partir des événements enregistrés
@@ -60,37 +61,45 @@ export default class CodeGenerator {
     for (let i = 0; i < events.length; i++) {
 
       const currentEvent = events[i];
+      const nextEvent = events[i + 1];
 
-      // On update les frames
-      this._setFrames(currentEvent.frameId, currentEvent.frameUrl);
+      /*
+       * On vérifie si l'event n'est pas un change de input file car si c'est le cas
+       * on a pas besoin de l'event courant car le block du change contiendra le code associé à l'event courant
+       */
+      if ( !(nextEvent && nextEvent.action === DOM_EVENT.CHANGE && nextEvent.files) || !nextEvent) {
 
-      // On contruit le block de code à partir de l'évènement enregistré
-      newBlock = ScenarioFactory.buildBlock(currentEvent, this._frameId, this._frame, this._options);
+        // On update les frames
+        this._setFrames(currentEvent.frameId, currentEvent.frameUrl);
 
-      if (newBlock) {
+        // On contruit le block de code à partir de l'évènement enregistré
+        newBlock = ScenarioFactory.buildBlock(currentEvent, this._frameId, this._frame, this._options);
 
-        /**
-         * Si l'option custom Line before event est utilisée et que ce n'est pas un action puppeteer
-         * Alors on rajoute la ligne customisé
-         */
-        if (this._options.customLinesBeforeEvent && Object.values(PPTR_ACTIONS).indexOf(currentEvent.action) === -1) {
+        if (newBlock) {
 
-          this._blocks.push(ScenarioFactory.buildCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
+          /**
+           * Si l'option custom Line before event est utilisée et que ce n'est pas un action puppeteer
+           * Alors on rajoute la ligne customisé
+           */
+          if (this._options.customLinesBeforeEvent && Object.values(PPTR_ACTIONS).indexOf(currentEvent.action) === -1) {
+
+            this._blocks.push(ScenarioFactory.buildCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
+          }
+
+          /* Si l'event contient un commentaire alors on rajoute un block de commentaire */
+          if (currentEvent.comments) {
+
+            this._blocks.push(ScenarioFactory.buildCommentBlock(newBlock, currentEvent.comments));
+          } else {
+
+            this._blocks.push(newBlock);
+          }
         }
 
-        /* Si l'event contient un commentaire alors on rajoute un block de commentaire */
-        if (currentEvent.comments) {
-
-          this._blocks.push(ScenarioFactory.buildCommentBlock(newBlock, currentEvent.comments));
-        } else {
-
-          this._blocks.push(newBlock);
+        // Si l'action détéctée est un navigation alors on met la navigation à true
+        if (currentEvent.action === PPTR_ACTIONS.NAVIGATION) {
+          this._hasNavigation = true;
         }
-      }
-
-      // Si l'action détéctée est un navigation alors on met la navigation à true
-      if (currentEvent.action === PPTR_ACTIONS.NAVIGATION) {
-        this._hasNavigation = true;
       }
     }
 

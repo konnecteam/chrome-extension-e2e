@@ -541,30 +541,6 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    test('Test de buildBlock pour un click sur un file drop zone', () => {
-      const eventI = {
-        selector,
-        action : CUSTOM_EVENT.CLICK_DROPZONE
-      };
-
-      expect(
-        ClickFactory.buildBlock(
-          eventI,
-          frameId,
-          frame,
-          defaultOptions
-        )
-      ).toEqual(
-        ClickFactory.buildFileDropZoneClickBlock(
-          defaultOptions,
-          frameId,
-          frame,
-          selector
-        )
-      );
-    });
-
-
     test('Test de buildBlock pour un click sur les flêches d\'un input numeric', () => {
       const eventI = {
         selector,

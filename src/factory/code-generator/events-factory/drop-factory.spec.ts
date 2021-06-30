@@ -2,7 +2,6 @@ import { IOption } from 'interfaces/i-options';
 import { IMessage } from '../../../interfaces/i-message';
 import { DropFactory } from './drop-factory';
 import 'jest';
-import { ClickFactory } from './click-factory';
 import { ChangeFactory } from './change-factory';
 
 // Constant
@@ -49,18 +48,13 @@ describe('Test de Drop Block Factory', () => {
     };
 
     // On rajoute d'abord la partie du click du file dropzone
-    const exceptedResult = ClickFactory.buildFileDropZoneClickBlock(
+    const exceptedResult = ChangeFactory.buildAcceptUploadFileChangeBlock(
       defaultOptions,
       frameId,
       frame,
-      eventMessage.selector
-    );
-    // On rajoute la partie acceptation du fichier
-    const chooserFile = ChangeFactory.buildAcceptUploadFileChangeBlock(
-      frameId,
+      eventMessage.selector,
       eventMessage.files
     );
-    exceptedResult.addLine(chooserFile.getLines()[0]);
 
     expect(
       DropFactory.buildBlock(

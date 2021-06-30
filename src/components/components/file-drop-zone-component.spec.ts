@@ -52,17 +52,4 @@ describe('Test de File DopZone Component', () => {
     ).toEqual(CUTOM_EVENT.DROP_FILE);
   });
 
-  test('Test de editFileDropZoneComponentMessage sans files', () => {
-
-    const eventCatched : IMessage = {
-      selector : 'test',
-      files : 'text.txt'
-    };
-
-    // On doit trouver l'action click sur une dropzone
-    expect(
-      FileDropZoneComponent.editFileDropZoneComponentMessage(eventCatched, undefined).action
-    ).toEqual(CUTOM_EVENT.CLICK_DROPZONE);
-
-  });
 });

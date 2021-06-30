@@ -145,7 +145,7 @@ export class ScenarioFactory {
         return ClickFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un change
       case DOM_EVENT.CHANGE :
-        return ChangeFactory.buildBlock(event, frameId, frame);
+        return ChangeFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un drop
       case DOM_EVENT.DROP :
         return DropFactory.buildBlock(event, frameId, frame, options);

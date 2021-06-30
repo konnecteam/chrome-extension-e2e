@@ -1,3 +1,5 @@
+import { IOption } from './../../../interfaces/i-options';
+import { ClickFactory } from './click-factory';
 import { IMessage } from '../../../interfaces/i-message';
 import { Block } from '../../../code-generator/block';
 
@@ -12,7 +14,7 @@ import CUSTOM_EVENT from '../../../constants/events/events-custom';
 export class ChangeFactory {
 
   /** Génère les blocks en fonction des paramètres données */
-  public static buildBlock(event : IMessage, frameId : number, frame : string) : Block {
+  public static buildBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
 
     const { action, selector, value, tagName, files, selectorFocus } = event;
 
@@ -33,7 +35,7 @@ export class ChangeFactory {
 
         } else if (files) {
           // Si il y a des files c'est que c'est un change dans un input files
-          return this.buildAcceptUploadFileChangeBlock(frameId, files);
+          return this.buildAcceptUploadFileChangeBlock(options, frameId, frame, selector, files);
         } else {
           // Sinon c'est un input simple
           return this.buildChangeBlock(frameId, frame, selector, value);
@@ -108,9 +110,10 @@ export class ChangeFactory {
   /**
    * Génère une acceptation d'uploader de fichier
    */
-  public static buildAcceptUploadFileChangeBlock(frameId : number, files : string) : Block {
+  public static buildAcceptUploadFileChangeBlock(options : IOption, frameId : number, frame : string , selector : string, files : string) : Block {
 
-    const block = new Block(frameId);
+    const block = ClickFactory.buildFileDropZoneClickBlock(options, frameId, frame, selector);
+
     const path = './recordings/files';
     const filesList = files.split(';');
 

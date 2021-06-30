@@ -45,10 +45,6 @@ export class FileDropZoneComponent {
     if (files) {
       newMessage.action = CUSTOM_EVENT.DROP_FILE;
       newMessage.files = FileService.Instance.prepareFilesForScenario(files);
-
-    } else {
-      // Sinon c'est qu'on a juste click sur la dropzone
-      newMessage.action = CUSTOM_EVENT.CLICK_DROPZONE;
     }
 
     return newMessage;

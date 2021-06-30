@@ -1,4 +1,3 @@
-import { KimoceDocumentsComponent } from '../../components/components/kimoce-documents-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { IMessage } from '../../interfaces/i-message';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
@@ -34,12 +33,10 @@ const INPUT_LIST_DOM = '/static/test/dom/dom-input-list.html';
 const POPOVER_DOM = '/static/test/dom/dom-popover.html';
 const CHECKBOX_DOM = '/static/test/dom/dom-checkbox.html';
 const RADIO_GROUP_DOM = '/static/test/dom/dom-radio-group.html';
-const KIMOCE_DOCUMENTS_DOM = '/static/test/dom/dom-kimoce-documents.html';
 
 /**
  * Selecteurs
  */
-const KIMOCE_DOCUMENTS_ADD_BUTTON = 'div > div > div > span > a';
 const FILE_DROP_ZONE_SELECTOR = 'div > file-dropzone > div > div > span\:nth-child(3)';
 const INPUT_NUMERIC_SELECTOR = 'numeric > div > span > span > input\:nth-child(2)';
 const K_SELECT_SELETOR = 'span > span > span > span\:nth-child(1) > span';
@@ -62,23 +59,6 @@ describe('Test de event message factory', () => {
     // On doit trouver un event model de file drop zone
     expect(EventMessageFactory.buildMessageEvent(component, eventCatched, null))
     .toEqual(FileDropZoneComponent.editFileDropZoneComponentMessage(eventCatched, (component.element as HTMLInputElement).files));
-
-  });
-
-  test('Test de Kimoce Documents add button component message', async () => {
-    // On init
-    await changeBodyDocumentAsync(KIMOCE_DOCUMENTS_DOM);
-
-    const eventCatched : IMessage = {
-      files : 'texte.txt'
-    };
-    // On doit trouver un event model du bouton ajouter fichier du file drop zone
-
-    const element = document.querySelector(KIMOCE_DOCUMENTS_ADD_BUTTON);
-    const component = KimoceDocumentsComponent.getElement(element as HTMLElement);
-
-    expect(EventMessageFactory.buildMessageEvent(component, eventCatched, null))
-    .toEqual(KimoceDocumentsComponent.editKimoceDocumentsComponentMessage(eventCatched, component));
 
   });
 

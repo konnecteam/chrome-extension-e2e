@@ -30,9 +30,6 @@ export class ClickFactory {
       // Si c'est un click basique
       case DOM_EVENT.CLICK:
         return this.buildSimpleClickBlock(options, frameId, frame, selector);
-      // Si c'est un click sur un dropzone element
-      case CUSTOM_EVENT.CLICK_DROPZONE:
-        return this.buildFileDropZoneClickBlock(options, frameId, frame, selector);
       // Si c'est un click sur les flêches de l'input numeric
       case CUSTOM_EVENT.CLICK_MOUSE_INPUT_NUMERIC:
         return this.buildClickMouseInputNumericBlock(options, frameId, frame, selector, durancyClick);
