@@ -5,11 +5,13 @@ export default {
   IMPORT_PUPPETEER: `const puppeteer = require('puppeteer');
   const fs = require('fs');
   const path = require('path');
-  const PageService = require('./recordings/services/page-service');\n`,
+  const PageService = require('./recordings/services/page-service');
+  const BrowserService = require('./recordings/services/browser-service');\n`,
 
   IMPORT_HTTP_REQUEST : `const puppeteer = require('puppeteer');
 const fs = require('fs');
 const PageService = require('./recordings/services/page-service');
+const BrowserService = require('./recordings/services/browser-service');
 const RequestService = require('./recordings/services/request-service');
 
 /** On commence par lire le har qui contient les requêtes et le faketimescript qui permet de faker la date */
@@ -29,6 +31,8 @@ page.setDefaultTimeout('100000')
 let fileChooser = null;
 /** On met en place le handle du chargement de la page */
 PageService.addLoadHandler(page);
+
+BrowserService.addTargetCreatedHandler(browser);
 \n`,
 
   WRAPPED_HEADER : `(async () => {
@@ -38,6 +42,8 @@ PageService.addLoadHandler(page);
   let fileChooser = null;
   /** On met en place le handle du chargement de la page */
   PageService.addLoadHandler(page);
+
+  BrowserService.addTargetCreatedHandler(browser);
   \n`,
 
   REQUEST_LISTENER : `  await page.setRequestInterception(true);

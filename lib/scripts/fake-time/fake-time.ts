@@ -6,4 +6,4 @@
 const FakeTimers = require('@sinonjs/fake-timers');
 
 // On met à now à 0 mais on va le modifier lors de l'export du script.
-FakeTimers.install({now : 0, target: window, shouldAdvanceTime: true });
+FakeTimers.withGlobal(window).install({now : 0, shouldAdvanceTime: true });

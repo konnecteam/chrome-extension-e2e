@@ -19,6 +19,7 @@ export class ScenarioService {
     `page-service.js`,
     `token-service.js`,
     `url-service.js`,
+    `browser-service.js`,
   ];
 
   /** Récupération des imports nécessaire au scénario */
