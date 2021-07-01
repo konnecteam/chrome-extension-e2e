@@ -254,7 +254,8 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element, TAG_NAME.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
-    ) ? element : element.parentElement.querySelector(`.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER} .${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`);
+    ) ? element :
+    element.parentElement ? element.parentElement.querySelector(`.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER} .${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`) : null;
   }
 
   /**

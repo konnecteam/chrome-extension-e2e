@@ -1,3 +1,4 @@
+import { AwaitConditionalService } from './../services/await/await-conditional-service';
 import { DebounceService } from '../services/debounce/debounce-service';
 import { PasswordService } from '../services/password/password-service';
 import { URLService } from './../services/url/url-service';
@@ -15,7 +16,6 @@ import { EventMessageFactory } from '../factory/message/event-message-factory';
 import EVENT_MSG from '../constants/events/events-message';
 import TAG_NAME from '../constants/elements/tag-name';
 import DOM_EVENT from '../constants/events/events-dom';
-import CUSTOM_EVENT from '../constants/events/events-custom';
 
 /**
  * Enregistre les intéractions de l'utilisateur avec la page
@@ -331,42 +331,43 @@ class EventRecorder {
     // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
     try {
 
-      while (!(window as any).eventRecorder._isEventProcessed) {
-        await new Promise(resolve => setTimeout(resolve, 500));
+      await AwaitConditionalService.waitForConditionAsync(
+        () => (window as any).eventRecorder._isEventProcessed,
+        250
+      );
+
+      // On bind la méthode de record des events
+      const boundedRecordEvent = ((window as any).eventRecorder as EventRecorder)._recordEvent.bind(
+        (window as any).eventRecorder
+      );
+
+      for (let i = 0 ; i < mutationList.length ; i++) {
+
+        const mutation = mutationList[i];
+
+        for (let j = 0 ; j < mutation.addedNodes.length; j++ ) {
+
+          const child = mutation.addedNodes[j];
+
+          // Si on a une iframe on rajoute les listener car de base il n'y en pas
+          if (child.tagName === TAG_NAME.IFRAME.toUpperCase() && child.contentDocument) {
+            Object.keys(DOM_EVENT).forEach(key => {
+              const type = DOM_EVENT[key];
+              child.contentDocument.addEventListener(type, boundedRecordEvent, true);
+            });
+          }
+
+          // Si on a un input file on rajoute le listener des change
+          if (child.tagName === TAG_NAME.INPUT.toUpperCase() && child.type === 'file') {
+            child.addEventListener(DOM_EVENT.CHANGE, boundedRecordEvent, false);
+          }
+        }
       }
 
+      (window as any).saveBody = document.cloneNode(true);
     } catch (err) {
     }
 
-    // On bind la méthode de record des events
-    const boundedRecordEvent = ((window as any).eventRecorder as EventRecorder)._recordEvent.bind(
-      (window as any).eventRecorder
-    );
-
-    for (let i = 0 ; i < mutationList.length ; i++) {
-
-      const mutation = mutationList[i];
-
-      for (let j = 0 ; j < mutation.addedNodes.length; j++ ) {
-
-        const child = mutation.addedNodes[j];
-
-        // Si on a une iframe on rajoute les listener car de base il n'y en pas
-        if (child.tagName === TAG_NAME.IFRAME.toUpperCase() && child.contentDocument) {
-          Object.keys(DOM_EVENT).forEach(key => {
-            const type = DOM_EVENT[key];
-            child.contentDocument.addEventListener(type, boundedRecordEvent, true);
-          });
-        }
-
-        // Si on a un input file on rajoute le listener des change
-        if (child.tagName === TAG_NAME.INPUT.toUpperCase() && child.type === 'file') {
-          child.addEventListener(DOM_EVENT.CHANGE, boundedRecordEvent, false);
-        }
-      }
-    }
-
-    (window as any).saveBody = document.cloneNode(true);
   }
 
   /** Ajout des listners */
