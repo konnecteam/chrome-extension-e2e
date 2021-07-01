@@ -114,34 +114,39 @@ class EventRecorder {
       loadingPage: false
     });
 
-    // Récupération des options
-    const data = await StorageService.getDataAsync(['options']);
-    if (data) {
+    try {
 
-      // Mise à jour des options
-      this._updateOptions(data.options);
+      // Récupération des options
+      const data = await StorageService.getDataAsync(['options']);
+      if (data) {
 
-      this._recordHttpRequest = data.options.recordHttpRequest;
+        // Mise à jour des options
+        this._updateOptions(data.options);
 
-      // Si On record les requests on initialise et inject le script polly
-      if (data.options.recordHttpRequest) {
-        this._init();
-      } else {
-        // On dit au startup config que pollyJS est prêt et que les modules peuvent être chargé
-        WindowService.dispatchEvent(new CustomEvent(EVENT_MSG.POLLY_READY));
+        this._recordHttpRequest = data.options.recordHttpRequest;
+
+        // Si On record les requests on initialise et inject le script polly
+        if (data.options.recordHttpRequest) {
+          this._init();
+        } else {
+          // On dit au startup config que pollyJS est prêt et que les modules peuvent être chargé
+          WindowService.dispatchEvent(new CustomEvent(EVENT_MSG.POLLY_READY));
+        }
+
+        // Ajout d'un listener afin d'écouter les messages du background
+        if (!(window.document as any).pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
+          this._addAllListeners();
+        }
+
+        // On observe les changement et on ajoute un listener sur les inputs
+        (window as any).observer = new MutationObserver(this._listenerObserverAsync);
+        (window as any).observer.observe(document, { childList: true, subtree: true });
+
+        ChromeService.sendMessage({ control: EVENT_MSG.EVENT_RECORDER_STARTED });
       }
-
-      // Ajout d'un listener afin d'écouter les messages du background
-      if (!(window.document as any).pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
-        this._addAllListeners();
-      }
-
-      // On observe les changement et on ajoute un listener sur les inputs
-      (window as any).observer = new MutationObserver(this._listenerObserverAsync);
-      (window as any).observer.observe(document, { childList: true, subtree: true });
-
-      ChromeService.sendMessage({ control: EVENT_MSG.EVENT_RECORDER_STARTED });
+    } catch (err) {
     }
+
   }
 
   /**
@@ -324,8 +329,13 @@ class EventRecorder {
   private async _listenerObserverAsync(mutationList : any[]) {
 
     // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
-    while (!(window as any).eventRecorder._isEventProcessed) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+    try {
+
+      while (!(window as any).eventRecorder._isEventProcessed) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+
+    } catch (err) {
     }
 
     // On bind la méthode de record des events

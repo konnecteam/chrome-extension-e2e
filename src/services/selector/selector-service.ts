@@ -35,20 +35,26 @@ export class SelectorService {
    */
   private async _getOption() : Promise<void> {
 
-    const opt = await StorageService.getDataAsync(['options']);
+    try {
 
-    if (opt) {
+      const opt = await StorageService.getDataAsync(['options']);
 
-      this._useRegex = opt.options.useRegexForDataAttribute;
+      if (opt) {
 
-      this._dataAttributes = opt.options.dataAttribute.split(' ').filter(element => element !== '').map(element => {
-        if (this._useRegex) {
-          return new RegExp(element);
-        } else {
-          return element;
-        }
-      });
+        this._useRegex = opt.options.useRegexForDataAttribute;
+
+        this._dataAttributes = opt.options.dataAttribute.split(' ').filter(element => element !== '').map(element => {
+          if (this._useRegex) {
+            return new RegExp(element);
+          } else {
+            return element;
+          }
+        });
+      }
+
+    } catch (err) {
     }
+
   }
 
   /**

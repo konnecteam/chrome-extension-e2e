@@ -163,91 +163,92 @@ class RecordingController {
    */
   private async _exportScriptAsync() : Promise<void> {
 
-    // 1 - On vérifie que la requête est bien récupérer et l'option de record des requêtes à true
-    if (!this._isResult && this._recordHttpRequest) {
-      alert('We haven\'t finish to get result, wait few seconds');
-      return;
-    }
 
-    // 2 - On vérifie que le contenu du zip n'est pas vide
-    if (this._zipContent) {
-
-      // Mise à jour de la barre de progression
-      ChromeService.sendMessage({ valueLoad: 100 });
-
-      await ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
-      return;
-    }
-
-    // 3 - Recupération du code dans le local storage
-    const result  = await StorageService.getDataAsync(['code', 'dateTimeStart']);
-    if (result) {
-
-      // Ajout du fichier script.js dans l'archive
-      this._zipService.addFileInFolder(RecordingController._SCENARIO_FILNAME, result.code);
-
-      // Ajout du package Json
-      this._zipService.addFileInFolder(
-        RecordingController._PACKAGE_JSON,
-        new File([ZIP_CONTENT.PACKAGE_JSON_CONTENT], RecordingController._PACKAGE_JSON)
-      );
-
-      // changement de la barre de progression
-      ChromeService.sendMessage({ valueLoad: 15 });
-
-      // Recupère la liste des fichiers qui seront dans le zip
-      const files = this._fileService.getUploadedFiles();
-      for (let i = 0; i < files.length; i++) {
-        this._zipService.addFileInFolder(`recordings/files/${files[i].name}`, files[i]);
+    try {
+      // 1 - On vérifie que la requête est bien récupérer et l'option de record des requêtes à true
+      if (!this._isResult && this._recordHttpRequest) {
+        alert('We haven\'t finish to get result, wait few seconds');
+        return;
       }
 
-      // On remplace 0 par la time de départ du record
-      const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuilded.replace('now:0', `now:${result.dateTimeStart}`);
+      // 2 - On vérifie que le contenu du zip n'est pas vide
+      if (this._zipContent) {
 
-      // On créé le fichier à ajouter dans le zip
-      const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], RecordingController._FAKE_TIME_SCRIPT_FILNAME);
+        // Mise à jour de la barre de progression
+        ChromeService.sendMessage({ valueLoad: 100 });
 
-      // On ajoute le fake script permettant de fake le time dans le zip
-      this._zipService.addFileInFolder(`recordings/scripts-build/${buildFakeTimeScript.name}`, buildFakeTimeScript);
-
-
-      // On parcourt tous les services pour les ajouter au zip
-      for (let index = 0; index < ScenarioService.SCENARIO_SERVICE_DEPENDENCIES.length; index++) {
-
-        const filename = ScenarioService.SCENARIO_SERVICE_DEPENDENCIES[index];
-        const contentFile = this._scenarioDependencies[index];
-        const file = new File([contentFile], filename );
-
-        // On ajoute le service au zip
-        this._zipService.addFileInFolder(`recordings/services/${file.name}`, file);
+        await ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
+        return;
       }
 
-      // changement de la barre de progression
-      ChromeService.sendMessage({ valueLoad: 35 });
+      // 3 - Recupération du code dans le local storage
+      const result  = await StorageService.getDataAsync(['code', 'dateTimeStart']);
+      if (result) {
 
-      if (this._recordHttpRequest) {
+        // Ajout du fichier script.js dans l'archive
+        this._zipService.addFileInFolder(RecordingController._SCENARIO_FILNAME, result.code);
 
-        const recording = {
-          folderName : this._pollyService.getRecordId() !== '' ? this._pollyService.getRecordId() : 'emptyResult',
-          har : this._pollyService.getRecordHar() !== '' ? this._pollyService.getRecordHar() : 'No request recorded'
-        };
+        // Ajout du package Json
+        this._zipService.addFileInFolder(
+            RecordingController._PACKAGE_JSON,
+            new File([ZIP_CONTENT.PACKAGE_JSON_CONTENT], RecordingController._PACKAGE_JSON)
+          );
 
         // changement de la barre de progression
-        ChromeService.sendMessage({
-          valueLoad: 65
-        });
-        // Ajoute le recording dans le zip
-        this._zipService.addFileInFolder(
-          `recordings/${recording.folderName}/${RecordingController._RECORDING_FILENAME}`,
-          new File([recording.har],
-          RecordingController._RECORDING_FILENAME
-        ));
-      }
+        ChromeService.sendMessage({ valueLoad: 15 });
 
-      // changement de la barre de progression
-      ChromeService.sendMessage({ valueLoad: 75 });
+        // Recupère la liste des fichiers qui seront dans le zip
+        const files = this._fileService.getUploadedFiles();
+        for (let i = 0; i < files.length; i++) {
+          this._zipService.addFileInFolder(`recordings/files/${files[i].name}`, files[i]);
+        }
 
-      try {
+        // On remplace 0 par la time de départ du record
+        const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuilded.replace('now:0', `now:${result.dateTimeStart}`);
+
+        // On créé le fichier à ajouter dans le zip
+        const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], RecordingController._FAKE_TIME_SCRIPT_FILNAME);
+
+        // On ajoute le fake script permettant de fake le time dans le zip
+        this._zipService.addFileInFolder(`recordings/scripts-build/${buildFakeTimeScript.name}`, buildFakeTimeScript);
+
+
+        // On parcourt tous les services pour les ajouter au zip
+        for (let index = 0; index < ScenarioService.SCENARIO_SERVICE_DEPENDENCIES.length; index++) {
+
+          const filename = ScenarioService.SCENARIO_SERVICE_DEPENDENCIES[index];
+          const contentFile = this._scenarioDependencies[index];
+          const file = new File([contentFile], filename );
+
+          // On ajoute le service au zip
+          this._zipService.addFileInFolder(`recordings/services/${file.name}`, file);
+        }
+
+        // changement de la barre de progression
+        ChromeService.sendMessage({ valueLoad: 35 });
+
+        if (this._recordHttpRequest) {
+
+          const recording = {
+            folderName : this._pollyService.getRecordId() !== '' ? this._pollyService.getRecordId() : 'emptyResult',
+            har : this._pollyService.getRecordHar() !== '' ? this._pollyService.getRecordHar() : 'No request recorded'
+          };
+
+          // changement de la barre de progression
+          ChromeService.sendMessage({
+            valueLoad: 65
+          });
+
+          // Ajoute le recording dans le zip
+          this._zipService.addFileInFolder(
+              `recordings/${recording.folderName}/${RecordingController._RECORDING_FILENAME}`,
+              new File([recording.har],
+              RecordingController._RECORDING_FILENAME
+          ));
+        }
+
+          // changement de la barre de progression
+        ChromeService.sendMessage({ valueLoad: 75 });
 
         const zipInNodeBuffer = await this._zipService.generateAsync();
 
@@ -265,9 +266,9 @@ class RecordingController {
 
         // Téléchargement du fichier
         await ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
-      } catch (e) {
-        throw new Error(e);
       }
+    } catch (err) {
+      alert('Problem with exported script');
     }
   }
 
@@ -300,7 +301,12 @@ class RecordingController {
     this._contentFakeTimeServiceBuilded = '';
     ChromeService.removeOnMessageListener(this._boundedMessageHandler);
     ChromeService.setBadgeText('');
-    await StorageService.removeDataAsync('recording');
+
+    try {
+
+      await StorageService.removeDataAsync('recording');
+    } catch (err) {
+    }
 
     if (callback) {
       callback();
@@ -360,45 +366,49 @@ class RecordingController {
     this._isPaused = false;
     chrome.browserAction.setBadgeText({ text : '' });
 
-    const currentTab = await ChromeService.getCurrentTabId();
+    try {
 
-    // 2 - On récupère les options
-    const data = await StorageService.getDataAsync(['options']);
-    if (data) {
-      this._recordHttpRequest = data.options.recordHttpRequest;
-      this._deleteSiteData = data.options.deleteSiteData;
+      const currentTab = await ChromeService.getCurrentTabId();
+
+      // 2 - On récupère les options
+      const data = await StorageService.getDataAsync(['options']);
+      if (data) {
+        this._recordHttpRequest = data.options.recordHttpRequest;
+        this._deleteSiteData = data.options.deleteSiteData;
+      }
+
+      // Si l'option deleteSiteDate est activé, on supprime les données du site
+      if (this._deleteSiteData) {
+        await ChromeService.removeBrowsingData(currentTab.url);
+      }
+
+      // 3 - Suppression du recording en local storage
+      await StorageService.removeDataAsync('recording');
+
+      StorageService.setData({ isRemovedListener: false });
+
+      // 4 - On récupère les fichiers liées au scénario
+      this._scenarioDependencies = ScenarioService.getScenarioFilesContent();
+      this._contentFakeTimeServiceBuilded = await ScenarioService.getFakeTimeScriptContentAsync();
+
+      // 5 - Inject le script
+      await ChromeService.executeScript({
+        file : RecordingController._CONTENT_SCRIPT_FILENAME,
+        allFrames : false,
+        runAt : 'document_start'
+      });
+
+      // Récupération du viewport
+      chrome.tabs.sendMessage(currentTab.id, {
+        control: MESSAGE.GET_VIEWPORT_SIZE
+      });
+
+      // Récupération de l'url
+      chrome.tabs.sendMessage(currentTab.id, {
+        control: MESSAGE.GET_CURRENT_URL
+      });
+    } catch (err) {
     }
-
-    // Si l'option deleteSiteDate est activé, on supprime les données du site
-    if (this._deleteSiteData) {
-      await ChromeService.removeBrowsingData(currentTab.url);
-    }
-
-    // 3 - Suppression du recording en local storage
-    await StorageService.removeDataAsync('recording');
-
-    StorageService.setData({ isRemovedListener: false });
-
-    // 4 - On récupère les fichiers liées au scénario
-    this._scenarioDependencies = ScenarioService.getScenarioFilesContent();
-    this._contentFakeTimeServiceBuilded = await ScenarioService.getFakeTimeScriptContentAsync();
-
-    // 5 - Inject le script
-    await ChromeService.executeScript({
-      file : RecordingController._CONTENT_SCRIPT_FILENAME,
-      allFrames : false,
-      runAt : 'document_start'
-    });
-
-    // Récupération du viewport
-    chrome.tabs.sendMessage(currentTab.id, {
-      control: MESSAGE.GET_VIEWPORT_SIZE
-    });
-
-    // Récupération de l'url
-    chrome.tabs.sendMessage(currentTab.id, {
-      control: MESSAGE.GET_CURRENT_URL
-    });
 
     // Binding
     this._boundedMessageHandler = this._handleMessage.bind(this);
@@ -445,15 +455,21 @@ class RecordingController {
    * Permet d'injecter le script
    */
   private async _injectScript(callback? : () => void) : Promise<void> {
-    await ChromeService.executeScript({
-      file : RecordingController._CONTENT_SCRIPT_FILENAME,
-      allFrames : false,
-      runAt : 'document-start'
-    });
+    try {
 
-    if (callback) {
-      callback();
+      await ChromeService.executeScript({
+        file : RecordingController._CONTENT_SCRIPT_FILENAME,
+        allFrames : false,
+        runAt : 'document-start'
+      });
+
+      if (callback) {
+        callback();
+      }
+    } catch (err) {
+      alert('Problem with script injection');
     }
+
   }
 
   /**
@@ -538,27 +554,35 @@ class RecordingController {
     if (message.resultURL) {
 
       this._pollyService.record.id = message.recordingId;
+      try {
 
-      // Récupération du fichier har
-      const har = await HttpService.getRequest(message.resultURL);
+        // Récupération du fichier har
+        const har = await HttpService.getRequest(message.resultURL);
 
-      if (har) {
-        this._pollyService.record.har = har;
+        if (har) {
+          this._pollyService.record.har = har;
+        }
+
+        URL.revokeObjectURL(message.resultURL);
+
+        this._isResult = true;
+      } catch (err) {
       }
-
-      URL.revokeObjectURL(message.resultURL);
-
-      this._isResult = true;
     }
 
-    const badge = await ChromeService.getBadgeText();
+    try {
 
-    // Si on a le résultat du record
-    if (badge === EBadgeState.RESULT_NOT_EMPTY || badge === '') {
+      const badge = await ChromeService.getBadgeText();
 
-      // On stock que l'on a supprimé le listener
-      StorageService.setData({ isRemovedListener: true});
+      // Si on a le résultat du record
+      if (badge === EBadgeState.RESULT_NOT_EMPTY || badge === '') {
+
+        // On stock que l'on a supprimé le listener
+        StorageService.setData({ isRemovedListener: true});
+      }
+    } catch (err) {
     }
+
   }
 
   /**

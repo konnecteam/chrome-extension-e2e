@@ -84,19 +84,25 @@ export class ChromeService {
    * Permet de récupérer le bage
    */
   public static async getBadgeText() : Promise<string> {
-    const currentTab = await this.getCurrentTabId();
-    return new Promise((resolve, reject) => {
 
-      chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
-        if (result === 'non-tab-specific') {
+    try {
 
-          reject('problem with tabId');
-        } else {
+      const currentTab = await this.getCurrentTabId();
+      return new Promise((resolve, reject) => {
 
-          resolve(result);
-        }
+        chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
+          if (result === 'non-tab-specific') {
+
+            reject('problem with tabId');
+          } else {
+
+            resolve(result);
+          }
+        });
       });
-    });
+    } catch (err) {
+      return Promise.reject(err);
+    }
   }
 
   /**
@@ -150,14 +156,20 @@ export class ChromeService {
    * @param message
    */
   public static async sendMessageToContentScript(message : string) : Promise<void> {
-    const tabs = await this._query({
-      currentWindow: true,
-      active: true
-    });
-    if (tabs && tabs[0]) {
-      chrome.tabs.sendMessage(tabs[0].id, {
-        control : message
+
+    try {
+
+      const tabs = await this._query({
+        currentWindow: true,
+        active: true
       });
+
+      if (tabs && tabs[0]) {
+        chrome.tabs.sendMessage(tabs[0].id, {
+          control : message
+        });
+      }
+    } catch (err) {
     }
   }
 

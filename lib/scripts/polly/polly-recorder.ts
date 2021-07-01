@@ -218,8 +218,13 @@ export class PollyRecorder {
       }
     }
 
-    await Promise.all(this._listRequestPromise);
-    await this._polly.stop();
+    try {
+
+      await Promise.all(this._listRequestPromise);
+      await this._polly.stop();
+    } catch (err) {
+    }
+
   }
 
   /**
@@ -267,21 +272,26 @@ export class PollyRecorder {
    * @param event
    */
   private async _getHARResult(event) : Promise<void> {
-    // On atttend que polly ait fini de stopper
-    await this._stopAsync();
 
-    // On envoie le résultat au content-script
-    window.postMessage(
-      {
-        action : EVENT_MSG.GOT_HAR,
-        payload : { result : this._getResult(this.recordingId), recordingId : this.recordingId }
-      },
-      event.origin
-    );
+    try {
 
-    // On remove les listeners
-    this._removeAllListener();
-    PollyRecorder.observer.disconnect();
+      // On atttend que polly ait fini de stopper
+      await this._stopAsync();
+
+      // On envoie le résultat au content-script
+      window.postMessage(
+        {
+          action : EVENT_MSG.GOT_HAR,
+          payload : { result : this._getResult(this.recordingId), recordingId : this.recordingId }
+        },
+        event.origin
+      );
+
+      // On remove les listeners
+      this._removeAllListener();
+      PollyRecorder.observer.disconnect();
+    } catch (err) {
+    }
   }
 
   /**
