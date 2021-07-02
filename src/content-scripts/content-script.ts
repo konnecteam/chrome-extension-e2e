@@ -249,7 +249,7 @@ class EventRecorder {
     /* Si on récupère un lien directement dans un body
      * Alors c'est qu'on a utilisé un window.open et ouvert un autre onglet
      * donc on l'ignore car l'élement n'existe pas
-    */
+     */
     if (e.target.tagName === TAG_NAME.LINK.toUpperCase()
         && e.target.getAttribute('target') === '_blank'
       ) {
@@ -306,7 +306,6 @@ class EventRecorder {
     // On vérifie si un composant est concerné par l'event
     const component = ComponentManager.getComponent(message.typeEvent, e.target);
 
-    // Si c'est le cas et qu'on a un previousElement, c'est que on a une konnect liste, on update donc la value des k list
     if (component) {
 
       message = EventMessageFactory.buildMessageEvent(component, message, filesUpload);
@@ -328,9 +327,9 @@ class EventRecorder {
    */
   private async _listenerObserverAsync(mutationList : any[]) {
 
-    // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
     try {
 
+      // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
       await AwaitConditionalService.waitForConditionAsync(
         () => (window as any).eventRecorder._isEventProcessed,
         250

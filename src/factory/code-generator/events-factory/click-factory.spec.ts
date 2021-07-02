@@ -117,7 +117,6 @@ function customeLineLineBlock() : ILineBlock {
 
 /**
  * Génère la ligne customisé avant chaque event
- * @param select
  */
 function customLineBeforeEvent(event : string) : ILineBlock {
   return {

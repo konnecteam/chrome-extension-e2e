@@ -258,7 +258,6 @@ export class PollyRecorder {
 
   /**
    * Ajoute une fetch request dans la liste des request à fatch
-   * @param url
    */
   private _addToRequestList(url : string) : void {
     this._listRequestPromise.push(
@@ -269,7 +268,6 @@ export class PollyRecorder {
   /**
    * Fonction exécuté lors de la reception de l'event
    * qui permet de récuperer le résultat de polly
-   * @param event
    */
   private async _getHARResult(event) : Promise<void> {
 

@@ -1,7 +1,6 @@
 import { InputListComponent } from './input-list-component';
 import 'jest';
 import * as path from 'path';
-import { IComponent } from 'interfaces/i-component';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
 

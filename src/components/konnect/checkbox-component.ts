@@ -14,7 +14,6 @@ export class CheckboxComponent {
 
   /**
    * Récupère le IComponent Checkbox
-   * @param element
    */
   public static getElement(element : HTMLElement) : IComponent {
 

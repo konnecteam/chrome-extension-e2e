@@ -153,7 +153,6 @@ export class ChromeService {
 
   /**
    * Permet d'envoyer des messages au content-script pour qu'il les envoie à PollyRecorder
-   * @param message
    */
   public static async sendMessageToContentScript(message : string) : Promise<void> {
 
@@ -176,7 +175,6 @@ export class ChromeService {
 
   /**
    * Suppression des données d'un site à partir de l'url
-   * @param url
    */
   public static async removeBrowsingData(url : string) : Promise<void> {
     const millisecondsPerYear = 1000 * 60 * 60 * 24 * 7 * 52;

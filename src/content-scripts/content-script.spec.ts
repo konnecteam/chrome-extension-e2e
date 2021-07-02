@@ -43,7 +43,6 @@ const INPUT_TEXT_ID = '#inputText';
 
 /**
  * Permet de lancer un dispatch event sur la window
- * @param event
  */
 async function dispatchEventAsync(event : string, message : IMessage) : Promise<void> {
   return page.evaluate(ev => {

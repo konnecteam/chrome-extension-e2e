@@ -42,8 +42,6 @@ const defaultOptions : IOption = {
 
 /**
  * Transforme une liste de Block en string
- * @param listBlock
- * @param wrapAsync
  */
 function blocksToString(listBlock : Block[], wrapAsync : boolean) {
   const indent = wrapAsync ? '  ' : '';
@@ -61,7 +59,6 @@ function blocksToString(listBlock : Block[], wrapAsync : boolean) {
 
 /**
  * Créer un scénario à partir des options
- * @param options
  */
 function createScenario(options : IOption) {
   // Header du scénario

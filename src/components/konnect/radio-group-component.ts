@@ -14,7 +14,6 @@ export class RadioGroupComponent {
 
   /**
    * Récupère le IComponent radiogroup
-   * @param element
    */
   public static getElement(element : HTMLElement) : IComponent {
 

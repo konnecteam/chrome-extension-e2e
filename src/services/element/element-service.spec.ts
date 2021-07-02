@@ -30,11 +30,10 @@ const K_SELECT_SELETOR = 'span > span > span > span\:nth-child(1) > span';
 const INPUT_LIST = 'input';
 const POPOVER = '.konnect-popover-content-margin-neg';
 const KM_SWITCH_SELECTOR = 'switch > div > span > span:nth-child(3) > span';
-const KM_SWITCH_CONTAINER = '.km-switch-container';
 const KM_SWITCH_HANDLE = '.km-switch-handle';
+
 /**
  * Permet de changer le contenu du body
- * @param pathDoc
  */
 async function changeBodyDocumentAsync(pathDoc : string) {
   const PATH_DOM = path.join(__dirname, `/../../..${pathDoc}` );

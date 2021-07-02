@@ -59,7 +59,6 @@ async function waitBackgroundReadyAsync() : Promise<string> {
 
 /**
  * Permet de lancer un dispatch event sur la window
- * @param event
  */
 async function dispatchEventAsync(event : string, message : IMessage) : Promise<void> {
   return page.evaluate(ev => {
@@ -71,7 +70,6 @@ async function dispatchEventAsync(event : string, message : IMessage) : Promise<
 
 /**
  * Permet de verifier le contenu du badge
- * @param action
  */
 async function verfiyBadgeContentAsync(action : string ) : Promise<string> {
   await waitBackgroundReadyAsync();

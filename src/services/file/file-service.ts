@@ -48,9 +48,6 @@ export class FileService {
 
   /**
    * Ajoute un fichier dans la liste de fichiers uploadés
-   *
-   * @param name nom du fichier
-   * @param content contenu du fichier en base 64
    */
   public addfile(name : string, content : string) : void {
     this._uploadedFiles.push(this.buildFile(name, content));
@@ -58,9 +55,6 @@ export class FileService {
 
   /**
    * Construit un fichier à partir d'un content en base64
-   *
-   * @param name nom du fichier
-   * @param content contenu du fichier en base 64
    */
   public buildFile(name : string, content : string) : File {
     const filObject = FileFactory.buildFileObject(content);

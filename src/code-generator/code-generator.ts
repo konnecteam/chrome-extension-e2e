@@ -65,7 +65,7 @@ export default class CodeGenerator {
 
       /*
        * On vérifie si l'event n'est pas un change de input file car si c'est le cas
-       * on a pas besoin de l'event courant car le block du change contiendra le code associé à l'event courant
+       * on n'a pas besoin de l'event courant car le block du change contiendra le code associé à l'event courant
        */
       if ( !(nextEvent && nextEvent.action === DOM_EVENT.CHANGE && nextEvent.files) || !nextEvent) {
 

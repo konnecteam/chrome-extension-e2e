@@ -9,7 +9,6 @@ import DOM_EVENT from '../constants/events/events-dom';
 
 /**
  * Permet de changer le contenu du body
- * @param pathDoc
  */
 async function changeBodyDocumentAsync(pathDoc : string) {
   const PATH_DOM = path.join(__dirname, `./../..${pathDoc}` );

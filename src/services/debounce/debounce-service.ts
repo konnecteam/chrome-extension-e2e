@@ -6,9 +6,6 @@ export class DebounceService {
 
   /**
    * Méthode qui permet de faire des debounces
-   * @param callback
-   * @param timeout
-   * @returns
    */
   public static debounce(callback : (e : any) => void, timeout : number) : () => void {
     let debounceTimeoutId : number;

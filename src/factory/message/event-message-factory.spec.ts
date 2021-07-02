@@ -14,7 +14,6 @@ import { FileService } from '../../services/file/file-service';
 
 /**
  * Permet de changer le contenu du body
- * @param pathDoc
  */
 async function changeBodyDocumentAsync(pathDoc : string) {
   const PATH_DOM = path.join(__dirname, `./../../..${pathDoc}` );
