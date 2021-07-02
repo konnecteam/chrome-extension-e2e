@@ -22,11 +22,11 @@ export class ChangeFactory {
     switch (action) {
 
       // Si c'est un changement dans un input numeric
-      case CUSTOM_EVENT.CHANGE_INPUT_NUMERIC:
+      case CUSTOM_EVENT.CHANGE_INPUT_NUMERIC :
         return this.buildInputNumericChangedBlock(frameId, frame, selector, value, selectorFocus);
 
       // Si c'est un change
-      case DOM_EVENT.CHANGE:
+      case DOM_EVENT.CHANGE :
 
         // Si c'est un select
         if (tagName === TAG_NAME.SELECT.toUpperCase()) {
@@ -57,13 +57,13 @@ export class ChangeFactory {
 
     const block = new Block(frameId);
     block.addLine({
-      type: 'focus',
-      value: `await page.focus('${selectorFocus}');`
+      type : 'focus',
+      value : `await page.focus('${selectorFocus}');`
     });
 
     block.addLine({
-      type: DOM_EVENT.CHANGE,
-      value: `await ${frame}.evaluate( async function(){
+      type : DOM_EVENT.CHANGE,
+      value : `await ${frame}.evaluate( async function(){
        let input = document.querySelector('${selector}');
        input.value = '${value}';
        input.dispatchEvent(new Event('blur'));
@@ -84,8 +84,8 @@ export class ChangeFactory {
   ) : Block {
 
     return new Block(frameId, {
-      type: DOM_EVENT.CHANGE,
-      value: `await ${frame}.select('${selector}', \`${value}\`);`
+      type : DOM_EVENT.CHANGE,
+      value : `await ${frame}.select('${selector}', \`${value}\`);`
     });
   }
 
@@ -101,8 +101,8 @@ export class ChangeFactory {
 
    // On remplace : \n par \\r\\n pour l'exportation du script
     return new Block(frameId, {
-      type: DOM_EVENT.CHANGE,
-      value: `await ${frame}.evaluate( () => document.querySelector('${selector}').value = "");
+      type : DOM_EVENT.CHANGE,
+      value : `await ${frame}.evaluate( () => document.querySelector('${selector}').value = "");
       await ${frame}.type('${selector}', \`${value.replace(/\n/g, '\\r\\n')}\`);`
     });
   }
@@ -122,8 +122,8 @@ export class ChangeFactory {
     }
 
     block.addLine({
-      type: DOM_EVENT.DROP,
-      value: ` await fileChooser.accept(${JSON.stringify(filesList)});`
+      type : DOM_EVENT.DROP,
+      value : ` await fileChooser.accept(${JSON.stringify(filesList)});`
     });
 
     return block;

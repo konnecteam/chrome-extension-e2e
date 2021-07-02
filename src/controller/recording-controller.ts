@@ -110,20 +110,20 @@ class RecordingController {
 
     StorageService.setData( {
       options :  {
-        wrapAsync: true,
-        headless: false,
-        waitForNavigation: true,
-        waitForSelectorOnClick: true,
-        blankLinesBetweenBlocks: true,
-        dataAttribute: '',
-        useRegexForDataAttribute: false,
-        customLineAfterClick: '',
-        recordHttpRequest: true,
-        regexHTTPrequest: '',
-        customLinesBeforeEvent: `await page.evaluate(async() => {
+        wrapAsync : true,
+        headless : false,
+        waitForNavigation : true,
+        waitForSelectorOnClick : true,
+        blankLinesBetweenBlocks : true,
+        dataAttribute : '',
+        useRegexForDataAttribute : false,
+        customLineAfterClick : '',
+        recordHttpRequest : true,
+        regexHTTPrequest : '',
+        customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-        deleteSiteData: true,
+        deleteSiteData : true,
       }
     });
   }
@@ -141,7 +141,7 @@ class RecordingController {
           case ACTION.STOP :
             this._stop();
             break;
-          case ACTION.CLEANUP:
+          case ACTION.CLEANUP :
             this._cleanUp();
             break;
           case ACTION.PAUSE :
@@ -175,7 +175,7 @@ class RecordingController {
       if (this._zipContent) {
 
         // Mise à jour de la barre de progression
-        ChromeService.sendMessage({ valueLoad: 100 });
+        ChromeService.sendMessage({ valueLoad : 100 });
 
         await ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
         return;
@@ -195,7 +195,7 @@ class RecordingController {
           );
 
         // changement de la barre de progression
-        ChromeService.sendMessage({ valueLoad: 15 });
+        ChromeService.sendMessage({ valueLoad : 15 });
 
         // Recupère la liste des fichiers qui seront dans le zip
         const files = this._fileService.getUploadedFiles();
@@ -204,7 +204,7 @@ class RecordingController {
         }
 
         // On remplace 0 par la time de départ du record
-        const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuilded.replace('now:0', `now:${result.dateTimeStart}`);
+        const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuilded.replace('now : 0', `now : ${result.dateTimeStart}`);
 
         // On créé le fichier à ajouter dans le zip
         const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], RecordingController._FAKE_TIME_SCRIPT_FILNAME);
@@ -225,7 +225,7 @@ class RecordingController {
         }
 
         // changement de la barre de progression
-        ChromeService.sendMessage({ valueLoad: 35 });
+        ChromeService.sendMessage({ valueLoad : 35 });
 
         if (this._recordHttpRequest) {
 
@@ -236,7 +236,7 @@ class RecordingController {
 
           // changement de la barre de progression
           ChromeService.sendMessage({
-            valueLoad: 65
+            valueLoad : 65
           });
 
           // Ajoute le recording dans le zip
@@ -248,12 +248,12 @@ class RecordingController {
         }
 
           // changement de la barre de progression
-        ChromeService.sendMessage({ valueLoad: 75 });
+        ChromeService.sendMessage({ valueLoad : 75 });
 
         const zipInNodeBuffer = await this._zipService.generateAsync();
 
         // changement de la barre de progression
-        ChromeService.sendMessage({ valueLoad: 100 });
+        ChromeService.sendMessage({ valueLoad : 100 });
 
         // Création d'un data url pour pouvoir transformer en File
         const dataURLZip = DataURLFactory.buildDataURL(
@@ -338,7 +338,7 @@ class RecordingController {
 
     // 6 - Si on record pas les requêtes on peut mettre à true isRemovedListener
     if (!this._recordHttpRequest) {
-      StorageService.setData({ isRemovedListener: true });
+      StorageService.setData({ isRemovedListener : true });
     }
   }
 
@@ -385,7 +385,7 @@ class RecordingController {
       // 3 - Suppression du recording en local storage
       await StorageService.removeDataAsync('recording');
 
-      StorageService.setData({ isRemovedListener: false });
+      StorageService.setData({ isRemovedListener : false });
 
       // 4 - On récupère les fichiers liées au scénario
       this._scenarioDependencies = ScenarioService.getScenarioFilesContent();
@@ -400,12 +400,12 @@ class RecordingController {
 
       // Récupération du viewport
       chrome.tabs.sendMessage(currentTab.id, {
-        control: MESSAGE.GET_VIEWPORT_SIZE
+        control : MESSAGE.GET_VIEWPORT_SIZE
       });
 
       // Récupération de l'url
       chrome.tabs.sendMessage(currentTab.id, {
-        control: MESSAGE.GET_CURRENT_URL
+        control : MESSAGE.GET_CURRENT_URL
       });
     } catch (err) {
     }
@@ -478,9 +478,9 @@ class RecordingController {
   private _recordNavigation() : void {
     this._handleMessage({
       typeEvent : PPTR_ACTION.PPTR,
-      selector: undefined,
-      value: undefined,
-      action: PPTR_ACTION.NAVIGATION
+      selector : undefined,
+      value : undefined,
+      action : PPTR_ACTION.NAVIGATION
     });
   }
 
@@ -534,14 +534,14 @@ class RecordingController {
    * Enregistre la taille de l'écran
    */
   private _recordCurrentViewportSize(value : { width : number, height : number }) : void {
-    this._handleMessage({ typeEvent: PPTR_ACTION.PPTR, selector: undefined, value, action: PPTR_ACTION.VIEWPORT });
+    this._handleMessage({ typeEvent : PPTR_ACTION.PPTR, selector : undefined, value, action : PPTR_ACTION.VIEWPORT });
   }
 
   /**
    * Enregistre l'url courante
    */
   private _recordCurrentUrl(value : string) : void {
-    this._handleMessage({ typeEvent: PPTR_ACTION.PPTR, selector: undefined, value, action: PPTR_ACTION.GOTO });
+    this._handleMessage({ typeEvent : PPTR_ACTION.PPTR, selector : undefined, value, action : PPTR_ACTION.GOTO });
   }
 
   /**
@@ -578,7 +578,7 @@ class RecordingController {
       if (badge === EBadgeState.RESULT_NOT_EMPTY || badge === '') {
 
         // On stock que l'on a supprimé le listener
-        StorageService.setData({ isRemovedListener: true});
+        StorageService.setData({ isRemovedListener : true});
       }
     } catch (err) {
     }

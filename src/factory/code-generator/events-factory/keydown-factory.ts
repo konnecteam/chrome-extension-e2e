@@ -39,16 +39,16 @@ export class KeydownFactory {
 
     if (options.waitForSelectorOnClick) {
       block.addLine({
-        type: DOM_EVENT.CLICK,
-        value: ` await ${frame}.waitForSelector('${iframe ? iframe : selector}')`
+        type : DOM_EVENT.CLICK,
+        value : ` await ${frame}.waitForSelector('${iframe ? iframe : selector}')`
       });
     }
 
     if (iframe) {
 
       block.addLine({
-        type: DOM_EVENT.KEYDOWN,
-        value: ` await ${frame}.evaluate( async function(){
+        type : DOM_EVENT.KEYDOWN,
+        value : ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
           let element = iframeElement.contentDocument.querySelector('${selector}');
           element.className = '';
@@ -61,8 +61,8 @@ export class KeydownFactory {
     } else {
 
       block.addLine({
-        type: 'KEYUP',
-        value: ` await ${frame}.evaluate( async function(){
+        type : 'KEYUP',
+        value : ` await ${frame}.evaluate( async function(){
           let element = document.querySelector('${selector}');
           var docEvent = document.createEvent('KeyboardEvents');
           //If it isn't input element

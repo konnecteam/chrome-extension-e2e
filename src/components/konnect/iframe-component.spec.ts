@@ -53,7 +53,7 @@ describe('Test de Iframe Component', () => {
   test('Test de editIframeComponentMessage', () => {
     // Event model qui contient les infos utiles
     const eventCatched : IMessage = {
-      selector: 'selector'
+      selector : 'selector'
     };
     // On selectionne l'iframe
     const element  = document.querySelector(IFRAME_SELECTOR);

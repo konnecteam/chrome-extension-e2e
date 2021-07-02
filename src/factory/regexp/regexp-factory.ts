@@ -9,7 +9,7 @@ export class RegExpFactory {
    */
   public static buildRegexpAndFlag(userRegexp : string) : { regexp : string, flag : string } {
 
-    const object = { regexp: '', flag: ''};
+    const object = { regexp : '', flag : ''};
 
     const splittedRegex = userRegexp.split('/');
 

@@ -21,7 +21,7 @@ export class PopoverComponent {
     // On vérifie si c'est un popover
     if (ElementService.getPopover(element)) {
 
-      return { component: COMPONENT.POPOVER, element };
+      return { component : COMPONENT.POPOVER, element };
     } else {
 
       return null;

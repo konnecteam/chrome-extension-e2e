@@ -23,20 +23,20 @@ const frame = 'page';
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick  : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 describe('Test de Scenario Factory', () => {
@@ -52,8 +52,8 @@ describe('Test de Scenario Factory', () => {
     ).toEqual(
       new Block(frameId, {
         frameId,
-        type: 'custom-line',
-        value: customLine
+        type : 'custom-line',
+        value : customLine
       })
     );
   });
@@ -69,20 +69,20 @@ describe('Test de Scenario Factory', () => {
     const block = new Block(1, {
       frameId : 0, value : 'line de frame simple', type : 'line'
     });
-    block.addLine({frameId: 1, type: 'line', value: 'line dans une autre frame'});
+    block.addLine({frameId : 1, type : 'line', value : 'line dans une autre frame'});
 
     const blockToAddResult = new Block(0);
 
     const declaration = `const frame_${1} = frames.find(f => f.url() === '${allFramesResult[1]}')`;
 
     blockToAddResult.addLineToTop(({
-      type: PPTR.FRAME_SET,
-      value: declaration
+      type : PPTR.FRAME_SET,
+      value : declaration
     }));
 
     blockToAddResult.addLineToTop({
-      type: PPTR.FRAME_SET,
-      value: 'let frames = await page.frames()'
+      type : PPTR.FRAME_SET,
+      value : 'let frames = await page.frames()'
     });
 
     delete allFramesResult[1];
@@ -104,8 +104,8 @@ describe('Test de Scenario Factory', () => {
       ScenarioFactory.buildBlankLineBlock()
     ).toEqual(
       new Block(undefined, {
-        type: null,
-        value: ''
+        type : null,
+        value : ''
       })
     );
   });
@@ -116,8 +116,8 @@ describe('Test de Scenario Factory', () => {
       ScenarioFactory.buildNavigationBlock(frameId)
     ).toEqual(
       new Block(frameId, {
-        type: PPTR.NAVIGATION_PROMISE,
-        value: 'const navigationPromise = page.waitForNavigation();'
+        type : PPTR.NAVIGATION_PROMISE,
+        value : 'const navigationPromise = page.waitForNavigation();'
       })
     );
   });
@@ -134,7 +134,7 @@ describe('Test de Scenario Factory', () => {
       value : 'test de comment',
       type : 'comment'
     });
-    blockResult.addLineToTop({value: `/** ${comment} */`});
+    blockResult.addLineToTop({value : `/** ${comment} */`});
 
     expect(
       ScenarioFactory.buildCommentBlock(block, comment)
@@ -164,7 +164,7 @@ describe('Test de Scenario Factory', () => {
       typeEvent : DOM_EVENT.CHANGE,
       selector : '#id',
       action :   DOM_EVENT.CHANGE,
-      value: 'content'
+      value : 'content'
     };
     expect(
       ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)

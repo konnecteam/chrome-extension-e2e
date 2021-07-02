@@ -15,6 +15,6 @@ describe('Test de Polly Service', () => {
     pollyService.record.id = 'ID';
     pollyService.flush();
 
-    expect({har : pollyService.record.har, id : pollyService.record.id}).toEqual(resultExcepted);
+    expect({ har : pollyService.record.har, id : pollyService.record.id }).toEqual(resultExcepted);
   });
 });

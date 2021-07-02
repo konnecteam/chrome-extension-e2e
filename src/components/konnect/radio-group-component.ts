@@ -19,7 +19,8 @@ export class RadioGroupComponent {
   public static getElement(element : HTMLElement) : IComponent {
 
     if (ElementService.findParentElementWithTagName(element, TAG_NAME.RADIOGROUP.toUpperCase())) {
-      return { component: COMPONENT.RADIO_GROUP, element };
+
+      return { component : COMPONENT.RADIO_GROUP, element };
     } else {
       return null;
     }

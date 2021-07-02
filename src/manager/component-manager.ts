@@ -20,18 +20,18 @@ export class ComponentManager {
     // En fonction de l'événement déclancheur
     switch (event) {
       // Si c'est un click
-      case DOM_EVENT.CLICK:
+      case DOM_EVENT.CLICK :
         return ElementService.getClickComponent(element);
       // Si c'est un drop
-      case DOM_EVENT.DROP:
+      case DOM_EVENT.DROP :
         return ElementService.getDropComponent(element);
       // Si c'est un change
-      case DOM_EVENT.CHANGE:
+      case DOM_EVENT.CHANGE :
         return ElementService.getChangeComponent(element);
       // Si c'est un keydown
-      case DOM_EVENT.KEYDOWN:
+      case DOM_EVENT.KEYDOWN :
         return ElementService.getKeydownComponent(element);
-      default:
+      default :
         return null;
     }
   }

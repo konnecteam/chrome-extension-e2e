@@ -129,9 +129,6 @@ export class SelectorService {
 
   /**
    * Trouve le custom selecteur d'un element
-   * @param element
-   * @param customAttributes
-   * @returns
    */
   private _findCustomSelector(element : HTMLElement, customAttributes : string[]) : string {
     let selector = '';
@@ -143,8 +140,6 @@ export class SelectorService {
 
   /**
    * Trouve le path selecteur d'un element
-   * @param element
-   * @returns
    */
   private _findStandardSelector(element : HTMLElement) : string {
     // Gestion de l'id
@@ -207,8 +202,8 @@ export class SelectorService {
     return finder(
       element, {
         root : document.body,
-        className: name => false, tagName: name => true ,
-        idName: name => !SelectorService._ID_TO_IGNORE.some(v => name.includes(v)) && !name.match(SelectorService._ID_TO_IGNORE_REG) && !SelectorService._ID_TO_IGNORE_REG.test(name),
+        className : name => false, tagName : name => true ,
+        idName : name => !SelectorService._ID_TO_IGNORE.some(v => name.includes(v)) && !name.match(SelectorService._ID_TO_IGNORE_REG) && !SelectorService._ID_TO_IGNORE_REG.test(name),
         seedMinLength : 7,
         optimizedMinLength : 12,
         threshold : 1500,

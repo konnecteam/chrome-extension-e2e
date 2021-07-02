@@ -20,20 +20,20 @@ let page : puppeteer.Page;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 /**
@@ -93,7 +93,7 @@ describe('Test Content script ', () => {
       // On donne l'api chrome à la window
       window.chrome = browserOption.chrome;
       // On set les options dans le local storage de la window car on est pas dans le plugin
-      window.localStorage.setItem('options', JSON.stringify({ options: { code: browserOption.options } }));
+      window.localStorage.setItem('options', JSON.stringify({ options : { code : browserOption.options } }));
 
       // On overwrite la foncion pour lui donner l'url de polly js
       window.chrome.extension.getURL = () => 'build/lib/scripts/polly/polly.js';
@@ -141,7 +141,7 @@ describe('Test Content script ', () => {
         window.addEventListener('OnMessage', fct);
       };
 
-    }, { chrome, options: defaultOptions });
+    }, { chrome, options : defaultOptions });
 
     // On ajoute le content script dans la page
     await page.evaluate(scriptText => {
@@ -185,7 +185,7 @@ describe('Test Content script ', () => {
 
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control: EVENT_MSG.GET_CURRENT_URL });
+    await dispatchEventAsync('OnMessage', { control : EVENT_MSG.GET_CURRENT_URL });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();
@@ -204,7 +204,7 @@ describe('Test Content script ', () => {
      */
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control: EVENT_MSG.GET_VIEWPORT_SIZE });
+    await dispatchEventAsync('OnMessage', { control : EVENT_MSG.GET_VIEWPORT_SIZE });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();

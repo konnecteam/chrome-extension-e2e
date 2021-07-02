@@ -120,6 +120,8 @@ export class KeyDownService {
 
         // Gestion de la touche entrée
         if (currentMsg.key === KeyDownService._ENTER_KEY) {
+
+          // Pour faire un retour à la ligne dans un memo il faut utilise une balise br car \n ne fonctionne pas
           value = `${value}<br/>`;
         }
       }
@@ -136,10 +138,10 @@ export class KeyDownService {
    */
   public getClickCoordinates(evt) {
     const eventsWithCoordinates = {
-      mouseup: true,
-      mousedown: true,
-      mousemove: true,
-      mouseover: true
+      mouseup : true,
+      mousedown : true,
+      mousemove : true,
+      mouseover : true
     };
     return eventsWithCoordinates[evt.type] ? { x : evt.clientX, y : evt.clientY } : null;
   }

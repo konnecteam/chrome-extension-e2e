@@ -19,7 +19,8 @@ export class KSelectComponent {
 
     // Si c'est un k select qui se situe dans input numeric
     if (ElementService.getNumericElement(element) && ElementService.getKSelectElement(element)) {
-      return { component: COMPONENT.K_SELECT, element };
+
+      return { component : COMPONENT.K_SELECT, element };
     } else {
       return null;
     }

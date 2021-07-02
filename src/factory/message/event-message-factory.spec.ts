@@ -87,7 +87,7 @@ describe('Test de event message factory', () => {
     const element = document.querySelector(K_SELECT_SELETOR);
     const component = KSelectComponent.getElement(element as HTMLElement);
     const event : IMessage = {
-      selector: '#id'
+      selector : '#id'
     };
     // On doit trouver un event model de k select
 
@@ -113,7 +113,7 @@ describe('Test de event message factory', () => {
     const component =  IframeComponent.getElement(element);
 
     const event : IMessage = {
-      selector: 'selector'
+      selector : 'selector'
     };
 
     // On doit trouver un event model d'iframe
@@ -139,7 +139,7 @@ describe('Test de event message factory', () => {
 
     // On doit trouver un event model de input list
     expect(EventMessageFactory.buildMessageEvent(component, event, null))
-    .toEqual(InputListComponent.editInputListComponentMessage(event, component));
+    .toEqual(InputListComponent.editInputListComponentMessage(event));
 
   });
 

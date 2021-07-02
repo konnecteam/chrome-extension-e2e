@@ -39,7 +39,7 @@ describe('Test de k select Component', () => {
 
   test('Test de editKSelectComponentMessage', () => {
     const eventMessage : IMessage = {
-      selector: '#id'
+      selector : '#id'
     };
 
     // on doit trouver un click sur un input numeric

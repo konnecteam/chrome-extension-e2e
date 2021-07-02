@@ -43,7 +43,7 @@ export class EventMessageFactory {
         return IframeComponent.editIframeComponentMessage(event, component);
       // Si c'est un input list
       case COMPONENT.INPUT_LIST :
-        return InputListComponent.editInputListComponentMessage(event, component);
+        return InputListComponent.editInputListComponentMessage(event);
       // Si c'est un checkbox
       case COMPONENT.CHECKBOX :
         return CheckboxComponent.editCheckboxComponentMessage(event);

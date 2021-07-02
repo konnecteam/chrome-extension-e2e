@@ -44,7 +44,7 @@ describe('Test de km switch Component', () => {
     const element = document.querySelector(KM_SWITCH_SELECTOR);
 
     const eventMessage : IMessage = {
-      selector: '#id'
+      selector : '#id'
     };
 
     const component : IComponent = {

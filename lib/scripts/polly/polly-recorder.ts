@@ -125,7 +125,7 @@ export class PollyRecorder {
       });
     });
 
-    PollyRecorder.observer.observe({entryTypes: ['resource', 'mark', 'measure']});
+    PollyRecorder.observer.observe({ entryTypes : ['resource', 'mark', 'measure'] });
   }
 
   /**
@@ -140,21 +140,21 @@ export class PollyRecorder {
    */
   private _createPollyInstance() : Polly {
     return new Polly('scenario', {
-      mode: 'record',
-      keepUnusedRequests: true,
-      recordFailedRequests: true,
-      recordIfMissing: true,
-      logging: false,
-      adapters: ['fetch', 'xhr'],
-      adapterOptions: {
-        xhr: {
-          context: window
+      mode : 'record',
+      keepUnusedRequests : true,
+      recordFailedRequests : true,
+      recordIfMissing : true,
+      logging : false,
+      adapters : ['fetch', 'xhr'],
+      adapterOptions : {
+        xhr : {
+          context : window
         },
-        fetch: {
-          context: window
+        fetch : {
+          context : window
         }
       },
-      persister: 'in-memory-persister'
+      persister : 'in-memory-persister'
     });
   }
 

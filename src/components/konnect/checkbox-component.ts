@@ -23,7 +23,7 @@ export class CheckboxComponent {
       TAG_NAME.CHECKBOX.toUpperCase()
     )) {
 
-      return { component: COMPONENT.CHECKBOX, element };
+      return { component : COMPONENT.CHECKBOX, element };
 
     } else {
       return null;

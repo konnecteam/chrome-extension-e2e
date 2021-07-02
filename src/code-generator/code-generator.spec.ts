@@ -24,20 +24,20 @@ const frame = 'page';
  * car elles vont être modifiés
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 /**
@@ -125,15 +125,15 @@ describe('Test de Code Generator', () => {
   beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
     messageList.push(
-      { typeEvent: PPTR_ACTIONS.PPTR , action: PPTR_ACTIONS.GOTO, value: 'localhost' }
+      { typeEvent : PPTR_ACTIONS.PPTR , action : PPTR_ACTIONS.GOTO, value : 'localhost' }
     );
 
     messageList.push(
-      { typeEvent: DOM_EVENT.CLICK, action: DOM_EVENT.CLICK, selector: '#idInput' }
+      { typeEvent : DOM_EVENT.CLICK, action : DOM_EVENT.CLICK, selector : '#idInput' }
     );
 
     messageList.push(
-      { typeEvent: DOM_EVENT.CHANGE, action: DOM_EVENT.CHANGE, selector: '#idInput', value: 'change de value input' }
+      { typeEvent : DOM_EVENT.CHANGE, action : DOM_EVENT.CHANGE, selector : '#idInput', value : 'change de value input' }
     );
   });
 

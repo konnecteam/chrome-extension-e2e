@@ -11,10 +11,6 @@ export class ScrollFactory {
 
   /**
    * Génère le block de scroll associé au IMessage
-   * @param event
-   * @param frameId
-   * @param frame
-   * @returns
    */
   public static buildBlock(event : IMessage, frameId : number, frame : string) : Block {
 
@@ -40,8 +36,8 @@ export class ScrollFactory {
     const element = selector ? `document.querySelector('${selector}')` : 'window';
 
     block.addLine({
-      type: 'scroll',
-      value: ` await ${frame}.evaluate( async function(){
+      type : 'scroll',
+      value : ` await ${frame}.evaluate( async function(){
         ${element}.scroll(${scrollX}, ${scrollY});
       });`
     });

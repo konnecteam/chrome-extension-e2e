@@ -25,20 +25,20 @@ let frameId : number;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 describe('Test de Change Block Factory', () => {
@@ -54,13 +54,13 @@ describe('Test de Change Block Factory', () => {
 
     const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
-      type: 'focus',
-      value: `await page.focus('${INPUT_NUN_ID}');`
+      type : 'focus',
+      value : `await page.focus('${INPUT_NUN_ID}');`
     });
 
     exceptedBlock.addLine({
-      type: DOM_EVENT.CHANGE,
-      value: `await ${frame}.evaluate( async function(){
+      type : DOM_EVENT.CHANGE,
+      value : `await ${frame}.evaluate( async function(){
        let input = document.querySelector('${SELECTOR}');
        input.value = '${value}';
        input.dispatchEvent(new Event('blur'));
@@ -82,8 +82,8 @@ describe('Test de Change Block Factory', () => {
 
     const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
-      type: DOM_EVENT.CHANGE,
-      value: `await ${frame}.select('${SELECTOR}', \`${value}\`);`
+      type : DOM_EVENT.CHANGE,
+      value : `await ${frame}.select('${SELECTOR}', \`${value}\`);`
     });
 
     const result = ChangeFactory.buildSelectChangeBlock(
@@ -100,8 +100,8 @@ describe('Test de Change Block Factory', () => {
 
     const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
-      type: DOM_EVENT.CHANGE,
-      value: `await ${frame}.evaluate( () => document.querySelector('${SELECTOR}').value = "");
+      type : DOM_EVENT.CHANGE,
+      value : `await ${frame}.evaluate( () => document.querySelector('${SELECTOR}').value = "");
       await ${frame}.type('${SELECTOR}', \`${value}\`);`
     });
 
@@ -123,8 +123,8 @@ describe('Test de Change Block Factory', () => {
     const exceptedBlock = ClickFactory.buildFileDropZoneClickBlock(defaultOptions, frameId, frame, SELECTOR);
 
     exceptedBlock.addLine({
-      type: DOM_EVENT.DROP,
-      value: ` await fileChooser.accept([${files}]);`
+      type : DOM_EVENT.DROP,
+      value : ` await fileChooser.accept([${files}]);`
     });
 
     const result = ChangeFactory.buildAcceptUploadFileChangeBlock(
@@ -141,9 +141,9 @@ describe('Test de Change Block Factory', () => {
   test('Test de buildBlock pour un change input numeric', () => {
     // Attributs utilisés pour générer le block
     const eventMessage : IMessage = {
-      selector: SELECTOR,
+      selector : SELECTOR,
       value,
-      selectorFocus: INPUT_ID,
+      selectorFocus : INPUT_ID,
       action : CUSTOM_EVENT.CHANGE_INPUT_NUMERIC
     };
 
@@ -169,7 +169,7 @@ describe('Test de Change Block Factory', () => {
   test('Test de buildBlock pour un change simple', () => {
     // Attributs utilisés pour générer le block
     const eventMessage : IMessage = {
-      selector: SELECTOR,
+      selector : SELECTOR,
       value,
       action : DOM_EVENT.CHANGE
     };
@@ -194,7 +194,7 @@ describe('Test de Change Block Factory', () => {
   test('Test de buildBlock pour un select change', () => {
     // Attributs utilisés pour générer le block
     const eventMessage : IMessage = {
-      selector: SELECTOR,
+      selector : SELECTOR,
       value,
       action : DOM_EVENT.CHANGE,
       tagName : TAG_NAME.SELECT.toUpperCase()
@@ -222,7 +222,7 @@ describe('Test de Change Block Factory', () => {
     // Attributs utilisés pour générer le block
     const files = 'test.txt';
     const eventMessage : IMessage = {
-      selector: SELECTOR,
+      selector : SELECTOR,
       value,
       action : DOM_EVENT.CHANGE,
       files

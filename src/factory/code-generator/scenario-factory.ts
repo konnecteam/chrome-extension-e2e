@@ -32,7 +32,7 @@ export class ScenarioFactory {
     // Récupération des imports
     const importedPackage = ScenarioService.getImport(includeHttpRequest);
     let header = ScenarioService.getHeader(includeWrapAsync);
-    header = isHeadless ? header : header.replace('launch()', 'launch({ headless: false })');
+    header = isHeadless ? header : header.replace('launch()', 'launch({ headless : false })');
 
     let regex = '';
 
@@ -81,13 +81,13 @@ export class ScenarioFactory {
 
         const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${allFrames[line.frameId]}')`;
         blockToAddLine.addLineToTop(({
-          type: PPTR_ACTIONS.FRAME_SET,
-          value: declaration
+          type : PPTR_ACTIONS.FRAME_SET,
+          value : declaration
         }));
 
         blockToAddLine.addLineToTop({
-          type: PPTR_ACTIONS.FRAME_SET,
-          value: 'let frames = await page.frames()'
+          type : PPTR_ACTIONS.FRAME_SET,
+          value : 'let frames = await page.frames()'
         });
 
         delete allFrames[line.frameId];
@@ -104,8 +104,8 @@ export class ScenarioFactory {
 
     const blankLine = new Block();
     blankLine.addLine({
-      type: null,
-      value: ''
+      type : null,
+      value : ''
     });
 
     return blankLine;
@@ -116,8 +116,8 @@ export class ScenarioFactory {
    */
   public static buildNavigationBlock(frameId : number) : Block {
     return new Block(frameId, {
-      type: PPTR_ACTIONS.NAVIGATION_PROMISE,
-      value: 'const navigationPromise = page.waitForNavigation();'
+      type : PPTR_ACTIONS.NAVIGATION_PROMISE,
+      value : 'const navigationPromise = page.waitForNavigation();'
     });
   }
 
@@ -125,7 +125,7 @@ export class ScenarioFactory {
    * Construit un commentaire à ajouté dans le code
    */
   public static buildCommentBlock(block : Block, comments : string) : Block {
-    block.addLineToTop({ value: `/** ${comments} */` });
+    block.addLineToTop({ value : `/** ${comments} */` });
     return block;
   }
 
@@ -141,7 +141,7 @@ export class ScenarioFactory {
     switch (typeEvent) {
 
       // Si c'est un click
-      case DOM_EVENT.CLICK:
+      case DOM_EVENT.CLICK :
         return ClickFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un change
       case DOM_EVENT.CHANGE :
@@ -150,16 +150,16 @@ export class ScenarioFactory {
       case DOM_EVENT.DROP :
         return DropFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un submit
-      case DOM_EVENT.SUBMIT:
+      case DOM_EVENT.SUBMIT :
         return SubmitFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un keydown
-      case DOM_EVENT.KEYDOWN:
+      case DOM_EVENT.KEYDOWN :
         return KeydownFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un scroll
-      case DOM_EVENT.SCROLL:
+      case DOM_EVENT.SCROLL :
         return ScrollFactory.buildBlock(event, frameId, frame);
       // Si c'est une action pupeteer
-      case PPTR_ACTIONS.PPTR:
+      case PPTR_ACTIONS.PPTR :
         return PPtrFactory.buildBlock(event, frameId, frame, options);
       default : return null;
     }

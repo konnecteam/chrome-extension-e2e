@@ -11,8 +11,8 @@ export class WindowService {
    */
   public static getCurrentUrl(message : IMessage) : void {
     ChromeService.sendMessage({
-      control: message.control,
-      frameUrl: window.location.href
+      control : message.control,
+      frameUrl : window.location.href
     });
   }
 
@@ -21,10 +21,10 @@ export class WindowService {
    */
   public static getViewPortSize(message : IMessage) : void {
     ChromeService.sendMessage({
-      control: message.control,
-      coordinates: {
-        width: window.innerWidth,
-        height: window.innerHeight
+      control : message.control,
+      coordinates : {
+        width : window.innerWidth,
+        height : window.innerHeight
       }
     });
   }

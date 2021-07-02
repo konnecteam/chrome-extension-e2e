@@ -2,7 +2,7 @@
  * Constantes du header du scénario
  */
 export default {
-  IMPORT_PUPPETEER: `const puppeteer = require('puppeteer');
+  IMPORT_PUPPETEER : `const puppeteer = require('puppeteer');
   const fs = require('fs');
   const path = require('path');
   const PageService = require('./recordings/services/page-service');

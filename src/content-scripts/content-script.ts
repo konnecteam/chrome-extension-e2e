@@ -111,7 +111,7 @@ class EventRecorder {
      * et il faut le définir
      */
     StorageService.setData({
-      loadingPage: false
+      loadingPage : false
     });
 
     try {
@@ -140,9 +140,9 @@ class EventRecorder {
 
         // On observe les changement et on ajoute un listener sur les inputs
         (window as any).observer = new MutationObserver(this._listenerObserverAsync);
-        (window as any).observer.observe(document, { childList: true, subtree: true });
+        (window as any).observer.observe(document, { childList : true, subtree : true });
 
-        ChromeService.sendMessage({ control: EVENT_MSG.EVENT_RECORDER_STARTED });
+        ChromeService.sendMessage({ control : EVENT_MSG.EVENT_RECORDER_STARTED });
       }
     } catch (err) {
     }
@@ -157,19 +157,19 @@ class EventRecorder {
     if (message && message.hasOwnProperty('control')) {
 
       switch (message.control) {
-        case EVENT_MSG.GET_CURRENT_URL:
+        case EVENT_MSG.GET_CURRENT_URL :
           WindowService.getCurrentUrl(message);
           break;
-        case EVENT_MSG.GET_VIEWPORT_SIZE:
+        case EVENT_MSG.GET_VIEWPORT_SIZE :
           WindowService.getViewPortSize(message);
           break;
-        case EVENT_MSG.GET_RESULT:
+        case EVENT_MSG.GET_RESULT :
           this._getResult();
           break;
-        case EVENT_MSG.PAUSE:
+        case EVENT_MSG.PAUSE :
           this._doPause();
           break;
-        case EVENT_MSG.UNPAUSE:
+        case EVENT_MSG.UNPAUSE :
           this._doUnPause();
           break;
         // default
@@ -287,19 +287,19 @@ class EventRecorder {
 
     // construction du message: IMessage
     let message : IMessage = {
-      selector: this._selectorService.standardizeSelector(selector),
+      selector : this._selectorService.standardizeSelector(selector),
       comments,
-      value: value ? value : e.target.value,
-      tagName: e.target.tagName,
-      action: e.type,
-      typeEvent: e.type,
-      key: e.key ? e.key : null,
-      keyCode: e.keyCode ? e.keyCode : null,
-      href: e.target.href ? e.target.href : null,
-      durancyClick: durationClick ? durationClick : 0,
-      clickCoordinates: this._keyDownService.getClickCoordinates(e),
-      scrollY: window.pageYOffset,
-      scrollX: window.pageXOffset,
+      value : value ? value : e.target.value,
+      tagName : e.target.tagName,
+      action : e.type,
+      typeEvent : e.type,
+      key : e.key ? e.key : null,
+      keyCode : e.keyCode ? e.keyCode : null,
+      href : e.target.href ? e.target.href : null,
+      durancyClick  : durationClick ? durationClick : 0,
+      clickCoordinates : this._keyDownService.getClickCoordinates(e),
+      scrollY : window.pageYOffset,
+      scrollX : window.pageXOffset,
       submitterSelector : e.submitter ? this._selectorService.find(e.submitter) : ''
     };
 
@@ -364,6 +364,10 @@ class EventRecorder {
         }
       }
 
+      /**
+       * On fait une copie du document car quand un élément disparait
+       * on ne peut pas récupérer son sélecteur donc on utilise la copie pour trouver le sélecteur
+       */
       (window as any).saveBody = document.cloneNode(true);
     } catch (err) {
     }
@@ -392,13 +396,13 @@ class EventRecorder {
 
       // Message pour un event scoll
       const message : IMessage = {
-        selector: this._selectorService.standardizeSelector(this._selectorService.find(event.target)),
-        tagName: event.target.tagName,
-        action: event.type,
-        typeEvent: event.type,
+        selector : this._selectorService.standardizeSelector(this._selectorService.find(event.target)),
+        tagName : event.target.tagName,
+        action : event.type,
+        typeEvent : event.type,
         // Si on a un scrollLeft c'est que c'est un element et sinon c'est la window donc on utilise pageXOffset
-        scrollX: event.target.scrollLeft ? event.target.scrollLeft : window.pageXOffset,
-        scrollY: event.target.scrollTop ? event.target.scrollTop : window.pageYOffset,
+        scrollX : event.target.scrollLeft ? event.target.scrollLeft : window.pageXOffset,
+        scrollY : event.target.scrollTop ? event.target.scrollTop : window.pageYOffset,
       };
 
       // On verfie si il y a eu un keydown avant pour envoyer l'event list keydown si le keydown est fini
@@ -445,7 +449,7 @@ class EventRecorder {
   private _onBeforeUnload() {
 
     // On set que le page reload
-    StorageService.setData({ loadingPage: true });
+    StorageService.setData({ loadingPage : true });
     this._getResult();
     this._deleteAllListeners();
   }
@@ -465,7 +469,7 @@ class EventRecorder {
     // On demande à récupérer le har
     if (event?.data.action === EVENT_MSG.GOT_HAR) {
 
-      const data = new File([event.data.payload.result], 'har.json', { type: 'text/json;charset=utf-8' });
+      const data = new File([event.data.payload.result], 'har.json', { type : 'text/json;charset=utf-8' });
 
       // On diffuse le message
       ChromeService.sendMessage({

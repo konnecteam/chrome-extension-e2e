@@ -45,7 +45,7 @@ describe('Test de du Service UrlService', function() {
       eval('window.createUrl = function ' + urlObject.urlCreate);
       return (window as any).createUrl(new Blob([JSON.stringify(urlObject.obj, null, 2)], { type : 'application/json' }));
     }, {
-      obj, urlCreate: URLService.createURLObject.toString()
+      obj, urlCreate : URLService.createURLObject.toString()
     });
     expect(urlLink).toBeDefined();
   });
@@ -58,7 +58,7 @@ describe('Test de du Service UrlService', function() {
 
       return fetch(urlObject.url).catch(() => null);
     }, {
-      url : urlLink, urlRemove: URLService.revokeURL.toString()
+      url : urlLink, urlRemove : URLService.revokeURL.toString()
     });
 
     expect(result).toBeNull();

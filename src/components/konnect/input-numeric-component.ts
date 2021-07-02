@@ -24,7 +24,7 @@ export class InputNumericComponent {
 
       if (inputElement) {
 
-        return { component: COMPONENT.INPUT_NUMERIC, element : inputElement as HTMLElement };
+        return { component : COMPONENT.INPUT_NUMERIC, element : inputElement as HTMLElement };
       }
     } else {
       return null;

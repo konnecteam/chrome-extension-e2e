@@ -19,7 +19,8 @@ export class KmSwitchComponent {
     const elementFind = ElementService.getKmSwitchElement(element);
 
     if (elementFind) {
-      return { component: COMPONENT.KM_SWITCH, element: elementFind as HTMLElement };
+
+      return { component : COMPONENT.KM_SWITCH, element : elementFind as HTMLElement };
     } else {
       return null;
     }

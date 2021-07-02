@@ -23,7 +23,7 @@ export class InputListComponent {
 
     if (input) {
 
-      return { component: COMPONENT.INPUT_LIST, element: input as HTMLElement };
+      return { component : COMPONENT.INPUT_LIST, element : input as HTMLElement };
     } else {
 
       return null;
@@ -34,7 +34,7 @@ export class InputListComponent {
   /**
    * On modifie l'event model en fonction de l'action voulue
    */
-  public static editInputListComponentMessage(event : IMessage, component : IComponent) : IMessage {
+  public static editInputListComponentMessage(event : IMessage) : IMessage {
 
     event.action = CUSTOM_EVENT.CLICK_MOUSE;
 

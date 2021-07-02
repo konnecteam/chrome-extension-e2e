@@ -21,20 +21,20 @@ let page : puppeteer.Page;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 /**
@@ -114,7 +114,7 @@ describe('Test de Recording Controller', () => {
         }, 100);
       });
       // On set les options dans le local storage de la window car on est pas dans le plugin
-      window.localStorage.setItem('options', JSON.stringify({ options: { code: params.options } }));
+      window.localStorage.setItem('options', JSON.stringify({ options : { code : params.options } }));
 
 
       // On utilise sendMessage donc il faut le declarer mais on a pas besoin de l'overwrite
@@ -163,7 +163,7 @@ describe('Test de Recording Controller', () => {
                 (window as any).recordingController._stop();
                 (window as any).badgeText = '';
                 break;
-              case params.controlActions.CLEANUP:
+              case params.controlActions.CLEANUP :
                 (window as any).recordingController._cleanUp();
                 (window as any).badgeText = '';
                 break;
@@ -228,7 +228,7 @@ describe('Test de Recording Controller', () => {
       };
 
       chrome.webNavigation = {
-        onCompleted: {
+        onCompleted : {
           addListener(callback) {},
           removeListener(callback) {}
         },
@@ -246,7 +246,7 @@ describe('Test de Recording Controller', () => {
         (window as any).ddlFile = true;
       };
 
-    }, { chrome, options: defaultOptions, controlActions: CONTROL , badgeStates : EBadgeState});
+    }, { chrome, options : defaultOptions, controlActions : CONTROL , badgeStates : EBadgeState});
 
     // On ajoute le background dans la page
     await page.evaluate(scriptText => {
@@ -318,7 +318,7 @@ describe('Test de Recording Controller', () => {
       Promise.resolve();
     });
     // Dispatch event
-    await dispatchEventAsync('OnMessage', { action: CONTROL.EXPORT_SCRIPT });
+    await dispatchEventAsync('OnMessage', { action : CONTROL.EXPORT_SCRIPT });
 
     // On fait une pause pour laisser exportScript le temps de finir
     await page.waitFor(40);

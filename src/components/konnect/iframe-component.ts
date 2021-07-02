@@ -19,7 +19,7 @@ export class IframeComponent {
     const iframeElement = ElementService.getIframeElement(element);
     // Si c'est un iframe on retourne le composant associé
     if (iframeElement) {
-      return { component: COMPONENT.IFRAME, element: iframeElement as HTMLElement };
+      return { component : COMPONENT.IFRAME, element : iframeElement as HTMLElement };
     } else {
       return null;
     }

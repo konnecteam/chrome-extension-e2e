@@ -118,11 +118,11 @@ export class ChromeService {
   public static async getCurrentTabId() : Promise<{id : number, url : string}> {
     return new Promise(async (resolve, reject) => {
       const tabs = await this._query({
-        active: true,
-        currentWindow: true
+        active : true,
+        currentWindow : true
       });
       if (tabs && tabs[0]) {
-        resolve({id : tabs[0].id, url: tabs[0].url});
+        resolve({id : tabs[0].id, url : tabs[0].url});
       } else {
         reject('tabs is undefined');
       }
@@ -160,8 +160,8 @@ export class ChromeService {
     try {
 
       const tabs = await this._query({
-        currentWindow: true,
-        active: true
+        currentWindow : true,
+        active : true
       });
 
       if (tabs && tabs[0]) {
@@ -206,9 +206,9 @@ export class ChromeService {
 
     return new Promise((resolve, reject) => {
       chrome.downloads.download({
-        url: URL.createObjectURL(content),
+        url : URL.createObjectURL(content),
         filename,
-        saveAs: true
+        saveAs : true
       }, (downloadId : number) => {
 
         if (downloadId) {

@@ -15,20 +15,20 @@ let frameId : number;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 describe('Test de Pptr Action Block Factory', () => {
@@ -44,13 +44,13 @@ describe('Test de Pptr Action Block Factory', () => {
     const href = 'localhost';
 
     const exceptedResult = new Block(frameId, {
-      type: PPTR_ACTION.GOTO,
-      value: `await ${frame}.goto('${href}');`
+      type : PPTR_ACTION.GOTO,
+      value : `await ${frame}.goto('${href}');`
     });
 
     exceptedResult.addLine({
-      type: PPTR_ACTION.GOTO,
-      value: `await page.waitForTimeout(1000);
+      type : PPTR_ACTION.GOTO,
+      value : `await page.waitForTimeout(1000);
   await page.evaluate( () => {
     window.konnect.engineStateService.Instance.start();
   });`
@@ -67,8 +67,8 @@ describe('Test de Pptr Action Block Factory', () => {
     const width = 1920;
     const height = 1080;
     const exceptedResult = new Block(frameId, {
-      type: PPTR_ACTION.VIEWPORT,
-      value: `await ${frame}.setViewport({ width: ${width}, height: ${height} });`
+      type : PPTR_ACTION.VIEWPORT,
+      value : `await ${frame}.setViewport({ width: ${width}, height: ${height} });`
     });
 
     expect(
@@ -88,15 +88,14 @@ describe('Test de Pptr Action Block Factory', () => {
     defaultOptions.waitForNavigation = true;
 
     const exceptedResult = new Block(frameId, {
-      type: PPTR_ACTION.NAVIGATION,
-      value: `await navigationPromise`
+      type : PPTR_ACTION.NAVIGATION,
+      value : `await navigationPromise`
     });
 
     expect(
       PPtrFactory.buildWaitForNavigationBlock(
         defaultOptions,
-        frameId,
-        frame
+        frameId
       )
     ).toEqual(
       exceptedResult
@@ -111,8 +110,7 @@ describe('Test de Pptr Action Block Factory', () => {
     expect(
       PPtrFactory.buildWaitForNavigationBlock(
         defaultOptions,
-        frameId,
-        frame
+        frameId
       )
     ).toEqual(
       exceptedResult
@@ -165,8 +163,7 @@ describe('Test de Pptr Action Block Factory', () => {
     ).toEqual(
       PPtrFactory.buildWaitForNavigationBlock(
         defaultOptions,
-        frameId,
-        frame
+        frameId
       )
     );
   });

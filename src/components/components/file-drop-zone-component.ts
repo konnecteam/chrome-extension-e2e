@@ -26,7 +26,7 @@ export class FileDropZoneComponent {
     // Si c'est un file dropzone
     if (fileDropzoneElement) {
 
-      return { component : COMPONENT.FILE_DROPZONE , element: fileDropzoneElement };
+      return { component : COMPONENT.FILE_DROPZONE , element : fileDropzoneElement };
     } else {
 
       return null;

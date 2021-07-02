@@ -20,14 +20,14 @@ export class PPtrFactory {
     // En fonction de l'action de l'event
     switch (action) {
       // Si l'action est un goto
-      case PPTR_ACTION.GOTO:
+      case PPTR_ACTION.GOTO :
         return this.buildGotoBlock(frameId, frame, value);
       // Si l'action est la récupération du viewport
-      case PPTR_ACTION.VIEWPORT:
+      case PPTR_ACTION.VIEWPORT :
         return this.buildViewportBlock(frameId, frame, value.width, value.height);
       // Si l'action est une navigation
-      case PPTR_ACTION.NAVIGATION:
-        return this.buildWaitForNavigationBlock(options, frameId, frame);
+      case PPTR_ACTION.NAVIGATION :
+        return this.buildWaitForNavigationBlock(options, frameId);
       default : return null;
     }
   }
@@ -42,14 +42,14 @@ export class PPtrFactory {
   ) : Block {
 
     const block =  new Block(frameId, {
-      type: PPTR_ACTION.GOTO,
-      value: `await ${frame}.goto('${href}');`
+      type : PPTR_ACTION.GOTO,
+      value : `await ${frame}.goto('${href}');`
     });
 
     // On wait une seconde pour attendre konnect
     block.addLine({
-      type: PPTR_ACTION.GOTO,
-      value: `await page.waitForTimeout(1000);
+      type : PPTR_ACTION.GOTO,
+      value : `await page.waitForTimeout(1000);
   await page.evaluate( () => {
     window.konnect.engineStateService.Instance.start();
   });`
@@ -69,8 +69,8 @@ export class PPtrFactory {
   ) : Block {
 
     return new Block(frameId, {
-      type: PPTR_ACTION.VIEWPORT,
-      value: `await ${frame}.setViewport({ width: ${width}, height: ${height} });`
+      type : PPTR_ACTION.VIEWPORT,
+      value : `await ${frame}.setViewport({ width: ${width}, height: ${height} });`
     });
   }
 
@@ -79,8 +79,7 @@ export class PPtrFactory {
    */
   public static buildWaitForNavigationBlock(
     options : IOption,
-    frameId : number,
-    frame : string
+    frameId : number
   ) : Block {
 
     const block = new Block(frameId);
@@ -88,8 +87,8 @@ export class PPtrFactory {
     if (options.waitForNavigation) {
 
       block.addLine({
-        type: PPTR_ACTION.NAVIGATION,
-        value: `await navigationPromise`
+        type : PPTR_ACTION.NAVIGATION,
+        value : `await navigationPromise`
       });
     }
 

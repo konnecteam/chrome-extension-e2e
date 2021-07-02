@@ -187,7 +187,7 @@ export default class CodeGenerator {
    */
   private _postProcessAddBlankLines() : void {
 
-    // On utilise i+2 éviter de séparer les lignes de code
+    // On utilise i+2 pour éviter de séparer les lignes de code
     for (let i = 0; i <= this._blocks.length; i += 2) {
       const blankLine = ScenarioFactory.buildBlankLineBlock();
       this._blocks.splice(i, 0, blankLine);

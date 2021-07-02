@@ -40,21 +40,13 @@ describe('Test de input list Component', () => {
 
   test('Test de editInputListComponentMessage', () => {
 
-    const element = document.querySelector(INPUT_LIST_SELECTOR);
-
     const eventMessage : IMessage = {
       selector : INPUT_LIST_SELECTOR
     };
 
-    const component : IComponent = {
-      component : COMPONENT.INPUT_LIST,
-      element,
-      previousSelector: INPUT_LIST_SELECTOR,
-    };
-
     // On doit trouver l'action click mouse
     expect(
-      InputListComponent.editInputListComponentMessage(eventMessage, component).action
+      InputListComponent.editInputListComponentMessage(eventMessage).action
     ).toEqual(CUSTOM_EVENT.CLICK_MOUSE);
 
   });

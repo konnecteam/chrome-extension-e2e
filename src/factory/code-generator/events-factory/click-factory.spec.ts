@@ -25,20 +25,20 @@ let frameId : number;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 /**
@@ -46,8 +46,8 @@ const defaultOptions : IOption = {
  */
 function simpleClickLineBlock() : ILineBlock {
   return {
-    type: DOM_EVENT.CLICK,
-    value: `await ${frame}.$eval('${selector}',  el=> el.click());`
+    type : DOM_EVENT.CLICK,
+    value : `await ${frame}.$eval('${selector}',  el=> el.click());`
   };
 }
 
@@ -56,8 +56,8 @@ function simpleClickLineBlock() : ILineBlock {
  */
 function clickFileDropZoneLineModel() : ILineBlock {
   return {
-    type: DOM_EVENT.CLICK,
-    value: `  [fileChooser] = await Promise.all([
+    type : DOM_EVENT.CLICK,
+    value : `  [fileChooser] = await Promise.all([
       ${frame}.waitForFileChooser(),
       ${frame}.waitForSelector('${selector}'),
       ${frame}.$eval('${selector}',  el=> el.click())
@@ -70,8 +70,8 @@ function clickFileDropZoneLineModel() : ILineBlock {
  */
 function clickMouseInputNumericLineModel() : ILineBlock {
   return {
-    type: DOM_EVENT.CLICK,
-    value: ` await ${frame}.evaluate( async function(){
+    type : DOM_EVENT.CLICK,
+    value : ` await ${frame}.evaluate( async function(){
       let e = document.querySelector('${selector}');
       var docEvent = document.createEvent('MouseEvents');
       docEvent.initEvent('mousedown', true, true);
@@ -93,8 +93,8 @@ function clickMouseInputNumericLineModel() : ILineBlock {
  */
 function clickMouseLineModel() : ILineBlock {
   return {
-    type: DOM_EVENT.CLICK,
-    value: ` await ${frame}.evaluate( async function(){
+    type : DOM_EVENT.CLICK,
+    value : ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         var docEvent = document.createEvent('MouseEvents');
         docEvent.initEvent('mousedown', true, true);
@@ -131,8 +131,8 @@ function customLineBeforeEvent(event : string) : ILineBlock {
 
 function waitForSelectorOnClickLineBlock(select : string) : ILineBlock {
   return {
-    type: DOM_EVENT.CLICK,
-    value: `await ${frame}.waitForSelector('${select}');`
+    type : DOM_EVENT.CLICK,
+    value : `await ${frame}.waitForSelector('${select}');`
   };
 }
 
@@ -152,8 +152,8 @@ function waitForSelectorOnClickScrollElementLineBlock() : ILineBlock {
  */
 function scrollInKListItemLineBlock() : ILineBlock {
   return {
-    type: DOM_EVENT.CLICK,
-    value: ` await ${frame}.evaluate( async function(){
+    type : DOM_EVENT.CLICK,
+    value : ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${scrollElement}').parentElement;
         e.scroll(${scrollXElement}, ${scrollYElement});
       });`
@@ -165,8 +165,8 @@ function scrollInKListItemLineBlock() : ILineBlock {
  */
 function clickKListItemLineBlock() : ILineBlock {
   return {
-    type: DOM_EVENT.CLICK,
-    value: `await ${frame}.evaluate( async function(){
+    type : DOM_EVENT.CLICK,
+    value : `await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         e.click();
       });`

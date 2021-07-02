@@ -28,9 +28,9 @@ export class FileService {
     // Après avoir lu le fichier on l'envoi au background
     this._reader.addEventListener('load', () => {
       ChromeService.sendMessage({
-        control: this._control,
-        filename: this._filename,
-        content: this._reader.result
+        control  : this._control,
+        filename : this._filename,
+        content : this._reader.result
       });
     }, false);
 

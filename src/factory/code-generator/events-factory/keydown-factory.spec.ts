@@ -13,20 +13,20 @@ let frameId : number;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 const iframe = 'body > iframe';
@@ -47,8 +47,8 @@ describe('Test de Keydown Block Factory', () => {
 
     exceptedResult.addLine({
 
-      type: DOM_EVENT.KEYDOWN,
-      value: ` await ${frame}.evaluate( async function(){
+      type : DOM_EVENT.KEYDOWN,
+      value : ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
           let element = iframeElement.contentDocument.querySelector('${selector}');
           element.className = '';
@@ -79,8 +79,8 @@ describe('Test de Keydown Block Factory', () => {
 
     exceptedResult.addLine({
 
-      type: 'KEYUP',
-      value: ` await ${frame}.evaluate( async function(){
+      type : 'KEYUP',
+      value : ` await ${frame}.evaluate( async function(){
           let element = document.querySelector('${selector}');
           var docEvent = document.createEvent('KeyboardEvents');
           //If it isn't input element
@@ -118,14 +118,14 @@ describe('Test de Keydown Block Factory', () => {
     const exceptedResult = new Block(frameId);
 
     exceptedResult.addLine({
-      type: DOM_EVENT.CLICK,
-      value: ` await ${frame}.waitForSelector('${selector}')`
+      type : DOM_EVENT.CLICK,
+      value : ` await ${frame}.waitForSelector('${selector}')`
     });
 
     exceptedResult.addLine({
 
-      type: 'KEYUP',
-      value: ` await ${frame}.evaluate( async function(){
+      type : 'KEYUP',
+      value : ` await ${frame}.evaluate( async function(){
           let element = document.querySelector('${selector}');
           var docEvent = document.createEvent('KeyboardEvents');
           //If it isn't input element
