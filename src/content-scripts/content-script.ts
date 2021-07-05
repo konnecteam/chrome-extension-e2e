@@ -1,6 +1,6 @@
+import { EventService } from './../services/event/event-service';
 import { AwaitConditionalService } from './../services/await/await-conditional-service';
 import { DebounceService } from '../services/debounce/debounce-service';
-import { PasswordService } from '../services/password/password-service';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
 import { IMessage } from '../interfaces/i-message';
@@ -9,8 +9,6 @@ import { StorageService } from '../services/storage/storage-service';
 import { ChromeService } from '../services/chrome/chrome-service';
 import { WindowService } from '../services/window/window-service';
 import { PollyService } from '../services/polly/polly-service';
-import { ComponentManager } from '../manager/component-manager';
-import { EventMessageFactory } from '../factory/message/event-message-factory';
 
 // Constant
 import EVENT_MSG from '../constants/events/events-message';
@@ -182,144 +180,48 @@ class EventRecorder {
    */
   private _recordEvent(e : any) : void {
 
-    // Si un evènement précédent est toujours en cours on ne fait rien
-    if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp) {
-      return;
-    }
+    if (EventService.continueEventTreatment(this._previousEvent, e, this._previousMessage)) {
 
-    let filesUpload : FileList = null;
-    let durationClick : number = null;
-    this._isEventProcessed = false;
+      let filesUpload : FileList = null;
+      let durationClick : number = null;
+      this._isEventProcessed = false;
 
-    // Si aucun élément capturé on met à jour la variable et on ne fait rien
-    if (!e.target) {
+      // Si des fichiers sont en cours de transfère on les stocks
+      if (e.dataTransfer) {
+        filesUpload = e.dataTransfer.files;
+      }
+
+      // Gestion de la durée du click (principalement pour les input numérique)
+      if (e.type === DOM_EVENT.MOUSEDOWN) {
+        this._startMouseDown = Date.now();
+        return;
+      }
+
+      if (e.type === DOM_EVENT.CLICK) {
+        durationClick = Date.now() - this._startMouseDown;
+      }
+
+      const value = EventService.valueEvent(e);
+
+      // définition du selecteur
+      const selector = EventService.selectorEvent(e, this._previousSelector);
+
+      const comments = EventService.commentsEvent(selector);
+
+      // construction du message: IMessage
+      const message = EventService.messageEvent(e, selector, value, durationClick, comments, filesUpload);
+
+      // On vérifie si on a eu des keydown ou si on a fini les keydown et dans ce cas on modifie le message car c'est un listkeydown
+      this._keyDownService.handleEvent(message, e.target);
+      this._previousEvent = e;
+      this._previousSelector = selector;
+
+      ChromeService.sendMessage(message);
+      this._previousMessage = message;
+
       this._isEventProcessed = true;
-      return;
     }
 
-    // Si des fichiers sont en cours de transfère on les stocks
-    if (e.dataTransfer) {
-      filesUpload = e.dataTransfer.files;
-    }
-
-    // Gestion de la durée du click (principalement pour les input numérique)
-    if (e.type === DOM_EVENT.MOUSEDOWN) {
-      this._startMouseDown = Date.now();
-      return;
-    }
-
-    let value = '';
-
-    /**
-     * Si c'est un input de type password
-     * il faut changer la value
-     */
-    if (e.target.tagName === TAG_NAME.INPUT.toUpperCase() && e.target.type === 'password') {
-
-      // Si c'est un change on modifie la value:
-      if (e.type === DOM_EVENT.CHANGE) {
-        value = PasswordService.generate();
-      }
-
-      /*
-       * Si c'est un keydown on arrête tout pour pas envoyer les caractères
-       * qui composent le mot de passe
-       */
-      else if (e.type === DOM_EVENT.KEYDOWN) {
-        return;
-      }
-    }
-
-    if (e.type === DOM_EVENT.CLICK) {
-      durationClick = Date.now() - this._startMouseDown;
-    }
-
-    /**
-     * On verifie si l'element qui a déclenché le submit
-     * et le même que celui de l'event précédent
-     * si c'est le cas c'est qu'il n'y a pas besoin
-     * de garder le submit car il y a eu une detection de clique
-     * sur l'event précédant donc on le traite pas
-     */
-    if (e.type === DOM_EVENT.SUBMIT && this._previousEvent.type === DOM_EVENT.CLICK
-      && e.submitter === this._previousEvent.target) {
-      return;
-    }
-
-    /* Si on récupère un lien directement dans un body
-     * Alors c'est qu'on a utilisé un window.open et ouvert un autre onglet
-     * donc on l'ignore car l'élement n'existe pas
-     */
-    if (e.target.tagName === TAG_NAME.LINK.toUpperCase()
-        && e.target.getAttribute('target') === '_blank'
-      ) {
-      return;
-    }
-
-    // définition du selecteur
-    let selector = '';
-
-    if (e.target.type === 'file' && e.target.tagName === TAG_NAME.INPUT.toUpperCase()) {
-
-      if (e.type === DOM_EVENT.CHANGE) {
-        selector = this._previousSelector;
-      }
-
-      /**
-       * Dans les file drop zone lors d'un change input file
-       * un click est catché mais on ne veut pas du click car il n'est pas utile
-       */
-      else if (e.type === DOM_EVENT.CLICK &&
-        this._previousMessage.action === DOM_EVENT.CLICK
-      ) {
-        return;
-      }
-    } else {
-      selector = this._selectorService.find(e.target);
-    }
-
-    let comments = '';
-
-    // On vérifie si le sélecteur est ambigu (plus de deux réponses)
-    if (document.querySelectorAll(selector).length > 1) {
-      comments = `/!\\ Le sélécteur a retourné plus d'un élément, il risque d'y avoir une erreur`;
-    }
-
-    // construction du message: IMessage
-    let message : IMessage = {
-      selector : this._selectorService.standardizeSelector(selector),
-      comments,
-      value : value ? value : e.target.value,
-      tagName : e.target.tagName,
-      action : e.type,
-      typeEvent : e.type,
-      key : e.key ? e.key : null,
-      keyCode : e.keyCode ? e.keyCode : null,
-      href : e.target.href ? e.target.href : null,
-      durancyClick  : durationClick ? durationClick : 0,
-      clickCoordinates : this._keyDownService.getClickCoordinates(e),
-      scrollY : window.pageYOffset,
-      scrollX : window.pageXOffset,
-      submitterSelector : e.submitter ? this._selectorService.find(e.submitter) : ''
-    };
-
-    // On vérifie si un composant est concerné par l'event
-    const component = ComponentManager.getComponent(message.typeEvent, e.target);
-
-    if (component) {
-
-      message = EventMessageFactory.buildMessageEvent(component, message, filesUpload);
-    }
-
-    // On vérifie si on a eu des keydown ou si on a fini les keydown et dans ce cas on modifie le message car c'est un listkeydown
-    this._keyDownService.handleEvent(message, e.target);
-    this._previousEvent = e;
-    this._previousSelector = selector;
-
-    ChromeService.sendMessage(message);
-    this._previousMessage = message;
-
-    this._isEventProcessed = true;
   }
 
   /**
