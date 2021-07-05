@@ -32,9 +32,16 @@
     },
     methods: {
       parseEventValue (event) {
-        if (event.action === 'viewport*') return `width: ${event.value.width}, height: ${event.value.height}`
-        if (event.action === 'goto*') return event.href
-        if (event.action === 'navigation*') return ''
+        switch (event.action) {
+          case 'viewport*' :
+            return `width: ${event.value.width}, height: ${event.value.height}`;
+          case 'goto*' :
+            return event.href;
+          case 'viewport*' :
+            return '';      
+          default:
+            break;
+        }
       }
     }
   }

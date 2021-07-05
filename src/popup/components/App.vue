@@ -63,7 +63,6 @@
         loaderValue: 0,
         showResultsTab: false,
         showHelp: false,
-        //we save if user have clicked in export script button
         isExport:false,
         liveEvents: [],
         recording: [],
@@ -80,21 +79,22 @@
     mounted () {
       this.loadState(() => {
         if (this.isRecording) {
-          console.debug('opened in recording state, fetching recording events')
           this.$chrome.storage.local.get(['recording', 'code'], ({ recording }) => {
-            console.debug('loaded recording', recording)
-            this.liveEvents = recording
+            this.liveEvents = recording;
           })
         }
 
         if (!this.isRecording && this.code) {
-          this.showResultsTab = true
+          this.showResultsTab = true;
         }
       })
-      this.bus = this.$chrome.extension.connect({ name: 'recordControls' })
-      //we capture message to update state of loader, we listen if we recieved message for exportScript 
-      chrome.runtime.onMessage.addListener(this.callBack);
 
+      this.bus = this.$chrome.extension.connect({ name: 'recordControls' });
+
+      // On écoute les message pour savoir si le scénario a été exporté
+      chrome.runtime.onMessage.addListener(this.handleMessage);
+
+      // On écoute le changement de certaine variable pour mettre à jour l'interface
       this.$chrome.storage.onChanged.addListener((changes, namespace) => {
 
         for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
@@ -103,7 +103,7 @@
             case 'isResult' :
               this.isResult = newValue;
               break;
-            case 'loadingPage':
+            case 'loadingPage' :
               this.loadingPage = newValue;
               break;
             case 'isRemovedListener' :
@@ -116,88 +116,87 @@
       });
     },
     methods: {
-      //callback to know if export is finih
-       callBack(request, sender, sendResponse) {
-          if(request.valueLoad){
-            this.loaderValue = request.valueLoad;
-            if(this.loaderValue === 100){
-              this.isExport = false;
-            }
+      //handleMessage permet d'écouter les messages et savoir si le scénario a été exporté
+       handleMessage(request, sender, sendResponse) {
+
+        if (request.valueLoad){
+          this.loaderValue = request.valueLoad;
+          
+          if (this.loaderValue === 100){
+            this.isExport = false;
           }
+        }
       },
       toggleRecord () {
+        
         if (this.isRecording) {
-          this.stop()
+          this.stop();
         } else {
-          this.start()
+          this.start();
         }
-        this.isRecording = !this.isRecording
-        this.storeState()
+        this.isRecording = !this.isRecording;
+        this.storeState();
       },
       togglePause () {
+
         if (this.isPaused) {
-          this.bus.postMessage({ action: controlAction.UNPAUSE })
-          this.isPaused = false
+          this.bus.postMessage({ action: controlAction.UNPAUSE });
+          this.isPaused = false;
         } else {
-          this.bus.postMessage({ action: controlAction.PAUSE })
-          this.isPaused = true
+          this.bus.postMessage({ action: controlAction.PAUSE });
+          this.isPaused = true;
         }
-        this.storeState()
+        this.storeState();
       },
       start () {
         this.cleanUp()
         // On récupère la date au moment de commencer le record
-        this.$chrome.storage.local.set({dateTimeStart : new Date().getTime()})
-        console.debug('start recorder')
-        this.bus.postMessage({ action: controlAction.START })
+        this.$chrome.storage.local.set({dateTimeStart : new Date().getTime()});
+        this.bus.postMessage({ action: controlAction.START });
       },
       stop () {
-        console.debug('stop recorder')
-        this.bus.postMessage({ action: controlAction.STOP })
+        this.bus.postMessage({ action: controlAction.STOP });
         this.$chrome.storage.local.get(['recording', 'options'], ({ recording, options }) => {
-          console.debug('loaded recording', recording)
-          console.debug('loaded options', options)
 
-          this.recording = recording
-          const codeOptions = options ? options : {}
+          this.recording = recording;
+          const codeOptions = options ? options : {};
 
-          const codeGen = new CodeGenerator(codeOptions)
-          this.code = codeGen.generate(this.recording)
-          this.showResultsTab = true
-          this.storeState()
+          const codeGen = new CodeGenerator(codeOptions);
+          this.code = codeGen.generate(this.recording);
+          this.showResultsTab = true;
+          this.storeState();
         })
       },
       restart () {
         // si on a remove ou si on reload la page alors on peut restart le programme
         if (this.isRemovedListener || this.loadingPage) {
-            this.cleanUp()
-            this.bus.postMessage({ action: controlAction.CLEANUP })
+            this.cleanUp();
+            this.bus.postMessage({ action: controlAction.CLEANUP });
         } else {
-            alert('We must waiting for recording to be stopped before restart process')
+            alert('We must waiting for recording to be stopped before restart process');
         }
     
       },
       cleanUp () {
-        this.recording = this.liveEvents = []
-        this.code = ''
-        this.showResultsTab = this.isRecording = this.isPaused = this.isResult = false
-        this.storeState()
+        this.recording = this.liveEvents = [];
+        this.code = '';
+        this.showResultsTab = this.isRecording = this.isPaused = this.isResult = false;
+        this.storeState();
       },
       openOptions () {
         if (this.$chrome.runtime.openOptionsPage) {
-          this.$chrome.runtime.openOptionsPage()
+          this.$chrome.runtime.openOptionsPage();
         }
       },
       loadState (cb) {
         this.$chrome.storage.local.get(['controls', 'code', 'isResult', 'isRemovedListener', 'loadingPage'],
          ({ controls, code, isResult, isRemovedListener, loadingPage }) => {
-          console.debug('loaded controls', controls)
         
-        // On récupère les informations lié à l'enregistrement
+          // On récupère les informations lié à l'enregistrement
 
-        if (controls) {
-            this.isRecording = controls.isRecording
-            this.isPaused = controls.isPaused
+          if (controls) {
+            this.isRecording = controls.isRecording;
+            this.isPaused = controls.isPaused;
           }
 
           if (code) {
@@ -216,7 +215,7 @@
             this.loadingPage = loadingPage;
           }
 
-          cb()
+          cb();
         })
       },
       storeState () {
@@ -229,38 +228,37 @@
         })
       },
       setCopying () {
-        this.isCopying = true
-        setTimeout(() => { this.isCopying = false }, 1500)
+        this.isCopying = true;
+        setTimeout(() => { this.isCopying = false }, 1500);
       },
       goHome () {
-        this.showResultsTab = false
-        this.showHelp = false
+        this.showResultsTab = false;
+        this.showHelp = false;
       },
       toggleShowHelp () {
-        this.showHelp = !this.showHelp
+        this.showHelp = !this.showHelp;
       },
-       //Export Script
       exportScript () {
         this.bus.postMessage({ action: controlAction.EXPORT_SCRIPT });
-        //exported is started
+        //Scénario exporté
         this.isExport=true;
       }
     }, 
     computed: {
       recordingBadgeText () {
-        return this.isPaused ? 'paused' : 'recording'
+        return this.isPaused ? 'paused' : 'recording';
       },
       recordButtonText () {
-        return this.isRecording ? 'Stop' : 'Record'
+        return this.isRecording ? 'Stop' : 'Record';
       },
       pauseButtonText () {
-        return this.isPaused ? 'Resume' : 'Pause'
+        return this.isPaused ? 'Resume' : 'Pause';
       },
       copyLinkText () {
-        return this.isCopying ? 'copied!' : 'copy to clipboard'
+        return this.isCopying ? 'copied!' : 'copy to clipboard';
       },
       messageToWait () {
-        return this.isResult ? '' : 'please wait the scenario is under construction...'
+        return this.isResult ? '' : 'please wait the scenario is under construction...';
       }
     }
 }

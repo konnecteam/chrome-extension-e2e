@@ -194,60 +194,63 @@ export default {
   },
   mounted() {
     this.$chrome.storage.local.get('options', data => {
-       this.options = data;
-        this.load();
+      this.options = data;
+      this.load();
     });
   },
   methods: {
     debounceKeydown() {
-      if(this.timeoutId !== null) {
+
+      if (this.timeoutId !== null) {
         clearTimeout(this.timeoutId);
       }
+
       this.timeoutId = setTimeout(() => {
         this.save();
       }, 500);
     },
 
     exportSettings() {
-      //transform json content to blob
+      // Transforme le json en blob
       let blob = new Blob([JSON.stringify(this.options, null, 2)], {
         type: "application/json",
       });
       let urlDDL = URL.createObjectURL(blob);
-      //ddl json file
+      // On télécharge le json
       this.$chrome.downloads.download({
         url: urlDDL,
-        filename: "recorder_Options.json",
+        filename: "e2e_recorder_options.json",
       });
     },
 
     importSettings() {
-      let file = document.getElementById("options-export").files[0];
+      let file = document.getElementById('options-export').files[0];
       var reader = new FileReader();
 
-      // if file doesn't containe json in her type, it's not a json file.
+      // Si le fichier ne contient pas json ce n'est pas un fichier de type json
       if (!file.type.includes("json")) {
         alert("ce n'est pas un fichier JSON");
         return;
       }
 
-      //options that we would update
-      let options = this.options.code;
-      //function to save new option values
+      // options que l'on veut mettre à jour
+      let op = this.options;
+
+      // Fonction qui sauvegarde les nouvelles options
       let saveFun = this.save;
 
-      reader.onload = function (e, code = options, save = saveFun) {
-        var text = reader.result;
-        // we parse json content in JSON
+      reader.onload = function (e, options = op, save = saveFun) {
+        let text = reader.result;
+        // On parse le json
         let jsonfile = JSON.parse(text);
-        // we browse json attributes
+        // On parcourt les attribues du json
         Object.keys(jsonfile).forEach((attribute) => {
-          // if we have same attribute we can update value of the one
+          // Si on a le même attribut alors on le met à jour
           if (options[attribute] !== null && options[attribute] !== undefined) {
             options[attribute] = jsonfile[attribute];
           }
         });
-        //we save modification
+        // On sauvegarde
         save();
       };
 
@@ -260,7 +263,6 @@ export default {
           options: this.options,
         },
         () => {
-          console.debug("saved options");
           setTimeout(() => {
             this.saving = false;
           }, 500);
@@ -270,7 +272,6 @@ export default {
     load() {
       this.$chrome.storage.local.get("options", ({ options }) => {
         if (options) {
-          console.debug("loaded options", JSON.stringify(options));
           this.options = options;
         }
         this.loading = false;
