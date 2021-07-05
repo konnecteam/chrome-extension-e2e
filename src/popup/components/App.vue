@@ -151,7 +151,7 @@
       start () {
         this.cleanUp()
         // On récupère la date au moment de commencer le record
-        this.$chrome.storage.local.set({dateTimeStart : new Date().getTime()});
+        this.$chrome.storage.local.set({ dateTimeStart : new Date().getTime() });
         this.bus.postMessage({ action: controlAction.START });
       },
       stop () {

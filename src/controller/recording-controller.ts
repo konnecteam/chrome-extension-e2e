@@ -204,7 +204,7 @@ class RecordingController {
         }
 
         // On remplace 0 par la time de départ du record
-        const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuilded.replace('now : 0', `now : ${result.dateTimeStart}`);
+        const contentBuilFakeTimeWithDate = this._contentFakeTimeServiceBuilded.replace('now:0', `now:${result.dateTimeStart}`);
 
         // On créé le fichier à ajouter dans le zip
         const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], RecordingController._FAKE_TIME_SCRIPT_FILNAME);
