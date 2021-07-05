@@ -9,6 +9,10 @@
           <span class="red-dot"></span>
           {{recordingBadgeText}}
         </div>
+         <div class="recording-badge" v-show="!isRecording && !isResult && showResultsTab">
+          <span class="red-dot"></span>
+          {{messageToWait}}
+        </div>
         <a href="#" @click="toggleShowHelp" class="header-button">
           <img src="/assets/images/help.svg" alt="help" width="18px">
         </a>
@@ -31,8 +35,8 @@
         </div>
         <ResultsTab :code="code" :copy-link-text="copyLinkText" :restart="restart" :set-copying="setCopying" v-show="showResultsTab"/>
         <div class="results-footer" v-show="showResultsTab">
-          <button class="btn btn-sm btn-primary" @click="restart" v-show="code">Restart</button>
-          <button class="btn btn-sm btn-primary" @click="exportScript" v-show="!isExport" >Export script</button>
+          <button class="btn btn-sm" :class="[isRemovedListener || loadingPage ? 'btn-primary' : 'btn-disabled']" :disabled="!(isRemovedListener || loadingPage)" @click="restart" v-show="code">Restart</button>
+          <button class="btn btn-sm" :class="[isResult ? 'btn-primary' : 'btn-disabled']" :disabled="!isResult" @click="exportScript" v-show="!isExport" type="button">Export script</button>
           <progress max="100" :value="loaderValue" v-show="isExport">{{this.loaderValue}}% </progress>
           <a href="#" v-clipboard:copy='code' @click="setCopying" v-show="code">{{copyLinkText}}</a>
         </div>
@@ -49,7 +53,6 @@
   import ResultsTab from "./ResultsTab.vue";
   import HelpTab from "./HelpTab.vue";
   import controlAction from '../../constants/control/control-actions'
-  import Vue from 'vue';
   
   export default {
     name: 'App',
@@ -67,6 +70,9 @@
         isRecording: false,
         isPaused: false,
         isCopying: false,
+        isResult : false,
+        isRemovedListener: false,
+        loadingPage: false,
         bus: null,
         version
       }
@@ -88,6 +94,26 @@
       this.bus = this.$chrome.extension.connect({ name: 'recordControls' })
       //we capture message to update state of loader, we listen if we recieved message for exportScript 
       chrome.runtime.onMessage.addListener(this.callBack);
+
+      this.$chrome.storage.onChanged.addListener((changes, namespace) => {
+
+        for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+
+          switch (key) {
+            case 'isResult' :
+              this.isResult = newValue;
+              break;
+            case 'loadingPage':
+              this.loadingPage = newValue;
+              break;
+            case 'isRemovedListener' :
+              this.isRemovedListener = newValue;
+              break
+            default:
+              break;
+          }
+        }
+      });
     },
     methods: {
       //callback to know if export is finih
@@ -143,19 +169,18 @@
       },
       restart () {
         // si on a remove ou si on reload la page alors on peut restart le programme
-        this.$chrome.storage.local.get(['isRemovedListener', 'loadingPage'], ({ isRemovedListener, loadingPage }) => {
-          if(isRemovedListener || loadingPage) {
+        if (this.isRemovedListener || this.loadingPage) {
             this.cleanUp()
             this.bus.postMessage({ action: controlAction.CLEANUP })
-          } else {
+        } else {
             alert('We must waiting for recording to be stopped before restart process')
-          }
-        });
+        }
+    
       },
       cleanUp () {
         this.recording = this.liveEvents = []
         this.code = ''
-        this.showResultsTab = this.isRecording = this.isPaused = false
+        this.showResultsTab = this.isRecording = this.isPaused = this.isResult = false
         this.storeState()
       },
       openOptions () {
@@ -164,16 +189,33 @@
         }
       },
       loadState (cb) {
-        this.$chrome.storage.local.get(['controls', 'code'], ({ controls, code }) => {
+        this.$chrome.storage.local.get(['controls', 'code', 'isResult', 'isRemovedListener', 'loadingPage'],
+         ({ controls, code, isResult, isRemovedListener, loadingPage }) => {
           console.debug('loaded controls', controls)
-          if (controls) {
+        
+        // On récupère les informations lié à l'enregistrement
+
+        if (controls) {
             this.isRecording = controls.isRecording
             this.isPaused = controls.isPaused
           }
 
           if (code) {
-            this.code = code
+            this.code = code;
           }
+
+          if (isResult) {
+            this.isResult = isResult;
+          }
+
+          if(isRemovedListener) {
+            this.isRemovedListener = isRemovedListener;
+          }
+
+          if(loadingPage) {
+            this.loadingPage = loadingPage;
+          }
+
           cb()
         })
       },
@@ -216,6 +258,9 @@
       },
       copyLinkText () {
         return this.isCopying ? 'copied!' : 'copy to clipboard'
+      },
+      messageToWait () {
+        return this.isResult ? '' : 'please wait the scenario is under construction...'
       }
     }
 }

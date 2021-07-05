@@ -35,5 +35,11 @@ button {
       background-color: $brand-danger;
       border-color: $brand-danger;
     }
+
+    &.btn-disabled {
+      color: #fff;
+      background-color: $brand-disabled;
+      border-color: $brand-disabled;
+    }
   }
 }

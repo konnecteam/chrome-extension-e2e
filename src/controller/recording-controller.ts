@@ -336,9 +336,11 @@ class RecordingController {
     // 5 - On récupère le résultat
     ChromeService.sendMessageToContentScript(MESSAGE.GET_RESULT);
 
-    // 6 - Si on record pas les requêtes on peut mettre à true isRemovedListener
+    // 6 - Si on record pas les requêtes on peut mettre à true isRemovedListener et le isResult
     if (!this._recordHttpRequest) {
       StorageService.setData({ isRemovedListener : true });
+      this._isResult = true;
+      StorageService.setData({ isResult : this._isResult });
     }
   }
 
@@ -386,6 +388,7 @@ class RecordingController {
       await StorageService.removeDataAsync('recording');
 
       StorageService.setData({ isRemovedListener : false });
+      StorageService.setData({ isResult : this._isResult });
 
       // 4 - On récupère les fichiers liées au scénario
       this._scenarioDependencies = ScenarioService.getScenarioFilesContent();
@@ -566,6 +569,7 @@ class RecordingController {
         URL.revokeObjectURL(message.resultURL);
 
         this._isResult = true;
+        StorageService.setData({ isResult : this._isResult });
       } catch (err) {
       }
     }

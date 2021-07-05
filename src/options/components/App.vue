@@ -17,7 +17,7 @@
                 id="options-code-dataAttribute"
                 type="text"
                 v-model="options.dataAttribute"
-                @change="save"
+                @keydown="debounceKeydown"
                 placeholder="your custom data-* attribute"
               />
               <small
@@ -45,7 +45,7 @@
                 id="options-code-regexhttpRequest"
                 type="text"
                 v-model="options.regexHTTPrequest"
-                @change="save"
+                @keydown="debounceKeydown"
                 placeholder="Exemple : /.*localhost.*token.*/gm"
               />
               <small
@@ -142,7 +142,7 @@
                 id="options-code-customLineAfterClick"
                 type="text"
                 v-model="options.customLineAfterClick"
-                @change="save"
+                @keydown="debounceKeydown"
               />
             </div>
             <div class="settings-group">
@@ -152,7 +152,7 @@
                 rows="7"
                 cols="70"
                 v-model="options.customLinesBeforeEvent"
-                @change="save"
+                @keydown="debounceKeydown"
               />
             </div>
           </div>
@@ -182,8 +182,6 @@
 </template>
 
 <script>
-import { IOption } from "../../interfaces/i-options";
-
 
 export default {
   name: "App",
@@ -201,6 +199,15 @@ export default {
     });
   },
   methods: {
+    debounceKeydown() {
+      if(this.timeoutId !== null) {
+        clearTimeout(this.timeoutId);
+      }
+      this.timeoutId = setTimeout(() => {
+        this.save();
+      }, 500);
+    },
+
     exportSettings() {
       //transform json content to blob
       let blob = new Blob([JSON.stringify(this.options, null, 2)], {
