@@ -3,10 +3,8 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-
-// Constant
-import DOM_EVENT from '../../constants/events/events-dom';
-import COMPONENT from '../../constants/component-name';
+import { EComponentName } from '../../enum/component/component-name';
+import { EDomEvent } from '../../enum/events/events-dom';
 
 /**
  * chemin du fichier html qui contient le body
@@ -32,7 +30,7 @@ describe('Test de Checkbox', () => {
     // On doit trouver la Checkbox
     expect(
       CheckboxComponent.getElement(element).component
-    ).toEqual(COMPONENT.CHECKBOX);
+    ).toEqual(EComponentName.CHECKBOX);
   });
 
   test('Test de editCheckboxComponentMessage', () => {
@@ -45,6 +43,6 @@ describe('Test de Checkbox', () => {
     expect(
       CheckboxComponent.
       editCheckboxComponentMessage(eventCatched).action
-    ).toEqual(DOM_EVENT.CLICK);
+    ).toEqual(EDomEvent.CLICK);
   });
 });

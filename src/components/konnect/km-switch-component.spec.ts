@@ -4,10 +4,8 @@ import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-
-// Constant
-import COMPONENT from '../../constants/component-name';
-import CUSTOM_EVENT from '../../constants/events/events-custom';
+import { EComponentName } from '../../enum/component/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
  * Path du fichier qui contient le body
@@ -35,7 +33,7 @@ describe('Test de km switch Component', () => {
     // on doit trouver le km switch
     expect(
       KmSwitchComponent.getElement(element as HTMLElement).component
-    ).toEqual(COMPONENT.KM_SWITCH);
+    ).toEqual(EComponentName.KM_SWITCH);
   });
 
 
@@ -48,13 +46,13 @@ describe('Test de km switch Component', () => {
     };
 
     const component : IComponent = {
-      component : COMPONENT.KM_SWITCH,
+      component : EComponentName.KM_SWITCH,
       element : element as HTMLElement
     };
 
     // On doit trouver l'action click mouse
     expect(
       KmSwitchComponent.editKmSwitchComponentMessage(eventMessage, component).action
-    ).toEqual(CUSTOM_EVENT.CLICK_MOUSE);
+    ).toEqual(ECustomEvent.CLICK_MOUSE);
   });
 });

@@ -4,10 +4,8 @@ import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-
-// Constant
-import CUSTOM_EVENT from '../../constants/events/events-custom';
-import COMPONENT from '../../constants/component-name';
+import { EComponentName } from '../../enum/component/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 // Path pour acceder au contenu du body que l'on va utiliser
 const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-input-numeric.html');
@@ -34,7 +32,7 @@ describe('Test de Input numeric Component', () => {
     // On doit trouver qur l'on est dans une input numeric
     expect(
       InputNumericComponent.getElement(element as HTMLElement).component
-    ).toEqual(COMPONENT.INPUT_NUMERIC);
+    ).toEqual(EComponentName.INPUT_NUMERIC);
   });
 
 
@@ -56,6 +54,6 @@ describe('Test de Input numeric Component', () => {
     // On doit trouver que c'est un change input numeric
     expect(
       InputNumericComponent.editInputNumericComponentMessage(event, component).action
-    ).toEqual(CUSTOM_EVENT.CHANGE_INPUT_NUMERIC);
+    ).toEqual(ECustomEvent.CHANGE_INPUT_NUMERIC);
   });
 });

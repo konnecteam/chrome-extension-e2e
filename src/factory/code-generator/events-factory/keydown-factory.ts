@@ -1,10 +1,10 @@
 import { Block } from '../../../code-generator/block';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
+import { ECustomEvent } from '../../../enum/events/events-custom';
 
 // Constant
-import CUSTOM_EVENT from '../../../constants/events/events-custom';
-import DOM_EVENT from '../../../constants/events/events-dom';
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /**
  * Factory qui permet de créér des objets liés à l'event keydown
@@ -19,7 +19,7 @@ export class KeydownFactory {
     const { action, selector, value, iframe } = event;
 
     // Si c'est une action event de liste keydown
-    if (action === CUSTOM_EVENT.LIST_KEYDOWN) {
+    if (action === ECustomEvent.LIST_KEYDOWN) {
       return this.buildListKeydownBlock(options, frameId, frame, selector, value, iframe);
     }
   }
@@ -39,7 +39,7 @@ export class KeydownFactory {
 
     if (options.waitForSelectorOnClick) {
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : ` await ${frame}.waitForSelector('${iframe ? iframe : selector}')`
       });
     }
@@ -47,7 +47,7 @@ export class KeydownFactory {
     if (iframe) {
 
       block.addLine({
-        type : DOM_EVENT.KEYDOWN,
+        type : EDomEvent.KEYDOWN,
         value : ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
           let element = iframeElement.contentDocument.querySelector('${selector}');

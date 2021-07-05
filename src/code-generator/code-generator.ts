@@ -3,10 +3,8 @@ import { Block } from './block';
 import { IOption } from '../interfaces/i-options';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
 import { ScenarioService } from '../services/scenario/scenario-service';
-
-// Constant
-import PPTR_ACTIONS from '../constants/pptr-actions';
-import DOM_EVENT from '../constants/events/events-dom';
+import { EPptrAction } from '../enum/action/pptr-actions';
+import { EDomEvent } from '../enum/events/events-dom';
 
 /**
  * Classe qui permet de générer le scénario à partir des événements enregistrés
@@ -67,7 +65,7 @@ export default class CodeGenerator {
        * On vérifie si l'event n'est pas un change de input file car si c'est le cas
        * on n'a pas besoin de l'event courant car le block du change contiendra le code associé à l'event courant
        */
-      if ( !(nextEvent && nextEvent.action === DOM_EVENT.CHANGE && nextEvent.files) || !nextEvent) {
+      if ( !(nextEvent && nextEvent.action === EDomEvent.CHANGE && nextEvent.files) || !nextEvent) {
 
         // On update les frames
         this._setFrames(currentEvent.frameId, currentEvent.frameUrl);
@@ -81,7 +79,7 @@ export default class CodeGenerator {
            * Si l'option custom Line before event est utilisée et que ce n'est pas un action puppeteer
            * Alors on rajoute la ligne customisé
            */
-          if (this._options.customLinesBeforeEvent && Object.values(PPTR_ACTIONS).indexOf(currentEvent.action) === -1) {
+          if (this._options.customLinesBeforeEvent && Object.values(EPptrAction as any).indexOf(currentEvent.action) === -1) {
 
             this._blocks.push(ScenarioFactory.buildCustomLineBlock(this._frameId, this._options.customLinesBeforeEvent));
           }
@@ -97,7 +95,7 @@ export default class CodeGenerator {
         }
 
         // Si l'action détéctée est un navigation alors on met la navigation à true
-        if (currentEvent.action === PPTR_ACTIONS.NAVIGATION) {
+        if (currentEvent.action === EPptrAction.NAVIGATION) {
           this._hasNavigation = true;
         }
       }

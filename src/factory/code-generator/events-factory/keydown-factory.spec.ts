@@ -4,7 +4,7 @@ import { Block } from '../../../code-generator/block';
 import 'jest';
 
 // Constant
-import DOM_EVENT from '../../../constants/events/events-dom';
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /** frame et defaultOptions utilisées pour les tests */
 let frame : string;
@@ -47,7 +47,7 @@ describe('Test de Keydown Block Factory', () => {
 
     exceptedResult.addLine({
 
-      type : DOM_EVENT.KEYDOWN,
+      type : EDomEvent.KEYDOWN,
       value : ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
           let element = iframeElement.contentDocument.querySelector('${selector}');
@@ -118,7 +118,7 @@ describe('Test de Keydown Block Factory', () => {
     const exceptedResult = new Block(frameId);
 
     exceptedResult.addLine({
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       value : ` await ${frame}.waitForSelector('${selector}')`
     });
 

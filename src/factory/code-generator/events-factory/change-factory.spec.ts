@@ -4,11 +4,11 @@ import { Block } from '../../../code-generator/block';
 import 'jest';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from 'interfaces/i-options';
+import { ETagName } from '../../../enum/elements/tag-name';
+import { ECustomEvent } from '../../../enum/events/events-custom';
 
 // Constant
-import DOM_EVENT from '../../../constants/events/events-dom';
-import CUSTOM_EVENT from '../../../constants/events/events-custom';
-import TAG_NAME from '../../../constants/elements/tag-name';
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /** valeur de l'élément */
 const value = `testValue`;
@@ -59,7 +59,7 @@ describe('Test de Change Block Factory', () => {
     });
 
     exceptedBlock.addLine({
-      type : DOM_EVENT.CHANGE,
+      type : EDomEvent.CHANGE,
       value : `await ${frame}.evaluate( async function(){
        let input = document.querySelector('${SELECTOR}');
        input.value = '${value}';
@@ -82,7 +82,7 @@ describe('Test de Change Block Factory', () => {
 
     const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
-      type : DOM_EVENT.CHANGE,
+      type : EDomEvent.CHANGE,
       value : `await ${frame}.select('${SELECTOR}', \`${value}\`);`
     });
 
@@ -100,7 +100,7 @@ describe('Test de Change Block Factory', () => {
 
     const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
-      type : DOM_EVENT.CHANGE,
+      type : EDomEvent.CHANGE,
       value : `await ${frame}.evaluate( () => document.querySelector('${SELECTOR}').value = "");
       await ${frame}.type('${SELECTOR}', \`${value}\`);`
     });
@@ -123,7 +123,7 @@ describe('Test de Change Block Factory', () => {
     const exceptedBlock = ClickFactory.buildFileDropZoneClickBlock(defaultOptions, frameId, frame, SELECTOR);
 
     exceptedBlock.addLine({
-      type : DOM_EVENT.DROP,
+      type : EDomEvent.DROP,
       value : ` await fileChooser.accept([${files}]);`
     });
 
@@ -144,7 +144,7 @@ describe('Test de Change Block Factory', () => {
       selector : SELECTOR,
       value,
       selectorFocus : INPUT_ID,
-      action : CUSTOM_EVENT.CHANGE_INPUT_NUMERIC
+      action : ECustomEvent.CHANGE_INPUT_NUMERIC
     };
 
     expect(
@@ -171,7 +171,7 @@ describe('Test de Change Block Factory', () => {
     const eventMessage : IMessage = {
       selector : SELECTOR,
       value,
-      action : DOM_EVENT.CHANGE
+      action : EDomEvent.CHANGE
     };
 
     expect(
@@ -196,8 +196,8 @@ describe('Test de Change Block Factory', () => {
     const eventMessage : IMessage = {
       selector : SELECTOR,
       value,
-      action : DOM_EVENT.CHANGE,
-      tagName : TAG_NAME.SELECT.toUpperCase()
+      action : EDomEvent.CHANGE,
+      tagName : ETagName.SELECT.toUpperCase()
     };
 
     expect(
@@ -224,7 +224,7 @@ describe('Test de Change Block Factory', () => {
     const eventMessage : IMessage = {
       selector : SELECTOR,
       value,
-      action : DOM_EVENT.CHANGE,
+      action : EDomEvent.CHANGE,
       files
     };
 

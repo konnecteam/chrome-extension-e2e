@@ -52,7 +52,7 @@
   import RecordingTab from "./RecordingTab.vue"
   import ResultsTab from "./ResultsTab.vue";
   import HelpTab from "./HelpTab.vue";
-  import controlAction from '../../constants/control/control-actions'
+  import { EControlAction } from '../../enum/action/control-actions'
   
   export default {
     name: 'App',
@@ -140,10 +140,10 @@
       togglePause () {
 
         if (this.isPaused) {
-          this.bus.postMessage({ action: controlAction.UNPAUSE });
+          this.bus.postMessage({ action: EControlAction.UNPAUSE });
           this.isPaused = false;
         } else {
-          this.bus.postMessage({ action: controlAction.PAUSE });
+          this.bus.postMessage({ action: EControlAction.PAUSE });
           this.isPaused = true;
         }
         this.storeState();
@@ -152,10 +152,10 @@
         this.cleanUp()
         // On récupère la date au moment de commencer le record
         this.$chrome.storage.local.set({ dateTimeStart : new Date().getTime() });
-        this.bus.postMessage({ action: controlAction.START });
+        this.bus.postMessage({ action: EControlAction.START });
       },
       stop () {
-        this.bus.postMessage({ action: controlAction.STOP });
+        this.bus.postMessage({ action: EControlAction.STOP });
         this.$chrome.storage.local.get(['recording', 'options'], ({ recording, options }) => {
 
           this.recording = recording;
@@ -171,7 +171,7 @@
         // si on a remove ou si on reload la page alors on peut restart le programme
         if (this.isRemovedListener || this.loadingPage) {
             this.cleanUp();
-            this.bus.postMessage({ action: controlAction.CLEANUP });
+            this.bus.postMessage({ action: EControlAction.CLEANUP });
         } else {
             alert('We must waiting for recording to be stopped before restart process');
         }
@@ -239,7 +239,7 @@
         this.showHelp = !this.showHelp;
       },
       exportScript () {
-        this.bus.postMessage({ action: controlAction.EXPORT_SCRIPT });
+        this.bus.postMessage({ action: EControlAction.EXPORT_SCRIPT });
         //Scénario exporté
         this.isExport=true;
       }

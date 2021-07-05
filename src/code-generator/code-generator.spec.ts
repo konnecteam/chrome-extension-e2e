@@ -5,10 +5,8 @@ import { Block } from './block';
 import 'jest';
 import CodeGenerator from './code-generator';
 import { ScenarioService } from '../services/scenario/scenario-service';
-
-// Constant
-import PPTR_ACTIONS from '../constants/pptr-actions';
-import DOM_EVENT from '../constants/events/events-dom';
+import { EDomEvent } from '../enum/events/events-dom';
+import { EPptrAction }from '../enum/action/pptr-actions';
 
 /** Frame dans laquelle on se situe */
 const frameId = 0;
@@ -84,7 +82,7 @@ function createScenario(options : IOption) {
 
     if (block) {
 
-      if (options.customLinesBeforeEvent && Object.values(PPTR_ACTIONS).indexOf(currentEvent.action) === -1) {
+      if (options.customLinesBeforeEvent && Object.values(EPptrAction as any).indexOf(currentEvent.action) === -1) {
         listBlock.push(ScenarioFactory.buildCustomLineBlock(frameId, options.customLinesBeforeEvent));
       }
 
@@ -122,15 +120,15 @@ describe('Test de Code Generator', () => {
   beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
     messageList.push(
-      { typeEvent : PPTR_ACTIONS.PPTR , action : PPTR_ACTIONS.GOTO, value : 'localhost' }
+      { typeEvent : EPptrAction.PPTR , action : EPptrAction.GOTO, value : 'localhost' }
     );
 
     messageList.push(
-      { typeEvent : DOM_EVENT.CLICK, action : DOM_EVENT.CLICK, selector : '#idInput' }
+      { typeEvent : EDomEvent.CLICK, action : EDomEvent.CLICK, selector : '#idInput' }
     );
 
     messageList.push(
-      { typeEvent : DOM_EVENT.CHANGE, action : DOM_EVENT.CHANGE, selector : '#idInput', value : 'change de value input' }
+      { typeEvent : EDomEvent.CHANGE, action : EDomEvent.CHANGE, selector : '#idInput', value : 'change de value input' }
     );
   });
 

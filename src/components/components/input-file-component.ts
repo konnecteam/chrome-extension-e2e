@@ -1,9 +1,7 @@
 import { FileService } from './../../services/file/file-service';
 import { IComponent } from '../../interfaces/i-component';
 import { IMessage } from '../../interfaces/i-message';
-
-// Constant
-import COMPONENT from '../../constants/component-name';
+import { EComponentName }  from '../../enum/component/component-name';
 
 /**
  * Composant qui permet la gestion des input files
@@ -15,7 +13,7 @@ export class InputFilesComponent {
    */
   public static getElement(element : HTMLInputElement) : IComponent {
     if (element.files && element.files[0]) {
-      return { component : COMPONENT.INPUT_FILE, element };
+      return { component : EComponentName.INPUT_FILE, element };
     }
     return null;
   }

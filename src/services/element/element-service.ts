@@ -10,9 +10,7 @@ import { KmSwitchComponent } from '../../components/konnect/km-switch- component
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { IComponent } from '../../interfaces/i-component';
 import { SelectorService } from '../selector/selector-service';
-
-// Constant
-import TAG_NAME from '../../constants/elements/tag-name';
+import { ETagName } from '../../enum/elements/tag-name';
 
 /**
  * Service permettant de gérer les elements HTML
@@ -192,7 +190,7 @@ export class ElementService {
 
     return this.findElementChildWithTagNameAndAttribute(
       element.parentElement,
-      TAG_NAME.INPUT.toUpperCase(),
+      ETagName.INPUT.toUpperCase(),
       this._TITLE_ATTRIBUTE
     );
   }
@@ -204,7 +202,7 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagName(
       element,
-      TAG_NAME.NUMERIC.toUpperCase()
+      ETagName.NUMERIC.toUpperCase()
     );
   }
 
@@ -215,7 +213,7 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
-      TAG_NAME.INPUT.toUpperCase(),
+      ETagName.INPUT.toUpperCase(),
       this._CLASS_ATTIBUTE,
       this._CLASS_ATTRIBUTE_INPUT_LIST
     );
@@ -228,7 +226,7 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
-      TAG_NAME.DIVISION.toUpperCase(),
+      ETagName.DIVISION.toUpperCase(),
       this._CLASS_ATTIBUTE,
       this._CLASS_ATTRIBUTE_POPOVER
     );
@@ -241,7 +239,7 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
-      TAG_NAME.SPAN.toUpperCase(),
+      ETagName.SPAN.toUpperCase(),
       this._CLASS_ATTIBUTE,
       this._CLASS_ATTIBUTE_K_SELECT
     );
@@ -253,7 +251,7 @@ export class ElementService {
   public static getKmSwitchElement(element : HTMLElement) : Element {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
-      element, TAG_NAME.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
+      element, ETagName.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
     ) ? element :
     element.parentElement ? element.parentElement.querySelector(`.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER} .${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`) : null;
   }

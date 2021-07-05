@@ -10,11 +10,11 @@ import { IMessage } from '../../interfaces/i-message';
 import { PPtrFactory } from './events-factory/pptr-factory';
 import { ScenarioService } from '../../services/scenario/scenario-service';
 import { RegExpFactory } from '../../factory/regexp/regexp-factory';
+import { EPptrAction } from '../../enum/action/pptr-actions';
+import { EDomEvent } from '../../enum/events/events-dom';
 
 // Constant
 import HEADER from '../../constants/code-generate/header-code';
-import PPTR_ACTIONS from '../../constants/pptr-actions';
-import DOM_EVENT from '../../constants/events/events-dom';
 
 /**
  * Factory qui génére le contenu du scnénario
@@ -81,12 +81,12 @@ export class ScenarioFactory {
 
         const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${allFrames[line.frameId]}')`;
         blockToAddLine.addLineToTop(({
-          type : PPTR_ACTIONS.FRAME_SET,
+          type : EPptrAction.FRAME_SET,
           value : declaration
         }));
 
         blockToAddLine.addLineToTop({
-          type : PPTR_ACTIONS.FRAME_SET,
+          type : EPptrAction.FRAME_SET,
           value : 'let frames = await page.frames()'
         });
 
@@ -116,7 +116,7 @@ export class ScenarioFactory {
    */
   public static buildNavigationBlock(frameId : number) : Block {
     return new Block(frameId, {
-      type : PPTR_ACTIONS.NAVIGATION_PROMISE,
+      type : EPptrAction.NAVIGATION_PROMISE,
       value : 'const navigationPromise = page.waitForNavigation();'
     });
   }
@@ -141,25 +141,25 @@ export class ScenarioFactory {
     switch (typeEvent) {
 
       // Si c'est un click
-      case DOM_EVENT.CLICK :
+      case EDomEvent.CLICK :
         return ClickFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un change
-      case DOM_EVENT.CHANGE :
+      case EDomEvent.CHANGE :
         return ChangeFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un drop
-      case DOM_EVENT.DROP :
+      case EDomEvent.DROP :
         return DropFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un submit
-      case DOM_EVENT.SUBMIT :
+      case EDomEvent.SUBMIT :
         return SubmitFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un keydown
-      case DOM_EVENT.KEYDOWN :
+      case EDomEvent.KEYDOWN :
         return KeydownFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un scroll
-      case DOM_EVENT.SCROLL :
+      case EDomEvent.SCROLL :
         return ScrollFactory.buildBlock(event, frameId, frame);
       // Si c'est une action pupeteer
-      case PPTR_ACTIONS.PPTR :
+      case EPptrAction.PPTR :
         return PPtrFactory.buildBlock(event, frameId, frame, options);
       default : return null;
     }

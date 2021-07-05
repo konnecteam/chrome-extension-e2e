@@ -10,9 +10,7 @@ import { KmSwitchComponent } from '../../components/konnect/km-switch- component
 import { IframeComponent } from '../../components/konnect/iframe-component';
 import { InputFilesComponent } from '../../components/components/input-file-component';
 import { InputNumericComponent } from '../../components/konnect/input-numeric-component';
-
-// Constant
-import TAG_NAME from '../../constants/elements/tag-name';
+import { ETagName } from '../../enum/elements/tag-name';
 
 const FILE_DROP_ZONE_PATH = '/static/test/dom/dom-filedropzone.html';
 const K_SELECT_PATH = '/static/test/dom/dom-k-select.html';
@@ -172,7 +170,7 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
 
     await changeBodyDocumentAsync(INPUT_NUMERIC);
 
-    expect(ElementService.getNumericElement(document.querySelector(TAG_NAME.NUMERIC)))
+    expect(ElementService.getNumericElement(document.querySelector(ETagName.NUMERIC)))
     .toBeDefined();
 
   });

@@ -2,7 +2,7 @@ import { IMessage } from 'interfaces/i-message';
 import { Block } from '../../../code-generator/block';
 
 // Constant
-import DOM_EVENT from '../../../constants/events/events-dom';
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /**
  * Factory qui permet de créér des objets liés au scroll
@@ -17,7 +17,7 @@ export class ScrollFactory {
     const { action, selector, scrollX, scrollY } = event;
 
     // Si c'est une action event de scroll
-    if (action === DOM_EVENT.SCROLL) {
+    if (action === EDomEvent.SCROLL) {
       return this.buildScrollBlock(frame, frameId, selector, scrollX, scrollY);
     }
   }

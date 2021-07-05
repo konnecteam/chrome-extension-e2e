@@ -3,9 +3,7 @@ import { IMessage } from '../../../interfaces/i-message';
 import { PPtrFactory } from './pptr-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
-
-// Constant
-import PPTR_ACTION from '../../../constants/pptr-actions';
+import { EPptrAction } from '../../../enum/action/pptr-actions';
 
 /** frame et defaultOptionsDefault utilisées pour les tests */
 let frame : string;
@@ -44,12 +42,12 @@ describe('Test de Pptr Action Block Factory', () => {
     const href = 'localhost';
 
     const exceptedResult = new Block(frameId, {
-      type : PPTR_ACTION.GOTO,
+      type : EPptrAction.GOTO,
       value : `await ${frame}.goto('${href}');`
     });
 
     exceptedResult.addLine({
-      type : PPTR_ACTION.GOTO,
+      type : EPptrAction.GOTO,
       value : `await page.waitForTimeout(1000);
   await page.evaluate( () => {
     window.konnect.engineStateService.Instance.start();
@@ -67,7 +65,7 @@ describe('Test de Pptr Action Block Factory', () => {
     const width = 1920;
     const height = 1080;
     const exceptedResult = new Block(frameId, {
-      type : PPTR_ACTION.VIEWPORT,
+      type : EPptrAction.VIEWPORT,
       value : `await ${frame}.setViewport({ width: ${width}, height: ${height} });`
     });
 
@@ -88,7 +86,7 @@ describe('Test de Pptr Action Block Factory', () => {
     defaultOptions.waitForNavigation = true;
 
     const exceptedResult = new Block(frameId, {
-      type : PPTR_ACTION.NAVIGATION,
+      type : EPptrAction.NAVIGATION,
       value : `await navigationPromise`
     });
 
@@ -120,7 +118,7 @@ describe('Test de Pptr Action Block Factory', () => {
   test('Test de generate d\'un GOTO ', () => {
 
     const eventMessage : IMessage = {
-      action : PPTR_ACTION.GOTO,
+      action : EPptrAction.GOTO,
       value : 'localhost'
     };
 
@@ -137,7 +135,7 @@ describe('Test de Pptr Action Block Factory', () => {
 
   test('Test de generate d\'un ViewPort ', () => {
     const eventMessage  = {
-      action : PPTR_ACTION.VIEWPORT,
+      action : EPptrAction.VIEWPORT,
       value : { width : 1920, height : 1080}
     };
 
@@ -155,7 +153,7 @@ describe('Test de Pptr Action Block Factory', () => {
 
   test('Test de generate d\'un WaitForNavigation ', () => {
     const eventMessage  = {
-      action : PPTR_ACTION.NAVIGATION,
+      action : EPptrAction.NAVIGATION,
     };
 
     expect(

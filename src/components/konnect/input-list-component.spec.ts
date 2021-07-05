@@ -3,11 +3,10 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
+import { ETagName } from '../../enum/elements/tag-name';
+import { EComponentName } from '../../enum/component/component-name';
 
-// Constant
-import TAG_NAME from '../../constants/elements/tag-name';
-import CUSTOM_EVENT from '../../constants/events/events-custom';
-import COMPONENT from '../../constants/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 // Path du fichier qui contient le body
 const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-input-list.html');
@@ -29,12 +28,12 @@ describe('Test de input list Component', () => {
   test('Test de getElement pour konnect DROPDOWN', () => {
 
     // On doit trouver que l'on est dans un input list
-    const element = document.querySelector(TAG_NAME.INPUT);
+    const element = document.querySelector(ETagName.INPUT);
 
     // On doit trouver que l'on est dans un input list
     expect(
-      InputListComponent.getElement(element as HTMLElement).component
-    ).toEqual(COMPONENT.INPUT_LIST);
+      InputListComponent.getElement(element).component
+    ).toEqual(EComponentName.INPUT_LIST);
   });
 
   test('Test de editInputListComponentMessage', () => {
@@ -46,7 +45,7 @@ describe('Test de input list Component', () => {
     // On doit trouver l'action click mouse
     expect(
       InputListComponent.editInputListComponentMessage(eventMessage).action
-    ).toEqual(CUSTOM_EVENT.CLICK_MOUSE);
+    ).toEqual(ECustomEvent.CLICK_MOUSE);
 
   });
 });

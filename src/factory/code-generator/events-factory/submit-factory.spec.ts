@@ -3,10 +3,8 @@ import { IOption } from '../../../interfaces/i-options';
 import { IMessage } from '../../../interfaces/i-message';
 import { SubmitFactory } from './submit-factory';
 import 'jest';
-
-// Constant
-import CUSTOM_EVENT from '../../../constants/events/events-custom';
-import TAG_NAME from '../../../constants/elements/tag-name';
+import { ETagName } from '../../../enum/elements/tag-name';
+import { ECustomEvent } from '../../../enum/events/events-custom';
 
 /** Frame définie pour les tests */
 let frameId = 0;
@@ -47,8 +45,8 @@ describe('Test de Submit Block Factory', () => {
 
   test('généré un block pour submit dans un formulaire', () => {
     const eventMessage : IMessage = {
-      tagName : TAG_NAME.FORM.toUpperCase(),
-      action : CUSTOM_EVENT.SUBMIT,
+      tagName : ETagName.FORM.toUpperCase(),
+      action : ECustomEvent.SUBMIT,
       submitterSelector : selector
     };
 

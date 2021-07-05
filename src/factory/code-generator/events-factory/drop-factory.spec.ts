@@ -3,9 +3,7 @@ import { IMessage } from '../../../interfaces/i-message';
 import { DropFactory } from './drop-factory';
 import 'jest';
 import { ChangeFactory } from './change-factory';
-
-// Constant
-import CUSTOM_EVENT from '../../../constants/events/events-custom';
+import { ECustomEvent } from '../../../enum/events/events-custom';
 
 /** frame utilisée pour les tests */
 let frame : string;
@@ -42,7 +40,7 @@ describe('Test de Drop Block Factory', () => {
 
   test('Généré un Drop Block', () => {
     const eventMessage : IMessage = {
-      action : CUSTOM_EVENT.DROP_FILE,
+      action : ECustomEvent.DROP_FILE,
       selector : '#test',
       files : 'text.txt'
     };

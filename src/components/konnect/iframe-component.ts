@@ -2,9 +2,7 @@ import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { SelectorService } from '../../services/selector/selector-service';
 import { ElementService } from '../../services/element/element-service';
-
-// Constant
-import COMPONENT from '../../constants/component-name';
+import { EComponentName } from '../../enum/component/component-name';
 
 /**
  * Composant qui permet de gérer les iframe
@@ -19,7 +17,7 @@ export class IframeComponent {
     const iframeElement = ElementService.getIframeElement(element);
     // Si c'est un iframe on retourne le composant associé
     if (iframeElement) {
-      return { component : COMPONENT.IFRAME, element : iframeElement as HTMLElement };
+      return { component : EComponentName.IFRAME, element : iframeElement as HTMLElement };
     } else {
       return null;
     }

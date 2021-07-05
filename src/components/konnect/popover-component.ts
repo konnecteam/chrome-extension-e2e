@@ -1,10 +1,8 @@
 import { ElementService } from '../../services/element/element-service';
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
-
-// Constant
-import CUSTOM_EVENT from '../../constants/events/events-custom';
-import COMPONENT from '../../constants/component-name';
+import { EComponentName } from '../../enum/component/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
  * Composant qui permet de gérer les popover
@@ -21,7 +19,7 @@ export class PopoverComponent {
     // On vérifie si c'est un popover
     if (ElementService.getPopover(element)) {
 
-      return { component : COMPONENT.POPOVER, element };
+      return { component : EComponentName.POPOVER, element };
     } else {
 
       return null;
@@ -34,7 +32,7 @@ export class PopoverComponent {
    */
   public static editPopoverComponentMessage(event : IMessage) : IMessage {
 
-    event.action = CUSTOM_EVENT.CLICK_MOUSE_ENTER;
+    event.action = ECustomEvent.CLICK_MOUSE_ENTER;
 
     return event;
   }

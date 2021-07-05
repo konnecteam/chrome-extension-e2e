@@ -1,10 +1,8 @@
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
-
-// Constant
-import CUSTOM_EVENT from '../../constants/events/events-custom';
-import COMPONENT from '../../constants/component-name';
+import { EComponentName } from '../../enum/component/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
  * Composant qui permet de gérer les input list
@@ -23,7 +21,7 @@ export class InputListComponent {
 
     if (input) {
 
-      return { component : COMPONENT.INPUT_LIST, element : input as HTMLElement };
+      return { component : EComponentName.INPUT_LIST, element : input as HTMLElement };
     } else {
 
       return null;
@@ -36,7 +34,7 @@ export class InputListComponent {
    */
   public static editInputListComponentMessage(event : IMessage) : IMessage {
 
-    event.action = CUSTOM_EVENT.CLICK_MOUSE;
+    event.action = ECustomEvent.CLICK_MOUSE;
 
     return event;
   }

@@ -3,10 +3,8 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-
-// Constant
-import CUSTOM_EVENT from '../../constants/events/events-custom';
-import COMPONENT from '../../constants/component-name';
+import { EComponentName } from '../../enum/component/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
  * Path du fichier qui contient le body
@@ -33,7 +31,7 @@ describe('Test de k select Component', () => {
     const element = document.querySelector(K_SELECT_SELETOR);
     expect(
       KSelectComponent.getElement(element as HTMLElement).component
-    ).toEqual(COMPONENT.K_SELECT);
+    ).toEqual(EComponentName.K_SELECT);
   });
 
 
@@ -45,6 +43,6 @@ describe('Test de k select Component', () => {
     // on doit trouver un click sur un input numeric
     expect(
       KSelectComponent.editKSelectComponentMessage(eventMessage).action
-    ).toEqual(CUSTOM_EVENT.CLICK_MOUSE_INPUT_NUMERIC);
+    ).toEqual(ECustomEvent.CLICK_MOUSE_INPUT_NUMERIC);
   });
 });

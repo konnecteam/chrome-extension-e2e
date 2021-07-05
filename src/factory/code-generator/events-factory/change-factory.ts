@@ -2,11 +2,11 @@ import { IOption } from './../../../interfaces/i-options';
 import { ClickFactory } from './click-factory';
 import { IMessage } from '../../../interfaces/i-message';
 import { Block } from '../../../code-generator/block';
+import { ETagName} from '../../../enum/elements/tag-name';
+import { ECustomEvent } from '../../../enum/events/events-custom';
 
 // Constant
-import TAG_NAME from '../../../constants/elements/tag-name';
-import DOM_EVENT from '../../../constants/events/events-dom';
-import CUSTOM_EVENT from '../../../constants/events/events-custom';
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /**
  * Factory qui permet de créér des objets liés à l'événement change
@@ -22,14 +22,14 @@ export class ChangeFactory {
     switch (action) {
 
       // Si c'est un changement dans un input numeric
-      case CUSTOM_EVENT.CHANGE_INPUT_NUMERIC :
+      case ECustomEvent.CHANGE_INPUT_NUMERIC :
         return this.buildInputNumericChangedBlock(frameId, frame, selector, value, selectorFocus);
 
       // Si c'est un change
-      case DOM_EVENT.CHANGE :
+      case EDomEvent.CHANGE :
 
         // Si c'est un select
-        if (tagName === TAG_NAME.SELECT.toUpperCase()) {
+        if (tagName === ETagName.SELECT.toUpperCase()) {
 
           return this.buildSelectChangeBlock(frameId, frame, selector, value);
 
@@ -62,7 +62,7 @@ export class ChangeFactory {
     });
 
     block.addLine({
-      type : DOM_EVENT.CHANGE,
+      type : EDomEvent.CHANGE,
       value : `await ${frame}.evaluate( async function(){
        let input = document.querySelector('${selector}');
        input.value = '${value}';
@@ -84,7 +84,7 @@ export class ChangeFactory {
   ) : Block {
 
     return new Block(frameId, {
-      type : DOM_EVENT.CHANGE,
+      type : EDomEvent.CHANGE,
       value : `await ${frame}.select('${selector}', \`${value}\`);`
     });
   }
@@ -101,7 +101,7 @@ export class ChangeFactory {
 
    // On remplace : \n par \\r\\n pour l'exportation du script
     return new Block(frameId, {
-      type : DOM_EVENT.CHANGE,
+      type : EDomEvent.CHANGE,
       value : `await ${frame}.evaluate( () => document.querySelector('${selector}').value = "");
       await ${frame}.type('${selector}', \`${value.replace(/\n/g, '\\r\\n')}\`);`
     });
@@ -122,7 +122,7 @@ export class ChangeFactory {
     }
 
     block.addLine({
-      type : DOM_EVENT.DROP,
+      type : EDomEvent.DROP,
       value : ` await fileChooser.accept(${JSON.stringify(filesList)});`
     });
 

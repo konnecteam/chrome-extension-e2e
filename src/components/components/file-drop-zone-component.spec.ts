@@ -3,10 +3,8 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-
-// Constant
-import COMPONENT from '../../constants/component-name';
-import CUTOM_EVENT from '../../constants/events/events-custom';
+import { EComponentName } from '../../enum/component/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
  * chemin du fichier html qui contient le body
@@ -36,7 +34,7 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver le file dropzone
     expect(
       FileDropZoneComponent.getElement(element as HTMLElement).component
-    ).toEqual(COMPONENT.FILE_DROPZONE);
+    ).toEqual(EComponentName.FILE_DROPZONE);
   });
 
   test('Test de editFileDropZoneComponentMessage', () => {
@@ -49,7 +47,7 @@ describe('Test de File DopZone Component', () => {
     expect(
       FileDropZoneComponent.
       editFileDropZoneComponentMessage(eventCatched, (document.getElementById(FILE_ITEM_SELECTOR) as HTMLInputElement).files).action
-    ).toEqual(CUTOM_EVENT.DROP_FILE);
+    ).toEqual(ECustomEvent.DROP_FILE);
   });
 
 });

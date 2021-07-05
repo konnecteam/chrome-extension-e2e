@@ -9,7 +9,7 @@ import { Server } from 'http';
 import { IOption } from '../interfaces/i-options';
 
 // Constant
-import EVENT_MSG from '../constants/events/events-message';
+import { EEventMessage } from '../enum/events/events-message';
 
 let server : Server;
 let browser : puppeteer.Browser;
@@ -184,7 +184,7 @@ describe('Test Content script ', () => {
 
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control : EVENT_MSG.GET_CURRENT_URL });
+    await dispatchEventAsync('OnMessage', { control : EEventMessage.GET_CURRENT_URL });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();
@@ -203,7 +203,7 @@ describe('Test Content script ', () => {
      */
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control : EVENT_MSG.GET_VIEWPORT_SIZE });
+    await dispatchEventAsync('OnMessage', { control : EEventMessage.GET_VIEWPORT_SIZE });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();

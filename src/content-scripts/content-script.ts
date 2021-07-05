@@ -9,11 +9,9 @@ import { StorageService } from '../services/storage/storage-service';
 import { ChromeService } from '../services/chrome/chrome-service';
 import { WindowService } from '../services/window/window-service';
 import { PollyService } from '../services/polly/polly-service';
-
-// Constant
-import EVENT_MSG from '../constants/events/events-message';
-import TAG_NAME from '../constants/elements/tag-name';
-import DOM_EVENT from '../constants/events/events-dom';
+import { ETagName } from '../enum/elements/tag-name';
+import { EEventMessage } from '../enum/events/events-message';
+import { EDomEvent} from '../enum/events/events-dom';
 
 /**
  * Enregistre les intéractions de l'utilisateur avec la page
@@ -128,7 +126,7 @@ class EventRecorder {
           this._init();
         } else {
           // On dit au startup config que pollyJS est prêt et que les modules peuvent être chargé
-          WindowService.dispatchEvent(new CustomEvent(EVENT_MSG.POLLY_READY));
+          WindowService.dispatchEvent(new CustomEvent(EEventMessage.POLLY_READY));
         }
 
         // Ajout d'un listener afin d'écouter les messages du background
@@ -140,7 +138,7 @@ class EventRecorder {
         (window as any).observer = new MutationObserver(this._listenerObserverAsync);
         (window as any).observer.observe(document, { childList : true, subtree : true });
 
-        ChromeService.sendMessage({ control : EVENT_MSG.EVENT_RECORDER_STARTED });
+        ChromeService.sendMessage({ control : EEventMessage.EVENT_RECORDER_STARTED });
       }
     } catch (err) {
     }
@@ -155,19 +153,19 @@ class EventRecorder {
     if (message && message.hasOwnProperty('control')) {
 
       switch (message.control) {
-        case EVENT_MSG.GET_CURRENT_URL :
+        case EEventMessage.GET_CURRENT_URL :
           WindowService.getCurrentUrl(message);
           break;
-        case EVENT_MSG.GET_VIEWPORT_SIZE :
+        case EEventMessage.GET_VIEWPORT_SIZE :
           WindowService.getViewPortSize(message);
           break;
-        case EVENT_MSG.GET_RESULT :
+        case EEventMessage.GET_RESULT :
           this._getResult();
           break;
-        case EVENT_MSG.PAUSE :
+        case EEventMessage.PAUSE :
           this._doPause();
           break;
-        case EVENT_MSG.UNPAUSE :
+        case EEventMessage.UNPAUSE :
           this._doUnPause();
           break;
         // default
@@ -192,12 +190,12 @@ class EventRecorder {
       }
 
       // Gestion de la durée du click (principalement pour les input numérique)
-      if (e.type === DOM_EVENT.MOUSEDOWN) {
+      if (e.type === EDomEvent.MOUSEDOWN) {
         this._startMouseDown = Date.now();
         return;
       }
 
-      if (e.type === DOM_EVENT.CLICK) {
+      if (e.type === EDomEvent.CLICK) {
         durationClick = Date.now() - this._startMouseDown;
       }
 
@@ -251,16 +249,16 @@ class EventRecorder {
           const child = mutation.addedNodes[j];
 
           // Si on a une iframe on rajoute les listener car de base il n'y en pas
-          if (child.tagName === TAG_NAME.IFRAME.toUpperCase() && child.contentDocument) {
-            Object.keys(DOM_EVENT).forEach(key => {
-              const type = DOM_EVENT[key];
+          if (child.tagName === ETagName.IFRAME.toUpperCase() && child.contentDocument) {
+            Object.keys(EDomEvent).forEach(key => {
+              const type = EDomEvent[key];
               child.contentDocument.addEventListener(type, boundedRecordEvent, true);
             });
           }
 
           // Si on a un input file on rajoute le listener des change
-          if (child.tagName === TAG_NAME.INPUT.toUpperCase() && child.type === 'file') {
-            child.addEventListener(DOM_EVENT.CHANGE, boundedRecordEvent, false);
+          if (child.tagName === ETagName.INPUT.toUpperCase() && child.type === 'file') {
+            child.addEventListener(EDomEvent.CHANGE, boundedRecordEvent, false);
           }
         }
       }
@@ -314,9 +312,9 @@ class EventRecorder {
 
     }, 150);
 
-    Object.keys(DOM_EVENT).forEach(key => {
-      const type = DOM_EVENT[key];
-      if (type !== DOM_EVENT.SCROLL) {
+    Object.keys(EDomEvent).forEach(key => {
+      const type = EDomEvent[key];
+      if (type !== EDomEvent.SCROLL) {
         WindowService.addEventListener(type, this._boundedRecordEvent, true);
       } else {
         WindowService.addEventListener(type, this._boundedScrollEvent, true);
@@ -329,9 +327,9 @@ class EventRecorder {
    */
   private _deleteAllListeners() : void {
 
-    Object.keys(DOM_EVENT).forEach(key => {
-      const type = DOM_EVENT[key];
-      if (type !== DOM_EVENT.SCROLL) {
+    Object.keys(EDomEvent).forEach(key => {
+      const type = EDomEvent[key];
+      if (type !== EDomEvent.SCROLL) {
         WindowService.removeEventListener(type, this._boundedRecordEvent, true);
       } else {
         WindowService.removeEventListener(type, this._boundedScrollEvent, true);
@@ -368,13 +366,13 @@ class EventRecorder {
   private _sendPollyResult(event) : void {
 
     // On demande à récupérer le har
-    if (event?.data.action === EVENT_MSG.GOT_HAR) {
+    if (event?.data.action === EEventMessage.GOT_HAR) {
 
       const data = new File([event.data.payload.result], 'har.json', { type : 'text/json;charset=utf-8' });
 
       // On diffuse le message
       ChromeService.sendMessage({
-        control : EVENT_MSG.GET_RESULT,
+        control : EEventMessage.GET_RESULT,
         recordingId : event.data.payload.recordingId,
         resultURL : URLService.createURLObject(data)
       });
@@ -389,7 +387,7 @@ class EventRecorder {
   /** Récupère les résultats de pollyJS */
   private _getResult() : void {
 
-    WindowService.dispatchEvent(new CustomEvent(EVENT_MSG.GET_HAR));
+    WindowService.dispatchEvent(new CustomEvent(EEventMessage.GET_HAR));
 
     // Si on n'enregistre pas les requêtes on peut directement supprimer les listeners
     if (!this._recordHttpRequest) {
@@ -401,14 +399,14 @@ class EventRecorder {
    * Envoi un event à Polly pour mettre le record en pause
    */
   private _doPause() : void {
-    WindowService.dispatchEvent(new CustomEvent(EVENT_MSG.PAUSE));
+    WindowService.dispatchEvent(new CustomEvent(EEventMessage.PAUSE));
   }
 
   /**
    * Envoi un event à Polly pour reprendre l'enregistrement
    */
   private _doUnPause() : void {
-    WindowService.dispatchEvent(new CustomEvent(EVENT_MSG.UNPAUSE));
+    WindowService.dispatchEvent(new CustomEvent(EEventMessage.UNPAUSE));
   }
 }
 

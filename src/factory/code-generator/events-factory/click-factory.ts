@@ -1,10 +1,10 @@
 import { Block } from '../../../code-generator/block';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
+import { ECustomEvent } from '../../../enum/events/events-custom';
 
 // Constant
-import DOM_EVENT from '../../../constants/events/events-dom';
-import CUSTOM_EVENT from '../../../constants/events/events-custom';
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /**
  * Factory qui permet de créér des objets liés à l'event Click
@@ -28,20 +28,20 @@ export class ClickFactory {
     switch (action) {
 
       // Si c'est un click basique
-      case DOM_EVENT.CLICK :
+      case EDomEvent.CLICK :
         return this.buildSimpleClickBlock(options, frameId, frame, selector);
       // Si c'est un click sur les flêches de l'input numeric
-      case CUSTOM_EVENT.CLICK_MOUSE_INPUT_NUMERIC :
+      case ECustomEvent.CLICK_MOUSE_INPUT_NUMERIC :
         return this.buildClickMouseInputNumericBlock(options, frameId, frame, selector, durancyClick);
       // Si c'est un click mouse (mousdown, mouseup)
-      case CUSTOM_EVENT.CLICK_MOUSE :
+      case ECustomEvent.CLICK_MOUSE :
         return this.buildClickMouseBlock(options, frameId, frame, selector);
       // Si c'est un click sur une liste
-      case CUSTOM_EVENT.CLICK_LIST_ITEM :
+      case ECustomEvent.CLICK_LIST_ITEM :
         return this.buildClickKListItemBlock(
           options, frameId, frame, selector, scrollElement, scrollXElement, scrollYElement
         );
-      case CUSTOM_EVENT.CLICK_MOUSE_ENTER :
+      case ECustomEvent.CLICK_MOUSE_ENTER :
         return this.buildClickMouseEnter(options, frameId, frame, selector);
       default : return null;
 
@@ -58,13 +58,13 @@ export class ClickFactory {
     if (options.waitForSelectorOnClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `await ${frame}.waitForSelector('${selector}');`
       });
     }
 
     block.addLine({
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       value : ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         var docEvent = document.createEvent('MouseEvents');
@@ -77,7 +77,7 @@ export class ClickFactory {
     if (options.customLineAfterClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `${options.customLineAfterClick}`
       });
     }
@@ -100,20 +100,20 @@ export class ClickFactory {
     if (options.waitForSelectorOnClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `await ${frame}.waitForSelector('${selector}');`
       });
     }
 
     block.addLine({
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       value : `await ${frame}.$eval('${selector}',  el=> el.click());`
     });
 
     if (options.customLineAfterClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `${options.customLineAfterClick}`
       });
     }
@@ -136,13 +136,13 @@ export class ClickFactory {
     if (options.waitForSelectorOnClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `await ${frame}.waitForSelector('${selector}');`
       });
     }
 
     block.addLine({
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       value : `  [fileChooser] = await Promise.all([
       ${frame}.waitForFileChooser(),
       ${frame}.waitForSelector('${selector}'),
@@ -167,13 +167,13 @@ export class ClickFactory {
     if (options.waitForSelectorOnClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `await ${frame}.waitForSelector('${selector}');`
       });
     }
 
     block.addLine({
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       value : ` await ${frame}.evaluate( async function(){
       let e = document.querySelector('${selector}');
       var docEvent = document.createEvent('MouseEvents');
@@ -193,7 +193,7 @@ export class ClickFactory {
     if (options.customLineAfterClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `${options.customLineAfterClick}`
       });
     }
@@ -216,13 +216,13 @@ export class ClickFactory {
     if (options.waitForSelectorOnClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `await ${frame}.waitForSelector('${selector}');`
       });
     }
 
     block.addLine({
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       value : ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         var docEvent = document.createEvent('MouseEvents');
@@ -236,7 +236,7 @@ export class ClickFactory {
     if (options.customLineAfterClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `${options.customLineAfterClick}`
       });
     }
@@ -261,13 +261,13 @@ export class ClickFactory {
 
     if (options.waitForSelectorOnClick) {
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `await ${frame}.waitForSelector('${scrollElement}');`
       });
     }
 
     block.addLine({
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       value : ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${scrollElement}').parentElement;
         e.scroll(${scrollXElement}, ${scrollYElement});
@@ -277,13 +277,13 @@ export class ClickFactory {
     // Permet d'attendre que les items chargent
     if (options.customLinesBeforeEvent) {
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `${options.customLinesBeforeEvent}`
       });
     }
 
     block.addLine({
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       value : `await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         e.click();
@@ -293,7 +293,7 @@ export class ClickFactory {
     if (options.customLineAfterClick) {
 
       block.addLine({
-        type : DOM_EVENT.CLICK,
+        type : EDomEvent.CLICK,
         value : `${options.customLineAfterClick}`
       });
     }

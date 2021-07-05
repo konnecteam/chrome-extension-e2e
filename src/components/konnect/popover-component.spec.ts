@@ -3,10 +3,8 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-
-// Constant
-import CUSTOM_EVENT from '../../constants/events/events-custom';
-import COMPONENT from '../../constants/component-name';
+import { EComponentName } from '../../enum/component/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 // Path du fichier qui contient le body
 const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-popover.html');
@@ -32,7 +30,7 @@ describe('Test de Popover Component', () => {
     // On doit trouver que l'on est dans un popover
     expect(
       PopoverComponent.getElement(element as HTMLElement).component
-    ).toEqual(COMPONENT.POPOVER);
+    ).toEqual(EComponentName.POPOVER);
   });
 
   test('Test de editPopoverComponentMessage', () => {
@@ -44,7 +42,7 @@ describe('Test de Popover Component', () => {
     // On doit trouver l'action click mouse enter
     expect(
       PopoverComponent.editPopoverComponentMessage(eventMessage).action
-    ).toEqual(CUSTOM_EVENT.CLICK_MOUSE_ENTER);
+    ).toEqual(ECustomEvent.CLICK_MOUSE_ENTER);
 
   });
 });

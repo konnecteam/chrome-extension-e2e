@@ -2,11 +2,9 @@ import { FileService } from './../../services/file/file-service';
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
-
-// Constant
-import TAG_NAME from '../../constants/elements/tag-name';
-import COMPONENT from '../../constants/component-name';
-import CUSTOM_EVENT from '../../constants/events/events-custom';
+import { ETagName } from '../../enum/elements/tag-name';
+import { EComponentName } from '../../enum/component/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
  * Composant qui permet la gestion du composant file dropzone
@@ -20,13 +18,13 @@ export class FileDropZoneComponent {
 
     const fileDropzoneElement = ElementService.findParentElementWithTagName(
       element,
-      TAG_NAME.FILE_DROPZONE.toUpperCase()
+      ETagName.FILE_DROPZONE.toUpperCase()
     );
 
     // Si c'est un file dropzone
     if (fileDropzoneElement) {
 
-      return { component : COMPONENT.FILE_DROPZONE , element : fileDropzoneElement };
+      return { component : EComponentName.FILE_DROPZONE , element : fileDropzoneElement };
     } else {
 
       return null;
@@ -43,7 +41,7 @@ export class FileDropZoneComponent {
        On les envoie au background pour qu'il les rajoute dans le zip
     */
     if (files) {
-      newMessage.action = CUSTOM_EVENT.DROP_FILE;
+      newMessage.action = ECustomEvent.DROP_FILE;
       newMessage.files = FileService.Instance.prepareFilesForScenario(files);
     }
 

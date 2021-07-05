@@ -6,14 +6,14 @@ import { ChromeService } from '../services/chrome/chrome-service';
 import { IMessage } from '../interfaces/i-message';
 import { PollyService } from '../services/polly/polly-service';
 import { HttpService } from '../services/http/http-service';
-import { EBadgeState } from '../enum/e-badge-states';
+import { EBadgeState } from '../enum/badge/e-badge-states';
+import { EControlAction } from '../enum/action/control-actions';
 import { ScenarioService } from '../services/scenario/scenario-service';
+import { EEventMessage } from '../enum/events/events-message';
+import { EPptrAction } from '../enum/action/pptr-actions';
 
 // Constant
-import ACTION from '../constants/control/control-actions';
-import MESSAGE from '../constants/events/events-message';
 import ZIP_CONTENT from '../constants/package-json-zip';
-import PPTR_ACTION from '../constants/pptr-actions';
 
 /**
  * Background du Plugin qui permet de gérer le recording
@@ -135,22 +135,22 @@ class RecordingController {
     (chrome.extension as any).onConnect.addListener(port => {
       port.onMessage.addListener(msg => {
         switch (msg.action) {
-          case ACTION.START :
+          case EControlAction.START :
             this._start();
             break;
-          case ACTION.STOP :
+          case EControlAction.STOP :
             this._stop();
             break;
-          case ACTION.CLEANUP :
+          case EControlAction.CLEANUP :
             this._cleanUp();
             break;
-          case ACTION.PAUSE :
+          case EControlAction.PAUSE :
             this._pause();
             break;
-          case ACTION.UNPAUSE :
+          case EControlAction.UNPAUSE :
             this._unPause();
             break;
-          case ACTION.EXPORT_SCRIPT :
+          case EControlAction.EXPORT_SCRIPT :
             this._exportScriptAsync();
             break;
         }
@@ -279,7 +279,7 @@ class RecordingController {
 
     ChromeService.setBadgeText(EBadgeState.REC);
     this._isPaused = false;
-    ChromeService.sendMessageToContentScript(MESSAGE.UNPAUSE);
+    ChromeService.sendMessageToContentScript(EEventMessage.UNPAUSE);
   }
 
   /**
@@ -289,7 +289,7 @@ class RecordingController {
 
     ChromeService.setBadgeText(EBadgeState.PAUSE);
     this._isPaused = true;
-    ChromeService.sendMessageToContentScript(MESSAGE.PAUSE);
+    ChromeService.sendMessageToContentScript(EEventMessage.PAUSE);
   }
 
   /**
@@ -334,7 +334,7 @@ class RecordingController {
     StorageService.setData({ recording : this._recording });
 
     // 5 - On récupère le résultat
-    ChromeService.sendMessageToContentScript(MESSAGE.GET_RESULT);
+    ChromeService.sendMessageToContentScript(EEventMessage.GET_RESULT);
 
     // 6 - Si on record pas les requêtes on peut mettre à true isRemovedListener et le isResult
     if (!this._recordHttpRequest) {
@@ -403,12 +403,12 @@ class RecordingController {
 
       // Récupération du viewport
       chrome.tabs.sendMessage(currentTab.id, {
-        control : MESSAGE.GET_VIEWPORT_SIZE
+        control : EEventMessage.GET_VIEWPORT_SIZE
       });
 
       // Récupération de l'url
       chrome.tabs.sendMessage(currentTab.id, {
-        control : MESSAGE.GET_CURRENT_URL
+        control : EEventMessage.GET_CURRENT_URL
       });
     } catch (err) {
     }
@@ -480,10 +480,10 @@ class RecordingController {
    */
   private _recordNavigation() : void {
     this._handleMessage({
-      typeEvent : PPTR_ACTION.PPTR,
+      typeEvent : EPptrAction.PPTR,
       selector : undefined,
       value : undefined,
-      action : PPTR_ACTION.NAVIGATION
+      action : EPptrAction.NAVIGATION
     });
   }
 
@@ -515,19 +515,19 @@ class RecordingController {
    */
   private _handleControlMessage(message : IMessage) : void {
     switch (message?.control) {
-      case MESSAGE.EVENT_RECORDER_STARTED :
+      case EEventMessage.EVENT_RECORDER_STARTED :
         ChromeService.setBadgeText(EBadgeState.REC);
         break;
-      case MESSAGE.GET_VIEWPORT_SIZE :
+      case EEventMessage.GET_VIEWPORT_SIZE :
         this._recordCurrentViewportSize(message.coordinates);
         break;
-      case MESSAGE.GET_CURRENT_URL :
+      case EEventMessage.GET_CURRENT_URL :
         this._recordCurrentUrl(message.frameUrl);
         break;
-      case MESSAGE.GET_RESULT :
+      case EEventMessage.GET_RESULT :
         this._getHARcontentAsync(message);
         break;
-      case MESSAGE.GET_NEW_FILE :
+      case EEventMessage.GET_NEW_FILE :
         this._recordNewFile(message);
       // default
     }
@@ -537,14 +537,14 @@ class RecordingController {
    * Enregistre la taille de l'écran
    */
   private _recordCurrentViewportSize(value : { width : number, height : number }) : void {
-    this._handleMessage({ typeEvent : PPTR_ACTION.PPTR, selector : undefined, value, action : PPTR_ACTION.VIEWPORT });
+    this._handleMessage({ typeEvent : EPptrAction.PPTR, selector : undefined, value, action : EPptrAction.VIEWPORT });
   }
 
   /**
    * Enregistre l'url courante
    */
   private _recordCurrentUrl(value : string) : void {
-    this._handleMessage({ typeEvent : PPTR_ACTION.PPTR, selector : undefined, value, action : PPTR_ACTION.GOTO });
+    this._handleMessage({ typeEvent : EPptrAction.PPTR, selector : undefined, value, action : EPptrAction.GOTO });
   }
 
   /**

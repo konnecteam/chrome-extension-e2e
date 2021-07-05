@@ -1,10 +1,8 @@
 import { IMessage } from 'interfaces/i-message';
 import { EventService } from './event-service';
 import 'jest';
-
-// Constant
-import DOM_EVENT from '../../constants/events/events-dom';
-import TAG_NAME from '../../constants/elements/tag-name';
+import { ETagName } from '../../enum/elements/tag-name';
+import { EDomEvent } from '../../enum/events/events-dom';
 
 describe('Test du Event Service', () => {
   beforeAll(() => {
@@ -30,9 +28,9 @@ describe('Test du Event Service', () => {
     const currentEvent = {
       target : {
         type : 'password',
-        tagName : TAG_NAME.INPUT.toUpperCase()
+        tagName : ETagName.INPUT.toUpperCase()
       },
-      type : DOM_EVENT.KEYDOWN,
+      type : EDomEvent.KEYDOWN,
       timeStamp : 50
     };
 
@@ -47,14 +45,14 @@ describe('Test du Event Service', () => {
     const currentEvent = {
       target : {
         type : 'file',
-        tagName : TAG_NAME.INPUT.toUpperCase()
+        tagName : ETagName.INPUT.toUpperCase()
       },
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       timeStamp : 50
     };
 
     const previousMessage : IMessage = {
-      action : DOM_EVENT.CLICK
+      action : EDomEvent.CLICK
     };
 
     expect(EventService.continueEventTreatment(previousEvent, currentEvent, previousMessage)).toBeFalsy();
@@ -70,9 +68,9 @@ describe('Test du Event Service', () => {
     const currentEvent = {
       target : {
         type : 'text',
-        tagName : TAG_NAME.INPUT.toUpperCase()
+        tagName : ETagName.INPUT.toUpperCase()
       },
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       timeStamp : 50,
     };
 
@@ -85,9 +83,9 @@ describe('Test du Event Service', () => {
     const currentEvent = {
       target : {
         type : 'password',
-        tagName : TAG_NAME.INPUT.toUpperCase()
+        tagName : ETagName.INPUT.toUpperCase()
       },
-      type : DOM_EVENT.CHANGE,
+      type : EDomEvent.CHANGE,
       timeStamp : 50
     };
 
@@ -99,9 +97,9 @@ describe('Test du Event Service', () => {
     const currentEvent = {
       target : {
         type : 'text',
-        tagName : TAG_NAME.INPUT.toUpperCase()
+        tagName : ETagName.INPUT.toUpperCase()
       },
-      type : DOM_EVENT.CHANGE,
+      type : EDomEvent.CHANGE,
       timeStamp : 50
     };
 
@@ -114,9 +112,9 @@ describe('Test du Event Service', () => {
     const currentEvent = {
       target : {
         type : 'file',
-        tagName : TAG_NAME.INPUT.toUpperCase()
+        tagName : ETagName.INPUT.toUpperCase()
       },
-      type : DOM_EVENT.CHANGE,
+      type : EDomEvent.CHANGE,
       timeStamp : 50
     };
     const previousEvent = 'input file';
@@ -128,7 +126,7 @@ describe('Test du Event Service', () => {
     document.body.innerHTML = '<button id="button"> </button>';
     const currentEvent = {
       target : document.getElementById('button'),
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       timeStamp : 50
     };
     const previousEvent = 'input file';
@@ -151,7 +149,7 @@ describe('Test du Event Service', () => {
     document.body.innerHTML = '<button id="button"> </button>';
     const currentEvent = {
       target : document.getElementById('button'),
-      type : DOM_EVENT.CLICK,
+      type : EDomEvent.CLICK,
       timeStamp : 50,
       href : 'local'
     };

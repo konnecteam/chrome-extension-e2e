@@ -9,11 +9,9 @@ import { IMessage } from '../../interfaces/i-message';
 import { Block } from '../../code-generator/block';
 import 'jest';
 import { ScenarioFactory } from './scenario-factory';
-
-// Constant
-import CUSTOM_EVENT from '../../constants/events/events-custom';
-import DOM_EVENT from '../../constants/events/events-dom';
-import PPTR from '../../constants/pptr-actions';
+import { ECustomEvent } from '../../enum/events/events-custom';
+import { EDomEvent } from '../../enum/events/events-dom';
+import { EPptrAction } from '../../enum/action/pptr-actions';
 
 /** Frame définie pour les tests */
 const frameId = 0;
@@ -76,12 +74,12 @@ describe('Test de Scenario Factory', () => {
     const declaration = `const frame_${1} = frames.find(f => f.url() === '${allFramesResult[1]}')`;
 
     blockToAddResult.addLineToTop(({
-      type : PPTR.FRAME_SET,
+      type : EPptrAction.FRAME_SET,
       value : declaration
     }));
 
     blockToAddResult.addLineToTop({
-      type : PPTR.FRAME_SET,
+      type : EPptrAction.FRAME_SET,
       value : 'let frames = await page.frames()'
     });
 
@@ -116,7 +114,7 @@ describe('Test de Scenario Factory', () => {
       ScenarioFactory.buildNavigationBlock(frameId)
     ).toEqual(
       new Block(frameId, {
-        type : PPTR.NAVIGATION_PROMISE,
+        type : EPptrAction.NAVIGATION_PROMISE,
         value : 'const navigationPromise = page.waitForNavigation();'
       })
     );
@@ -146,9 +144,9 @@ describe('Test de Scenario Factory', () => {
 
   test('Test de build Click event', () => {
     const eventMessage : IMessage = {
-      typeEvent : DOM_EVENT.CLICK,
+      typeEvent : EDomEvent.CLICK,
       selector : '#id',
-      action :   DOM_EVENT.CLICK
+      action :   EDomEvent.CLICK
     };
 
     expect(
@@ -161,9 +159,9 @@ describe('Test de Scenario Factory', () => {
 
   test('Test de build Change event', () => {
     const eventMessage : IMessage = {
-      typeEvent : DOM_EVENT.CHANGE,
+      typeEvent : EDomEvent.CHANGE,
       selector : '#id',
-      action :   DOM_EVENT.CHANGE,
+      action :   EDomEvent.CHANGE,
       value : 'content'
     };
     expect(
@@ -176,9 +174,9 @@ describe('Test de Scenario Factory', () => {
 
   test('Test de build Drop event', () => {
     const eventMessage : IMessage = {
-      typeEvent : DOM_EVENT.DROP,
+      typeEvent : EDomEvent.DROP,
       selector : '#id',
-      action : CUSTOM_EVENT.DROP_FILE,
+      action : ECustomEvent.DROP_FILE,
       files : 'text.txt'
     };
 
@@ -191,9 +189,9 @@ describe('Test de Scenario Factory', () => {
 
   test('Test de build Submit event', () => {
     const eventMessage : IMessage = {
-      typeEvent : DOM_EVENT.SUBMIT,
+      typeEvent : EDomEvent.SUBMIT,
       selector : '#id',
-      action : CUSTOM_EVENT.SUBMIT
+      action : ECustomEvent.SUBMIT
     };
 
     expect(
@@ -205,9 +203,9 @@ describe('Test de Scenario Factory', () => {
 
   test('Test de build Kedown event', () => {
     const eventMessage : IMessage = {
-      typeEvent : DOM_EVENT.KEYDOWN,
+      typeEvent : EDomEvent.KEYDOWN,
       selector : '#id',
-      action : CUSTOM_EVENT.LIST_KEYDOWN,
+      action : ECustomEvent.LIST_KEYDOWN,
       value : 'content',
       iframe : '#iframe'
     };
@@ -221,9 +219,9 @@ describe('Test de Scenario Factory', () => {
 
   test('Test de build PPtr action event', () => {
     const eventMessage : IMessage = {
-      typeEvent : PPTR.PPTR,
+      typeEvent : EPptrAction.PPTR,
       selector : '#id',
-      action : PPTR.GOTO,
+      action : EPptrAction.GOTO,
       value : 'localhost'
     };
 

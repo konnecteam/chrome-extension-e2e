@@ -3,9 +3,7 @@ import { ComponentManager } from './component-manager';
 import * as path from 'path';
 import 'jest';
 import { FileService } from '../services/file/file-service';
-
-// Constant
-import DOM_EVENT from '../constants/events/events-dom';
+import { EDomEvent } from '../enum/events/events-dom';
 
 /**
  * Permet de changer le contenu du body
@@ -40,7 +38,7 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un compoenent model de file dropzone
     expect(
       ComponentManager.getComponent(
-        DOM_EVENT.CLICK,
+        EDomEvent.CLICK,
         element as HTMLElement
         )
     ).toEqual(
@@ -57,7 +55,7 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un component model de file dropzone
     expect(
       ComponentManager.getComponent(
-        DOM_EVENT.DROP,
+        EDomEvent.DROP,
         element as HTMLElement
         )
     ).toEqual(
@@ -72,7 +70,7 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un component model d'input numeric
     expect(
       ComponentManager.getComponent(
-        DOM_EVENT.CHANGE,
+        EDomEvent.CHANGE,
         element as HTMLElement
       )
     ).toEqual(ElementService.getChangeComponent(element as HTMLElement)
@@ -95,7 +93,7 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un component model d'iframe
     expect(
       ComponentManager.getComponent(
-        DOM_EVENT.KEYDOWN,
+        EDomEvent.KEYDOWN,
         element
       )
     ).toEqual(ElementService.getKeydownComponent(element));

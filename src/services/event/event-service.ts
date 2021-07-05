@@ -4,10 +4,8 @@ import { IMessage } from '../../interfaces/i-message';
 import { PasswordService } from '../../services/password/password-service';
 import { ComponentManager } from '../../manager/component-manager';
 import { EventMessageFactory } from '../../factory/message/event-message-factory';
-
-// Constant
-import TAG_NAME from '../../constants/elements/tag-name';
-import DOM_EVENT from '../../constants/events/events-dom';
+import { ETagName } from '../../enum/elements/tag-name';
+import { EDomEvent } from '../../enum/events/events-dom';
 
 
 /**
@@ -29,8 +27,8 @@ export class EventService {
      * Si c'est un keydown on arrête tout pour pas envoyer les caractères
      * qui composent le mot de passe
      */
-    if (currentEvent.target.tagName === TAG_NAME.INPUT.toUpperCase()
-    && currentEvent.target.type === 'password' && currentEvent.type === DOM_EVENT.KEYDOWN) {
+    if (currentEvent.target.tagName === ETagName.INPUT.toUpperCase()
+    && currentEvent.target.type === 'password' && currentEvent.type === EDomEvent.KEYDOWN) {
       return false;
     }
 
@@ -41,7 +39,7 @@ export class EventService {
      * de garder le submit car il y a eu une detection de clique
      * sur l'event précédant donc on le traite pas
      */
-    if (currentEvent.type === DOM_EVENT.SUBMIT && previousEvent.type === DOM_EVENT.CLICK
+    if (currentEvent.type === EDomEvent.SUBMIT && previousEvent.type === EDomEvent.CLICK
       && currentEvent.submitter === previousEvent.target) {
       return false;
     }
@@ -50,7 +48,7 @@ export class EventService {
      * Alors c'est qu'on a utilisé un window.open et ouvert un autre onglet
      * donc on l'ignore car l'élement n'existe pas
      */
-    if (currentEvent.target.tagName === TAG_NAME.LINK.toUpperCase()
+    if (currentEvent.target.tagName === ETagName.LINK.toUpperCase()
         && currentEvent.target.getAttribute('target') === '_blank'
       ) {
       return false;
@@ -60,8 +58,8 @@ export class EventService {
      * Dans les file drop zone lors d'un change input file
      * un click est catché mais on ne veut pas du click car il n'est pas utile
      */
-    if (currentEvent.target.type === 'file' && currentEvent.target.tagName === TAG_NAME.INPUT.toUpperCase()
-      && currentEvent.type === DOM_EVENT.CLICK && previousMessage.action === DOM_EVENT.CLICK) {
+    if (currentEvent.target.type === 'file' && currentEvent.target.tagName === ETagName.INPUT.toUpperCase()
+      && currentEvent.type === EDomEvent.CLICK && previousMessage.action === EDomEvent.CLICK) {
       return false;
     }
 
@@ -76,7 +74,7 @@ export class EventService {
      * Si c'est un input de type password et que c'est un event de type change
      * il faut changer la value
      */
-    if (currentEvent.target.tagName === TAG_NAME.INPUT.toUpperCase() && currentEvent.target.type === 'password' && currentEvent.type === DOM_EVENT.CHANGE) {
+    if (currentEvent.target.tagName === ETagName.INPUT.toUpperCase() && currentEvent.target.type === 'password' && currentEvent.type === EDomEvent.CHANGE) {
 
       return PasswordService.generate();
     } else {
@@ -89,8 +87,8 @@ export class EventService {
    */
   public static selectorEvent(currentEvent : any, previousSelector : string) : string {
 
-    if (currentEvent.target.type === 'file' && currentEvent.target.tagName === TAG_NAME.INPUT.toUpperCase()
-      && currentEvent.type === DOM_EVENT.CHANGE) {
+    if (currentEvent.target.type === 'file' && currentEvent.target.tagName === ETagName.INPUT.toUpperCase()
+      && currentEvent.type === EDomEvent.CHANGE) {
 
       return previousSelector;
     } else {

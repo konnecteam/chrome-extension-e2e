@@ -2,10 +2,8 @@ import { SelectorService } from '../../services/selector/selector-service';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import { IMessage } from '../../interfaces/i-message';
-
-// Constant
-import COMPONENT from '../../constants/component-name';
-import CUSTOM_EVENT from '../../constants/events/events-custom';
+import { EComponentName } from '../../enum/component/component-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 
 /**
@@ -24,7 +22,7 @@ export class InputNumericComponent {
 
       if (inputElement) {
 
-        return { component : COMPONENT.INPUT_NUMERIC, element : inputElement as HTMLElement };
+        return { component : EComponentName.INPUT_NUMERIC, element : inputElement as HTMLElement };
       }
     } else {
       return null;
@@ -37,7 +35,7 @@ export class InputNumericComponent {
   public static editInputNumericComponentMessage(event : IMessage, component : IComponent) : IMessage {
 
     event.selectorFocus = SelectorService.Instance.find(component.element);
-    event.action = CUSTOM_EVENT.CHANGE_INPUT_NUMERIC;
+    event.action = ECustomEvent.CHANGE_INPUT_NUMERIC;
     return event;
   }
 }

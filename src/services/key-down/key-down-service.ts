@@ -1,11 +1,9 @@
 import { ElementService } from './../element/element-service';
 import { ChromeService } from './../chrome/chrome-service';
 import { IMessage } from '../../interfaces/i-message';
-
-// Constant
-import DOM_EVENT from '../../constants/events/events-dom';
-import CUSTOM_EVENT from '../../constants/events/events-custom';
-import TAG_NAME from '../../constants/elements/tag-name';
+import { ETagName } from '../../enum/elements/tag-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
+import { EDomEvent } from '../../enum/events/events-dom';
 
 /**
  * Service qui permet de gérer les keydown pour un sélecteur
@@ -45,19 +43,19 @@ export class KeyDownService {
   public handleEvent(msg : IMessage, element : HTMLElement) : void {
 
     // On vérifie que l'event est un keydown
-    if (msg.action === DOM_EVENT.KEYDOWN) {
+    if (msg.action === EDomEvent.KEYDOWN) {
 
       // On gère le cas ou si c'est un user qui appuie sur la touche Entrer sur un bouton
-      if (element.tagName === TAG_NAME.BUTTON.toUpperCase() && msg.key === KeyDownService._ENTER_KEY) {
+      if (element.tagName === ETagName.BUTTON.toUpperCase() && msg.key === KeyDownService._ENTER_KEY) {
 
         // Si c'est le cas on tranforme le keydown en click
-        msg.action = DOM_EVENT.CLICK;
-        msg.typeEvent = DOM_EVENT.CLICK;
+        msg.action = EDomEvent.CLICK;
+        msg.typeEvent = EDomEvent.CLICK;
         return;
       }
 
       // On verifie si c'est un body car les textes areas sont parfois dans un body qui se trouve dans une iframe
-      if (!msg.value && element.tagName === TAG_NAME.BODY.toUpperCase() || element.tagName === TAG_NAME.TEXTAREA.toUpperCase()
+      if (!msg.value && element.tagName === ETagName.BODY.toUpperCase() || element.tagName === ETagName.TEXTAREA.toUpperCase()
           || ElementService.getInputList(element)) {
 
         // On récupère l'event
@@ -81,7 +79,7 @@ export class KeyDownService {
 
       // Si le premier élément à le même action et même sélecteur on enregistre tous les évènements
       // Pour ce même sélecteur
-      if (this._listsKeyDown[0].action === DOM_EVENT.KEYDOWN && this._listsKeyDown[0].selector !== msg.selector) {
+      if (this._listsKeyDown[0].action === EDomEvent.KEYDOWN && this._listsKeyDown[0].selector !== msg.selector) {
 
         // dans le cas contraire on envoie la liste qu'on à déja
         // et on traite la liste des keydown
@@ -129,7 +127,7 @@ export class KeyDownService {
 
     // On définit le premier élément
     this._listsKeyDown[0].value = value;
-    this._listsKeyDown[0].action = CUSTOM_EVENT.LIST_KEYDOWN;
+    this._listsKeyDown[0].action = ECustomEvent.LIST_KEYDOWN;
     return this._listsKeyDown[0];
   }
 
