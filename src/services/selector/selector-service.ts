@@ -73,14 +73,18 @@ export class SelectorService {
       for (let i = 0;  i < this._dataAttributes.length; i++) {
 
         const patternAttr = this._dataAttributes[i];
-        // On test chaque attribute avec le pattern
-        for (let j = 0; j < targetAttributes.length; j++) {
 
-          // Regex ou string test
-          if (this._useRegex ? (patternAttr as RegExp).test(targetAttributes[j].name) : patternAttr === targetAttributes[j].name) {
-            // La recherche est terminée
-            // On traite les cas spéciaux des customs attributes
-            customAttributes.push(this.manageSpecialCase(targetAttributes[j].name));
+        // On test chaque attribute avec le pattern
+        if (targetAttributes) {
+
+          for (let j = 0; j < targetAttributes.length; j++) {
+
+            // Regex ou string test
+            if (this._useRegex ? (patternAttr as RegExp).test(targetAttributes[j].name) : patternAttr === targetAttributes[j].name) {
+              // La recherche est terminée
+              // On traite les cas spéciaux des customs attributes
+              customAttributes.push(this.manageSpecialCase(targetAttributes[j].name));
+            }
           }
         }
       }
