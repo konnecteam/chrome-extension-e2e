@@ -1,3 +1,4 @@
+import { TextEditorComponent } from '../../components/components/text-editor-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import { InputFilesComponent } from '../../components/components/input-file-component';
@@ -32,14 +33,13 @@ export class ElementService {
   /** Contenu de la class d'un KmSwitch handle */
   private static readonly _CLASS_ATTIBUTE_KMSWITCH_HANDLE = 'km-switch-handle';
 
-  /** Contenu de class d'un KmSwitch */
-  private static readonly _CLASS_ATTIBUTE_KMSWITCH = 'km-switch';
-
   /**  Contenu de class d'un KmSwitch conteneur */
   private static readonly _CLASS_ATTIBUTE_KMSWITCH_CONTAINER = 'km-switch-container';
 
   /** Contenu de la class d'un popover */
   private static readonly _CLASS_ATTRIBUTE_POPOVER = 'konnect-popover';
+
+  private static readonly _CLASS_ATTRIBUTE_TEXT_EDITOR_CONTENT = 'ql-editor';
 
   /**
    * Trouver le parent avec son tagname
@@ -262,7 +262,7 @@ export class ElementService {
   public static getChangeComponent(element : HTMLElement) : IComponent {
 
     return InputFilesComponent.getElement(element as HTMLInputElement) || InputNumericComponent.getElement(element)
-    || CheckboxComponent.getElement(element) || RadioGroupComponent.getElement(element);
+    || CheckboxComponent.getElement(element) || RadioGroupComponent.getElement(element) || TextEditorComponent.getElement(element);
   }
 
   /**
@@ -272,7 +272,7 @@ export class ElementService {
 
     return FileDropZoneComponent.getElement(element) ||
     KSelectComponent.getElement(element) || KmSwitchComponent.getElement(element) ||
-    PopoverComponent.getElement(element) || InputListComponent.getElement(element);
+    PopoverComponent.getElement(element) || InputListComponent.getElement(element) || TextEditorComponent.getElement(element);
   }
 
   /**
@@ -287,7 +287,21 @@ export class ElementService {
    * Détermine sur quel composant il y a eu un keydown
    */
   public static getKeydownComponent(element : HTMLElement) : IComponent {
-    return IframeComponent.getElement(element);
+    return IframeComponent.getElement(element) || TextEditorComponent.getElement(element) ;
+  }
+
+  /**
+   * Permet de trouver un text editor
+   */
+  public static getTextEditor(element : HTMLElement) : HTMLElement {
+    return this.findParentElementWithTagName(element, ETagName.TEXT_EDITOR.toUpperCase());
+  }
+
+  /**
+   * Permet de trouver le content du text editor
+   */
+  public static getTextEditorContent(element : HTMLElement) : HTMLElement {
+    return this.findParentElementWithTagNameAndValueAttribute(element, ETagName.DIVISION.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTRIBUTE_TEXT_EDITOR_CONTENT);
   }
 
 }

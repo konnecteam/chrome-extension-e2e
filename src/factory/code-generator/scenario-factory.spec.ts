@@ -1,3 +1,4 @@
+import { DbClickFactory } from './events-factory/dbclick-factory';
 import { IOption } from './../../interfaces/i-options';
 import { PPtrFactory } from './events-factory/pptr-factory';
 import { KeydownFactory } from './events-factory/keydown-factory';
@@ -229,6 +230,20 @@ describe('Test de Scenario Factory', () => {
       ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
       PPtrFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    );
+  });
+
+  test('Test de build double click event', () => {
+    const eventMessage : IMessage = {
+      typeEvent : EDomEvent.DBLCLICK,
+      selector : '#id',
+      action : EDomEvent.DBLCLICK
+    };
+
+    expect(
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    ).toEqual(
+      DbClickFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 });

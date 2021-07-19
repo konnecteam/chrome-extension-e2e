@@ -1,3 +1,4 @@
+import { SelectorService } from './../selector/selector-service';
 import { ElementService } from './../element/element-service';
 import { ChromeService } from './../chrome/chrome-service';
 import { IMessage } from '../../interfaces/i-message';
@@ -56,7 +57,7 @@ export class KeyDownService {
 
       // On verifie si c'est un body car les textes areas sont parfois dans un body qui se trouve dans une iframe
       if (!msg.value && element.tagName === ETagName.BODY.toUpperCase() || element.tagName === ETagName.TEXTAREA.toUpperCase()
-          || ElementService.getInputList(element)) {
+          || ElementService.getTextEditor(element) || ElementService.getInputList(element)) {
 
         // On récupère l'event
         this._handleKeyDownEvent(msg);
@@ -64,7 +65,7 @@ export class KeyDownService {
     } else if (this._listsKeyDown.length > 0) {
 
       // On récupère la liste des keydowns
-      ChromeService.sendMessage(this._processListsKeydown());
+      ChromeService.sendMessage(this._listKeydownProcess());
 
       this._listsKeyDown = [];
     }
@@ -81,9 +82,9 @@ export class KeyDownService {
       // Pour ce même sélecteur
       if (this._listsKeyDown[0].action === EDomEvent.KEYDOWN && this._listsKeyDown[0].selector !== msg.selector) {
 
-        // dans le cas contraire on envoie la liste qu'on à déja
+        // dans le cas contraire on envoie la liste qu'on a déja
         // et on traite la liste des keydown
-        msg = this._processListsKeydown();
+        msg = this._listKeydownProcess();
         this._listsKeyDown = [];
       }
     }
@@ -94,11 +95,36 @@ export class KeyDownService {
   }
 
   /**
-   * Permet de traité les key down
+   * Permet de traiter les keydowns
    */
-  private _processListsKeydown() {
+  private _listKeydownProcess () : IMessage {
 
-    // Contien la liste des clés des keydown
+    // Si le list keydown concerne le text editor on utilise le processus spécifique
+    if (ElementService.getTextEditor(document.querySelector(this._listsKeyDown[0].selector))) {
+
+      return this._textEditorListKeydownProcess();
+    } else {
+
+      return this._standardProcess();
+    }
+  }
+
+  /**
+   * Processus pour le text editor du list keydown
+   */
+  private _textEditorListKeydownProcess() : IMessage {
+
+    const event = this._listsKeyDown[this._listsKeyDown.length - 1 ];
+    event.action = ECustomEvent.LIST_KEYDOWN_EDITOR;
+    event.selector = SelectorService.Instance.standardizeSelector(event.selector);
+    return event;
+  }
+
+  /**
+   * Processus standard d'un listkeydown
+   */
+  private _standardProcess() : IMessage {
+    // Contient la liste des clés des keydowns
     let value = '';
 
     for (let i = 0; i < this._listsKeyDown.length; i++) {

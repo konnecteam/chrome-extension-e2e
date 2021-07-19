@@ -12,4 +12,5 @@ export enum EComponentName {
   CHECKBOX = 'checkbox',
   RADIO_GROUP = 'radio-group',
   POPOVER = 'popover',
+  TEXT_EDITOR = 'text-editor'
 }

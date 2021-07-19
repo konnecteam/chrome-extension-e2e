@@ -18,6 +18,7 @@ const KM_SWITCH_PATH = '/static/test/dom/dom-km-switch.html';
 const INPUT_LIST_PATH = '/static/test/dom/dom-input-list.html';
 const POPOVER_PATH = '/static/test/dom/dom-popover.html';
 const INPUT_NUMERIC = '/static/test/dom/dom-input-numeric.html';
+const TEXT_EDITOR_DOM = '/static/test/dom/dom-text-editor.html';
 
 /**
  * Selecteurs
@@ -29,6 +30,8 @@ const INPUT_LIST = 'input';
 const POPOVER = '.konnect-popover-content-margin-neg';
 const KM_SWITCH_SELECTOR = 'switch > div > span > span:nth-child(3) > span';
 const KM_SWITCH_HANDLE = '.km-switch-handle';
+const TEXT_EDITOR_SELECTOR_CONTENT = 'text-editor > div > div > div > div > p';
+const TEXT_EDITOR_SELECTOR = 'text-editor';
 
 /**
  * Permet de changer le contenu du body
@@ -210,6 +213,24 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     .toBeDefined();
 
   });
+
+  test('Test de la fonction getTextEditor', async () => {
+
+    await changeBodyDocumentAsync(TEXT_EDITOR_DOM);
+
+    expect(ElementService.getTextEditor(document.querySelector(TEXT_EDITOR_SELECTOR_CONTENT)))
+    .toBeDefined();
+
+  });
+
+  test('Test de la fonction getTextEditorContent', async () => {
+
+    await changeBodyDocumentAsync(TEXT_EDITOR_DOM);
+
+    expect(ElementService.getTextEditorContent(document.querySelector(TEXT_EDITOR_SELECTOR)))
+    .toBeDefined();
+  });
+
 });
 
 describe('Test du get click event', () => {

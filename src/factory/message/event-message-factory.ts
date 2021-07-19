@@ -1,3 +1,4 @@
+import { TextEditorComponent } from '../../components/components/text-editor-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { CheckboxComponent } from '../../components/konnect/checkbox-component';
@@ -50,6 +51,9 @@ export class EventMessageFactory {
         return RadioGroupComponent.editRadioGroupComponentMessage(event);
       case EComponentName.POPOVER :
         return PopoverComponent.editPopoverComponentMessage(event);
+      // Si c'est un text editor
+      case EComponentName.TEXT_EDITOR :
+        return TextEditorComponent.editTextEditorComponentMessage(event, component);
       default :
         return null;
     }

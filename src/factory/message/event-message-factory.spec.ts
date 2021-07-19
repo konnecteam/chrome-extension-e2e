@@ -1,3 +1,4 @@
+import { TextEditorComponent } from './../../components/components/text-editor-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { IMessage } from '../../interfaces/i-message';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
@@ -11,6 +12,7 @@ import 'jest';
 import { KSelectComponent } from '../../components/konnect/k-select-component';
 import { InputListComponent } from '../../components/konnect/input-list-component';
 import { FileService } from '../../services/file/file-service';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
  * Permet de changer le contenu du body
@@ -32,6 +34,7 @@ const INPUT_LIST_DOM = '/static/test/dom/dom-input-list.html';
 const POPOVER_DOM = '/static/test/dom/dom-popover.html';
 const CHECKBOX_DOM = '/static/test/dom/dom-checkbox.html';
 const RADIO_GROUP_DOM = '/static/test/dom/dom-radio-group.html';
+const TEXT_EDITOR_DOM = '/static/test/dom/dom-text-editor.html';
 
 /**
  * Selecteurs
@@ -43,6 +46,7 @@ const INPUT_LIST = 'input';
 const CHECKBOX_ID = 'ckb146';
 const RADIO_GROUP_ID = 'rg168_0';
 const POPOVER = '.konnect-popover-content-margin-neg';
+const TEXT_EDITOR_SELECTOR = 'text-editor > div > div > div > div > p';
 
 describe('Test de event message factory', () => {
 
@@ -193,6 +197,26 @@ describe('Test de event message factory', () => {
     // On doit trouver un component model qui fait référence à un popover
     expect(EventMessageFactory.buildMessageEvent(component, event, null))
     .toEqual(PopoverComponent.editPopoverComponentMessage(event));
+
+  });
+
+  test('Test du text editor component message', async () => {
+    // on init le body
+    await changeBodyDocumentAsync(TEXT_EDITOR_DOM);
+
+    const element : HTMLElement = document.querySelector(TEXT_EDITOR_SELECTOR);
+
+    const component = TextEditorComponent.getElement(element);
+
+    const event : IMessage = {
+      action : ECustomEvent.LIST_KEYDOWN_EDITOR,
+      selector : '#test',
+      value : 'test de keydown list',
+      iframe : null
+    };
+    // On doit trouver un component model qui fait référence à un popover
+    expect(EventMessageFactory.buildMessageEvent(component, event, null))
+    .toEqual(TextEditorComponent.editTextEditorComponentMessage(event, component));
 
   });
 });

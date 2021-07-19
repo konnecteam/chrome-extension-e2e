@@ -1,3 +1,4 @@
+import { DbClickFactory } from './events-factory/dbclick-factory';
 import { ScrollFactory } from './events-factory/scroll-factory';
 import { KeydownFactory } from './events-factory/keydown-factory';
 import { SubmitFactory } from './events-factory/submit-factory';
@@ -143,6 +144,9 @@ export class ScenarioFactory {
       // Si c'est un click
       case EDomEvent.CLICK :
         return ClickFactory.buildBlock(event, frameId, frame, options);
+      // Si c'est un double click
+      case EDomEvent.DBLCLICK :
+        return DbClickFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un change
       case EDomEvent.CHANGE :
         return ChangeFactory.buildBlock(event, frameId, frame, options);
