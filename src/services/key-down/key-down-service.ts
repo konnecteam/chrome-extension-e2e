@@ -154,6 +154,8 @@ export class KeyDownService {
     // On définit le premier élément
     this._listsKeyDown[0].value = value;
     this._listsKeyDown[0].action = ECustomEvent.LIST_KEYDOWN;
+    this._listsKeyDown[0].selector = SelectorService.Instance.standardizeSelector(this._listsKeyDown[0].selector);
+
     return this._listsKeyDown[0];
   }
 
