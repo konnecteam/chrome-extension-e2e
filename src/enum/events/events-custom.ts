@@ -9,5 +9,6 @@ export enum ECustomEvent {
   DROP_FILE = 'drop-dropzone-file',
   CHANGE_INPUT_NUMERIC = 'change-input-numeric',
   CLICK_LIST_ITEM = 'click-list-item',
-  CLICK_MOUSE_ENTER = 'click-mouse-enter'
+  CLICK_MOUSE_ENTER = 'click-mouse-enter',
+  CHANGE_TAGS_LIST = 'change-tags-list'
 }

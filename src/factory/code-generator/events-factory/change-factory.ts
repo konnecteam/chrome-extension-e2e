@@ -40,6 +40,9 @@ export class ChangeFactory {
           // Sinon c'est un input simple
           return this.buildChangeBlock(frameId, frame, selector, value);
         }
+      // Si c'est un change dans un tags list
+      case ECustomEvent.CHANGE_TAGS_LIST :
+        return this.buildChangeTagsListBlock(frameId, frame, selector, value);
       default : return null;
     }
   }
@@ -104,6 +107,25 @@ export class ChangeFactory {
       type : EDomEvent.CHANGE,
       value : `await ${frame}.evaluate( () => document.querySelector('${selector}').value = "");
       await ${frame}.type('${selector}', \`${value.replace(/\n/g, '\\r\\n')}\`);`
+    });
+  }
+
+  /**
+   * Génère une change dans une taglist
+   */
+  public static buildChangeTagsListBlock(
+    frameId : number,
+    frame : string,
+    selector : string,
+    value : string
+  ) : Block {
+
+    return new Block(frameId, {
+      type : EDomEvent.CHANGE,
+      value : ` await ${frame}.evaluate( async function () {
+        let element = document.querySelector('${selector}');
+        element.au['tags-list'].viewModel.value.push('${value}');
+      })`
     });
   }
 

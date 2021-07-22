@@ -11,6 +11,7 @@ import { RadioGroupComponent } from '../../components/konnect/radio-group-compon
 import { IComponent } from '../../interfaces/i-component';
 import { SelectorService } from '../selector/selector-service';
 import { ETagName } from '../../enum/elements/tag-name';
+import { TagsListComponent } from '../../components/konnect/tags-list-component';
 
 /**
  * Service permettant de gérer les elements HTML
@@ -31,9 +32,6 @@ export class ElementService {
 
   /** Contenu de la class d'un KmSwitch handle */
   private static readonly _CLASS_ATTIBUTE_KMSWITCH_HANDLE = 'km-switch-handle';
-
-  /** Contenu de class d'un KmSwitch */
-  private static readonly _CLASS_ATTIBUTE_KMSWITCH = 'km-switch';
 
   /**  Contenu de class d'un KmSwitch conteneur */
   private static readonly _CLASS_ATTIBUTE_KMSWITCH_CONTAINER = 'km-switch-container';
@@ -262,7 +260,8 @@ export class ElementService {
   public static getChangeComponent(element : HTMLElement) : IComponent {
 
     return InputFilesComponent.getElement(element as HTMLInputElement) || InputNumericComponent.getElement(element)
-    || CheckboxComponent.getElement(element) || RadioGroupComponent.getElement(element);
+    || CheckboxComponent.getElement(element) || RadioGroupComponent.getElement(element)
+    || TagsListComponent.getElement(element);
   }
 
   /**
@@ -288,6 +287,14 @@ export class ElementService {
    */
   public static getKeydownComponent(element : HTMLElement) : IComponent {
     return IframeComponent.getElement(element);
+  }
+
+  /**
+   * Permet de récupérer le tags list element
+   */
+  public static getTagsList(element : HTMLElement) : HTMLElement {
+
+    return this.findParentElementWithTagName(element, ETagName.TAGS_LIST.toUpperCase());
   }
 
 }

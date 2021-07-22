@@ -245,4 +245,29 @@ describe('Test de Change Block Factory', () => {
       )
     );
   });
+
+  test('Test de buildChangeTagsListBlock pour un lists tags', () => {
+    // Attributs utilisés pour générer le block
+    const eventMessage : IMessage = {
+      selector : SELECTOR,
+      value,
+      action : ECustomEvent.CHANGE_TAGS_LIST,
+    };
+
+    expect(
+      ChangeFactory.buildBlock(
+        eventMessage ,
+        frameId,
+        frame,
+        defaultOptions
+      )
+    ).toEqual(
+      ChangeFactory.buildChangeTagsListBlock(
+        frameId,
+        frame,
+        SELECTOR,
+        value
+      )
+    );
+  });
 });

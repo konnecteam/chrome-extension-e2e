@@ -28,5 +28,6 @@ export enum ETagName {
   LIST_ELEMENT = 'ul',
   DATE = 'date',
   CHECKBOX = 'checkbox',
-  RADIOGROUP = 'radio-group'
+  RADIOGROUP = 'radio-group',
+  TAGS_LIST = 'tags-list'
 }

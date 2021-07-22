@@ -1,3 +1,4 @@
+import { TagsListComponent } from '../../components/konnect/tags-list-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { CheckboxComponent } from '../../components/konnect/checkbox-component';
@@ -48,8 +49,12 @@ export class EventMessageFactory {
       // Si c'est un radio group
       case EComponentName.RADIO_GROUP :
         return RadioGroupComponent.editRadioGroupComponentMessage(event);
+      // Si c'est un popover
       case EComponentName.POPOVER :
         return PopoverComponent.editPopoverComponentMessage(event);
+      // Si c'est un tags list
+      case EComponentName.TAGS_LIST :
+        return TagsListComponent.editTagsListComponentMessage(event, component);
       default :
         return null;
     }
