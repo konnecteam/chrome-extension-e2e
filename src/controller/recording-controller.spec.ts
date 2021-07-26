@@ -153,7 +153,7 @@ describe('Test de Recording Controller', () => {
           window.addEventListener('OnMessage', async (msg : any) => {
             switch (msg.action) {
               case params.controlActions.START :
-                (window as any).recordingController._start();
+                (window as any).recordingController._startAsync();
                 (window as any).badgeText = params.badgeStates.REC;
                 break;
               case params.controlActions.STOP :
@@ -161,7 +161,7 @@ describe('Test de Recording Controller', () => {
                 (window as any).badgeText = '';
                 break;
               case params.controlActions.CLEANUP :
-                (window as any).recordingController._cleanUp();
+                (window as any).recordingController._cleanUpAsync();
                 (window as any).badgeText = '';
                 break;
               case params.controlActions.PAUSE :

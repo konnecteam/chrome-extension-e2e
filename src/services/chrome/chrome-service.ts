@@ -83,11 +83,11 @@ export class ChromeService {
   /**
    * Permet de récupérer le bage
    */
-  public static async getBadgeText() : Promise<string> {
+  public static async getBadgeTextAsync() : Promise<string> {
 
     try {
 
-      const currentTab = await this.getCurrentTabId();
+      const currentTab = await this.getCurrentTabIdAsync();
       return new Promise((resolve, reject) => {
 
         chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
@@ -115,9 +115,9 @@ export class ChromeService {
   /**
    * Permet de récupérer l'id du tab courrant
    */
-  public static async getCurrentTabId() : Promise<{id : number, url : string}> {
+  public static async getCurrentTabIdAsync() : Promise<{id : number, url : string}> {
     return new Promise(async (resolve, reject) => {
-      const tabs = await this._query({
+      const tabs = await this._queryAsync({
         active : true,
         currentWindow : true
       });
@@ -143,7 +143,7 @@ export class ChromeService {
   /**
    * Permet de récupérer des info via une query
    */
-  private static async _query(queryInfo : chrome.tabs.QueryInfo) : Promise<chrome.tabs.Tab[]> {
+  private static async _queryAsync(queryInfo : chrome.tabs.QueryInfo) : Promise<chrome.tabs.Tab[]> {
     return new Promise((resolve, reject) => {
       chrome.tabs.query(queryInfo, (result : chrome.tabs.Tab[]) => {
         resolve(result);
@@ -154,11 +154,11 @@ export class ChromeService {
   /**
    * Permet d'envoyer des messages au content-script pour qu'il les envoie à PollyRecorder
    */
-  public static async sendMessageToContentScript(message : string) : Promise<void> {
+  public static async sendMessageToContentScriptAsync(message : string) : Promise<void> {
 
     try {
 
-      const tabs = await this._query({
+      const tabs = await this._queryAsync({
         currentWindow : true,
         active : true
       });
@@ -176,7 +176,7 @@ export class ChromeService {
   /**
    * Suppression des données d'un site à partir de l'url
    */
-  public static async removeBrowsingData(url : string) : Promise<void> {
+  public static async removeBrowsingDataAsync(url : string) : Promise<void> {
     const millisecondsPerYear = 1000 * 60 * 60 * 24 * 7 * 52;
     const oneYearAgo = (new Date()).getTime() - millisecondsPerYear;
     return new Promise<void>((resolve, err) => {

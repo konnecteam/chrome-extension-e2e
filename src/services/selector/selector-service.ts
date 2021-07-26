@@ -26,14 +26,14 @@ export class SelectorService {
 
   constructor() {
     this._useRegex = false;
-    this._getOption();
+    this._getOptionAsync();
   }
 
   /**
    * Récupère les options du plugin pour savoir si il faut utiliser des
    * custom selectors
    */
-  private async _getOption() : Promise<void> {
+  private async _getOptionAsync() : Promise<void> {
 
     try {
 

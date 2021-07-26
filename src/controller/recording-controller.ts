@@ -136,13 +136,13 @@ class RecordingController {
       port.onMessage.addListener(msg => {
         switch (msg.action) {
           case EControlAction.START :
-            this._start();
+            this._startAsync();
             break;
           case EControlAction.STOP :
             this._stop();
             break;
           case EControlAction.CLEANUP :
-            this._cleanUp();
+            this._cleanUpAsync();
             break;
           case EControlAction.PAUSE :
             this._pause();
@@ -279,7 +279,7 @@ class RecordingController {
 
     ChromeService.setBadgeText(EBadgeState.REC);
     this._isPaused = false;
-    ChromeService.sendMessageToContentScript(EEventMessage.UNPAUSE);
+    ChromeService.sendMessageToContentScriptAsync(EEventMessage.UNPAUSE);
   }
 
   /**
@@ -289,13 +289,13 @@ class RecordingController {
 
     ChromeService.setBadgeText(EBadgeState.PAUSE);
     this._isPaused = true;
-    ChromeService.sendMessageToContentScript(EEventMessage.PAUSE);
+    ChromeService.sendMessageToContentScriptAsync(EEventMessage.PAUSE);
   }
 
   /**
    * Clean des données
    */
-  private async _cleanUp(callback? : () => void) : Promise<void> {
+  private async _cleanUpAsync(callback? : () => void) : Promise<void> {
 
     this._recording = [];
     this._contentFakeTimeServiceBuilded = '';
@@ -334,7 +334,7 @@ class RecordingController {
     StorageService.setData({ recording : this._recording });
 
     // 5 - On récupère le résultat
-    ChromeService.sendMessageToContentScript(EEventMessage.GET_RESULT);
+    ChromeService.sendMessageToContentScriptAsync(EEventMessage.GET_RESULT);
 
     // 6 - Si on record pas les requêtes on peut mettre à true isRemovedListener et le isResult
     if (!this._recordHttpRequest) {
@@ -347,7 +347,7 @@ class RecordingController {
   /**
    * Démarre l'enregistrement d'un scénario
    */
-  private async _start() : Promise<void> {
+  private async _startAsync() : Promise<void> {
 
     /**
      * Si l'utilisateur à reload alors
@@ -370,7 +370,7 @@ class RecordingController {
 
     try {
 
-      const currentTab = await ChromeService.getCurrentTabId();
+      const currentTab = await ChromeService.getCurrentTabIdAsync();
 
       // 2 - On récupère les options
       const data = await StorageService.getDataAsync(['options']);
@@ -381,7 +381,7 @@ class RecordingController {
 
       // Si l'option deleteSiteDate est activé, on supprime les données du site
       if (this._deleteSiteData) {
-        await ChromeService.removeBrowsingData(currentTab.url);
+        await ChromeService.removeBrowsingDataAsync(currentTab.url);
       }
 
       // 3 - Suppression du recording en local storage
@@ -417,7 +417,7 @@ class RecordingController {
     this._boundedMessageHandler = this._handleMessage.bind(this);
     this._boundedNavigationHandler = this._handleNavigation.bind(this);
     this._boundedWaitHandler = this._handleAction.bind(this, this._handleWait.bind(this));
-    this._boundedScriptHandler = this._handleAction.bind(this, this._injectScript.bind(this));
+    this._boundedScriptHandler = this._handleAction.bind(this, this._injectScriptAsync.bind(this));
 
     ChromeService.addOnMessageListener(this._boundedMessageHandler);
     ChromeService.addOnCompletedListener(this._boundedNavigationHandler);
@@ -457,7 +457,7 @@ class RecordingController {
   /**
    * Permet d'injecter le script
    */
-  private async _injectScript(callback? : () => void) : Promise<void> {
+  private async _injectScriptAsync(callback? : () => void) : Promise<void> {
     try {
 
       await ChromeService.executeScript({
@@ -560,7 +560,7 @@ class RecordingController {
       try {
 
         // Récupération du fichier har
-        const har = await HttpService.getRequest(message.resultURL);
+        const har = await HttpService.getRequestAsync(message.resultURL);
 
         if (har) {
           this._pollyService.record.har = har;
@@ -576,7 +576,7 @@ class RecordingController {
 
     try {
 
-      const badge = await ChromeService.getBadgeText();
+      const badge = await ChromeService.getBadgeTextAsync();
 
       // Si on a le résultat du record
       if (badge === EBadgeState.RESULT_NOT_EMPTY || badge === '') {

@@ -98,7 +98,7 @@ class EventRecorder {
   /**
    * Démarrage du recorder
    */
-  public async start() {
+  public async startAsync() {
 
     /**
      * Quand on start,
@@ -193,9 +193,7 @@ class EventRecorder {
       if (e.type === EDomEvent.MOUSEDOWN) {
         this._startMouseDown = Date.now();
         return;
-      }
-
-      if (e.type === EDomEvent.CLICK) {
+      } else if (e.type === EDomEvent.CLICK) {
         durationClick = Date.now() - this._startMouseDown;
       }
 
@@ -411,4 +409,4 @@ class EventRecorder {
 }
 
 (window as any).eventRecorder = new EventRecorder();
-(window as any).eventRecorder.start();
+(window as any).eventRecorder.startAsync();

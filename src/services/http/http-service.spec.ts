@@ -38,16 +38,16 @@ describe('Test de du Service HttpService', function() {
 
   test('Test de execute request', async () => {
     // On déclare getRequest car sinon le programme nous indique une erreur
-    const getRequest = null;
+    const getRequestAsync = null;
     // on execute la request
     const result = await page.evaluate(async httpService => {
       // On utilise eval pour récuperer la fonction getRequest
       // tslint:disable-next-line: no-eval
       eval(httpService);
-      return getRequest('https://jsonplaceholder.typicode.com/users');
+      return getRequestAsync('https://jsonplaceholder.typicode.com/users');
 
       // on replace async par async function pour avoir une fonction JS valide
-    }, HttpService.getRequest.toString().replace('async', 'async function '));
+    }, HttpService.getRequestAsync.toString().replace('async', 'async function '));
 
     // result doit être defined
     expect(result).toBeDefined();
