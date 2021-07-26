@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 // Path du fichier qui contient le body
@@ -30,7 +30,7 @@ describe('Test de Popover Component', () => {
     // On doit trouver que l'on est dans un popover
     expect(
       PopoverComponent.getElement(element as HTMLElement).component
-    ).toEqual(EComponentName.POPOVER);
+    ).toEqual(EComponent.POPOVER);
   });
 
   test('Test de editPopoverComponentMessage', () => {

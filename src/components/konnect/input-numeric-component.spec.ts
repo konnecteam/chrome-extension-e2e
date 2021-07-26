@@ -4,7 +4,7 @@ import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 // Path pour acceder au contenu du body que l'on va utiliser
@@ -32,7 +32,7 @@ describe('Test de Input numeric Component', () => {
     // On doit trouver qur l'on est dans une input numeric
     expect(
       InputNumericComponent.getElement(element as HTMLElement).component
-    ).toEqual(EComponentName.INPUT_NUMERIC);
+    ).toEqual(EComponent.INPUT_NUMERIC);
   });
 
 

@@ -4,7 +4,7 @@ import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
 import { ETagName } from '../../enum/elements/tag-name';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 
 import { ECustomEvent } from '../../enum/events/events-custom';
 
@@ -33,7 +33,7 @@ describe('Test de input list Component', () => {
     // On doit trouver que l'on est dans un input list
     expect(
       InputListComponent.getElement(element).component
-    ).toEqual(EComponentName.INPUT_LIST);
+    ).toEqual(EComponent.INPUT_LIST);
   });
 
   test('Test de editInputListComponentMessage', () => {

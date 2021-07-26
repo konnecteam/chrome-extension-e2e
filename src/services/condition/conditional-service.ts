@@ -1,7 +1,7 @@
 /**
  * Service qui permet d'attendre que la condition soit valide
  */
-export class AwaitConditionalService {
+export class ConditionalService {
 
   /**
    * Permet d'attendre que la condition soit valide
@@ -45,7 +45,7 @@ export class AwaitConditionalService {
   public static waitForConditionAsync(condition : () => any, interval : number = 200) : Promise<any> {
 
     return new Promise( (resolve, reject ) => {
-      return AwaitConditionalService._waitForCondition(condition, resolve as (() => void), interval, reject);
+      return ConditionalService._waitForCondition(condition, resolve as (() => void), interval, reject);
     });
   }
 }

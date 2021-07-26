@@ -1,5 +1,5 @@
 import { EventService } from './../services/event/event-service';
-import { AwaitConditionalService } from './../services/await/await-conditional-service';
+import { ConditionalService } from '../services/condition/conditional-service';
 import { DebounceService } from '../services/debounce/debounce-service';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
@@ -228,7 +228,7 @@ class EventRecorder {
     try {
 
       // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
-      await AwaitConditionalService.waitForConditionAsync(
+      await ConditionalService.waitForConditionAsync(
         () => (window as any).eventRecorder._isEventProcessed,
         250
       );

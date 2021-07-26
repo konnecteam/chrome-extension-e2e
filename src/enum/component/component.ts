@@ -1,7 +1,7 @@
 /**
  * Enum des noms des composants que l'on traite
  */
-export enum EComponentName {
+export enum EComponent {
   FILE_DROPZONE = 'file-dropzone',
   INPUT_FILE = 'input-file',
   INPUT_NUMERIC = 'input-numeric',
