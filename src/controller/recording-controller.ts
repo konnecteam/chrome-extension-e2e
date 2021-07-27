@@ -268,7 +268,9 @@ class RecordingController {
         await ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
       }
     } catch (err) {
-      alert('Problem with exported script');
+
+      StorageService.setData({ errorMessage : 'Problem with exported script' });
+      console.error('Problem with exported script');
     }
   }
 
@@ -306,6 +308,7 @@ class RecordingController {
 
       await StorageService.removeDataAsync('recording');
     } catch (err) {
+      console.error('Error with removed data : ', err);
     }
 
     if (callback) {
@@ -411,6 +414,8 @@ class RecordingController {
         control : EEventMessage.GET_CURRENT_URL
       });
     } catch (err) {
+      console.error('Error with Recording controller start : ', err);
+
     }
 
     // Binding
@@ -471,6 +476,8 @@ class RecordingController {
       }
     } catch (err) {
       alert('Problem with script injection');
+      console.error('Problem with script injection : ', err);
+
     }
 
   }
@@ -571,6 +578,7 @@ class RecordingController {
         this._isResult = true;
         StorageService.setData({ isResult : this._isResult });
       } catch (err) {
+        console.error('Problem with recuperation of HAR content : ', err);
       }
     }
 
@@ -585,6 +593,7 @@ class RecordingController {
         StorageService.setData({ isRemovedListener : true});
       }
     } catch (err) {
+      console.error('Problem with badge text modification : ', err);
     }
 
   }

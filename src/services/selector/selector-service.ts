@@ -53,6 +53,7 @@ export class SelectorService {
       }
 
     } catch (err) {
+      console.error('Problem with options recovery : ', err);
     }
 
   }

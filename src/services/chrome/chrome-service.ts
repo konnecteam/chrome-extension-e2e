@@ -85,24 +85,19 @@ export class ChromeService {
    */
   public static async getBadgeTextAsync() : Promise<string> {
 
-    try {
+    const currentTab = await this.getCurrentTabIdAsync();
+    return new Promise((resolve, reject) => {
 
-      const currentTab = await this.getCurrentTabIdAsync();
-      return new Promise((resolve, reject) => {
+      chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
+        if (result === 'non-tab-specific') {
 
-        chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
-          if (result === 'non-tab-specific') {
+          reject('problem with tabId');
+        } else {
 
-            reject('problem with tabId');
-          } else {
-
-            resolve(result);
-          }
-        });
+          resolve(result);
+        }
       });
-    } catch (err) {
-      return Promise.reject(err);
-    }
+    });
   }
 
   /**
@@ -156,19 +151,15 @@ export class ChromeService {
    */
   public static async sendMessageToContentScriptAsync(message : string) : Promise<void> {
 
-    try {
+    const tabs = await this._queryAsync({
+      currentWindow : true,
+      active : true
+    });
 
-      const tabs = await this._queryAsync({
-        currentWindow : true,
-        active : true
+    if (tabs && tabs[0]) {
+      chrome.tabs.sendMessage(tabs[0].id, {
+        control : message
       });
-
-      if (tabs && tabs[0]) {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          control : message
-        });
-      }
-    } catch (err) {
     }
   }
 

@@ -221,6 +221,8 @@ export class PollyRecorder {
       await Promise.all(this._listRequestPromise);
       await this._polly.stop();
     } catch (err) {
+
+      console.error('Error with stop Polly : ', err);
     }
 
   }
@@ -287,6 +289,7 @@ export class PollyRecorder {
       this._removeAllListener();
       PollyRecorder.observer.disconnect();
     } catch (err) {
+      console.error('Error with Polly HAR Result : ', err);
     }
   }
 

@@ -141,6 +141,8 @@ class EventRecorder {
         ChromeService.sendMessage({ control : EEventMessage.EVENT_RECORDER_STARTED });
       }
     } catch (err) {
+      alert('Error with start of event recorder');
+      console.error('Error with start Event Recorder : ', err);
     }
 
   }
@@ -267,6 +269,7 @@ class EventRecorder {
        */
       (window as any).saveBody = document.cloneNode(true);
     } catch (err) {
+      console.error('Error with listener observer : ', err);
     }
 
   }

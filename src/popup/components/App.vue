@@ -13,6 +13,10 @@
           <span class="red-dot"></span>
           {{messageToWait}}
         </div>
+        <div class="recording-badge" v-show="errorMessage">
+          <span class="red-dot"></span>
+          {{errorMessage}}
+        </div>
         <a href="#" @click="toggleShowHelp" class="header-button">
           <img src="/assets/images/help.svg" alt="help" width="18px">
         </a>
@@ -72,6 +76,7 @@
         isResult : false,
         isRemovedListener: false,
         loadingPage: false,
+        errorMessage : '',
         bus: null,
         version
       }
@@ -109,6 +114,8 @@
             case 'isRemovedListener' :
               this.isRemovedListener = newValue;
               break
+            case 'errorMessage' :
+              this.errorMessage = newValue;
             default:
               break;
           }
@@ -189,8 +196,8 @@
         }
       },
       loadState (cb) {
-        this.$chrome.storage.local.get(['controls', 'code', 'isResult', 'isRemovedListener', 'loadingPage'],
-         ({ controls, code, isResult, isRemovedListener, loadingPage }) => {
+        this.$chrome.storage.local.get(['controls', 'code', 'isResult', 'isRemovedListener', 'loadingPage', 'errorMessage'],
+         ({ controls, code, isResult, isRemovedListener, loadingPage, errorMessage }) => {
         
           // On récupère les informations lié à l'enregistrement
 
@@ -213,6 +220,10 @@
 
           if(loadingPage) {
             this.loadingPage = loadingPage;
+          }
+          
+          if(errorMessage) {
+            this.errorMessage = errorMessage;
           }
 
           cb();
