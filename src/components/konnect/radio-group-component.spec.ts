@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { EDomEvent } from '../../enum/events/events-dom';
 
 /**
@@ -33,7 +33,7 @@ describe('Test de RadioGroup', () => {
     // On doit trouver la RadioGroup
     expect(
        RadioGroupComponent.getElement(element).component
-    ).toEqual(EComponentName.RADIO_GROUP);
+    ).toEqual(EComponent.RADIO_GROUP);
   });
 
   test('Test de editRadioGroupComponentMessage', () => {

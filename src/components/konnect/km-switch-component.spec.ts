@@ -4,7 +4,7 @@ import * as path from 'path';
 import { IComponent } from 'interfaces/i-component';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
@@ -33,7 +33,7 @@ describe('Test de km switch Component', () => {
     // on doit trouver le km switch
     expect(
       KmSwitchComponent.getElement(element as HTMLElement).component
-    ).toEqual(EComponentName.KM_SWITCH);
+    ).toEqual(EComponent.KM_SWITCH);
   });
 
 
@@ -46,7 +46,7 @@ describe('Test de km switch Component', () => {
     };
 
     const component : IComponent = {
-      component : EComponentName.KM_SWITCH,
+      component : EComponent.KM_SWITCH,
       element : element as HTMLElement
     };
 

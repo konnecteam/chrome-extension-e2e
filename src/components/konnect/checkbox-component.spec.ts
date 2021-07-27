@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { EDomEvent } from '../../enum/events/events-dom';
 
 /**
@@ -30,7 +30,7 @@ describe('Test de Checkbox', () => {
     // On doit trouver la Checkbox
     expect(
       CheckboxComponent.getElement(element).component
-    ).toEqual(EComponentName.CHECKBOX);
+    ).toEqual(EComponent.CHECKBOX);
   });
 
   test('Test de editCheckboxComponentMessage', () => {

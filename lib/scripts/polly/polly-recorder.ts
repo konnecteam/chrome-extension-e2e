@@ -67,7 +67,7 @@ export class PollyRecorder {
   constructor() {
 
 
-    this._boundedGetHARResult = this._getHARResult.bind(this);
+    this._boundedGetHARResult = this._getHARResultAsync.bind(this);
     this._boundedPause = this._pause.bind(this);
     this._boundedUnpause = this._unpause.bind(this);
 
@@ -221,6 +221,8 @@ export class PollyRecorder {
       await Promise.all(this._listRequestPromise);
       await this._polly.stop();
     } catch (err) {
+
+      console.error('Error with stop Polly : ', err);
     }
 
   }
@@ -267,11 +269,11 @@ export class PollyRecorder {
    * Fonction exécuté lors de la reception de l'event
    * qui permet de récuperer le résultat de polly
    */
-  private async _getHARResult(event) : Promise<void> {
+  private async _getHARResultAsync(event) : Promise<void> {
 
     try {
 
-      // On atttend que polly ait fini de stopper
+      // On attend que polly ait fini de stopper
       await this._stopAsync();
 
       // On envoie le résultat au content-script
@@ -287,6 +289,7 @@ export class PollyRecorder {
       this._removeAllListener();
       PollyRecorder.observer.disconnect();
     } catch (err) {
+      console.error('Error with Polly HAR Result : ', err);
     }
   }
 

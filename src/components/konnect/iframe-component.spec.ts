@@ -2,7 +2,7 @@ import { IframeComponent } from './iframe-component';
 import 'jest';
 import { IComponent } from 'interfaces/i-component';
 import { IMessage } from '../../interfaces/i-message';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 
 /**
  * Selecteurs
@@ -45,7 +45,7 @@ describe('Test de Iframe Component', () => {
     // On doit trouver que c'est une iframe
     expect(
       IframeComponent.getElement(element).component
-    ).toEqual(EComponentName.IFRAME);
+    ).toEqual(EComponent.IFRAME);
   });
 
   test('Test de editIframeComponentMessage', () => {

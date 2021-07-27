@@ -3,7 +3,7 @@ import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import { ETagName } from '../../enum/elements/tag-name';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
@@ -24,7 +24,7 @@ export class FileDropZoneComponent {
     // Si c'est un file dropzone
     if (fileDropzoneElement) {
 
-      return { component : EComponentName.FILE_DROPZONE , element : fileDropzoneElement };
+      return { component : EComponent.FILE_DROPZONE , element : fileDropzoneElement };
     } else {
 
       return null;

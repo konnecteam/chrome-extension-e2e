@@ -87,8 +87,7 @@ export class EventService {
    */
   public static selectorEvent(currentEvent : any, previousSelector : string) : string {
 
-    if (currentEvent.target.type === 'file' && currentEvent.target.tagName === ETagName.INPUT.toUpperCase()
-      && currentEvent.type === EDomEvent.CHANGE) {
+    if (currentEvent.target.type === 'file' && currentEvent.target.tagName === ETagName.INPUT.toUpperCase() && currentEvent.type === EDomEvent.CHANGE) {
 
       return previousSelector;
     } else {

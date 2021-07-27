@@ -2,7 +2,7 @@ import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import { IMessage } from '../../interfaces/i-message';
 import { ECustomEvent } from '../../enum/events/events-custom';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 
 
 /**
@@ -18,7 +18,7 @@ export class KSelectComponent {
     // Si c'est un k select qui se situe dans input numeric
     if (ElementService.getNumericElement(element) && ElementService.getKSelectElement(element)) {
 
-      return { component : EComponentName.K_SELECT, element };
+      return { component : EComponent.K_SELECT, element };
     } else {
       return null;
     }

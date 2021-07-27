@@ -4,7 +4,7 @@
 export class HttpService {
 
   /** Permet d'exécuter une requête XMLHttpRequest de type GET */
-  public static async getRequest(url : string, type : XMLHttpRequestResponseType = 'text') : Promise<string> {
+  public static async getRequestAsync(url : string, type : XMLHttpRequestResponseType = 'text') : Promise<string> {
     const xhr = new XMLHttpRequest();
     return new Promise((resolve, reject) => {
       xhr.open('GET', url, true);
