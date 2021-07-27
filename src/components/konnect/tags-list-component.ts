@@ -3,7 +3,7 @@ import { SelectorService } from '../../services/selector/selector-service';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import { IMessage } from '../../interfaces/i-message';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 
 /**
  * Permet de gérer les tags list
@@ -20,7 +20,7 @@ export class TagsListComponent {
     // Si on est dans un tags list
     if (tagsListElement) {
 
-      return { component : EComponentName.TAGS_LIST, element : tagsListElement };
+      return { component : EComponent.TAGS_LIST, element : tagsListElement };
     } else {
 
       return null;

@@ -4,7 +4,7 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 
 /**
  * chemin du fichier html qui contient le body
@@ -28,7 +28,7 @@ describe('Test de TagsList', () => {
     // On doit trouver la RadioGroup
     expect(
        TagsListComponent.getElement(element).component
-    ).toEqual(EComponentName.TAGS_LIST);
+    ).toEqual(EComponent.TAGS_LIST);
   });
 
   test('Test de editTagsListComponentMessage', () => {

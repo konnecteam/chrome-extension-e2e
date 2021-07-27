@@ -67,7 +67,7 @@ describe('Test de Change Block Factory', () => {
      })`
     });
 
-    const result = ChangeFactory.buildInputNumericChangedBlock(
+    const result = ChangeFactory.buildInputNumericNewValue(
       frameId,
       frame,
       SELECTOR,
@@ -105,7 +105,7 @@ describe('Test de Change Block Factory', () => {
       await ${frame}.type('${SELECTOR}', \`${value}\`);`
     });
 
-    const result = ChangeFactory.buildChangeBlock(
+    const result = ChangeFactory.buildNewValue(
       frameId,
       frame,
       SELECTOR,
@@ -155,7 +155,7 @@ describe('Test de Change Block Factory', () => {
         defaultOptions
       )
     ).toEqual(
-      ChangeFactory.buildInputNumericChangedBlock(
+      ChangeFactory.buildInputNumericNewValue(
         frameId,
         frame,
         SELECTOR,
@@ -182,7 +182,7 @@ describe('Test de Change Block Factory', () => {
         defaultOptions
       )
     ).toEqual(
-      ChangeFactory.buildChangeBlock(
+      ChangeFactory.buildNewValue(
         frameId,
         frame,
         SELECTOR,
@@ -262,7 +262,7 @@ describe('Test de Change Block Factory', () => {
         defaultOptions
       )
     ).toEqual(
-      ChangeFactory.buildChangeTagsListBlock(
+      ChangeFactory.buildTagsListNewValue(
         frameId,
         frame,
         SELECTOR,
