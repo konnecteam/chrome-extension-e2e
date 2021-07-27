@@ -136,13 +136,13 @@ class RecordingController {
       port.onMessage.addListener(msg => {
         switch (msg.action) {
           case EControlAction.START :
-            this._start();
+            this._startAsync();
             break;
           case EControlAction.STOP :
             this._stop();
             break;
           case EControlAction.CLEANUP :
-            this._cleanUp();
+            this._cleanUpAsync();
             break;
           case EControlAction.PAUSE :
             this._pause();
@@ -268,7 +268,9 @@ class RecordingController {
         await ChromeService.download(this._zipContent, RecordingController._SCENARIO_ZIP_NAME);
       }
     } catch (err) {
-      alert('Problem with exported script');
+
+      StorageService.setData({ errorMessage : 'Problem with exported script' });
+      console.error('Problem with exported script');
     }
   }
 
@@ -279,7 +281,7 @@ class RecordingController {
 
     ChromeService.setBadgeText(EBadgeState.REC);
     this._isPaused = false;
-    ChromeService.sendMessageToContentScript(EEventMessage.UNPAUSE);
+    ChromeService.sendMessageToContentScriptAsync(EEventMessage.UNPAUSE);
   }
 
   /**
@@ -289,13 +291,13 @@ class RecordingController {
 
     ChromeService.setBadgeText(EBadgeState.PAUSE);
     this._isPaused = true;
-    ChromeService.sendMessageToContentScript(EEventMessage.PAUSE);
+    ChromeService.sendMessageToContentScriptAsync(EEventMessage.PAUSE);
   }
 
   /**
    * Clean des données
    */
-  private async _cleanUp(callback? : () => void) : Promise<void> {
+  private async _cleanUpAsync(callback? : () => void) : Promise<void> {
 
     this._recording = [];
     this._contentFakeTimeServiceBuilded = '';
@@ -306,6 +308,7 @@ class RecordingController {
 
       await StorageService.removeDataAsync('recording');
     } catch (err) {
+      console.error('Error with removed data : ', err);
     }
 
     if (callback) {
@@ -334,7 +337,7 @@ class RecordingController {
     StorageService.setData({ recording : this._recording });
 
     // 5 - On récupère le résultat
-    ChromeService.sendMessageToContentScript(EEventMessage.GET_RESULT);
+    ChromeService.sendMessageToContentScriptAsync(EEventMessage.GET_RESULT);
 
     // 6 - Si on record pas les requêtes on peut mettre à true isRemovedListener et le isResult
     if (!this._recordHttpRequest) {
@@ -347,7 +350,7 @@ class RecordingController {
   /**
    * Démarre l'enregistrement d'un scénario
    */
-  private async _start() : Promise<void> {
+  private async _startAsync() : Promise<void> {
 
     /**
      * Si l'utilisateur à reload alors
@@ -370,7 +373,7 @@ class RecordingController {
 
     try {
 
-      const currentTab = await ChromeService.getCurrentTabId();
+      const currentTab = await ChromeService.getCurrentTabIdAsync();
 
       // 2 - On récupère les options
       const data = await StorageService.getDataAsync(['options']);
@@ -381,7 +384,7 @@ class RecordingController {
 
       // Si l'option deleteSiteDate est activé, on supprime les données du site
       if (this._deleteSiteData) {
-        await ChromeService.removeBrowsingData(currentTab.url);
+        await ChromeService.removeBrowsingDataAsync(currentTab.url);
       }
 
       // 3 - Suppression du recording en local storage
@@ -411,13 +414,15 @@ class RecordingController {
         control : EEventMessage.GET_CURRENT_URL
       });
     } catch (err) {
+      console.error('Error with Recording controller start : ', err);
+
     }
 
     // Binding
     this._boundedMessageHandler = this._handleMessage.bind(this);
     this._boundedNavigationHandler = this._handleNavigation.bind(this);
     this._boundedWaitHandler = this._handleAction.bind(this, this._handleWait.bind(this));
-    this._boundedScriptHandler = this._handleAction.bind(this, this._injectScript.bind(this));
+    this._boundedScriptHandler = this._handleAction.bind(this, this._injectScriptAsync.bind(this));
 
     ChromeService.addOnMessageListener(this._boundedMessageHandler);
     ChromeService.addOnCompletedListener(this._boundedNavigationHandler);
@@ -457,7 +462,7 @@ class RecordingController {
   /**
    * Permet d'injecter le script
    */
-  private async _injectScript(callback? : () => void) : Promise<void> {
+  private async _injectScriptAsync(callback? : () => void) : Promise<void> {
     try {
 
       await ChromeService.executeScript({
@@ -471,6 +476,8 @@ class RecordingController {
       }
     } catch (err) {
       alert('Problem with script injection');
+      console.error('Problem with script injection : ', err);
+
     }
 
   }
@@ -560,7 +567,7 @@ class RecordingController {
       try {
 
         // Récupération du fichier har
-        const har = await HttpService.getRequest(message.resultURL);
+        const har = await HttpService.getRequestAsync(message.resultURL);
 
         if (har) {
           this._pollyService.record.har = har;
@@ -571,12 +578,13 @@ class RecordingController {
         this._isResult = true;
         StorageService.setData({ isResult : this._isResult });
       } catch (err) {
+        console.error('Problem with recuperation of HAR content : ', err);
       }
     }
 
     try {
 
-      const badge = await ChromeService.getBadgeText();
+      const badge = await ChromeService.getBadgeTextAsync();
 
       // Si on a le résultat du record
       if (badge === EBadgeState.RESULT_NOT_EMPTY || badge === '') {
@@ -585,6 +593,7 @@ class RecordingController {
         StorageService.setData({ isRemovedListener : true});
       }
     } catch (err) {
+      console.error('Problem with badge text modification : ', err);
     }
 
   }

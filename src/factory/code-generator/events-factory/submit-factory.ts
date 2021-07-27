@@ -18,10 +18,9 @@ export class SubmitFactory {
     const { action, tagName, submitterSelector} = event;
 
     // Si l'event est un submit
-    if (action === ECustomEvent.SUBMIT) {
-      if (tagName === ETagName.FORM.toUpperCase()) {
-        return ClickFactory.buildSimpleClickBlock(options, frameId, frame, submitterSelector);
-      }
+    if (action === ECustomEvent.SUBMIT && tagName === ETagName.FORM.toUpperCase()) {
+
+      return ClickFactory.buildSimpleClickBlock(options, frameId, frame, submitterSelector);
     }
   }
 }

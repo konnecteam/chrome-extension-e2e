@@ -26,14 +26,14 @@ export class SelectorService {
 
   constructor() {
     this._useRegex = false;
-    this._getOption();
+    this._getOptionAsync();
   }
 
   /**
    * Récupère les options du plugin pour savoir si il faut utiliser des
    * custom selectors
    */
-  private async _getOption() : Promise<void> {
+  private async _getOptionAsync() : Promise<void> {
 
     try {
 
@@ -53,6 +53,7 @@ export class SelectorService {
       }
 
     } catch (err) {
+      console.error('Problem with options recovery : ', err);
     }
 
   }
@@ -137,7 +138,7 @@ export class SelectorService {
   private _findCustomSelector(element : HTMLElement, customAttributes : string[]) : string {
     let selector = '';
     for (const customAttribute of customAttributes) {
-      selector += `${this._formatDataOfSelector(element, customAttribute)}`;
+      selector = `${selector}${this._formatDataOfSelector(element, customAttribute)}`;
     }
     return selector;
   }

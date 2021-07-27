@@ -112,7 +112,7 @@ export class ScenarioFactory {
   }
 
   /**
-   * Contruit la variable navigationPromise en cas de navigation
+   * Construit la variable navigationPromise en cas de navigation
    */
   public static buildNavigationBlock(frameId : number) : Block {
     return new Block(frameId, {

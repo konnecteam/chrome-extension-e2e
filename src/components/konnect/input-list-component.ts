@@ -1,7 +1,7 @@
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
@@ -21,7 +21,7 @@ export class InputListComponent {
 
     if (input) {
 
-      return { component : EComponentName.INPUT_LIST, element : input as HTMLElement };
+      return { component : EComponent.INPUT_LIST, element : input as HTMLElement };
     } else {
 
       return null;

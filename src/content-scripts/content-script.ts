@@ -1,5 +1,5 @@
 import { EventService } from './../services/event/event-service';
-import { AwaitConditionalService } from './../services/await/await-conditional-service';
+import { ConditionalService } from '../services/condition/conditional-service';
 import { DebounceService } from '../services/debounce/debounce-service';
 import { URLService } from './../services/url/url-service';
 import { SelectorService } from './../services/selector/selector-service';
@@ -98,7 +98,7 @@ class EventRecorder {
   /**
    * Démarrage du recorder
    */
-  public async start() {
+  public async startAsync() {
 
     /**
      * Quand on start,
@@ -141,6 +141,8 @@ class EventRecorder {
         ChromeService.sendMessage({ control : EEventMessage.EVENT_RECORDER_STARTED });
       }
     } catch (err) {
+      alert('Error with start of event recorder');
+      console.error('Error with start Event Recorder : ', err);
     }
 
   }
@@ -193,9 +195,7 @@ class EventRecorder {
       if (e.type === EDomEvent.MOUSEDOWN) {
         this._startMouseDown = Date.now();
         return;
-      }
-
-      if (e.type === EDomEvent.CLICK) {
+      } else if (e.type === EDomEvent.CLICK) {
         durationClick = Date.now() - this._startMouseDown;
       }
 
@@ -230,7 +230,7 @@ class EventRecorder {
     try {
 
       // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
-      await AwaitConditionalService.waitForConditionAsync(
+      await ConditionalService.waitForConditionAsync(
         () => (window as any).eventRecorder._isEventProcessed,
         250
       );
@@ -269,6 +269,7 @@ class EventRecorder {
        */
       (window as any).saveBody = document.cloneNode(true);
     } catch (err) {
+      console.error('Error with listener observer : ', err);
     }
 
   }
@@ -411,4 +412,4 @@ class EventRecorder {
 }
 
 (window as any).eventRecorder = new EventRecorder();
-(window as any).eventRecorder.start();
+(window as any).eventRecorder.startAsync();

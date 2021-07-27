@@ -13,7 +13,7 @@ export class StorageService {
   /**
    * Permet de récupérer un objet
    */
-  public static getDataAsync(keys : string[]) : Promise<{ [keys : string] : any }> {
+  public static async getDataAsync(keys : string[]) : Promise<{ [keys : string] : any }> {
     return new Promise((resolve, reject) => {
 
       chrome.storage.local.get(keys, data => {
@@ -31,7 +31,7 @@ export class StorageService {
   /**
    * Supprime des données dans le local storage
    */
-  public static removeDataAsync(key : string) : Promise<void> {
+  public static async removeDataAsync(key : string) : Promise<void> {
     return new Promise((resolve, reject) => {
       chrome.storage.local.remove(key, () => {
         if (chrome.runtime.lastError) {

@@ -2,7 +2,7 @@ import { SelectorService } from '../../services/selector/selector-service';
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
@@ -18,7 +18,7 @@ export class KmSwitchComponent {
 
     if (elementFind) {
 
-      return { component : EComponentName.KM_SWITCH, element : elementFind as HTMLElement };
+      return { component : EComponent.KM_SWITCH, element : elementFind as HTMLElement };
     } else {
       return null;
     }

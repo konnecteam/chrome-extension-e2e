@@ -11,7 +11,7 @@ import { FileDropZoneComponent } from '../../components/components/file-drop-zon
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { InputListComponent } from '../../components/konnect/input-list-component';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 
 /**
  * Factory qui permet de générer le message IMessage pour le code generator
@@ -23,37 +23,36 @@ export class EventMessageFactory {
 
     switch (component.component) {
       // Si c'est un file drop zone component
-      case EComponentName.FILE_DROPZONE :
+      case EComponent.FILE_DROPZONE :
         return FileDropZoneComponent.editFileDropZoneComponentMessage(event, filesUpload);
       // Si c'est un input de fichier
-      case EComponentName.INPUT_FILE :
+      case EComponent.INPUT_FILE :
         return InputFilesComponent.editInputFileComponentMessage(event, (component.element as HTMLInputElement).files);
       // Si c'est un input numeric
-      case EComponentName.INPUT_NUMERIC :
+      case EComponent.INPUT_NUMERIC :
         return InputNumericComponent.editInputNumericComponentMessage(event, component);
       // Si c'est un k select (les flêches à coté de l'input numeric)
-      case EComponentName.K_SELECT :
+      case EComponent.K_SELECT :
         return KSelectComponent.editKSelectComponentMessage(event);
       // Si c'est un switch
-      case EComponentName.KM_SWITCH :
+      case EComponent.KM_SWITCH :
         return KmSwitchComponent.editKmSwitchComponentMessage(event, component);
       // Si c'est une frame
-      case EComponentName.IFRAME :
+      case EComponent.IFRAME :
         return IframeComponent.editIframeComponentMessage(event, component);
       // Si c'est un input list
-      case EComponentName.INPUT_LIST :
+      case EComponent.INPUT_LIST :
         return InputListComponent.editInputListComponentMessage(event);
       // Si c'est un checkbox
-      case EComponentName.CHECKBOX :
+      case EComponent.CHECKBOX :
         return CheckboxComponent.editCheckboxComponentMessage(event);
       // Si c'est un radio group
-      case EComponentName.RADIO_GROUP :
+      case EComponent.RADIO_GROUP :
         return RadioGroupComponent.editRadioGroupComponentMessage(event);
-      // Si c'est un popover
-      case EComponentName.POPOVER :
+      case EComponent.POPOVER :
         return PopoverComponent.editPopoverComponentMessage(event);
       // Si c'est un tags list
-      case EComponentName.TAGS_LIST :
+      case EComponent.TAGS_LIST :
         return TagsListComponent.editTagsListComponentMessage(event, component);
       default :
         return null;

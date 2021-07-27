@@ -2,7 +2,7 @@ import { ElementService } from '../../services/element/element-service';
 import { IComponent } from '../../interfaces/i-component';
 import { IMessage } from '../../interfaces/i-message';
 import { ETagName }from '../../enum/elements/tag-name';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { EDomEvent } from '../../enum/events/events-dom';
 
 /**
@@ -20,7 +20,7 @@ export class CheckboxComponent {
       ETagName.CHECKBOX.toUpperCase()
     )) {
 
-      return { component : EComponentName.CHECKBOX, element };
+      return { component : EComponent.CHECKBOX, element };
 
     } else {
       return null;

@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
@@ -31,7 +31,7 @@ describe('Test de k select Component', () => {
     const element = document.querySelector(K_SELECT_SELETOR);
     expect(
       KSelectComponent.getElement(element as HTMLElement).component
-    ).toEqual(EComponentName.K_SELECT);
+    ).toEqual(EComponent.K_SELECT);
   });
 
 

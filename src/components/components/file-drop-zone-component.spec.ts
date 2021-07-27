@@ -3,7 +3,7 @@ import 'jest';
 import * as path from 'path';
 import { IMessage } from '../../interfaces/i-message';
 import { FileService } from '../../services/file/file-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
@@ -34,7 +34,7 @@ describe('Test de File DopZone Component', () => {
     // On doit trouver le file dropzone
     expect(
       FileDropZoneComponent.getElement(element as HTMLElement).component
-    ).toEqual(EComponentName.FILE_DROPZONE);
+    ).toEqual(EComponent.FILE_DROPZONE);
   });
 
   test('Test de editFileDropZoneComponentMessage', () => {

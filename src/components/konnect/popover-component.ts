@@ -1,7 +1,7 @@
 import { ElementService } from '../../services/element/element-service';
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
@@ -19,7 +19,7 @@ export class PopoverComponent {
     // On vérifie si c'est un popover
     if (ElementService.getPopover(element)) {
 
-      return { component : EComponentName.POPOVER, element };
+      return { component : EComponent.POPOVER, element };
     } else {
 
       return null;

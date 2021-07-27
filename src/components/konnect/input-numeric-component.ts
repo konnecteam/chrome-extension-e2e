@@ -2,7 +2,7 @@ import { SelectorService } from '../../services/selector/selector-service';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import { IMessage } from '../../interfaces/i-message';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 
@@ -22,7 +22,7 @@ export class InputNumericComponent {
 
       if (inputElement) {
 
-        return { component : EComponentName.INPUT_NUMERIC, element : inputElement as HTMLElement };
+        return { component : EComponent.INPUT_NUMERIC, element : inputElement as HTMLElement };
       }
     } else {
       return null;
