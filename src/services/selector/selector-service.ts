@@ -137,7 +137,7 @@ export class SelectorService {
   private _findCustomSelector(element : HTMLElement, customAttributes : string[]) : string {
     let selector = '';
     for (const customAttribute of customAttributes) {
-      selector += `${this._formatDataOfSelector(element, customAttribute)}`;
+      selector = `${selector}${this._formatDataOfSelector(element, customAttribute)}`;
     }
     return selector;
   }

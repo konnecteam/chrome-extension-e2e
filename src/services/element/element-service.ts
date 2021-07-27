@@ -250,10 +250,18 @@ export class ElementService {
    */
   public static getKmSwitchElement(element : HTMLElement) : Element {
 
-    return ElementService.findParentElementWithTagNameAndValueAttribute(
+    const parentElement = ElementService.findParentElementWithTagNameAndValueAttribute(
       element, ETagName.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
-    ) ? element :
-    element.parentElement ? element.parentElement.querySelector(`.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER} .${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`) : null;
+    );
+
+    if (parentElement) {
+
+      return element;
+    } else if (element.parentElement) {
+      element.parentElement.querySelector(`.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER} .${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`);
+    } else {
+      return null;
+    }
   }
 
   /**
