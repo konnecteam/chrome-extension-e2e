@@ -6,8 +6,10 @@ import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as chrome from 'sinon-chrome';
 import { Server } from 'http';
-import controlMessage from '../constants/control/control-message';
 import { IOption } from '../interfaces/i-options';
+
+// Constant
+import { EEventMessage } from '../enum/events/events-message';
 
 let server : Server;
 let browser : puppeteer.Browser;
@@ -18,20 +20,20 @@ let page : puppeteer.Page;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 /**
@@ -41,7 +43,6 @@ const INPUT_TEXT_ID = '#inputText';
 
 /**
  * Permet de lancer un dispatch event sur la window
- * @param event
  */
 async function dispatchEventAsync(event : string, message : IMessage) : Promise<void> {
   return page.evaluate(ev => {
@@ -91,7 +92,7 @@ describe('Test Content script ', () => {
       // On donne l'api chrome à la window
       window.chrome = browserOption.chrome;
       // On set les options dans le local storage de la window car on est pas dans le plugin
-      window.localStorage.setItem('options', JSON.stringify({ options: { code: browserOption.options } }));
+      window.localStorage.setItem('options', JSON.stringify({ options : { code : browserOption.options } }));
 
       // On overwrite la foncion pour lui donner l'url de polly js
       window.chrome.extension.getURL = () => 'build/lib/scripts/polly/polly.js';
@@ -139,7 +140,7 @@ describe('Test Content script ', () => {
         window.addEventListener('OnMessage', fct);
       };
 
-    }, { chrome, options: defaultOptions });
+    }, { chrome, options : defaultOptions });
 
     // On ajoute le content script dans la page
     await page.evaluate(scriptText => {
@@ -183,7 +184,7 @@ describe('Test Content script ', () => {
 
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control: controlMessage.GET_CURRENT_URL_EVENT });
+    await dispatchEventAsync('OnMessage', { control : EEventMessage.GET_CURRENT_URL });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();
@@ -202,7 +203,7 @@ describe('Test Content script ', () => {
      */
     await waitContentScriptReadyAsync();
 
-    await dispatchEventAsync('OnMessage', { control: controlMessage.GET_VIEWPORT_SIZE_EVENT });
+    await dispatchEventAsync('OnMessage', { control : EEventMessage.GET_VIEWPORT_SIZE });
 
     // On récupère la liste des events
     const events = await getEvensRecordAsync();

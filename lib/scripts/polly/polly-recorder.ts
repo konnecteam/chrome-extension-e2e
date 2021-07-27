@@ -4,7 +4,7 @@ import { Polly } from '@pollyjs/core';
 import * as  FetchAdapter from '@pollyjs/adapter-fetch';
 import * as XHRAdapter from '@pollyjs/adapter-xhr';
 import inMemoryPersister from '../../persister/polly/in-memory-persister';
-import controlMSG from '../../../src/constants/control/control-message';
+import { EEventMessage } from '../../../src/enum/events/events-message';
 
 // On prrécise à polly les adapter et persister utilisés
 Polly.register(XHRAdapter);
@@ -39,9 +39,6 @@ export class PollyRecorder {
   /** Strings qui caractérise une requête google maps */
   private static readonly _googleMapsStrings = ['google', 'maps'];
 
-  /** Contient les chemins de l'url pour récupérer les informations d'un produit */
-  private static readonly _catalaogProductUrl = [ 'picture/obj' ];
-
   /** Liste des requêtes enreigstrées */
   public requestRecorded : string[];
 
@@ -70,7 +67,7 @@ export class PollyRecorder {
   constructor() {
 
 
-    this._boundedGetHARResult = this._getHARResult.bind(this);
+    this._boundedGetHARResult = this._getHARResultAsync.bind(this);
     this._boundedPause = this._pause.bind(this);
     this._boundedUnpause = this._unpause.bind(this);
 
@@ -102,7 +99,7 @@ export class PollyRecorder {
     }
 
     // le startup config nous dit quand il a exporté les modules
-    WindowService.addEventListener(controlMSG.SETUP_READY_EVENT, this._dispatchPollyReadyEvent, false);
+    WindowService.addEventListener(EEventMessage.SETUP_READY, this._dispatchPollyReadyEvent, false);
 
     this._dispatchPollyReadyEvent();
 
@@ -122,74 +119,18 @@ export class PollyRecorder {
 
           fetch(entry.name);
           this.requestRecorded.push(entry.name);
-          /**
-           * Pour le catalog des prduits, il y a un lazy load qui execute une requête http
-           * pour récupérer un produit qui n'est pas visible sur notre page mais quand même charger dans le dom
-           * on récupêre donc sa requête car quand on rejoue le scénario, il nous l'a faut.
-           */
-          for (let i = 0 ; i < PollyRecorder._requestNotRecorded.length; i++) {
-            const catalogURL = PollyRecorder._requestNotRecorded[i];
-            if ((entry.name.includes(catalogURL) || new RegExp(/autoroute\/obj\/+\d/g).test(entry.name)) && entry.name ) {
-
-              this._fetchProductCatalogRequest(entry.name);
-            }
-          }
         }
       });
     });
 
-    PollyRecorder.observer.observe({entryTypes: ['resource', 'mark', 'measure']});
+    PollyRecorder.observer.observe({ entryTypes : ['resource', 'mark', 'measure'] });
   }
 
   /**
    * Dispatch l'event PollyReady  au startup config pour qu'il exporte les modules
    */
   private _dispatchPollyReadyEvent() {
-    WindowService.dispatchEvent(new CustomEvent(controlMSG.POLLY_READY_EVENT));
-  }
-
-  /**
-   * Permet de fetch les requêtes lié aux produits
-   * CETTE SOLTION N'EST PAS DÉFINITIVE, LE PROBLÈME NE VIENT PAS DE L'ENREGISTREMENT DES REQUÈTES
-   */
-  private _fetchProductCatalogRequest(url : string) : void {
-    const listA = document.querySelectorAll('a');
-    // On slip une ancience request pour savoir ou est le product id et pour avoir les bon paramètre
-    const splitURL = url.split('/');
-    let indexId = -1;
-
-    // Si la requete contient un obj alors on a un product id on le modifie et on fetch
-    for (let i = 0; i < splitURL.length; i++) {
-
-      if (splitURL[i] === 'obj') {
-        indexId = i + 1;
-      }
-    }
-    for (let i = 0; i < listA.length; i++) {
-
-      const currentLink = listA[i].href;
-      const splitLink = currentLink.split('/');
-      const productId = parseInt(splitLink[splitLink.length - 1], 10);
-
-      // On vérifie si la requête contient un catalog product et on trouve le product id pour l'utiliser pour la requête
-      if (currentLink.includes('catalog_product')) {
-
-        if (!isNaN(productId) && indexId) {
-
-          // On build la requete avec le product id voulu et on fetch
-          splitURL[indexId] = `${productId}?${splitURL[indexId].split('?')[1]}`;
-          const builtLink = splitURL.join('/');
-
-          if (!this.requestRecorded.includes(builtLink)) {
-            try {
-              fetch(builtLink);
-              this.requestRecorded.push(builtLink);
-            }
-            catch (err) {}
-          }
-        }
-      }
-    }
+    WindowService.dispatchEvent(new CustomEvent(EEventMessage.POLLY_READY));
   }
 
   /**
@@ -197,21 +138,21 @@ export class PollyRecorder {
    */
   private _createPollyInstance() : Polly {
     return new Polly('scenario', {
-      mode: 'record',
-      keepUnusedRequests: true,
-      recordFailedRequests: true,
-      recordIfMissing: true,
-      logging: true,
-      adapters: ['fetch', 'xhr'],
-      adapterOptions: {
-        xhr: {
-          context: window
+      mode : 'record',
+      keepUnusedRequests : true,
+      recordFailedRequests : true,
+      recordIfMissing : true,
+      logging : false,
+      adapters : ['fetch', 'xhr'],
+      adapterOptions : {
+        xhr : {
+          context : window
         },
-        fetch: {
-          context: window
+        fetch : {
+          context : window
         }
       },
-      persister: 'in-memory-persister'
+      persister : 'in-memory-persister'
     });
   }
 
@@ -275,8 +216,15 @@ export class PollyRecorder {
       }
     }
 
-    await Promise.all(this._listRequestPromise);
-    await this._polly.stop();
+    try {
+
+      await Promise.all(this._listRequestPromise);
+      await this._polly.stop();
+    } catch (err) {
+
+      console.error('Error with stop Polly : ', err);
+    }
+
   }
 
   /**
@@ -310,7 +258,6 @@ export class PollyRecorder {
 
   /**
    * Ajoute une fetch request dans la liste des request à fatch
-   * @param url
    */
   private _addToRequestList(url : string) : void {
     this._listRequestPromise.push(
@@ -321,42 +268,47 @@ export class PollyRecorder {
   /**
    * Fonction exécuté lors de la reception de l'event
    * qui permet de récuperer le résultat de polly
-   * @param event
    */
-  private async _getHARResult(event) : Promise<void> {
-    // On atttend que polly ait fini de stopper
-    await this._stopAsync();
+  private async _getHARResultAsync(event) : Promise<void> {
 
-    // On envoie le résultat au content-script
-    window.postMessage(
-      {
-        action : controlMSG.GOT_HAR_EVENT,
-        payload : { result : this._getResult(this.recordingId), recordingId : this.recordingId }
-      },
-      event.origin
-    );
+    try {
 
-    // On remove les listeners
-    this._removeAllListener();
-    PollyRecorder.observer.disconnect();
+      // On attend que polly ait fini de stopper
+      await this._stopAsync();
+
+      // On envoie le résultat au content-script
+      window.postMessage(
+        {
+          action : EEventMessage.GOT_HAR,
+          payload : { result : this._getResult(this.recordingId), recordingId : this.recordingId }
+        },
+        event.origin
+      );
+
+      // On remove les listeners
+      this._removeAllListener();
+      PollyRecorder.observer.disconnect();
+    } catch (err) {
+      console.error('Error with Polly HAR Result : ', err);
+    }
   }
 
   /**
    * Ajout de tous les listeners d'event entre le polly recorder et le content script
    */
   private _addAllListener() : void {
-    WindowService.addEventListener(controlMSG.GET_HAR_EVENT, this._boundedGetHARResult, false);
-    WindowService.addEventListener(controlMSG.PAUSE_EVENT, this._boundedPause, false);
-    WindowService.addEventListener(controlMSG.UNPAUSE_EVENT, this._boundedUnpause, false);
+    WindowService.addEventListener(EEventMessage.GET_HAR, this._boundedGetHARResult, false);
+    WindowService.addEventListener(EEventMessage.PAUSE, this._boundedPause, false);
+    WindowService.addEventListener(EEventMessage.UNPAUSE, this._boundedUnpause, false);
   }
 
   /**
    * Remove de tous les listeners entre polly recorder et le content script
    */
   private _removeAllListener() : void {
-    WindowService.removeEventListener(controlMSG.GET_HAR_EVENT, this._boundedGetHARResult, false);
-    WindowService.removeEventListener(controlMSG.PAUSE_EVENT, this._boundedPause, false);
-    WindowService.removeEventListener(controlMSG.UNPAUSE_EVENT, this._boundedUnpause, false);
+    WindowService.removeEventListener(EEventMessage.GET_HAR, this._boundedGetHARResult, false);
+    WindowService.removeEventListener(EEventMessage.PAUSE, this._boundedPause, false);
+    WindowService.removeEventListener(EEventMessage.UNPAUSE, this._boundedUnpause, false);
   }
 }
 

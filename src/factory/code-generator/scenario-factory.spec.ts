@@ -1,17 +1,17 @@
+import { IOption } from './../../interfaces/i-options';
 import { PPtrFactory } from './events-factory/pptr-factory';
 import { KeydownFactory } from './events-factory/keydown-factory';
 import { SubmitFactory } from './events-factory/submit-factory';
 import { DropFactory } from './events-factory/drop-factory';
 import { ChangeFactory } from './events-factory/change-factory';
 import { ClickFactory } from './events-factory/click-factory';
-import customEvents from '../../constants/events/events-custom';
-import domEventsToRecord from '../../constants/events/events-dom';
 import { IMessage } from '../../interfaces/i-message';
 import { Block } from '../../code-generator/block';
 import 'jest';
 import { ScenarioFactory } from './scenario-factory';
-import pptrActions from '../../constants/pptr-actions';
-import eventsDom from '../../constants/events/events-dom';
+import { ECustomEvent } from '../../enum/events/events-custom';
+import { EDomEvent } from '../../enum/events/events-dom';
+import { EPptrAction } from '../../enum/action/pptr-actions';
 
 /** Frame définie pour les tests */
 const frameId = 0;
@@ -20,43 +20,43 @@ const frame = 'page';
 /**
  * Options
  */
-const defaultOptions = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+const defaultOptions : IOption = {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick  : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 describe('Test de Scenario Factory', () => {
 
-  test('Test de generate cutome ligne', () => {
+  test('Test de build cutome ligne', () => {
 
     const customLine = 'await page.waitFor(1500);';
     expect(
-      ScenarioFactory.generateCustomLineBlock(
+      ScenarioFactory.buildCustomLineBlock(
         frameId,
         customLine
       )
     ).toEqual(
       new Block(frameId, {
         frameId,
-        type: 'custom-line',
-        value: customLine
+        type : 'custom-line',
+        value : customLine
       })
     );
   });
 
-  test('Test de generate SetFrame', () => {
+  test('Test de build SetFrame', () => {
 
     const allFrames : any = [];
     allFrames[1] = 'kimoce.com';
@@ -67,26 +67,26 @@ describe('Test de Scenario Factory', () => {
     const block = new Block(1, {
       frameId : 0, value : 'line de frame simple', type : 'line'
     });
-    block.addLine({frameId: 1, type: 'line', value: 'line dans une autre frame'});
+    block.addLine({frameId : 1, type : 'line', value : 'line dans une autre frame'});
 
     const blockToAddResult = new Block(0);
 
     const declaration = `const frame_${1} = frames.find(f => f.url() === '${allFramesResult[1]}')`;
 
     blockToAddResult.addLineToTop(({
-      type: pptrActions.FRAME_SET,
-      value: declaration
+      type : EPptrAction.FRAME_SET,
+      value : declaration
     }));
 
     blockToAddResult.addLineToTop({
-      type: pptrActions.FRAME_SET,
-      value: 'let frames = await page.frames()'
+      type : EPptrAction.FRAME_SET,
+      value : 'let frames = await page.frames()'
     });
 
     delete allFramesResult[1];
 
     expect(
-      ScenarioFactory.generateSetFrame(
+      ScenarioFactory.buildSetFrame(
         block,
         new Block(0),
         allFrames
@@ -96,31 +96,31 @@ describe('Test de Scenario Factory', () => {
     );
   });
 
-  test('Test de generate Blank Line', () => {
+  test('Test de build Blank Line', () => {
 
     expect(
-      ScenarioFactory.generateBlankLineBlock()
+      ScenarioFactory.buildBlankLineBlock()
     ).toEqual(
       new Block(undefined, {
-        type: null,
-        value: ''
+        type : null,
+        value : ''
       })
     );
   });
 
-  test('Test de generate NavigationVar', () => {
+  test('Test de build NavigationVar', () => {
 
     expect(
-      ScenarioFactory.generateVarNavigationBlock(frameId)
+      ScenarioFactory.buildNavigationBlock(frameId)
     ).toEqual(
       new Block(frameId, {
-        type: pptrActions.NAVIGATION_PROMISE,
-        value: 'const navigationPromise = page.waitForNavigation();'
+        type : EPptrAction.NAVIGATION_PROMISE,
+        value : 'const navigationPromise = page.waitForNavigation();'
       })
     );
   });
 
-  test('Test de generate comments', () => {
+  test('Test de build comments', () => {
     const block = new Block(frameId, {
       value : 'test de comment',
       type : 'comment'
@@ -132,103 +132,103 @@ describe('Test de Scenario Factory', () => {
       value : 'test de comment',
       type : 'comment'
     });
-    blockResult.addLineToTop({value: `/** ${comment} */`});
+    blockResult.addLineToTop({value : `/** ${comment} */`});
 
     expect(
-      ScenarioFactory.generateCommentsBlock(block, comment)
+      ScenarioFactory.buildCommentBlock(block, comment)
     ).toEqual(
       blockResult
     );
   });
 
 
-  test('Test de generate Click event', () => {
+  test('Test de build Click event', () => {
     const eventMessage : IMessage = {
-      typeEvent : domEventsToRecord.CLICK,
+      typeEvent : EDomEvent.CLICK,
       selector : '#id',
-      action : eventsDom.CLICK
+      action :   EDomEvent.CLICK
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      ClickFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
+      ClickFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
 
-  test('Test de generate Change event', () => {
+  test('Test de build Change event', () => {
     const eventMessage : IMessage = {
-      typeEvent : domEventsToRecord.CHANGE,
+      typeEvent : EDomEvent.CHANGE,
       selector : '#id',
-      action : eventsDom.CHANGE,
-      value: 'content'
+      action :   EDomEvent.CHANGE,
+      value : 'content'
     };
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      ChangeFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
+      ChangeFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
 
-  test('Test de generate Drop event', () => {
+  test('Test de build Drop event', () => {
     const eventMessage : IMessage = {
-      typeEvent : domEventsToRecord.DROP,
+      typeEvent : EDomEvent.DROP,
       selector : '#id',
-      action : customEvents.DROP_FILE,
+      action : ECustomEvent.DROP_FILE,
       files : 'text.txt'
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      DropFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
+      DropFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
-  test('Test de generate Submit event', () => {
+  test('Test de build Submit event', () => {
     const eventMessage : IMessage = {
-      typeEvent : domEventsToRecord.SUBMIT,
+      typeEvent : EDomEvent.SUBMIT,
       selector : '#id',
-      action : customEvents.SUBMIT
+      action : ECustomEvent.SUBMIT
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      SubmitFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
+      SubmitFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
-  test('Test de generate Kedown event', () => {
+  test('Test de build Kedown event', () => {
     const eventMessage : IMessage = {
-      typeEvent : domEventsToRecord.KEYDOWN,
+      typeEvent : EDomEvent.KEYDOWN,
       selector : '#id',
-      action : customEvents.LIST_KEYDOWN,
+      action : ECustomEvent.LIST_KEYDOWN,
       value : 'content',
       iframe : '#iframe'
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      KeydownFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
+      KeydownFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
-  test('Test de generate PPtr action event', () => {
+  test('Test de build PPtr action event', () => {
     const eventMessage : IMessage = {
-      typeEvent : pptrActions.PPTR,
+      typeEvent : EPptrAction.PPTR,
       selector : '#id',
-      action : pptrActions.GOTO,
+      action : EPptrAction.GOTO,
       value : 'localhost'
     };
 
     expect(
-      ScenarioFactory.parseEvent(eventMessage, frameId, frame, defaultOptions)
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     ).toEqual(
-      PPtrFactory.generateBlock(eventMessage, frameId, frame, defaultOptions)
+      PPtrFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 });

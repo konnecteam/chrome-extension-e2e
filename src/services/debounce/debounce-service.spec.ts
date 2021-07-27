@@ -1,6 +1,6 @@
 import { DebounceService } from './debounce-service';
 import 'jest';
-import domEventsToRecord from '../../constants/events/events-dom';
+import { EDomEvent } from '../../enum/events/events-dom';
 
 describe('Test de Scroll Service', () => {
   beforeAll(() => {
@@ -19,8 +19,8 @@ describe('Test de Scroll Service', () => {
     // On créé l'event qui sera catché
     const eventObject = {
       target  : document.getElementById('DivTitle'),
-      type : domEventsToRecord.SCROLL,
-      typeEvent : domEventsToRecord.SCROLL,
+      type : EDomEvent.SCROLL,
+      typeEvent : EDomEvent.SCROLL,
     };
     let eventCatch = null;
 

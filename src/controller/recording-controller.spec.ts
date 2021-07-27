@@ -5,11 +5,13 @@ import { startServer } from '../../static/test/page-test/server';
 import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as chrome from 'sinon-chrome';
 import { IMessage } from '../interfaces/i-message';
-import controlActions from '../constants/control/control-actions';
 import { Server } from 'http';
-import { EBadgeState } from '../enum/e-badge-states';
+import { EBadgeState } from '../enum/badge/e-badge-states';
+import { EControlAction } from '../enum/action/control-actions';
 import { IOption } from 'interfaces/i-options';
 
+
+//CONTROL
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
@@ -18,20 +20,20 @@ let page : puppeteer.Page;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 /**
@@ -56,7 +58,6 @@ async function waitBackgroundReadyAsync() : Promise<string> {
 
 /**
  * Permet de lancer un dispatch event sur la window
- * @param event
  */
 async function dispatchEventAsync(event : string, message : IMessage) : Promise<void> {
   return page.evaluate(ev => {
@@ -68,7 +69,6 @@ async function dispatchEventAsync(event : string, message : IMessage) : Promise<
 
 /**
  * Permet de verifier le contenu du badge
- * @param action
  */
 async function verfiyBadgeContentAsync(action : string ) : Promise<string> {
   await waitBackgroundReadyAsync();
@@ -111,7 +111,7 @@ describe('Test de Recording Controller', () => {
         }, 100);
       });
       // On set les options dans le local storage de la window car on est pas dans le plugin
-      window.localStorage.setItem('options', JSON.stringify({ options: { code: params.options } }));
+      window.localStorage.setItem('options', JSON.stringify({ options : { code : params.options } }));
 
 
       // On utilise sendMessage donc il faut le declarer mais on a pas besoin de l'overwrite
@@ -153,15 +153,15 @@ describe('Test de Recording Controller', () => {
           window.addEventListener('OnMessage', async (msg : any) => {
             switch (msg.action) {
               case params.controlActions.START :
-                (window as any).recordingController._start();
+                (window as any).recordingController._startAsync();
                 (window as any).badgeText = params.badgeStates.REC;
                 break;
               case params.controlActions.STOP :
                 (window as any).recordingController._stop();
                 (window as any).badgeText = '';
                 break;
-              case params.controlActions.CLEANUP:
-                (window as any).recordingController._cleanUp();
+              case params.controlActions.CLEANUP :
+                (window as any).recordingController._cleanUpAsync();
                 (window as any).badgeText = '';
                 break;
               case params.controlActions.PAUSE :
@@ -225,7 +225,7 @@ describe('Test de Recording Controller', () => {
       };
 
       chrome.webNavigation = {
-        onCompleted: {
+        onCompleted : {
           addListener(callback) {},
           removeListener(callback) {}
         },
@@ -243,7 +243,7 @@ describe('Test de Recording Controller', () => {
         (window as any).ddlFile = true;
       };
 
-    }, { chrome, options: defaultOptions, controlActions , badgeStates : EBadgeState});
+    }, { chrome, options : defaultOptions, controlActions : EControlAction , badgeStates : EBadgeState});
 
     // On ajoute le background dans la page
     await page.evaluate(scriptText => {
@@ -266,35 +266,35 @@ describe('Test de Recording Controller', () => {
 
   test('Test de start', async () => {
 
-    const badge = await verfiyBadgeContentAsync(controlActions.START);
+    const badge = await verfiyBadgeContentAsync(EControlAction.START);
     // Verifier si il est égale à 'rec' car il n'y a pas d'event à save
     expect(badge).toEqual(EBadgeState.REC);
 
   });
 
   test('Test de stop', async () => {
-    const badge = await verfiyBadgeContentAsync(controlActions.STOP);
+    const badge = await verfiyBadgeContentAsync(EControlAction.STOP);
     // Verifier si il est égale à '' car il n'y a pas d'event à save
     expect(badge).toEqual('');
   });
 
   test('Test de cleanUp', async () => {
 
-    const badge = await verfiyBadgeContentAsync(controlActions.CLEANUP);
+    const badge = await verfiyBadgeContentAsync(EControlAction.CLEANUP);
     // Verifier si il est égale à '' car il n'y a pas d'event à save
     expect(badge).toEqual('');
   });
 
   test('Test de pause', async () => {
 
-    const badge = await verfiyBadgeContentAsync(controlActions.PAUSE);
+    const badge = await verfiyBadgeContentAsync(EControlAction.PAUSE);
     // Verifier si il est égale à '❚❚' car on est en pause
     expect(badge).toEqual(EBadgeState.PAUSE);
   });
 
   test('Test de unpause', async () => {
 
-    const badge = await verfiyBadgeContentAsync(controlActions.UNPAUSE);
+    const badge = await verfiyBadgeContentAsync(EControlAction.UNPAUSE);
     // Verifier si il est égale à 'rec' car on record
     expect(badge).toEqual(EBadgeState.REC);
   });
@@ -315,7 +315,7 @@ describe('Test de Recording Controller', () => {
       Promise.resolve();
     });
     // Dispatch event
-    await dispatchEventAsync('OnMessage', { action: controlActions.EXPORT_SCRIPT });
+    await dispatchEventAsync('OnMessage', { action : EControlAction.EXPORT_SCRIPT });
 
     // On fait une pause pour laisser exportScript le temps de finir
     await page.waitFor(40);

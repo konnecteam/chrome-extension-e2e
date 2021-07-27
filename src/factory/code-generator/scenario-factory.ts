@@ -3,30 +3,75 @@ import { KeydownFactory } from './events-factory/keydown-factory';
 import { SubmitFactory } from './events-factory/submit-factory';
 import { DropFactory } from './events-factory/drop-factory';
 import { ChangeFactory } from './events-factory/change-factory';
-import domEventsToRecord from '../../constants/events/events-dom';
 import { ClickFactory } from './events-factory/click-factory';
 import { IOption } from '../../interfaces/i-options';
 import { Block } from '../../code-generator/block';
 import { IMessage } from '../../interfaces/i-message';
-import pptrActions from '../../constants/pptr-actions';
 import { PPtrFactory } from './events-factory/pptr-factory';
+import { ScenarioService } from '../../services/scenario/scenario-service';
+import { RegExpFactory } from '../../factory/regexp/regexp-factory';
+import { EPptrAction } from '../../enum/action/pptr-actions';
+import { EDomEvent } from '../../enum/events/events-dom';
+
+// Constant
+import HEADER from '../../constants/code-generate/header-code';
 
 /**
  * Factory qui génére le contenu du scnénario
  */
 export class ScenarioFactory {
 
+  /** Construction du header du scenario */
+  public static buildHeader(
+    includeHttpRequest : boolean,
+    includeWrapAsync : boolean,
+    isHeadless : boolean,
+    httpRegex : string
+  ) : string {
+
+    // Récupération des imports
+    const importedPackage = ScenarioService.getImport(includeHttpRequest);
+    let header = ScenarioService.getHeader(includeWrapAsync);
+    header = isHeadless ? header : header.replace('launch()', 'launch({ headless : false })');
+
+    let regex = '';
+
+    // Si les options contiennent une regex on récupère la regex et son flag
+    if (httpRegex) {
+
+      const regexObject = RegExpFactory.buildRegexpAndFlag(httpRegex);
+
+      if (regexObject && regexObject.regexp) {
+
+        // On créé les paramètres pour l'objet RegExp
+        regex = `${regex}'${regexObject.regexp}'${regexObject.flag ? `,'${regexObject.flag}'` : ''}`;
+      }
+    }
+
+    // Les requêtes http doivent être incluse dans le header ?
+    if (includeHttpRequest) {
+
+      header = `${header}${HEADER.REQUEST_LISTENER.replace('**httpregex**', regex ? `, new RegExp(${regex})` : '')}`;
+    } else {
+
+    // Si on une regex et pas l'option de record activé, on utilise le listener de la page pour les requêtes en live
+      header = `${header}${HEADER.LIVE_REQUEST_LISTENER.replace('**httpregex**', regex ? `, new RegExp(${regex})` : '')}`;
+    }
+
+    return `${importedPackage}${header}`;
+  }
+
   /**
-   * Renvoie le block issue d'une custom ligne
+   * Construit le code personnalisé définit par les options utilisateur
    */
-  public static generateCustomLineBlock(framedID : number, customLine : string) : Block {
-    return new Block(framedID, {frameId: framedID, type: 'custom-line' , value: customLine });
+  public static buildCustomLineBlock(framedID : number, customLine : string) : Block {
+    return new Block(framedID, { frameId : framedID, type : 'custom-line', value : customLine });
   }
 
   /**
    * on set une frame
    */
-  public static generateSetFrame(blockRead : Block, blockToAddLine : Block, allFrames : any) : any {
+  public static buildSetFrame(blockRead : Block, blockToAddLine : Block, allFrames : any) : any {
 
     const lines = blockRead.getLines();
     for (let i = 0; lines.length; i++) {
@@ -36,13 +81,13 @@ export class ScenarioFactory {
 
         const declaration = `const frame_${line.frameId} = frames.find(f => f.url() === '${allFrames[line.frameId]}')`;
         blockToAddLine.addLineToTop(({
-          type: pptrActions.FRAME_SET,
-          value: declaration
+          type : EPptrAction.FRAME_SET,
+          value : declaration
         }));
 
         blockToAddLine.addLineToTop({
-          type: pptrActions.FRAME_SET,
-          value: 'let frames = await page.frames()'
+          type : EPptrAction.FRAME_SET,
+          value : 'let frames = await page.frames()'
         });
 
         delete allFrames[line.frameId];
@@ -55,67 +100,67 @@ export class ScenarioFactory {
   /**
    * Génère une ligne blanche, utilisée pour faire un saut de ligne entre les blocs de code
    */
-  public static generateBlankLineBlock() : Block {
+  public static buildBlankLineBlock() : Block {
 
     const blankLine = new Block();
     blankLine.addLine({
-      type: null,
-      value: ''
+      type : null,
+      value : ''
     });
 
     return blankLine;
   }
 
   /**
-   * Génère la variable navigationPromise en cas de navigation
+   * Construit la variable navigationPromise en cas de navigation
    */
-  public static generateVarNavigationBlock(frameId : number) : Block {
+  public static buildNavigationBlock(frameId : number) : Block {
     return new Block(frameId, {
-      type: pptrActions.NAVIGATION_PROMISE,
-      value: 'const navigationPromise = page.waitForNavigation();'
+      type : EPptrAction.NAVIGATION_PROMISE,
+      value : 'const navigationPromise = page.waitForNavigation();'
     });
   }
 
   /**
-   * Ajoute le commentaire dans le block donné
+   * Construit un commentaire à ajouté dans le code
    */
-  public static generateCommentsBlock(block : Block, comments : string) : Block {
-    block.addLineToTop({
-      value: `/** ${comments} */`
-    });
+  public static buildCommentBlock(block : Block, comments : string) : Block {
+    block.addLineToTop({ value : `/** ${comments} */` });
     return block;
   }
 
-
   /**
-   * Parser un événement en Block
+   * Permet de construire un block de code correspondant à l'événèment donnée
    */
-  public static parseEvent(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
+  public static buildBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
+
     // Pour chaque type d'event possible
     const { typeEvent } = event;
+
     // En fonction du typeEvent déclancheur
     switch (typeEvent) {
+
       // Si c'est un click
-      case domEventsToRecord.CLICK:
-        return ClickFactory.generateBlock(event, frameId, frame, options);
+      case EDomEvent.CLICK :
+        return ClickFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un change
-      case domEventsToRecord.CHANGE :
-        return ChangeFactory.generateBlock(event, frameId, frame, options);
+      case EDomEvent.CHANGE :
+        return ChangeFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un drop
-      case domEventsToRecord.DROP :
-        return DropFactory.generateBlock(event, frameId, frame, options);
+      case EDomEvent.DROP :
+        return DropFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un submit
-      case domEventsToRecord.SUBMIT:
-        return SubmitFactory.generateBlock(event, frameId, frame, options);
+      case EDomEvent.SUBMIT :
+        return SubmitFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un keydown
-      case domEventsToRecord.KEYDOWN:
-        return KeydownFactory.generateBlock(event, frameId, frame, options);
+      case EDomEvent.KEYDOWN :
+        return KeydownFactory.buildBlock(event, frameId, frame, options);
       // Si c'est un scroll
-      case domEventsToRecord.SCROLL:
-        return ScrollFactory.generateBlock(event, frameId, frame);
+      case EDomEvent.SCROLL :
+        return ScrollFactory.buildBlock(event, frameId, frame);
       // Si c'est une action pupeteer
-      case pptrActions.PPTR:
-        return PPtrFactory.generateBlock(event, frameId, frame, options);
+      case EPptrAction.PPTR :
+        return PPtrFactory.buildBlock(event, frameId, frame, options);
       default : return null;
     }
   }

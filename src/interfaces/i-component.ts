@@ -11,11 +11,4 @@ export interface IComponent {
 
   /** Le sélécteur de l'event précédant */
   previousSelector? : string;
-
-  /** Utile pour déterminer dans quel type de konnect liste on se situe */
-  previousElement? : {
-    selector : string,
-    element : Element,
-    typeList : string
-  };
 }

@@ -5,7 +5,6 @@ export class URLService {
 
   /**
    * Création d'une url à partir d'un objet
-   * @param object
    */
   public static createURLObject(object : any) : string {
     return URL.createObjectURL(object);
@@ -13,7 +12,6 @@ export class URLService {
 
   /**
    * Permet de retirer une url
-   * @param url
    */
   public static revokeURL(url : string) : void {
     URL.revokeObjectURL(url);

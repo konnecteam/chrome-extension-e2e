@@ -2,14 +2,16 @@
  * Constantes du header du scénario
  */
 export default {
-  IMPORT_PUPPETEER: `const puppeteer = require('puppeteer');
+  IMPORT_PUPPETEER : `const puppeteer = require('puppeteer');
   const fs = require('fs');
   const path = require('path');
-  const PageService = require('./recordings/services/page-service');\n`,
+  const PageService = require('./recordings/services/page-service');
+  const BrowserService = require('./recordings/services/browser-service');\n`,
 
   IMPORT_HTTP_REQUEST : `const puppeteer = require('puppeteer');
 const fs = require('fs');
 const PageService = require('./recordings/services/page-service');
+const BrowserService = require('./recordings/services/browser-service');
 const RequestService = require('./recordings/services/request-service');
 
 /** On commence par lire le har qui contient les requêtes et le faketimescript qui permet de faker la date */
@@ -29,6 +31,8 @@ page.setDefaultTimeout('100000')
 let fileChooser = null;
 /** On met en place le handle du chargement de la page */
 PageService.addLoadHandler(page);
+
+BrowserService.addTargetCreatedHandler(browser);
 \n`,
 
   WRAPPED_HEADER : `(async () => {
@@ -38,15 +42,17 @@ PageService.addLoadHandler(page);
   let fileChooser = null;
   /** On met en place le handle du chargement de la page */
   PageService.addLoadHandler(page);
+
+  BrowserService.addTargetCreatedHandler(browser);
   \n`,
 
-  LISTENER_PAGE_RECORDED_REQUEST : `  await page.setRequestInterception(true);
+  REQUEST_LISTENER : `  await page.setRequestInterception(true);
   await page.setBypassCSP(true);
   await page.setOfflineMode(true);
   /** On met en place le handle requests de la page */
   PageService.addSavedRequestHandler(page **httpregex**);
 `,
-  LISTENER_PAGE_LIVE_REQUEST : `  await page.setRequestInterception(true);
+  LIVE_REQUEST_LISTENER : `  await page.setRequestInterception(true);
   PageService.addLiveRequestHandler(page **httpregex**);
 `
 };

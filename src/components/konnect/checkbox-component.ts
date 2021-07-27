@@ -1,9 +1,9 @@
 import { ElementService } from '../../services/element/element-service';
-import componentName from '../../constants/component-name';
 import { IComponent } from '../../interfaces/i-component';
-import elementsTagName from '../../constants/elements/tag-name';
 import { IMessage } from '../../interfaces/i-message';
-import eventsDom from '../../constants/events/events-dom';
+import { ETagName }from '../../enum/elements/tag-name';
+import { EComponent } from '../../enum/component/component';
+import { EDomEvent } from '../../enum/events/events-dom';
 
 /**
  * Permet de gérer les checkbox
@@ -12,16 +12,15 @@ export class CheckboxComponent {
 
   /**
    * Récupère le IComponent Checkbox
-   * @param element
    */
   public static getElement(element : HTMLElement) : IComponent {
 
     if (ElementService.findParentElementWithTagName(
       element,
-      elementsTagName.CHECKBOX.toUpperCase()
+      ETagName.CHECKBOX.toUpperCase()
     )) {
 
-      return { component: componentName.CHECKBOX, element };
+      return { component : EComponent.CHECKBOX, element };
 
     } else {
       return null;
@@ -32,7 +31,7 @@ export class CheckboxComponent {
    * Modification de l'event pour un checkbox
    */
   public static editCheckboxComponentMessage(event : IMessage) : IMessage {
-    event.action = eventsDom.CLICK;
+    event.action = EDomEvent.CLICK;
     return event;
   }
 }

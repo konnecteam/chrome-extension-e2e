@@ -2,8 +2,8 @@ import { SelectorService } from '../../services/selector/selector-service';
 import { IMessage } from '../../interfaces/i-message';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
-import componentName from '../../constants/component-name';
-import customEvents from '../../constants/events/events-custom';
+import { EComponent } from '../../enum/component/component';
+import { ECustomEvent } from '../../enum/events/events-custom';
 
 /**
  * Composant qui permet de gérer les Km switch
@@ -17,7 +17,8 @@ export class KmSwitchComponent {
     const elementFind = ElementService.getKmSwitchElement(element);
 
     if (elementFind) {
-      return { component: componentName.KM_SWITCH, element: elementFind as HTMLElement };
+
+      return { component : EComponent.KM_SWITCH, element : elementFind as HTMLElement };
     } else {
       return null;
     }
@@ -29,7 +30,7 @@ export class KmSwitchComponent {
   public static editKmSwitchComponentMessage(event : IMessage, component : IComponent) : IMessage {
 
     event.selector = SelectorService.Instance.find(component.element);
-    event.action = customEvents.CLICK_MOUSE;
+    event.action = ECustomEvent.CLICK_MOUSE;
     return event;
   }
 }

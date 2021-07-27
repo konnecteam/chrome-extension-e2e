@@ -2,7 +2,9 @@ import { IOption } from 'interfaces/i-options';
 import { KeydownFactory } from './keydown-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
-import domEventsToRecord from '../../../constants/events/events-dom';
+
+// Constant
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /** frame et defaultOptions utilisées pour les tests */
 let frame : string;
@@ -10,21 +12,21 @@ let frameId : number;
 /**
  * Options
  */
-const defaultOptions = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+const defaultOptions : IOption = {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 const iframe = 'body > iframe';
@@ -45,8 +47,8 @@ describe('Test de Keydown Block Factory', () => {
 
     exceptedResult.addLine({
 
-      type: domEventsToRecord.KEYDOWN,
-      value: ` await ${frame}.evaluate( async function(){
+      type : EDomEvent.KEYDOWN,
+      value : ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
           let element = iframeElement.contentDocument.querySelector('${selector}');
           element.className = '';
@@ -77,8 +79,8 @@ describe('Test de Keydown Block Factory', () => {
 
     exceptedResult.addLine({
 
-      type: 'KEYUP',
-      value: ` await ${frame}.evaluate( async function(){
+      type : 'KEYUP',
+      value : ` await ${frame}.evaluate( async function(){
           let element = document.querySelector('${selector}');
           var docEvent = document.createEvent('KeyboardEvents');
           //If it isn't input element
@@ -116,14 +118,14 @@ describe('Test de Keydown Block Factory', () => {
     const exceptedResult = new Block(frameId);
 
     exceptedResult.addLine({
-      type: domEventsToRecord.CLICK,
-      value: ` await ${frame}.waitForSelector('${selector}')`
+      type : EDomEvent.CLICK,
+      value : ` await ${frame}.waitForSelector('${selector}')`
     });
 
     exceptedResult.addLine({
 
-      type: 'KEYUP',
-      value: ` await ${frame}.evaluate( async function(){
+      type : 'KEYUP',
+      value : ` await ${frame}.evaluate( async function(){
           let element = document.querySelector('${selector}');
           var docEvent = document.createEvent('KeyboardEvents');
           //If it isn't input element

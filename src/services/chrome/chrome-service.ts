@@ -83,11 +83,19 @@ export class ChromeService {
   /**
    * Permet de récupérer le bage
    */
-  public static async getBadgeText() : Promise<string> {
-    const currentTab = await this.getCurrentTabId();
-    return new Promise((resolve, err) => {
+  public static async getBadgeTextAsync() : Promise<string> {
+
+    const currentTab = await this.getCurrentTabIdAsync();
+    return new Promise((resolve, reject) => {
+
       chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
-        resolve(result);
+        if (result === 'non-tab-specific') {
+
+          reject('problem with tabId');
+        } else {
+
+          resolve(result);
+        }
       });
     });
   }
@@ -102,16 +110,16 @@ export class ChromeService {
   /**
    * Permet de récupérer l'id du tab courrant
    */
-  public static async getCurrentTabId() : Promise<{id : number, url : string}> {
-    return new Promise(async (resolve, err) => {
-      const tabs = await this._query({
-        active: true,
-        currentWindow: true
+  public static async getCurrentTabIdAsync() : Promise<{id : number, url : string}> {
+    return new Promise(async (resolve, reject) => {
+      const tabs = await this._queryAsync({
+        active : true,
+        currentWindow : true
       });
       if (tabs && tabs[0]) {
-        resolve({id : tabs[0].id, url: tabs[0].url});
+        resolve({id : tabs[0].id, url : tabs[0].url});
       } else {
-        err('tabs is undefined');
+        reject('tabs is undefined');
       }
     });
   }
@@ -120,7 +128,7 @@ export class ChromeService {
    * Permet d'exécuter un script
    */
   public static executeScript(details : chrome.tabs.InjectDetails) : Promise<boolean> {
-    return new Promise((resolve, err) => {
+    return new Promise((resolve, reject) => {
       chrome.tabs.executeScript(details, () => {
         resolve(true);
       });
@@ -130,8 +138,8 @@ export class ChromeService {
   /**
    * Permet de récupérer des info via une query
    */
-  private static async _query(queryInfo : chrome.tabs.QueryInfo) : Promise<chrome.tabs.Tab[]> {
-    return new Promise((resolve, err) => {
+  private static async _queryAsync(queryInfo : chrome.tabs.QueryInfo) : Promise<chrome.tabs.Tab[]> {
+    return new Promise((resolve, reject) => {
       chrome.tabs.query(queryInfo, (result : chrome.tabs.Tab[]) => {
         resolve(result);
       });
@@ -140,13 +148,14 @@ export class ChromeService {
 
   /**
    * Permet d'envoyer des messages au content-script pour qu'il les envoie à PollyRecorder
-   * @param message
    */
-  public static async sendMessageToContentScript(message : string) : Promise<void> {
-    const tabs = await this._query({
-      currentWindow: true,
-      active: true
+  public static async sendMessageToContentScriptAsync(message : string) : Promise<void> {
+
+    const tabs = await this._queryAsync({
+      currentWindow : true,
+      active : true
     });
+
     if (tabs && tabs[0]) {
       chrome.tabs.sendMessage(tabs[0].id, {
         control : message
@@ -157,9 +166,8 @@ export class ChromeService {
 
   /**
    * Suppression des données d'un site à partir de l'url
-   * @param url
    */
-  public static async removeBrowsingData(url : string) : Promise<void> {
+  public static async removeBrowsingDataAsync(url : string) : Promise<void> {
     const millisecondsPerYear = 1000 * 60 * 60 * 24 * 7 * 52;
     const oneYearAgo = (new Date()).getTime() - millisecondsPerYear;
     return new Promise<void>((resolve, err) => {
@@ -183,11 +191,23 @@ export class ChromeService {
   /**
    * Permet de télécharger un fichier
    */
-  public static download(content : File, filename : string) : void {
-    chrome.downloads.download({
-      url: URL.createObjectURL(content),
-      filename,
-      saveAs: true
+  public static download(content : File, filename : string) : Promise<void> {
+
+    return new Promise((resolve, reject) => {
+      chrome.downloads.download({
+        url : URL.createObjectURL(content),
+        filename,
+        saveAs : true
+      }, (downloadId : number) => {
+
+        if (downloadId) {
+
+          resolve();
+        } else {
+          // chrome.runtime.lastError contient la raison de l'erreur
+          reject(chrome.runtime.lastError);
+        }
+      });
     });
   }
 

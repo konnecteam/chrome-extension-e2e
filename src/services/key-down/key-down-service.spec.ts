@@ -31,13 +31,13 @@ describe('Test de Keydown Service', () => {
     const element = document.getElementById('txtArea');
 
     const msg : IMessage = {
-      selector: '.txtArea',
-      tagName: 'textarea',
-      action: 'keydown',
+      selector : '.txtArea',
+      tagName : 'textarea',
+      action : 'keydown',
       typeEvent : 'keydown',
-      key: 'k',
-      scrollY: window.pageYOffset,
-      scrollX: window.pageXOffset
+      key : 'k',
+      scrollY : window.pageYOffset,
+      scrollX : window.pageXOffset
     };
     keyDownService.handleEvent(msg, element);
     /*
@@ -54,13 +54,13 @@ describe('Test de Keydown Service', () => {
     const element = document.getElementById('input');
 
     const msg : IMessage = {
-      selector: '.input',
-      tagName: 'input',
-      action: 'change',
+      selector : '.input',
+      tagName : 'input',
+      action : 'change',
       typeEvent : 'change',
       value : 'test',
-      scrollY: window.pageYOffset,
-      scrollX: window.pageXOffset
+      scrollY : window.pageYOffset,
+      scrollX : window.pageXOffset
     };
     keyDownService.handleEvent(msg, element);
     /*
@@ -80,13 +80,13 @@ describe('Test de Keydown Service', () => {
     const element = document.getElementById('input');
 
     const msg : IMessage = {
-      selector: '.input',
-      tagName: 'input',
-      action: 'keydown',
+      selector : '.input',
+      tagName : 'input',
+      action : 'keydown',
       typeEvent : 'keydown',
       key : 't',
-      scrollY: window.pageYOffset,
-      scrollX: window.pageXOffset
+      scrollY : window.pageYOffset,
+      scrollX : window.pageXOffset
     };
     keyDownService.handleEvent(msg, element);
     /*

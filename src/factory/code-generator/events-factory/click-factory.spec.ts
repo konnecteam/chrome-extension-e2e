@@ -2,10 +2,11 @@ import { IOption } from './../../../interfaces/i-options';
 import { ILineBlock } from '../../../interfaces/i-line-block';
 import { Block } from '../../../code-generator/block';
 import 'jest';
-import domEventsToRecord from '../../../constants/events/events-dom';
-import customEvents from '../../../constants/events/events-custom';
 import { ClickFactory } from './click-factory';
-import eventsDom from '../../../constants/events/events-dom';
+import { ECustomEvent } from '../../../enum/events/events-custom';
+
+// Constant
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /**
  * Attributs d'un IMessage
@@ -24,20 +25,20 @@ let frameId : number;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 /**
@@ -45,8 +46,8 @@ const defaultOptions : IOption = {
  */
 function simpleClickLineBlock() : ILineBlock {
   return {
-    type: domEventsToRecord.CLICK,
-    value: `await ${frame}.$eval('${selector}',  el=> el.click());`
+    type : EDomEvent.CLICK,
+    value : `await ${frame}.$eval('${selector}',  el=> el.click());`
   };
 }
 
@@ -55,8 +56,8 @@ function simpleClickLineBlock() : ILineBlock {
  */
 function clickFileDropZoneLineModel() : ILineBlock {
   return {
-    type: domEventsToRecord.CLICK,
-    value: `  [fileChooser] = await Promise.all([
+    type : EDomEvent.CLICK,
+    value : `  [fileChooser] = await Promise.all([
       ${frame}.waitForFileChooser(),
       ${frame}.waitForSelector('${selector}'),
       ${frame}.$eval('${selector}',  el=> el.click())
@@ -69,8 +70,8 @@ function clickFileDropZoneLineModel() : ILineBlock {
  */
 function clickMouseInputNumericLineModel() : ILineBlock {
   return {
-    type: domEventsToRecord.CLICK,
-    value: ` await ${frame}.evaluate( async function(){
+    type : EDomEvent.CLICK,
+    value : ` await ${frame}.evaluate( async function(){
       let e = document.querySelector('${selector}');
       var docEvent = document.createEvent('MouseEvents');
       docEvent.initEvent('mousedown', true, true);
@@ -92,8 +93,8 @@ function clickMouseInputNumericLineModel() : ILineBlock {
  */
 function clickMouseLineModel() : ILineBlock {
   return {
-    type: domEventsToRecord.CLICK,
-    value: ` await ${frame}.evaluate( async function(){
+    type : EDomEvent.CLICK,
+    value : ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         var docEvent = document.createEvent('MouseEvents');
         docEvent.initEvent('mousedown', true, true);
@@ -109,14 +110,13 @@ function clickMouseLineModel() : ILineBlock {
  */
 function customeLineLineBlock() : ILineBlock {
   return {
-    type : domEventsToRecord.CLICK,
+    type : EDomEvent.CLICK,
     value : defaultOptions.customLineAfterClick
   };
 }
 
 /**
  * Génère la ligne customisé avant chaque event
- * @param select
  */
 function customLineBeforeEvent(event : string) : ILineBlock {
   return {
@@ -130,8 +130,8 @@ function customLineBeforeEvent(event : string) : ILineBlock {
 
 function waitForSelectorOnClickLineBlock(select : string) : ILineBlock {
   return {
-    type: domEventsToRecord.CLICK,
-    value: `await ${frame}.waitForSelector('${select}');`
+    type : EDomEvent.CLICK,
+    value : `await ${frame}.waitForSelector('${select}');`
   };
 }
 
@@ -151,8 +151,8 @@ function waitForSelectorOnClickScrollElementLineBlock() : ILineBlock {
  */
 function scrollInKListItemLineBlock() : ILineBlock {
   return {
-    type: domEventsToRecord.CLICK,
-    value: ` await ${frame}.evaluate( async function(){
+    type : EDomEvent.CLICK,
+    value : ` await ${frame}.evaluate( async function(){
         let e = document.querySelector('${scrollElement}').parentElement;
         e.scroll(${scrollXElement}, ${scrollYElement});
       });`
@@ -164,8 +164,8 @@ function scrollInKListItemLineBlock() : ILineBlock {
  */
 function clickKListItemLineBlock() : ILineBlock {
   return {
-    type: domEventsToRecord.CLICK,
-    value: `await ${frame}.evaluate( async function(){
+    type : EDomEvent.CLICK,
+    value : `await ${frame}.evaluate( async function(){
         let e = document.querySelector('${selector}');
         e.click();
       });`
@@ -176,7 +176,7 @@ function clickKListItemLineBlock() : ILineBlock {
 describe('Test de Click Block Factory', () => {
 
   // tslint:disable-next-line: no-big-function
-  describe('Test des buiders', () => {
+  describe('Test des builds', () => {
 
     // Initialisation des attributs de classe
     beforeAll(() => {
@@ -196,7 +196,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(simpleClickLineBlock());
 
       expect(
-        ClickFactory.buildBlock(
+        ClickFactory.buildSimpleClickBlock(
           defaultOptions,
           frameId,
           frame,
@@ -216,7 +216,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(simpleClickLineBlock());
 
       expect(
-        ClickFactory.buildBlock(
+        ClickFactory.buildSimpleClickBlock(
           defaultOptions,
           frameId,
           frame,
@@ -242,7 +242,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(customeLineLineBlock());
 
       expect(
-        ClickFactory.buildBlock(
+        ClickFactory.buildSimpleClickBlock(
           defaultOptions,
           frameId,
           frame,
@@ -263,7 +263,7 @@ describe('Test de Click Block Factory', () => {
       // Click in file dropzone
       exceptedBlock.addLine(clickFileDropZoneLineModel());
       expect(
-        ClickFactory.buildclickFileDropZoneBlock(
+        ClickFactory.buildFileDropZoneClickBlock(
           defaultOptions,
           frameId,
           frame,
@@ -281,7 +281,7 @@ describe('Test de Click Block Factory', () => {
       // Click in file dropzone
       exceptedBlock.addLine(clickFileDropZoneLineModel());
       expect(
-        ClickFactory.buildclickFileDropZoneBlock(
+        ClickFactory.buildFileDropZoneClickBlock(
           defaultOptions,
           frameId,
           frame,
@@ -348,7 +348,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(clickMouseInputNumericLineModel());
       // cutom line
       exceptedBlock.addLine({
-        type : domEventsToRecord.CLICK,
+        type : EDomEvent.CLICK,
         value : defaultOptions.customLineAfterClick
       });
 
@@ -440,7 +440,7 @@ describe('Test de Click Block Factory', () => {
       exceptedBlock.addLine(waitForSelectorOnClickScrollElementLineBlock());
       // Click list item
       exceptedBlock.addLine(scrollInKListItemLineBlock());
-      exceptedBlock.addLine(customLineBeforeEvent(domEventsToRecord.CLICK));
+      exceptedBlock.addLine(customLineBeforeEvent(EDomEvent.CLICK));
       exceptedBlock.addLine(clickKListItemLineBlock());
 
       expect(
@@ -464,7 +464,7 @@ describe('Test de Click Block Factory', () => {
 
       // Click item konnect liste teste
       exceptedBlock.addLine(scrollInKListItemLineBlock());
-      exceptedBlock.addLine(customLineBeforeEvent(domEventsToRecord.CLICK));
+      exceptedBlock.addLine(customLineBeforeEvent(EDomEvent.CLICK));
       exceptedBlock.addLine(clickKListItemLineBlock());
 
 
@@ -493,7 +493,7 @@ describe('Test de Click Block Factory', () => {
 
       // Click item k list teste
       exceptedBlock.addLine(scrollInKListItemLineBlock());
-      exceptedBlock.addLine(customLineBeforeEvent(domEventsToRecord.CLICK));
+      exceptedBlock.addLine(customLineBeforeEvent(EDomEvent.CLICK));
       exceptedBlock.addLine(clickKListItemLineBlock());
       // Custom line
       exceptedBlock.addLine(customeLineLineBlock());
@@ -517,44 +517,21 @@ describe('Test de Click Block Factory', () => {
   describe('Test de generate', () => {
 
 
-    test('Test de generateBlock pour un simple click', () => {
+    test('Test de buildBlock pour un simple click', () => {
       const eventI = {
         selector,
-        action : eventsDom.CLICK,
+        action : EDomEvent.CLICK,
       };
 
       expect(
-        ClickFactory.generateBlock(
-          eventI,
-          frameId,
-          frame,
-          defaultOptions
-        )
-      ).toEqual(
         ClickFactory.buildBlock(
-          defaultOptions,
-          frameId,
-          frame,
-          selector
-        )
-      );
-    });
-
-    test('Test de generateBlock pour un click sur un file drop zone', () => {
-      const eventI = {
-        selector,
-        action : customEvents.CLICK_DROPZONE
-      };
-
-      expect(
-        ClickFactory.generateBlock(
           eventI,
           frameId,
           frame,
           defaultOptions
         )
       ).toEqual(
-        ClickFactory.buildclickFileDropZoneBlock(
+        ClickFactory.buildSimpleClickBlock(
           defaultOptions,
           frameId,
           frame,
@@ -563,16 +540,15 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-
-    test('Test de generateBlock pour un click sur les flêches d\'un input numeric', () => {
+    test('Test de buildBlock pour un click sur les flêches d\'un input numeric', () => {
       const eventI = {
         selector,
         durancyClick : time,
-        action : customEvents.CLICK_MOUSE_INPUT_NUMERIC
+        action : ECustomEvent.CLICK_MOUSE_INPUT_NUMERIC
       };
 
       expect(
-        ClickFactory.generateBlock(
+        ClickFactory.buildBlock(
           eventI,
           frameId,
           frame,
@@ -589,14 +565,14 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    test('Test de generateBlock pour un click mouse', () => {
+    test('Test de buildBlock pour un click mouse', () => {
       const eventI = {
         selector,
-        action : customEvents.CLICK_MOUSE
+        action : ECustomEvent.CLICK_MOUSE
       };
 
       expect(
-        ClickFactory.generateBlock(
+        ClickFactory.buildBlock(
           eventI,
           frameId,
           frame,
@@ -612,17 +588,17 @@ describe('Test de Click Block Factory', () => {
       );
     });
 
-    test('Test de generateBlock pour une liste à choix multiples', () => {
+    test('Test de buildBlock pour un input list', () => {
       const eventI = {
         selector,
         scrollElement,
         scrollXElement,
         scrollYElement,
-        action : customEvents.CLICK_LIST_ITEM
+        action : ECustomEvent.CLICK_LIST_ITEM
       };
 
       expect(
-        ClickFactory.generateBlock(
+        ClickFactory.buildBlock(
           eventI,
           frameId,
           frame,
@@ -637,6 +613,29 @@ describe('Test de Click Block Factory', () => {
           scrollElement,
           scrollXElement,
           scrollYElement
+        )
+      );
+    });
+
+    test('Test de buildBlock pour un popover', () => {
+      const eventI = {
+        selector,
+        action : ECustomEvent.CLICK_MOUSE_ENTER
+      };
+
+      expect(
+        ClickFactory.buildBlock(
+          eventI,
+          frameId,
+          frame,
+          defaultOptions
+        )
+      ).toEqual(
+        ClickFactory.buildClickMouseEnter(
+          defaultOptions,
+          frameId,
+          frame,
+          selector
         )
       );
     });

@@ -1,0 +1,67 @@
+<div class="konnect-popover-content-margin-neg">
+  <div class="p-xs">
+    <div class="has-feedback"><input type="text" name.bind="parentVM.inputName"
+        class="konnect-dropdown-search-input form-control au-target" value.bind="parentVM.internalQuery &amp; debounce"
+        disabled.bind="parentVM.globalReadOnly" auto-focus="" au-target-id="1557" name=""> <span
+        class="form-control-feedback"><span class="fas fa-search"></span></span></div>
+  </div>
+  <!--anchor-->
+  <!--anchor-->
+  <!--anchor-->
+  <div scroll.trigger="parentVM.onScroll($event) &amp; debounce:500" class="overflow-auto custom-scrollbar au-target"
+    au-target-id="1562" style="max-height: 256px;">
+    <div>
+      <div style="height: 0px;"></div>
+      <div click.trigger="parentVM.toggleItem(item)" class="konnect-dropdown-line hover-effect au-target"
+        au-target-id="1563" style="height: 26px;">
+        <div class="height-xs-100pc">
+          <div class="au-target flex align-items-center height-xs-100pc" au-target-id="1567">
+            <div show.bind="parentVM.isMultiSelect === true" class="flex-col-auto au-target" au-target-id="1568">
+              <div class="m-l-xs">
+                <div class="au-target konnect-dropdown-checkbox" au-target-id="1569"></div>
+              </div>
+            </div>
+            <div class="flex-col align-self-stretch">
+              <!--anchor-->
+              <div as-element="compose" view-model.bind="item" view.bind="parentVM.kTemplates.lineTemplate"
+                class="au-target height-xs-100pc p-l-xs p-r-xs flex align-items-center" au-target-id="1573">
+                <span>1802000810 - titi</span></div>
+            </div>
+          </div>
+        </div>
+        <!--anchor-->
+        <!--anchor-->
+      </div>
+      <div click.trigger="parentVM.toggleItem(item)" class="konnect-dropdown-line hover-effect au-target"
+        au-target-id="1563" style="height: 26px;">
+        <div class="height-xs-100pc">
+          <div class="au-target flex align-items-center height-xs-100pc" au-target-id="1567">
+            <div show.bind="parentVM.isMultiSelect === true" class="flex-col-auto au-target" au-target-id="1568">
+              <div class="m-l-xs">
+                <div class="au-target konnect-dropdown-checkbox" au-target-id="1569"></div>
+              </div>
+            </div>
+            <div class="flex-col align-self-stretch">
+              <!--anchor-->
+              <div as-element="compose" view-model.bind="item" view.bind="parentVM.kTemplates.lineTemplate"
+                class="au-target height-xs-100pc p-l-xs p-r-xs flex align-items-center" au-target-id="1573">
+                <span>1803000816 - test</span></div>
+            </div>
+          </div>
+        </div>
+        <!--anchor-->
+        <!--anchor-->
+      </div>
+     
+        <!--anchor-->
+      </div>
+      <!--anchor-->
+      <div style="height: 936px;"></div>
+    </div>
+    <!--anchor-->
+    <!--anchor-->
+  </div>
+  <!--anchor-->
+  <!--anchor-->
+  <!--anchor-->
+</div>

@@ -14,8 +14,8 @@ describe('Test de Scroll Block factory', () => {
     const selector = '#test';
     const excpetedResult = new Block(frameId);
     excpetedResult.addLine({
-      type: 'scroll',
-      value: ` await ${frame}.evaluate( async function(){
+      type : 'scroll',
+      value : ` await ${frame}.evaluate( async function(){
         document.querySelector('${selector}').scroll(${scrollX}, ${scrollY});
       });`
     });

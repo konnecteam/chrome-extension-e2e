@@ -1,15 +1,12 @@
-import domEventsToRecord from '../constants/events/events-dom';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
-import { FooterFactory } from '../factory/code-generator/footer-factory';
-import { HeaderFactory } from '../factory/code-generator/header-factory';
 import { IOption } from '../interfaces/i-options';
-import  pptrActions  from '../constants/pptr-actions';
 import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
 import 'jest';
 import CodeGenerator from './code-generator';
-import { UtilityService } from '../services/utility/utility-service';
-import eventsDom from '../constants/events/events-dom';
+import { ScenarioService } from '../services/scenario/scenario-service';
+import { EDomEvent } from '../enum/events/events-dom';
+import { EPptrAction }from '../enum/action/pptr-actions';
 
 /** Frame dans laquelle on se situe */
 const frameId = 0;
@@ -25,26 +22,24 @@ const frame = 'page';
  * car elles vont être modifiés
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 /**
  * Transforme une liste de Block en string
- * @param listBlock
- * @param wrapAsync
  */
 function blocksToString(listBlock : Block[], wrapAsync : boolean) {
   const indent = wrapAsync ? '  ' : '';
@@ -62,11 +57,11 @@ function blocksToString(listBlock : Block[], wrapAsync : boolean) {
 
 /**
  * Créer un scénario à partir des options
- * @param options
  */
 function createScenario(options : IOption) {
   // Header du scénario
-  let scenarioExcepted = HeaderFactory.generateHeader(
+
+  let scenarioExcepted = ScenarioFactory.buildHeader(
     options.recordHttpRequest,
     options.wrapAsync,
     options.headless,
@@ -78,7 +73,7 @@ function createScenario(options : IOption) {
   for (let i = 0; i < messageList.length; i++) {
     const currentEvent = messageList[i];
 
-    const block = ScenarioFactory.parseEvent(
+    const block = ScenarioFactory.buildBlock(
       currentEvent,
       frameId,
       frame,
@@ -87,12 +82,12 @@ function createScenario(options : IOption) {
 
     if (block) {
 
-      if (options.customLinesBeforeEvent && !UtilityService.isValueInObject(pptrActions, currentEvent.action)) {
-        listBlock.push(ScenarioFactory.generateCustomLineBlock(frameId, options.customLinesBeforeEvent));
+      if (options.customLinesBeforeEvent && Object.values(EPptrAction as any).indexOf(currentEvent.action) === -1) {
+        listBlock.push(ScenarioFactory.buildCustomLineBlock(frameId, options.customLinesBeforeEvent));
       }
 
       if (currentEvent.comments) {
-        listBlock.push(ScenarioFactory.generateCommentsBlock(block, currentEvent.comments));
+        listBlock.push(ScenarioFactory.buildCommentBlock(block, currentEvent.comments));
       } else {
         listBlock.push(block);
       }
@@ -100,7 +95,7 @@ function createScenario(options : IOption) {
   }
   if (options.customLinesBeforeEvent) {
 
-    listBlock.push(ScenarioFactory.generateCustomLineBlock(frameId, options.customLinesBeforeEvent));
+    listBlock.push(ScenarioFactory.buildCustomLineBlock(frameId, options.customLinesBeforeEvent));
   }
 
   // Insertion des lignes vide entre deux Block
@@ -108,15 +103,15 @@ function createScenario(options : IOption) {
     let i = 0;
     while (i <= listBlock.length) {
 
-      const blankLine = ScenarioFactory.generateBlankLineBlock();
+      const blankLine = ScenarioFactory.buildBlankLineBlock();
       listBlock.splice(i, 0, blankLine);
       i += 2;
     }
   }
   // Passage des Block en string
-  scenarioExcepted += blocksToString(listBlock, options.wrapAsync);
+  scenarioExcepted = `${scenarioExcepted}${blocksToString(listBlock, options.wrapAsync)}`;
   // Footer du scénario
-  scenarioExcepted += FooterFactory.generateFooter(options.wrapAsync);
+  scenarioExcepted = `${scenarioExcepted}${ScenarioService.getFooter(options.wrapAsync)}`;
   return scenarioExcepted;
 }
 
@@ -125,15 +120,15 @@ describe('Test de Code Generator', () => {
   beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
     messageList.push(
-      { typeEvent: pptrActions.PPTR , action: pptrActions.GOTO, value: 'localhost' }
+      { typeEvent : EPptrAction.PPTR , action : EPptrAction.GOTO, value : 'localhost' }
     );
 
     messageList.push(
-      { typeEvent: domEventsToRecord.CLICK, action: eventsDom.CLICK, selector: '#idInput' }
+      { typeEvent : EDomEvent.CLICK, action : EDomEvent.CLICK, selector : '#idInput' }
     );
 
     messageList.push(
-      { typeEvent: domEventsToRecord.CHANGE, action: eventsDom.CHANGE, selector: '#idInput', value: 'change de value input' }
+      { typeEvent : EDomEvent.CHANGE, action : EDomEvent.CHANGE, selector : '#idInput', value : 'change de value input' }
     );
   });
 

@@ -1,8 +1,10 @@
 import { Block } from '../../../code-generator/block';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
-import customEvents from '../../../constants/events/events-custom';
-import domEventsToRecord from '../../../constants/events/events-dom';
+import { ECustomEvent } from '../../../enum/events/events-custom';
+
+// Constant
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /**
  * Factory qui permet de créér des objets liés à l'event keydown
@@ -12,12 +14,12 @@ export class KeydownFactory {
   /**
    * Génère un block de l'event keydown
    */
-  public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
+  public static buildBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
+
     const { action, selector, value, iframe } = event;
 
-
     // Si c'est une action event de liste keydown
-    if (action === customEvents.LIST_KEYDOWN) {
+    if (action === ECustomEvent.LIST_KEYDOWN) {
       return this.buildListKeydownBlock(options, frameId, frame, selector, value, iframe);
     }
   }
@@ -37,17 +39,16 @@ export class KeydownFactory {
 
     if (options.waitForSelectorOnClick) {
       block.addLine({
-        type: domEventsToRecord.CLICK,
-        value: ` await ${frame}.waitForSelector('${iframe ? iframe : selector}')`
+        type : EDomEvent.CLICK,
+        value : ` await ${frame}.waitForSelector('${iframe ? iframe : selector}')`
       });
     }
 
     if (iframe) {
 
       block.addLine({
-
-        type: domEventsToRecord.KEYDOWN,
-        value: ` await ${frame}.evaluate( async function(){
+        type : EDomEvent.KEYDOWN,
+        value : ` await ${frame}.evaluate( async function(){
           let iframeElement = document.querySelector('${iframe}');
           let element = iframeElement.contentDocument.querySelector('${selector}');
           element.className = '';
@@ -60,8 +61,8 @@ export class KeydownFactory {
     } else {
 
       block.addLine({
-        type: 'KEYUP',
-        value: ` await ${frame}.evaluate( async function(){
+        type : 'KEYUP',
+        value : ` await ${frame}.evaluate( async function(){
           let element = document.querySelector('${selector}');
           var docEvent = document.createEvent('KeyboardEvents');
           //If it isn't input element
@@ -77,9 +78,8 @@ export class KeydownFactory {
           }
         });`
       });
-
     }
+
     return block;
   }
-
 }

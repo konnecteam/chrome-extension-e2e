@@ -6,11 +6,9 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development DEBUG=puppeteer-recorder:* webpack --watch",
     "build": "cross-env NODE_ENV=production webpack",
-    "dist": "cross-env NODE_ENV=production webpack && node scripts/zip.js",
-    "test": "npm run unit-test && npm run e2e-test",
-    "test-prod": "cross-env NODE_ENV=production npm run unit-test && npm run e2e-test",
-    "unit-test": "jest __tests__/.*.spec.js --silent",
-    "e2e-test": "jest __e2e-tests__ --runInBand --silent",
+    "dist": "cross-env NODE_ENV=production webpack",
+    "test": "npm run test-jest",
+    "test-prod": "cross-env NODE_ENV=production npm run test-jest",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "test-jest": "node_modules/jest/bin/jest.js --runInBand lib/*/*/*.spec.ts src/*/*.spec.ts src/*/*/*.spec.ts src/*/*/*/*.spec.ts"
   },
@@ -79,6 +77,7 @@
     "webpack-cli": "^4.0.0-beta.2",
     "zip-folder": "^1.0.0",
     "sinon-chrome": "3.0.1",
+    "@sinonjs/fake-timers": "^7.1.2",
     "atob": "2.1.2",
     "@types/jest": "^26.0.15",
     "ts-jest": "26.5.2"

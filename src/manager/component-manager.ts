@@ -1,6 +1,6 @@
 import { ElementService } from './../services/element/element-service';
 import { IComponent } from '../interfaces/i-component';
-import domEventsToRecord from '../constants/events/events-dom';
+import { EDomEvent } from '../enum/events/events-dom';
 
 /**
  * Manager qui fait la gestions des composants
@@ -12,25 +12,24 @@ export class ComponentManager {
    */
   public static getComponent(
     event : string,
-    element : HTMLElement,
-    previousElement : {selector : string, element : Element, typeList : string
-  }) : IComponent {
+    element : HTMLElement
+  ) : IComponent {
 
     // En fonction de l'événement déclancheur
     switch (event) {
       // Si c'est un click
-      case domEventsToRecord.CLICK:
-        return ElementService.getClickComponent(element, previousElement);
+      case EDomEvent.CLICK :
+        return ElementService.getClickComponent(element);
       // Si c'est un drop
-      case domEventsToRecord.DROP:
+      case EDomEvent.DROP :
         return ElementService.getDropComponent(element);
       // Si c'est un change
-      case domEventsToRecord.CHANGE:
+      case EDomEvent.CHANGE :
         return ElementService.getChangeComponent(element);
       // Si c'est un keydown
-      case domEventsToRecord.KEYDOWN:
+      case EDomEvent.KEYDOWN :
         return ElementService.getKeydownComponent(element);
-      default:
+      default :
         return null;
     }
   }

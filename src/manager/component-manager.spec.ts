@@ -1,14 +1,12 @@
 import { ElementService } from './../services/element/element-service';
 import { ComponentManager } from './component-manager';
 import * as path from 'path';
-import domEventsToRecord from '../constants/events/events-dom';
 import 'jest';
 import { FileService } from '../services/file/file-service';
-
+import { EDomEvent } from '../enum/events/events-dom';
 
 /**
  * Permet de changer le contenu du body
- * @param pathDoc
  */
 async function changeBodyDocumentAsync(pathDoc : string) {
   const PATH_DOM = path.join(__dirname, `./../..${pathDoc}` );
@@ -40,14 +38,12 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un compoenent model de file dropzone
     expect(
       ComponentManager.getComponent(
-        domEventsToRecord.CLICK,
-        element as HTMLElement,
-        null
+        EDomEvent.CLICK,
+        element as HTMLElement
         )
     ).toEqual(
       ElementService.getClickComponent(
-      element as HTMLElement,
-      null
+      element as HTMLElement
     ));
   });
 
@@ -59,9 +55,8 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un component model de file dropzone
     expect(
       ComponentManager.getComponent(
-        domEventsToRecord.DROP,
-        element as HTMLElement,
-        null
+        EDomEvent.DROP,
+        element as HTMLElement
         )
     ).toEqual(
       ElementService.getDropComponent(element as HTMLElement));
@@ -75,9 +70,8 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un component model d'input numeric
     expect(
       ComponentManager.getComponent(
-        domEventsToRecord.CHANGE,
-        element as HTMLElement,
-        null
+        EDomEvent.CHANGE,
+        element as HTMLElement
       )
     ).toEqual(ElementService.getChangeComponent(element as HTMLElement)
     );
@@ -99,9 +93,8 @@ describe('Test du Component Manager' , () => {
     // ON doit trouver un component model d'iframe
     expect(
       ComponentManager.getComponent(
-        domEventsToRecord.KEYDOWN,
-        element,
-        null
+        EDomEvent.KEYDOWN,
+        element
       )
     ).toEqual(ElementService.getKeydownComponent(element));
   });

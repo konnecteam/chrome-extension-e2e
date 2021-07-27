@@ -9,7 +9,7 @@ describe('Test de RegExp Factory', () => {
     expect(
       RegExpFactory.buildRegexpAndFlag('/*.localhost.*/g')
     ).toEqual(
-      { regexp: '*.localhost.*', flag: 'g'}
+      { regexp : '*.localhost.*', flag : 'g'}
 
     );
   });
@@ -20,7 +20,7 @@ describe('Test de RegExp Factory', () => {
     expect(
       RegExpFactory.buildRegexpAndFlag('/*.localhost.*')
     ).toEqual(
-      { regexp: '', flag: ''}
+      { regexp : '', flag : ''}
     );
   });
 
@@ -30,7 +30,7 @@ describe('Test de RegExp Factory', () => {
     expect(
       RegExpFactory.buildRegexpAndFlag('/*.localhost.*/')
     ).toEqual(
-      { regexp: '*.localhost.*', flag: ''}
+      { regexp : '*.localhost.*', flag : ''}
     );
   });
 });

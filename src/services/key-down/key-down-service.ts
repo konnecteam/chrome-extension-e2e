@@ -1,8 +1,9 @@
+import { ElementService } from './../element/element-service';
 import { ChromeService } from './../chrome/chrome-service';
 import { IMessage } from '../../interfaces/i-message';
-import domEventsToRecord from '../../constants/events/events-dom';
-import customEvents from '../../constants/events/events-custom';
-import elementsTagName from '../../constants/elements/tag-name';
+import { ETagName } from '../../enum/elements/tag-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
+import { EDomEvent } from '../../enum/events/events-dom';
 
 /**
  * Service qui permet de gérer les keydown pour un sélecteur
@@ -40,22 +41,22 @@ export class KeyDownService {
    * Permet de gérer les evènement keydown
    */
   public handleEvent(msg : IMessage, element : HTMLElement) : void {
+
     // On vérifie que l'event est un keydown
-    if (msg.action === domEventsToRecord.KEYDOWN) {
+    if (msg.action === EDomEvent.KEYDOWN) {
 
       // On gère le cas ou si c'est un user qui appuie sur la touche Entrer sur un bouton
-      if (element.tagName === elementsTagName.BUTTON.toUpperCase() && msg.key === KeyDownService._ENTER_KEY) {
+      if (element.tagName === ETagName.BUTTON.toUpperCase() && msg.key === KeyDownService._ENTER_KEY) {
 
         // Si c'est le cas on tranforme le keydown en click
-        msg.action = domEventsToRecord.CLICK;
-        msg.typeEvent = domEventsToRecord.CLICK;
+        msg.action = EDomEvent.CLICK;
+        msg.typeEvent = EDomEvent.CLICK;
         return;
       }
 
       // On verifie si c'est un body car les textes areas sont parfois dans un body qui se trouve dans une iframe
-
-      if (!msg.value && element.tagName === elementsTagName.BODY.toUpperCase() || element.tagName === elementsTagName.TEXTAREA.toUpperCase()
-       ||  this._isInputList(element)) {
+      if (!msg.value && element.tagName === ETagName.BODY.toUpperCase() || element.tagName === ETagName.TEXTAREA.toUpperCase()
+          || ElementService.getInputList(element)) {
 
         // On récupère l'event
         this._handleKeyDownEvent(msg);
@@ -64,6 +65,7 @@ export class KeyDownService {
 
       // On récupère la liste des keydowns
       ChromeService.sendMessage(this._processListsKeydown());
+
       this._listsKeyDown = [];
     }
   }
@@ -77,7 +79,7 @@ export class KeyDownService {
 
       // Si le premier élément à le même action et même sélecteur on enregistre tous les évènements
       // Pour ce même sélecteur
-      if (this._listsKeyDown[0].action === domEventsToRecord.KEYDOWN && this._listsKeyDown[0].selector !== msg.selector) {
+      if (this._listsKeyDown[0].action === EDomEvent.KEYDOWN && this._listsKeyDown[0].selector !== msg.selector) {
 
         // dans le cas contraire on envoie la liste qu'on à déja
         // et on traite la liste des keydown
@@ -106,7 +108,7 @@ export class KeyDownService {
       // Si le keydown event contient uniquement une touche
       if (currentMsg.key.length === 1) {
         // On concataine la valeur
-        value += currentMsg.key;
+        value = `${value}${currentMsg.key}`;
       } else {
 
         // Gestion du backspace
@@ -116,32 +118,17 @@ export class KeyDownService {
 
         // Gestion de la touche entrée
         if (currentMsg.key === KeyDownService._ENTER_KEY) {
-          value += '<br/>';
+
+          // Pour faire un retour à la ligne dans un memo il faut utilise une balise br car \n ne fonctionne pas
+          value = `${value}<br/>`;
         }
       }
     }
 
     // On définit le premier élément
     this._listsKeyDown[0].value = value;
-    this._listsKeyDown[0].action = customEvents.LIST_KEYDOWN;
+    this._listsKeyDown[0].action = ECustomEvent.LIST_KEYDOWN;
     return this._listsKeyDown[0];
-  }
-
-  /**
-   * Verifie si c'est un input de list
-   */
-  private _isInputList(element : HTMLElement) : boolean {
-    let listbox = '';
-    // On verifié si c'est un input d'une dropdown list
-    listbox = element.getAttribute('aria-owns');
-
-    if (!listbox) {
-      // On vérifie si c'est le input d'une liste multiple select liste
-      listbox = element.getAttribute('aria-describedby');
-      if (!listbox) return false;
-    }
-
-    return listbox && listbox.includes('kdp');
   }
 
   /**
@@ -149,11 +136,11 @@ export class KeyDownService {
    */
   public getClickCoordinates(evt) {
     const eventsWithCoordinates = {
-      mouseup: true,
-      mousedown: true,
-      mousemove: true,
-      mouseover: true
+      mouseup : true,
+      mousedown : true,
+      mousemove : true,
+      mouseover : true
     };
-    return eventsWithCoordinates[evt.type] ? { x: evt.clientX, y: evt.clientY } : null;
+    return eventsWithCoordinates[evt.type] ? { x : evt.clientX, y : evt.clientY } : null;
   }
 }

@@ -93,7 +93,7 @@ module.exports = {
     new CopyPlugin([
       { from: './src/manifest.json', to: './manifest.json' },
       { from: './assets/images', to: 'assets/images' },
-      { from: './src/services/scenario', to: 'services/scenario/'}
+      { from: './lib/scripts/services', to: 'services/scenario/'}
     ]),
     new HtmlWebpackPlugin({
       template: './src/popup/template.html',

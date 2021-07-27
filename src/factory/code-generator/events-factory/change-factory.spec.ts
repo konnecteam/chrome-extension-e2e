@@ -1,12 +1,14 @@
+import { ClickFactory } from './click-factory';
 import { ChangeFactory } from './change-factory';
 import { Block } from '../../../code-generator/block';
 import 'jest';
-import domEventsToRecord from '../../../constants/events/events-dom';
-import customEvents from '../../../constants/events/events-custom';
-import elementsTagName from '../../../constants/elements/tag-name';
 import { IMessage } from '../../../interfaces/i-message';
-import eventsDom from '../../../constants/events/events-dom';
 import { IOption } from 'interfaces/i-options';
+import { ETagName } from '../../../enum/elements/tag-name';
+import { ECustomEvent } from '../../../enum/events/events-custom';
+
+// Constant
+import { EDomEvent } from '../../../enum/events/events-dom';
 
 /** valeur de l'élément */
 const value = `testValue`;
@@ -23,20 +25,20 @@ let frameId : number;
  * Options
  */
 const defaultOptions : IOption = {
-  wrapAsync: true,
-  headless: false,
-  waitForNavigation: true,
-  waitForSelectorOnClick: true,
-  blankLinesBetweenBlocks: true,
-  dataAttribute: '',
-  useRegexForDataAttribute: false,
-  customLineAfterClick: '',
-  recordHttpRequest: true,
-  regexHTTPrequest: '',
-  customLinesBeforeEvent: `await page.evaluate(async() => {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
   });`,
-  deleteSiteData: true,
+  deleteSiteData : true,
 };
 
 describe('Test de Change Block Factory', () => {
@@ -48,24 +50,24 @@ describe('Test de Change Block Factory', () => {
     frame = 'page';
   });
 
-  test('Test de buildChangeBlockInputNumericBlock', () => {
+  test('Test de buildInputNumericChangedBlock', () => {
 
     const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
-      type: 'focus',
-      value: `await page.focus('${INPUT_NUN_ID}');`
+      type : 'focus',
+      value : `await page.focus('${INPUT_NUN_ID}');`
     });
 
     exceptedBlock.addLine({
-      type: domEventsToRecord.CHANGE,
-      value: `await ${frame}.evaluate( async function(){
+      type : EDomEvent.CHANGE,
+      value : `await ${frame}.evaluate( async function(){
        let input = document.querySelector('${SELECTOR}');
        input.value = '${value}';
        input.dispatchEvent(new Event('blur'));
      })`
     });
 
-    const result = ChangeFactory.buildChangeBlockInputNumericBlock(
+    const result = ChangeFactory.buildInputNumericChangedBlock(
       frameId,
       frame,
       SELECTOR,
@@ -80,8 +82,8 @@ describe('Test de Change Block Factory', () => {
 
     const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
-      type: domEventsToRecord.CHANGE,
-      value: `await ${frame}.select('${SELECTOR}', \`${value}\`);`
+      type : EDomEvent.CHANGE,
+      value : `await ${frame}.select('${SELECTOR}', \`${value}\`);`
     });
 
     const result = ChangeFactory.buildSelectChangeBlock(
@@ -98,8 +100,8 @@ describe('Test de Change Block Factory', () => {
 
     const exceptedBlock = new Block(frameId);
     exceptedBlock.addLine({
-      type: domEventsToRecord.CHANGE,
-      value: `await ${frame}.evaluate( () => document.querySelector('${SELECTOR}').value = "");
+      type : EDomEvent.CHANGE,
+      value : `await ${frame}.evaluate( () => document.querySelector('${SELECTOR}').value = "");
       await ${frame}.type('${SELECTOR}', \`${value}\`);`
     });
 
@@ -118,38 +120,42 @@ describe('Test de Change Block Factory', () => {
     // Attributs utilisés pour générer le block
     const files = '\"./recordings/files/test.txt\"';
 
-    const exceptedBlock = new Block(frameId);
+    const exceptedBlock = ClickFactory.buildFileDropZoneClickBlock(defaultOptions, frameId, frame, SELECTOR);
+
     exceptedBlock.addLine({
-      type: domEventsToRecord.DROP,
-      value: ` await fileChooser.accept([${files}]);`
+      type : EDomEvent.DROP,
+      value : ` await fileChooser.accept([${files}]);`
     });
 
     const result = ChangeFactory.buildAcceptUploadFileChangeBlock(
+      defaultOptions,
       frameId,
+      frame,
+      SELECTOR,
       'test.txt'
     );
 
     expect(result).toEqual(exceptedBlock);
   });
 
-  test('Test de generateBlock pour un change input numeric', () => {
+  test('Test de buildBlock pour un change input numeric', () => {
     // Attributs utilisés pour générer le block
     const eventMessage : IMessage = {
-      selector: SELECTOR,
+      selector : SELECTOR,
       value,
-      selectorFocus: INPUT_ID,
-      action : customEvents.CHANGE_INPUT_NUMERIC
+      selectorFocus : INPUT_ID,
+      action : ECustomEvent.CHANGE_INPUT_NUMERIC
     };
 
     expect(
-      ChangeFactory.generateBlock(
+      ChangeFactory.buildBlock(
         eventMessage ,
         frameId,
         frame,
         defaultOptions
       )
     ).toEqual(
-      ChangeFactory.buildChangeBlockInputNumericBlock(
+      ChangeFactory.buildInputNumericChangedBlock(
         frameId,
         frame,
         SELECTOR,
@@ -160,16 +166,16 @@ describe('Test de Change Block Factory', () => {
 
   });
 
-  test('Test de generateBlock pour un change simple', () => {
+  test('Test de buildBlock pour un change simple', () => {
     // Attributs utilisés pour générer le block
     const eventMessage : IMessage = {
-      selector: SELECTOR,
+      selector : SELECTOR,
       value,
-      action : eventsDom.CHANGE
+      action : EDomEvent.CHANGE
     };
 
     expect(
-      ChangeFactory.generateBlock(
+      ChangeFactory.buildBlock(
         eventMessage ,
         frameId,
         frame,
@@ -185,17 +191,17 @@ describe('Test de Change Block Factory', () => {
     );
   });
 
-  test('Test de generateBlock pour un select change', () => {
+  test('Test de buildBlock pour un select change', () => {
     // Attributs utilisés pour générer le block
     const eventMessage : IMessage = {
-      selector: SELECTOR,
+      selector : SELECTOR,
       value,
-      action : eventsDom.CHANGE,
-      tagName : elementsTagName.SELECT.toUpperCase()
+      action : EDomEvent.CHANGE,
+      tagName : ETagName.SELECT.toUpperCase()
     };
 
     expect(
-      ChangeFactory.generateBlock(
+      ChangeFactory.buildBlock(
         eventMessage ,
         frameId,
         frame,
@@ -212,18 +218,18 @@ describe('Test de Change Block Factory', () => {
   });
 
 
-  test('Test de generateBlock pour un input file', () => {
+  test('Test de buildBlock pour un input file', () => {
     // Attributs utilisés pour générer le block
     const files = 'test.txt';
     const eventMessage : IMessage = {
-      selector: SELECTOR,
+      selector : SELECTOR,
       value,
-      action : eventsDom.CHANGE,
+      action : EDomEvent.CHANGE,
       files
     };
 
     expect(
-      ChangeFactory.generateBlock(
+      ChangeFactory.buildBlock(
         eventMessage ,
         frameId,
         frame,
@@ -231,7 +237,10 @@ describe('Test de Change Block Factory', () => {
       )
     ).toEqual(
       ChangeFactory.buildAcceptUploadFileChangeBlock(
+        defaultOptions,
         frameId,
+        frame,
+        SELECTOR,
         files
       )
     );

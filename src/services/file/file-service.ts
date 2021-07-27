@@ -3,7 +3,7 @@ import { ChromeService } from './../chrome/chrome-service';
 import * as fs from 'fs';
 
 /**
- * Service Global qui permet la gestion des enregistrements depuis le background
+ * Service de gestion de fichier
  */
 export class FileService {
 
@@ -28,9 +28,9 @@ export class FileService {
     // Après avoir lu le fichier on l'envoi au background
     this._reader.addEventListener('load', () => {
       ChromeService.sendMessage({
-        control: this._control,
-        filename: this._filename,
-        content: this._reader.result
+        control  : this._control,
+        filename : this._filename,
+        content : this._reader.result
       });
     }, false);
 
@@ -48,9 +48,6 @@ export class FileService {
 
   /**
    * Ajoute un fichier dans la liste de fichiers uploadés
-   *
-   * @param name nom du fichier
-   * @param content contenu du fichier en base 64
    */
   public addfile(name : string, content : string) : void {
     this._uploadedFiles.push(this.buildFile(name, content));
@@ -58,9 +55,6 @@ export class FileService {
 
   /**
    * Construit un fichier à partir d'un content en base64
-   *
-   * @param name nom du fichier
-   * @param content contenu du fichier en base 64
    */
   public buildFile(name : string, content : string) : File {
     const filObject = FileFactory.buildFileObject(content);
@@ -92,6 +86,7 @@ export class FileService {
       this._control = 'get-newFile';
       this._reader.readAsDataURL(file);
     }
+
     return this._filename;
   }
 
@@ -101,7 +96,9 @@ export class FileService {
   public prepareFilesForScenario(files : FileList) : string {
 
     const listFiles : string[] = [];
+
     if (files) {
+
       for (let i = 0; i < files.length; i++) {
 
         listFiles.push(this._getFileToSend(files[i]));

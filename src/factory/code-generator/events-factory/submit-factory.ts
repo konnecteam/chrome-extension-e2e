@@ -1,36 +1,26 @@
 import { ClickFactory } from './click-factory';
 import { IMessage } from '../../../interfaces/i-message';
 import { IOption } from '../../../interfaces/i-options';
-import customEvents from '../../../constants/events/events-custom';
 import { Block } from '../../../code-generator/block';
-import elementsTagName from '../../../constants/elements/tag-name';
+import { ETagName } from '../../../enum/elements/tag-name';
+import { ECustomEvent } from '../../../enum/events/events-custom';
 
 /**
- * Facotry qui permet de créér des objets liés au submit
+ * Factory qui permet de créér des objets liés au submit
  */
 export class SubmitFactory {
 
   /**
    * Génère un block lié à l'event submit
    */
-  public static generateBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
+  public static buildBlock(event : IMessage, frameId : number, frame : string, options : IOption) : Block {
 
     const { action, tagName, submitterSelector} = event;
 
     // Si l'event est un submit
-    if (action === customEvents.SUBMIT) {
-      if (tagName === elementsTagName.FORM.toUpperCase()) {
-        return this.buildBlock(frameId, frame, options, submitterSelector);
-      }
+    if (action === ECustomEvent.SUBMIT && tagName === ETagName.FORM.toUpperCase()) {
+
+      return ClickFactory.buildSimpleClickBlock(options, frameId, frame, submitterSelector);
     }
   }
-
-  /**
-   * Généré un submit
-   */
-  public static buildBlock(frameId : number, frame : string, options : IOption, selector : string) : Block {
-
-    return ClickFactory.buildBlock(options, frameId, frame, selector);
-  }
-
 }

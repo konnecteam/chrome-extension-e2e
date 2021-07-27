@@ -1,38 +1,30 @@
+import { PopoverComponent } from './../../components/konnect/popover-component';
 import { FileDropZoneComponent } from '../../components/components/file-drop-zone-component';
 import { InputFilesComponent } from '../../components/components/input-file-component';
 import { CheckboxComponent } from '../../components/konnect/checkbox-component';
 import { IframeComponent } from '../../components/konnect/iframe-component';
 import { InputNumericComponent } from '../../components/konnect/input-numeric-component';
-import { KListComponent } from '../../components/konnect/k-list-component';
+import { InputListComponent } from '../../components/konnect/input-list-component';
 import { KSelectComponent } from '../../components/konnect/k-select-component';
 import { KmSwitchComponent } from '../../components/konnect/km-switch- component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { IComponent } from '../../interfaces/i-component';
-import elementsTagName from '../../constants/elements/tag-name';
 import { SelectorService } from '../selector/selector-service';
+import { ETagName } from '../../enum/elements/tag-name';
 
 /**
- * Service global permetant de trouver les éléments dans le dom
+ * Service permettant de gérer les elements HTML
  */
 export class ElementService {
 
   /** Attribut titre d'un HTMLELement */
   private static readonly _TITLE_ATTRIBUTE = 'title';
 
-  /** Id d'un HTMLElement */
-  private static readonly _ID_ATTRIBUTE = 'id';
-
-  /** Attribut Role d'un HTMLElement */
-  private static readonly  _ROLE_ATTRIBUTE = 'role';
-
   /** Attribut class d'un HTMLElement */
   private static readonly _CLASS_ATTIBUTE = 'class';
 
-  /** Valeur de l'id d'une konnect list */
-  private static readonly _ID_ATTRIBUTE_LIST_VALUE = 'kdp';
-
   /** Valeur de l'attribut role d'une liste */
-  private static readonly _ROLE_ATTRIBUTE_LIST_VALUE = 'listbox';
+  private static readonly _CLASS_ATTRIBUTE_INPUT_LIST = 'konnect-dropdown-search-input';
 
   /** Class d'un composant KSelect  */
   private static readonly _CLASS_ATTIBUTE_K_SELECT = 'k-select';
@@ -45,6 +37,9 @@ export class ElementService {
 
   /**  Contenu de class d'un KmSwitch conteneur */
   private static readonly _CLASS_ATTIBUTE_KMSWITCH_CONTAINER = 'km-switch-container';
+
+  /** Contenu de la class d'un popover */
+  private static readonly _CLASS_ATTRIBUTE_POPOVER = 'konnect-popover';
 
   /**
    * Trouver le parent avec son tagname
@@ -63,7 +58,6 @@ export class ElementService {
       } else {
         currentElement = currentElement.parentElement;
       }
-
     }
 
     return null;
@@ -152,7 +146,7 @@ export class ElementService {
     attribute : string
   ) : Element {
 
-    let currentElement = this.findElementChildWithSelector(document.body, selector);
+    let currentElement = document.body.querySelector(selector);
 
     while (currentElement) {
 
@@ -179,10 +173,11 @@ export class ElementService {
    * Verifie si c'est une iframe et la retourne
    */
   public static getIframeElement(element : HTMLElement) : Element  {
+
     const selector = SelectorService.Instance.findSelectorIframeElement(element);
     if (selector) {
 
-      return this.findElementChildWithSelector(document.body, selector);
+      return document.body.querySelector(selector);
     } else {
       return null;
     }
@@ -195,7 +190,7 @@ export class ElementService {
 
     return this.findElementChildWithTagNameAndAttribute(
       element.parentElement,
-      elementsTagName.INPUT.toUpperCase(),
+      ETagName.INPUT.toUpperCase(),
       this._TITLE_ATTRIBUTE
     );
   }
@@ -207,44 +202,33 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagName(
       element,
-      elementsTagName.NUMERIC.toUpperCase()
-    );
-  }
-
-  /**
-   * Trouve l'element liste si on a clické sur une liste
-   * @param element
-   */
-  public static findListComponent(element : HTMLElement, listTagname : string) : Element {
-
-    return ElementService.findParentElementWithTagName(
-      element, listTagname.toUpperCase()
-    );
-  }
-
-  /**
-   * Vérifie si on a cliqué sur un item de la liste
-   */
-  public static getUlListElement(element : HTMLElement) : HTMLElement {
-
-    return ElementService.findParentElementWithTagNameAndValueAttribute(
-      element,
-      elementsTagName.LIST_ELEMENT.toUpperCase(),
-      this._ID_ATTRIBUTE,
-      this._ID_ATTRIBUTE_LIST_VALUE
+      ETagName.NUMERIC.toUpperCase()
     );
   }
 
   /**
    * Vérifie si on a cliqué sur l'input d'une liste
    */
-  public static getInputKList(element : HTMLElement) : Element {
+  public static getInputList(element : HTMLElement) : Element {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
-      elementsTagName.INPUT.toUpperCase(),
-      this._ROLE_ATTRIBUTE,
-      this._ROLE_ATTRIBUTE_LIST_VALUE
+      ETagName.INPUT.toUpperCase(),
+      this._CLASS_ATTIBUTE,
+      this._CLASS_ATTRIBUTE_INPUT_LIST
+    );
+  }
+
+  /**
+   * Vérifie si l'element se trouve dans un popover
+   */
+  public static getPopover(element : HTMLElement) {
+
+    return ElementService.findParentElementWithTagNameAndValueAttribute(
+      element,
+      ETagName.DIVISION.toUpperCase(),
+      this._CLASS_ATTIBUTE,
+      this._CLASS_ATTRIBUTE_POPOVER
     );
   }
 
@@ -255,7 +239,7 @@ export class ElementService {
 
     return ElementService.findParentElementWithTagNameAndValueAttribute(
       element,
-      elementsTagName.SPAN.toUpperCase(),
+      ETagName.SPAN.toUpperCase(),
       this._CLASS_ATTIBUTE,
       this._CLASS_ATTIBUTE_K_SELECT
     );
@@ -266,31 +250,15 @@ export class ElementService {
    */
   public static getKmSwitchElement(element : HTMLElement) : Element {
 
-    if (ElementService.findParentElementWithTagNameAndValueAttribute(
-      element, elementsTagName.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
-    )) {
+    const parentElement = ElementService.findParentElementWithTagNameAndValueAttribute(
+      element, ETagName.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH_HANDLE
+    );
+
+    if (parentElement) {
 
       return element;
-    } else {
-      return this.findKmSwitchElement(element);
-    }
-  }
-
-  /**
-   * Trouve le km switch si le click est tout proche de lui
-   */
-  public static findKmSwitchElement(element : HTMLElement) : Element {
-
-    const parentElement = element.parentElement;
-    if (ElementService.findParentElementWithTagNameAndValueAttribute(
-      parentElement, elementsTagName.SPAN.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTIBUTE_KMSWITCH
-    )) {
-
-      const container = ElementService.findElementChildWithSelector(parentElement, `.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER}`);
-      if (container) {
-
-        return ElementService.findElementChildWithSelector(container as HTMLElement, `.${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`);
-      }
+    } else if (element.parentElement) {
+      element.parentElement.querySelector(`.${this._CLASS_ATTIBUTE_KMSWITCH_CONTAINER} .${this._CLASS_ATTIBUTE_KMSWITCH_HANDLE}`);
     } else {
       return null;
     }
@@ -308,18 +276,17 @@ export class ElementService {
   /**
    * Permet de déterminer sur quel composant on a cliqué
    */
-  public static getClickComponent(element : HTMLElement, previousElement : { selector : string, typeList : string, element : Element}) : IComponent {
+  public static getClickComponent(element : HTMLElement) : IComponent {
 
     return FileDropZoneComponent.getElement(element) ||
     KSelectComponent.getElement(element) || KmSwitchComponent.getElement(element) ||
-    KListComponent.getElement(element, previousElement);
+    PopoverComponent.getElement(element) || InputListComponent.getElement(element);
   }
 
   /**
    * Détermine sur quel composant il y a eu un drop
    */
   public static getDropComponent(element : HTMLElement) : IComponent {
-
     return FileDropZoneComponent.getElement(element);
   }
 
@@ -328,7 +295,6 @@ export class ElementService {
    * Détermine sur quel composant il y a eu un keydown
    */
   public static getKeydownComponent(element : HTMLElement) : IComponent {
-
     return IframeComponent.getElement(element);
   }
 
