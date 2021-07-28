@@ -3,7 +3,7 @@ import { SelectorService } from '../../services/selector/selector-service';
 import { IComponent } from '../../interfaces/i-component';
 import { ElementService } from '../../services/element/element-service';
 import { IMessage } from '../../interfaces/i-message';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 
 /**
  * Permet de gérer les text editor
@@ -27,7 +27,7 @@ export class TextEditorComponent {
 
       // Si on a un text editor content
       if (editorContent) {
-        return { component : EComponentName.TEXT_EDITOR, element: editorContent };
+        return { component : EComponent.TEXT_EDITOR, element: editorContent };
       } else {
         return null;
       }

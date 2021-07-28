@@ -2,7 +2,7 @@ import { TextEditorComponent } from './text-editor-component';
 import 'jest';
 import * as path from 'path';
 import { FileService } from '../../services/file/file-service';
-import { EComponentName } from '../../enum/component/component-name';
+import { EComponent } from '../../enum/component/component';
 import { IMessage } from '../../interfaces/i-message';
 import { EDomEvent } from '../../enum/events/events-dom';
 
@@ -28,7 +28,7 @@ describe('Test de Text editor Component', () => {
     // On doit trouver le text editor
     expect(
       TextEditorComponent.getElement(element).component
-    ).toEqual(EComponentName.TEXT_EDITOR);
+    ).toEqual(EComponent.TEXT_EDITOR);
   });
 
   test('Test de editTextEditorComponentMessage', () => {

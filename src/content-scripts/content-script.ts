@@ -209,18 +209,11 @@ class EventRecorder {
       // construction du message: IMessage
       const message = EventService.messageEvent(e, selector, value, durationClick, comments, filesUpload);
 
-      /*
-       * On vérifie si on a eu des keydown ou si on a fini les keydown et dans ce cas on modifie le message car c'est un listkeydown
-       * On utilise un object assign car on veut pas que les modifications faites affectent le message
-       */
-      this._keyDownService.handleEvent(Object.assign({}, message), e.target);
+      this._sendToScenario(message, e);
 
       this._previousEvent = e;
       this._previousSelector = selector;
 
-      // On standardise le selecteur avant de l'envoyer pour le script du scénario
-      message.selector = this._selectorService.standardizeSelector(message.selector);
-      ChromeService.sendMessage(message);
       this._previousMessage = message;
 
       this._isEventProcessed = true;
@@ -313,11 +306,7 @@ class EventRecorder {
 
       // On verfie si il y a eu un keydown avant pour envoyer l'event list keydown si le keydown est fini
       this._keyDownService.handleEvent(Object.assign({}, message), event.target);
-
-      // On standardise le selecteur avant de l'envoyer pour le script du scénario
-      message.selector = this._selectorService.standardizeSelector(message.selector);
-      // Envoi du scroll
-      ChromeService.sendMessage(message);
+      this._sendToScenario(message, event);
 
     }, 150);
 
@@ -417,6 +406,22 @@ class EventRecorder {
   private _doUnPause() : void {
     WindowService.dispatchEvent(new CustomEvent(EEventMessage.UNPAUSE));
   }
+
+  /**
+   * Envoi les events catchés pour le scénario
+   */
+  private _sendToScenario(message : IMessage, event : any) : void {
+    /*
+     * On vérifie si on a eu des keydown ou si on a fini les keydown et dans ce cas on modifie le message car c'est un listkeydown
+     * On utilise un object assign car on veut pas que les modifications faites affectent le message
+     */
+    this._keyDownService.handleEvent(Object.assign({}, message), event.target);
+
+    // On standardise le selecteur avant de l'envoyer pour le script du scénario
+    message.selector = this._selectorService.standardizeSelector(message.selector);
+    ChromeService.sendMessage(message);
+  }
+
 }
 
 (window as any).eventRecorder = new EventRecorder();

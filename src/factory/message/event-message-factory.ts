@@ -52,7 +52,7 @@ export class EventMessageFactory {
       case EComponent.POPOVER :
         return PopoverComponent.editPopoverComponentMessage(event);
       // Si c'est un text editor
-      case EComponentName.TEXT_EDITOR :
+      case EComponent.TEXT_EDITOR :
         return TextEditorComponent.editTextEditorComponentMessage(event, component);
       default :
         return null;
