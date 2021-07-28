@@ -105,7 +105,7 @@ describe('Test de Change Block Factory', () => {
       await ${frame}.type('${SELECTOR}', \`${value}\`);`
     });
 
-    const result = ChangeFactory.buildNewValue(
+    const result = ChangeFactory.buildInputNewValue(
       frameId,
       frame,
       SELECTOR,
@@ -182,7 +182,7 @@ describe('Test de Change Block Factory', () => {
         defaultOptions
       )
     ).toEqual(
-      ChangeFactory.buildNewValue(
+      ChangeFactory.buildInputNewValue(
         frameId,
         frame,
         SELECTOR,

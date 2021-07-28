@@ -38,7 +38,7 @@ export class ChangeFactory {
           return this.buildAcceptUploadFileChangeBlock(options, frameId, frame, selector, files);
         } else {
           // Sinon c'est un input simple
-          return this.buildNewValue(frameId, frame, selector, value);
+          return this.buildInputNewValue(frameId, frame, selector, value);
         }
       // Si c'est un change dans un tags list
       case ECustomEvent.CHANGE_TAGS_LIST :
@@ -93,9 +93,9 @@ export class ChangeFactory {
   }
 
  /**
-  * Génère un change basique
+  * Génère un change d'un input simple
   */
-  public static buildNewValue(
+  public static buildInputNewValue(
     frameId : number,
     frame : string,
     selector : string,
