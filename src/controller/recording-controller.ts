@@ -210,7 +210,7 @@ class RecordingController {
         const buildFakeTimeScript = new File([contentBuilFakeTimeWithDate], RecordingController._FAKE_TIME_SCRIPT_FILNAME);
 
         // On ajoute le fake script permettant de fake le time dans le zip
-        this._zipService.addFileInFolder(`recordings/scripts-build/${buildFakeTimeScript.name}`, buildFakeTimeScript);
+        this._zipService.addFileInFolder(`recordings/lib/${buildFakeTimeScript.name}`, buildFakeTimeScript);
 
 
         // On parcourt tous les services pour les ajouter au zip
