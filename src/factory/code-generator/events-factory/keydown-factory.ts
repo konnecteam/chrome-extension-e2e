@@ -21,6 +21,8 @@ export class KeydownFactory {
     // Si c'est une action event de liste keydown
     if (action === ECustomEvent.LIST_KEYDOWN) {
       return this.buildListKeydownBlock(options, frameId, frame, selector, value, iframe);
+    } else if (action === ECustomEvent.LIST_KEYDOWN_EDITOR) {
+      return this.buildListKeydownEditorBlock(options, frameId, frame, selector, value);
     }
   }
 
@@ -79,6 +81,37 @@ export class KeydownFactory {
         });`
       });
     }
+
+    return block;
+  }
+
+  /**
+   * Permet de créer une list keydown pour un text editor
+   */
+  public static buildListKeydownEditorBlock(
+    options : IOption,
+    frameId : number,
+    frame : string,
+    selector : string,
+    value : string
+  ) : Block {
+
+    const block = new Block(frameId);
+
+    if (options.waitForSelectorOnClick) {
+      block.addLine({
+        type : EDomEvent.CLICK,
+        value : ` await ${frame}.waitForSelector('${selector}')`
+      });
+    }
+
+    block.addLine({
+      type : EDomEvent.KEYDOWN,
+      value : ` await ${frame}.evaluate( async function(){
+        let element = document.querySelector('${selector}');
+        element.au['text-editor'].viewModel.quill.clipboard.dangerouslyPasteHTML('${value}');
+      });`
+    });
 
     return block;
   }

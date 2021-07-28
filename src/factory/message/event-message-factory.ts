@@ -1,3 +1,4 @@
+import { TextEditorComponent } from '../../components/components/text-editor-component';
 import { TagsListComponent } from '../../components/konnect/tags-list-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
@@ -51,6 +52,9 @@ export class EventMessageFactory {
         return RadioGroupComponent.editRadioGroupComponentMessage(event);
       case EComponent.POPOVER :
         return PopoverComponent.editPopoverComponentMessage(event);
+      // Si c'est un text editor
+      case EComponent.TEXT_EDITOR :
+        return TextEditorComponent.editTextEditorComponentMessage(event, component);
       // Si c'est un tags list
       case EComponent.TAGS_LIST :
         return TagsListComponent.editTagsListComponentMessage(event, component);

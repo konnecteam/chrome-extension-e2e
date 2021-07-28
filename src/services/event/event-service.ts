@@ -118,7 +118,7 @@ export class EventService {
     , comments : string, filesUpload : FileList) : IMessage {
 
     let message : IMessage = {
-      selector : SelectorService.Instance.standardizeSelector(selector),
+      selector,
       comments,
       value : value ? value : currentEvent.target.value,
       tagName : currentEvent.target.tagName,

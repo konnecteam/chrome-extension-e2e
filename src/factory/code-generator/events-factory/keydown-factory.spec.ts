@@ -1,3 +1,5 @@
+import { ECustomEvent } from './../../../enum/events/events-custom';
+import { IMessage } from 'interfaces/i-message';
 import { IOption } from 'interfaces/i-options';
 import { KeydownFactory } from './keydown-factory';
 import { Block } from '../../../code-generator/block';
@@ -154,5 +156,92 @@ describe('Test de Keydown Block Factory', () => {
     ).toEqual(
       exceptedResult
     );
+  });
+
+  test('Test de build ListKeydown text editor', () => {
+    const exceptedResult = new Block(frameId);
+    exceptedResult.addLine({
+      type : EDomEvent.CLICK,
+      value : ` await ${frame}.waitForSelector('${selector}')`
+    });
+    exceptedResult.addLine({
+
+      type : EDomEvent.KEYDOWN,
+      value : ` await ${frame}.evaluate( async function(){
+        let element = document.querySelector('${selector}');
+        element.au['text-editor'].viewModel.quill.clipboard.dangerouslyPasteHTML('${value}');
+      });`
+    });
+
+    expect(
+      KeydownFactory.buildListKeydownEditorBlock(
+        defaultOptions,
+        frameId,
+        frame,
+        selector,
+        value
+      )
+    ).toEqual(
+      exceptedResult
+    );
+  });
+
+  test('test de generate de buildBlock pour un list keydown', () => {
+
+    const event : IMessage = {
+      action : ECustomEvent.LIST_KEYDOWN,
+      selector : '#test',
+      value : 'test de keydown list',
+      iframe : null
+    };
+
+    expect(
+      KeydownFactory.buildBlock(
+        event,
+        frameId,
+        frame,
+        defaultOptions
+      )
+    )
+    .toEqual(
+      KeydownFactory.buildListKeydownBlock(
+        defaultOptions,
+        frameId,
+        frame,
+        event.selector,
+        event.value,
+        event.iframe
+      )
+    );
+
+  });
+
+  test('test de generate de buildBlock pour un list keydown de text editor', () => {
+
+    const event : IMessage = {
+      action : ECustomEvent.LIST_KEYDOWN_EDITOR,
+      selector : '#test',
+      value : 'test de keydown list',
+      iframe : null
+    };
+
+    expect(
+      KeydownFactory.buildBlock(
+        event,
+        frameId,
+        frame,
+        defaultOptions
+      )
+    )
+    .toEqual(
+      KeydownFactory.buildListKeydownEditorBlock(
+        defaultOptions,
+        frameId,
+        frame,
+        event.selector,
+        event.value
+      )
+    );
+
   });
 });
