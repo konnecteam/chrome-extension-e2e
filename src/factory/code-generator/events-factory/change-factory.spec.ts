@@ -67,7 +67,7 @@ describe('Test de Change Block Factory', () => {
      })`
     });
 
-    const result = ChangeFactory.buildInputNumericChangedBlock(
+    const result = ChangeFactory.buildInputNumericNewValue(
       frameId,
       frame,
       SELECTOR,
@@ -105,7 +105,7 @@ describe('Test de Change Block Factory', () => {
       await ${frame}.type('${SELECTOR}', \`${value}\`);`
     });
 
-    const result = ChangeFactory.buildChangeBlock(
+    const result = ChangeFactory.buildInputNewValue(
       frameId,
       frame,
       SELECTOR,
@@ -155,7 +155,7 @@ describe('Test de Change Block Factory', () => {
         defaultOptions
       )
     ).toEqual(
-      ChangeFactory.buildInputNumericChangedBlock(
+      ChangeFactory.buildInputNumericNewValue(
         frameId,
         frame,
         SELECTOR,
@@ -182,7 +182,7 @@ describe('Test de Change Block Factory', () => {
         defaultOptions
       )
     ).toEqual(
-      ChangeFactory.buildChangeBlock(
+      ChangeFactory.buildInputNewValue(
         frameId,
         frame,
         SELECTOR,
@@ -242,6 +242,31 @@ describe('Test de Change Block Factory', () => {
         frame,
         SELECTOR,
         files
+      )
+    );
+  });
+
+  test('Test de buildChangeTagsListBlock pour un lists tags', () => {
+    // Attributs utilisés pour générer le block
+    const eventMessage : IMessage = {
+      selector : SELECTOR,
+      value,
+      action : ECustomEvent.CHANGE_TAGS_LIST,
+    };
+
+    expect(
+      ChangeFactory.buildBlock(
+        eventMessage ,
+        frameId,
+        frame,
+        defaultOptions
+      )
+    ).toEqual(
+      ChangeFactory.buildTagsListNewValue(
+        frameId,
+        frame,
+        SELECTOR,
+        value
       )
     );
   });

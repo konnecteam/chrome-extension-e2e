@@ -1,4 +1,5 @@
 import { TextEditorComponent } from '../../components/components/text-editor-component';
+import { TagsListComponent } from '../../components/konnect/tags-list-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
 import { CheckboxComponent } from '../../components/konnect/checkbox-component';
@@ -54,6 +55,9 @@ export class EventMessageFactory {
       // Si c'est un text editor
       case EComponent.TEXT_EDITOR :
         return TextEditorComponent.editTextEditorComponentMessage(event, component);
+      // Si c'est un tags list
+      case EComponent.TAGS_LIST :
+        return TagsListComponent.editTagsListComponentMessage(event, component);
       default :
         return null;
     }

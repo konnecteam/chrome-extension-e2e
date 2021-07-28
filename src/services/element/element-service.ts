@@ -12,6 +12,7 @@ import { RadioGroupComponent } from '../../components/konnect/radio-group-compon
 import { IComponent } from '../../interfaces/i-component';
 import { SelectorService } from '../selector/selector-service';
 import { ETagName } from '../../enum/elements/tag-name';
+import { TagsListComponent } from '../../components/konnect/tags-list-component';
 
 /**
  * Service permettant de gérer les elements HTML
@@ -270,7 +271,8 @@ export class ElementService {
   public static getChangeComponent(element : HTMLElement) : IComponent {
 
     return InputFilesComponent.getElement(element as HTMLInputElement) || InputNumericComponent.getElement(element)
-    || CheckboxComponent.getElement(element) || RadioGroupComponent.getElement(element) || TextEditorComponent.getElement(element);
+    || CheckboxComponent.getElement(element) || RadioGroupComponent.getElement(element) || TextEditorComponent.getElement(element)
+    || TagsListComponent.getElement(element);
   }
 
   /**
@@ -310,6 +312,14 @@ export class ElementService {
    */
   public static getTextEditorContent(element : HTMLElement) : HTMLElement {
     return this.findParentElementWithTagNameAndValueAttribute(element, ETagName.DIVISION.toUpperCase(), this._CLASS_ATTIBUTE, this._CLASS_ATTRIBUTE_TEXT_EDITOR_CONTENT);
+  }
+
+  /**
+   * Permet de récupérer le tags list element
+   */
+  public static getTagsList(element : HTMLElement) : HTMLElement {
+
+    return this.findParentElementWithTagName(element, ETagName.TAGS_LIST.toUpperCase());
   }
 
 }

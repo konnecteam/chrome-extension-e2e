@@ -1,3 +1,4 @@
+import { TagsListComponent } from '../../components/konnect/tags-list-component';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { ElementService } from './element-service';
 import 'jest';
@@ -19,7 +20,7 @@ const INPUT_LIST_PATH = '/static/test/dom/dom-input-list.html';
 const POPOVER_PATH = '/static/test/dom/dom-popover.html';
 const INPUT_NUMERIC = '/static/test/dom/dom-input-numeric.html';
 const TEXT_EDITOR_DOM = '/static/test/dom/dom-text-editor.html';
-
+const TAGS_LIST = '/static/test/dom/dom-tags-list.html';
 /**
  * Selecteurs
  */
@@ -196,6 +197,16 @@ describe('Test des méthodes de recherche d\'element du Element Service', () => 
     .toBeDefined();
 
   });
+
+  test('Test de la fonction getTagsList', async () => {
+
+    await changeBodyDocumentAsync(TAGS_LIST);
+
+    expect(ElementService.getTagsList(document.querySelector(ETagName.TAGS_LIST)))
+    .toBeDefined();
+
+  });
+
   test('Test de la fonction getKSelectElement', async () => {
 
     await changeBodyDocumentAsync(K_SELECT_PATH);
@@ -371,6 +382,18 @@ describe('Test du get change event', () => {
     // On doit trouver que l'on est dans un input numeric
     expect(ElementService.getChangeComponent(element as HTMLElement))
     .toEqual(InputNumericComponent.getElement(element as HTMLElement));
+
+  });
+
+
+  test('Determiner change d\'un tags list', async() => {
+
+    await changeBodyDocumentAsync(TAGS_LIST);
+
+    const element = document.querySelector(ETagName.TAGS_LIST);
+    // On doit trouver que l'on est dans un input numeric
+    expect(ElementService.getChangeComponent(element as HTMLElement))
+    .toEqual(TagsListComponent.getElement(element as HTMLElement));
 
   });
 

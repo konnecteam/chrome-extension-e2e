@@ -29,5 +29,6 @@ export enum ETagName {
   DATE = 'date',
   CHECKBOX = 'checkbox',
   RADIOGROUP = 'radio-group',
-  TEXT_EDITOR = 'text-editor'
+  TEXT_EDITOR = 'text-editor',
+  TAGS_LIST = 'tags-list'
 }
