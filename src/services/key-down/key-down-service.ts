@@ -65,14 +65,14 @@ export class KeyDownService {
     } else if (this._listsKeyDown.length > 0) {
 
       // On récupère la liste des keydowns
-      ChromeService.sendMessage(this._listKeydownProcess());
+      ChromeService.sendMessage(this._handleKeyDownList());
 
       this._listsKeyDown = [];
     }
   }
 
   /**
-   * Permet de gérer la liste des évènements pour un sélecteur
+   * Permet de gérer la liste des évènements keydown pour un sélecteur
    */
   private _handleKeyDownEvent(msg : IMessage) : IMessage {
 
@@ -84,7 +84,7 @@ export class KeyDownService {
 
         // dans le cas contraire on envoie la liste qu'on a déja
         // et on traite la liste des keydown
-        msg = this._listKeydownProcess();
+        msg = this._handleKeyDownList();
         this._listsKeyDown = [];
       }
     }
@@ -95,24 +95,24 @@ export class KeyDownService {
   }
 
   /**
-   * Permet de traiter les keydowns
+   * Permet d'obtenir un objet IMessage pour les events list keydowns
    */
-  private _listKeydownProcess () : IMessage {
+  private _handleKeyDownList () : IMessage {
 
     // Si le list keydown concerne le text editor on utilise le processus spécifique
     if (ElementService.getTextEditor(document.querySelector(this._listsKeyDown[0].selector))) {
 
-      return this._textEditorListKeydownProcess();
+      return this._handleTextEditorKeyDownList();
     } else {
 
-      return this._standardProcess();
+      return this._handleStandardKeyDownList();
     }
   }
 
   /**
-   * Processus pour le text editor du list keydown
+   * Retourne un IMessage de keydown list de text editor
    */
-  private _textEditorListKeydownProcess() : IMessage {
+  private _handleTextEditorKeyDownList() : IMessage {
 
     const event = this._listsKeyDown[this._listsKeyDown.length - 1 ];
     event.action = ECustomEvent.LIST_KEYDOWN_EDITOR;
@@ -121,9 +121,9 @@ export class KeyDownService {
   }
 
   /**
-   * Processus standard d'un listkeydown
+   * Retourne un IMessage pour un keydown list standard
    */
-  private _standardProcess() : IMessage {
+  private _handleStandardKeyDownList() : IMessage {
     // Contient la liste des clés des keydowns
     let value = '';
 
