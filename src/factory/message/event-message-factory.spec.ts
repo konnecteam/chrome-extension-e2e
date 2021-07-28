@@ -1,3 +1,5 @@
+import { TagsListComponent } from '../../components/konnect/tags-list-component';
+import { ETagName } from './../../enum/elements/tag-name';
 import { PopoverComponent } from './../../components/konnect/popover-component';
 import { IMessage } from '../../interfaces/i-message';
 import { RadioGroupComponent } from '../../components/konnect/radio-group-component';
@@ -32,7 +34,7 @@ const INPUT_LIST_DOM = '/static/test/dom/dom-input-list.html';
 const POPOVER_DOM = '/static/test/dom/dom-popover.html';
 const CHECKBOX_DOM = '/static/test/dom/dom-checkbox.html';
 const RADIO_GROUP_DOM = '/static/test/dom/dom-radio-group.html';
-
+const TAGS_LIST_DOM = '/static/test/dom/dom-tags-list.html';
 /**
  * Selecteurs
  */
@@ -193,6 +195,24 @@ describe('Test de event message factory', () => {
     // On doit trouver un component model qui fait référence à un popover
     expect(EventMessageFactory.buildMessageEvent(component, event, null))
     .toEqual(PopoverComponent.editPopoverComponentMessage(event));
+
+  });
+
+
+  test('Test de tags list component message', async () => {
+    // on init le body
+    await changeBodyDocumentAsync(TAGS_LIST_DOM);
+
+    const element : HTMLElement = document.querySelector(ETagName.TAGS_LIST);
+
+    const component = TagsListComponent.getElement(element);
+
+    const event : IMessage =  {
+      action : '',
+    };
+    // On doit trouver un component model qui fait référence à un popover
+    expect(EventMessageFactory.buildMessageEvent(component, event, null))
+    .toEqual(TagsListComponent.editTagsListComponentMessage(event, component));
 
   });
 });

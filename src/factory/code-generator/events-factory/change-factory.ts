@@ -23,7 +23,7 @@ export class ChangeFactory {
 
       // Si c'est un changement dans un input numeric
       case ECustomEvent.CHANGE_INPUT_NUMERIC :
-        return this.buildInputNumericChangedBlock(frameId, frame, selector, value, selectorFocus);
+        return this.buildInputNumericNewValue(frameId, frame, selector, value, selectorFocus);
 
       // Si c'est un change
       case EDomEvent.CHANGE :
@@ -38,8 +38,11 @@ export class ChangeFactory {
           return this.buildAcceptUploadFileChangeBlock(options, frameId, frame, selector, files);
         } else {
           // Sinon c'est un input simple
-          return this.buildChangeBlock(frameId, frame, selector, value);
+          return this.buildInputNewValue(frameId, frame, selector, value);
         }
+      // Si c'est un change dans un tags list
+      case ECustomEvent.CHANGE_TAGS_LIST :
+        return this.buildTagsListNewValue(frameId, frame, selector, value);
       default : return null;
     }
   }
@@ -47,7 +50,7 @@ export class ChangeFactory {
   /**
    * Généré le change d'un input numeric
    */
-  public static buildInputNumericChangedBlock(
+  public static buildInputNumericNewValue(
     frameId : number,
     frame : string,
     selector : string ,
@@ -90,9 +93,9 @@ export class ChangeFactory {
   }
 
  /**
-  * Génère un change basique
+  * Génère un change d'un input simple
   */
-  public static buildChangeBlock(
+  public static buildInputNewValue(
     frameId : number,
     frame : string,
     selector : string,
@@ -104,6 +107,25 @@ export class ChangeFactory {
       type : EDomEvent.CHANGE,
       value : `await ${frame}.evaluate( () => document.querySelector('${selector}').value = "");
       await ${frame}.type('${selector}', \`${value.replace(/\n/g, '\\r\\n')}\`);`
+    });
+  }
+
+  /**
+   * Génère une change dans une taglist
+   */
+  public static buildTagsListNewValue(
+    frameId : number,
+    frame : string,
+    selector : string,
+    value : string
+  ) : Block {
+
+    return new Block(frameId, {
+      type : EDomEvent.CHANGE,
+      value : ` await ${frame}.evaluate( async function () {
+        let element = document.querySelector('${selector}');
+        element.au['tags-list'].viewModel.value.push('${value}');
+      })`
     });
   }
 
