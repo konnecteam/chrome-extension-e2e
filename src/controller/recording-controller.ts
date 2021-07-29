@@ -387,8 +387,10 @@ class RecordingController {
         await ChromeService.removeBrowsingDataAsync(currentTab.url);
       }
 
-      // 3 - Suppression du recording en local storage
+      // 3 - Suppression du recording en local storage et des erreurs trouvé lors du précédant enregistrement
       await StorageService.removeDataAsync('recording');
+      await StorageService.removeDataAsync('errorMessage' );
+
 
       StorageService.setData({ isRemovedListener : false });
       StorageService.setData({ isResult : this._isResult });
