@@ -30,24 +30,27 @@ export class DbClickFactory {
 
     const block = new Block(frameId);
 
-    if (options.waitForSelectorOnClick) {
+    if (selector.length > 0) {
+
+      if (options.waitForSelectorOnClick) {
+
+        block.addLine({
+          type : EDomEvent.CLICK,
+          value : `await ${frame}.waitForSelector('${selector}');`
+        });
+      }
 
       block.addLine({
-        type : EDomEvent.CLICK,
-        value : `await ${frame}.waitForSelector('${selector}');`
+        type : EDomEvent.DBLCLICK,
+        value : ` await ${frame}.evaluate( async function(){
+            let e = document.querySelector('${selector}');
+            var docEvent = document.createEvent('MouseEvents');
+            docEvent.initEvent('dblclick', true, true);
+            e.dispatchEvent(docEvent);
+            e.click();
+          });`
       });
     }
-
-    block.addLine({
-      type : EDomEvent.DBLCLICK,
-      value : ` await ${frame}.evaluate( async function(){
-          let e = document.querySelector('${selector}');
-          var docEvent = document.createEvent('MouseEvents');
-          docEvent.initEvent('dblclick', true, true);
-          e.dispatchEvent(docEvent);
-          e.click();
-        });`
-    });
 
     if (options.customLineAfterClick) {
 

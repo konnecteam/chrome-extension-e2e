@@ -55,24 +55,27 @@ export class ClickFactory {
 
     const block = new Block(frameId);
 
-    if (options.waitForSelectorOnClick) {
+    if (selector.length > 0) {
+
+      if (options.waitForSelectorOnClick) {
+
+        block.addLine({
+          type : EDomEvent.CLICK,
+          value : `await ${frame}.waitForSelector('${selector}');`
+        });
+      }
 
       block.addLine({
         type : EDomEvent.CLICK,
-        value : `await ${frame}.waitForSelector('${selector}');`
+        value : ` await ${frame}.evaluate( async function(){
+          let e = document.querySelector('${selector}');
+          var docEvent = document.createEvent('MouseEvents');
+          docEvent.initEvent('mouseenter', true, true);
+          e.dispatchEvent(docEvent);
+          e.click();
+        });`
       });
     }
-
-    block.addLine({
-      type : EDomEvent.CLICK,
-      value : ` await ${frame}.evaluate( async function(){
-        let e = document.querySelector('${selector}');
-        var docEvent = document.createEvent('MouseEvents');
-        docEvent.initEvent('mouseenter', true, true);
-        e.dispatchEvent(docEvent);
-        e.click();
-      });`
-    });
 
     if (options.customLineAfterClick) {
 
@@ -97,18 +100,21 @@ export class ClickFactory {
 
     const block = new Block(frameId);
 
-    if (options.waitForSelectorOnClick) {
+    if (selector.length > 0) {
+
+      if (options.waitForSelectorOnClick) {
+
+        block.addLine({
+          type : EDomEvent.CLICK,
+          value : `await ${frame}.waitForSelector('${selector}');`
+        });
+      }
 
       block.addLine({
         type : EDomEvent.CLICK,
-        value : `await ${frame}.waitForSelector('${selector}');`
+        value : `await ${frame}.$eval('${selector}',  el=> el.click());`
       });
     }
-
-    block.addLine({
-      type : EDomEvent.CLICK,
-      value : `await ${frame}.$eval('${selector}',  el=> el.click());`
-    });
 
     if (options.customLineAfterClick) {
 
