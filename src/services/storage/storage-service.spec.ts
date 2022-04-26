@@ -1,16 +1,15 @@
 import { StorageService } from './storage-service';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import * as chrome from 'sinon-chrome';
 
 
 const DATAVALUE = 'test de data';
 
-let dataStorage = '';
+let dataStorage : { [keys : string] : any; };
 
-let getStorage = '';
-chrome.storage.local.set.withArgs({data : DATAVALUE }).callsFake(() => {
-  dataStorage = DATAVALUE;
+let getStorage : { [keys : string] : any; };
+chrome.storage.local.set.withArgs({ data : DATAVALUE }).callsFake(() => {
+  dataStorage = { test : DATAVALUE };
 });
 
 chrome.storage.local.get.withArgs(['data']).callsFake(() => {
@@ -18,29 +17,31 @@ chrome.storage.local.get.withArgs(['data']).callsFake(() => {
 });
 
 chrome.storage.local.remove.withArgs('data').callsFake(() => {
-  dataStorage = '';
+  dataStorage = null;
 });
 
 describe('Test de Storage Service', () => {
 
-  before('Mock chrome', () => {
+  // Mock chrome
+  beforeAll(() => {
     global.chrome = chrome;
   });
 
-  it('Test de set data', () => {
+  test('Test de set data', () => {
 
-    StorageService.setData({data : 'test de data'});
-    assert.strictEqual(dataStorage, DATAVALUE);
+    StorageService.setData({ data : 'test de data'});
+    expect(dataStorage.test).toEqual(DATAVALUE);
   });
 
-  it('Test de get data', () => {
-    StorageService.get(['data'], () => {});
-    assert.strictEqual(getStorage, DATAVALUE);
+  test('Test de get data', async () => {
+    StorageService.getDataAsync(['data']);
+    expect(getStorage.test).toEqual(DATAVALUE);
+
   });
 
-  it('Test de remove data', () => {
-    StorageService.remove('data');
-    assert.strictEqual(dataStorage, '');
+  test('Test de remove data', () => {
+    StorageService.removeDataAsync('data');
+    expect(dataStorage).toBeNull();
   });
 
 });

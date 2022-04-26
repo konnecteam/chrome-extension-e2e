@@ -28,7 +28,8 @@ module.exports = {
     'services/storage/storage-service' : './src/services/storage/storage-service.ts',
     'services/window/window-service' : './src/services/window/window-service.ts',
     'services/zip/zip-service' : './src/services/zip/zip-service.ts',
-    'polly-build/polly' : './src/polly/polly-recorder.ts'
+    'lib/scripts/polly/polly' : './lib/scripts/polly/polly-recorder.ts',
+    'lib/scripts/fake-time/fake-time' : './lib/scripts/fake-time/fake-time.ts'
 /*
     'constants/action-events' : './src/constants/action-events.ts',
     'constants/elements-tagName' : './src/constants/elements-tagName.ts',
@@ -92,6 +93,7 @@ module.exports = {
     new CopyPlugin([
       { from: './src/manifest.json', to: './manifest.json' },
       { from: './assets/images', to: 'assets/images' },
+      { from: './lib/scripts/services', to: 'services/scenario/'}
     ]),
     new HtmlWebpackPlugin({
       template: './src/popup/template.html',
@@ -106,4 +108,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
   },
+  node : {
+    fs : 'empty' // Utile pour pouvoir builder le fichier FileService
+  }
 };

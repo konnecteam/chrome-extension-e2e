@@ -1,8 +1,10 @@
+import { SelectorService } from './../selector/selector-service';
+import { ElementService } from './../element/element-service';
 import { ChromeService } from './../chrome/chrome-service';
-import { EventModel } from './../../models/event-model';
-import domEventsToRecord from '../../constants/dom-events-to-record';
-import actionEvents from '../../constants/action-events';
-import elementsTagName from '../../constants/elements-tagName';
+import { IMessage } from '../../interfaces/i-message';
+import { ETagName } from '../../enum/elements/tag-name';
+import { ECustomEvent } from '../../enum/events/events-custom';
+import { EDomEvent } from '../../enum/events/events-dom';
 
 /**
  * Service qui permet de gérer les keydown pour un sélecteur
@@ -12,8 +14,14 @@ export class KeyDownService {
   /** Instance de classe */
   public static instance : KeyDownService;
 
+  /**
+   * Value des touches
+   */
+  private static readonly _ENTER_KEY = 'Enter';
+  private static readonly _BACKSPACE_KEY = 'Backspace';
+
   /** Liste des keydown enregistrés */
-  private _listsKeyDown : EventModel[] = [];
+  private _listsKeyDown : IMessage[] = [];
 
   /**
    * Constructeur
@@ -33,35 +41,50 @@ export class KeyDownService {
   /**
    * Permet de gérer les evènement keydown
    */
-  public handleEvent(msg : EventModel, element : HTMLElement) : void {
-    // On vérifie que l'event est un keydown et que ce n'est pas un input ou que c'est un input de liste
-    if (msg.action === domEventsToRecord.KEYDOWN) {
-      if (!msg.value && element.tagName !== elementsTagName.INPUT.toLocaleUpperCase() ||  this._verifyIsinputList(element)) {
+  public handleEvent(msg : IMessage, element : HTMLElement) : void {
+
+    // On vérifie que l'event est un keydown
+    if (msg.action === EDomEvent.KEYDOWN) {
+
+      // On gère le cas ou si c'est un user qui appuie sur la touche Entrer sur un bouton
+      if (element.tagName === ETagName.BUTTON.toUpperCase() && msg.key === KeyDownService._ENTER_KEY) {
+
+        // Si c'est le cas on tranforme le keydown en click
+        msg.action = EDomEvent.CLICK;
+        msg.typeEvent = EDomEvent.CLICK;
+        return;
+      }
+
+      // On verifie si c'est un body car les textes areas sont parfois dans un body qui se trouve dans une iframe
+      if (!msg.value && element.tagName === ETagName.BODY.toUpperCase() || element.tagName === ETagName.TEXTAREA.toUpperCase()
+          || ElementService.getTextEditor(element) || ElementService.getInputList(element)) {
+
         // On récupère l'event
         this._handleKeyDownEvent(msg);
       }
     } else if (this._listsKeyDown.length > 0) {
 
-      // On récupère la liste des keydown
-      ChromeService.sendMessage(this._processListsKeydown());
+      // On récupère la liste des keydowns
+      ChromeService.sendMessage(this._handleKeyDownList());
+
       this._listsKeyDown = [];
     }
   }
 
   /**
-   * Permet de gérer la liste des évènement pour un sélecteur
+   * Permet de gérer la liste des évènements keydown pour un sélecteur
    */
-  private _handleKeyDownEvent(msg : EventModel) : EventModel {
+  private _handleKeyDownEvent(msg : IMessage) : IMessage {
 
     if (this._listsKeyDown.length > 0) {
 
       // Si le premier élément à le même action et même sélecteur on enregistre tous les évènements
       // Pour ce même sélecteur
-      if (this._listsKeyDown[0].action === domEventsToRecord.KEYDOWN && this._listsKeyDown[0].selector !== msg.selector) {
+      if (this._listsKeyDown[0].action === EDomEvent.KEYDOWN && this._listsKeyDown[0].selector !== msg.selector) {
 
-        // dans le cas contraire on envoie la liste qu'on à déja
+        // dans le cas contraire on envoie la liste qu'on a déja
         // et on traite la liste des keydown
-        msg = this._processListsKeydown();
+        msg = this._handleKeyDownList();
         this._listsKeyDown = [];
       }
     }
@@ -72,11 +95,36 @@ export class KeyDownService {
   }
 
   /**
-   * Permet de traité les key down
+   * Permet d'obtenir un objet IMessage pour les events list keydowns
    */
-  private _processListsKeydown() {
+  private _handleKeyDownList () : IMessage {
 
-    // Contien la liste des clés des keydown
+    // Si le list keydown concerne le text editor on utilise le processus spécifique
+    if (ElementService.getTextEditor(document.querySelector(this._listsKeyDown[0].selector))) {
+
+      return this._handleTextEditorKeyDownList();
+    } else {
+
+      return this._handleStandardKeyDownList();
+    }
+  }
+
+  /**
+   * Retourne un IMessage de keydown list de text editor
+   */
+  private _handleTextEditorKeyDownList() : IMessage {
+
+    const event = this._listsKeyDown[this._listsKeyDown.length - 1 ];
+    event.action = ECustomEvent.LIST_KEYDOWN_EDITOR;
+    event.selector = SelectorService.Instance.standardizeSelector(event.selector);
+    return event;
+  }
+
+  /**
+   * Retourne un IMessage pour un keydown list standard
+   */
+  private _handleStandardKeyDownList() : IMessage {
+    // Contient la liste des clés des keydowns
     let value = '';
 
     for (let i = 0; i < this._listsKeyDown.length; i++) {
@@ -86,54 +134,41 @@ export class KeyDownService {
       // Si le keydown event contient uniquement une touche
       if (currentMsg.key.length === 1) {
         // On concataine la valeur
-        value += currentMsg.key;
+        value = `${value}${currentMsg.key}`;
       } else {
 
         // Gestion du backspace
-        if (currentMsg.key === 'Backspace') {
+        if (currentMsg.key === KeyDownService._BACKSPACE_KEY) {
           value = value.slice(0, -1);
         }
 
-        // Gestion de la touche entré
-        if (currentMsg.key === 'Enter') {
-          value += '<br/>';
+        // Gestion de la touche entrée
+        if (currentMsg.key === KeyDownService._ENTER_KEY) {
+
+          // Pour faire un retour à la ligne dans un memo il faut utilise une balise br car \n ne fonctionne pas
+          value = `${value}<br/>`;
         }
       }
     }
 
     // On définit le premier élément
     this._listsKeyDown[0].value = value;
-    this._listsKeyDown[0].action = actionEvents.LISTKEYDOWN;
+    this._listsKeyDown[0].action = ECustomEvent.LIST_KEYDOWN;
+    this._listsKeyDown[0].selector = SelectorService.Instance.standardizeSelector(this._listsKeyDown[0].selector);
+
     return this._listsKeyDown[0];
   }
 
   /**
-   * Verifie si c'est un input de list
+   * Récupère les évènements liés au clic de la souris
    */
-  private _verifyIsinputList(element : HTMLElement) : boolean {
-    let listbox = '';
-    // On verifié si c'est un input d'une simple k list
-    listbox = element.getAttribute('aria-owns');
-
-    if (!listbox) {
-      // On vérifie si c'est le input d'une multiple liste
-      listbox = element.getAttribute('aria-describedby');
-      if (!listbox) return false;
-    }
-
-    return listbox && listbox.includes('kdp');
-  }
-
-  /**
-   * Récupère les évènements lié au clic de la souris
-   */
-  public getCoordinates(evt) {
+  public getClickCoordinates(evt) {
     const eventsWithCoordinates = {
-      mouseup: true,
-      mousedown: true,
-      mousemove: true,
-      mouseover: true
+      mouseup : true,
+      mousedown : true,
+      mousemove : true,
+      mouseover : true
     };
-    return eventsWithCoordinates[evt.type] ? { x: evt.clientX, y: evt.clientY } : null;
+    return eventsWithCoordinates[evt.type] ? { x : evt.clientX, y : evt.clientY } : null;
   }
 }

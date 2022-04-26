@@ -6,14 +6,11 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development DEBUG=puppeteer-recorder:* webpack --watch",
     "build": "cross-env NODE_ENV=production webpack",
-    "dist": "cross-env NODE_ENV=production webpack && node scripts/zip.js",
-    "test": "npm run unit-test && npm run e2e-test",
-    "test-prod": "cross-env NODE_ENV=production npm run unit-test && npm run e2e-test",
-    "unit-test": "jest __tests__/.*.spec.js --silent",
-    "e2e-test": "jest __e2e-tests__ --runInBand --silent",
+    "dist": "cross-env NODE_ENV=production webpack",
+    "test": "npm run test-jest",
+    "test-prod": "cross-env NODE_ENV=production npm run test-jest",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "test-mocha": "node_modules/mocha/bin/mocha --require ts-node/register src/**/*/*/*.spec.ts --recursive src/**/*/*.spec.ts --recursive src/**/*.spec.ts",
-    "test-jest": "node_modules/jest/bin/jest.js src/*/*.test.ts src/*/*/*.test.ts"
+    "test-jest": "node_modules/jest/bin/jest.js --runInBand lib/*/*/*.spec.ts src/*/*.spec.ts src/*/*/*.spec.ts src/*/*/*/*.spec.ts"
   },
   "pre-commit": [
     "lint"
@@ -40,7 +37,6 @@
   },
   "devDependencies": {
     "@types/chrome": "0.0.122",
-    "@types/mocha": "^8.0.3",
     "@types/node": "^14.6.0",
     "@vue/test-utils": "^1.0.0-beta.24",
     "awesome-typescript-loader": "^5.2.1",
@@ -50,7 +46,7 @@
     "eslint": "^5.3.0",
     "eslint-config-standard": "^12.0.0-alpha.0",
     "eslint-plugin-html": "^4.0.5",
-    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jest": "^21.21.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^3.8.0",
@@ -62,18 +58,17 @@
     "jest-vue-preprocessor": "^1.4.0",
     "lodash": "^4.17.10",
     "mini-css-extract-plugin": "^0.10.0",
-    "mocha": "^8.2.0",
     "node-sass": "^4.14.1",
     "pre-commit": "^1.2.2",
-    "puppeteer": "^1.7.0",
     "sass-loader": "^7.3.1",
     "style-loader": "^0.22.1",
     "superagent": "^3.8.3",
     "ts-node": "^9.0.0",
+    "puppeteer": "^1.7.0",
     "tslint": "^6.0.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-sonarts": "^1.9.0",
-    "typescript": "^4.0.2",
+    "typescript": "4.2.2",
     "vue-loader": "^15.3.0",
     "vue-style-loader": "^4.1.1",
     "vue-template-compiler": "^2.5.17",
@@ -82,29 +77,14 @@
     "webpack-cli": "^4.0.0-beta.2",
     "zip-folder": "^1.0.0",
     "sinon-chrome": "3.0.1",
+    "@sinonjs/fake-timers": "^7.1.2",
     "atob": "2.1.2",
     "@types/jest": "^26.0.15",
-    "ts-jest": "^26.4.3"
+    "ts-jest": "26.5.2"
   },
   "standard": {
     "globals": [
       "chrome"
     ]
-  },
-  "jest": {
-    "moduleNameMapper": {
-      "^vue$": "vue/dist/vue.common.js"
-    },
-    "moduleFileExtensions": [
-      "js",
-      "vue",
-      "json",
-      "ts"
-    ],
-    "transform": {
-      ".(ts|tsx)": "ts-jest",
-      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
-      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue-preprocessor"
-    }
   }
 }

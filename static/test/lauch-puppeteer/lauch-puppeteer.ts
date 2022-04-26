@@ -1,13 +1,12 @@
 import * as path from 'path';
-
 const extensionPath = path.join(__dirname, '../../../dist');
 
 export const launchPuppeteerWithExtension = function (puppeteer) {
   const options = {
-    headless: true,
-    ignoreHTTPSErrors: true,
-    devtools: true,
-    args: [
+    headless : true,
+    ignoreHTTPSErrors : true,
+    devtools : true,
+    args : [
       `--disable-extensions-except=${extensionPath}`,
       `--load-extension=${extensionPath}`,
       '--no-sandbox',

@@ -1,22 +1,18 @@
-import { defaults } from './../constants/default-options';
-import domEventsToRecord from '../constants/dom-events-to-record';
 import { ScenarioFactory } from '../factory/code-generator/scenario-factory';
-import { FooterFactory } from '../factory/code-generator/footer-factory';
-import { HeaderFactory } from '../factory/code-generator/header-factory';
-import { OptionModel } from '../models/options-model';
-import  pptrActions  from '../constants/pptr-actions';
-import  actionEvents from '../constants/action-events';
-import { EventModel } from '../models/event-model';
+import { IOption } from '../interfaces/i-options';
+import { IMessage } from '../interfaces/i-message';
 import { Block } from './block';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import CodeGenerator from './code-generator';
+import { ScenarioService } from '../services/scenario/scenario-service';
+import { EDomEvent } from '../enum/events/events-dom';
+import { EPptrAction }from '../enum/action/pptr-actions';
 
 /** Frame dans laquelle on se situe */
 const frameId = 0;
 
 /** Le tableau qui va contenir les events à parser */
-let listEventModel : EventModel[] = [];
+let messageList : IMessage[] = [];
 
 /** Nom de la frame */
 const frame = 'page';
@@ -25,21 +21,34 @@ const frame = 'page';
  * Sauvegarde les options par défauts
  * car elles vont être modifiés
  */
-const optionsDefault = JSON.parse(JSON.stringify(defaults));
+const defaultOptions : IOption = {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
+  deleteSiteData : true,
+};
 
 /**
  * Transforme une liste de Block en string
- * @param listBlock
- * @param wrapAsync
  */
 function blocksToString(listBlock : Block[], wrapAsync : boolean) {
   const indent = wrapAsync ? '  ' : '';
   const newLine = `\n`;
   let result = '';
-  for (const block of listBlock) {
-    const lines = block.getLines();
-
-    for (const line of lines) {
+  for (let i = 0 ; i < listBlock.length; i++) {
+    const lines = listBlock[i].getLines();
+    for (let j = 0; j < lines.length; j++) {
+      const line = lines[j];
       result += indent + line.value + newLine;
     }
   }
@@ -48,11 +57,11 @@ function blocksToString(listBlock : Block[], wrapAsync : boolean) {
 
 /**
  * Créer un scénario à partir des options
- * @param options
  */
-function createScenario(options : OptionModel) {
+function createScenario(options : IOption) {
   // Header du scénario
-  let scenarioExcepted = HeaderFactory.getHeader(
+
+  let scenarioExcepted = ScenarioFactory.buildHeader(
     options.recordHttpRequest,
     options.wrapAsync,
     options.headless,
@@ -61,8 +70,10 @@ function createScenario(options : OptionModel) {
 
   const listBlock = [];
   // Scénario
-  for (const currentEvent of listEventModel) {
-    const block = ScenarioFactory.parseEvent(
+  for (let i = 0; i < messageList.length; i++) {
+    const currentEvent = messageList[i];
+
+    const block = ScenarioFactory.buildBlock(
       currentEvent,
       frameId,
       frame,
@@ -71,16 +82,20 @@ function createScenario(options : OptionModel) {
 
     if (block) {
 
-      if (options.customLineBeforeEvent) {
-        listBlock.push(ScenarioFactory.generateCustomLine(frameId, options.customLineBeforeEvent));
+      if (options.customLinesBeforeEvent && Object.values(EPptrAction as any).indexOf(currentEvent.action) === -1) {
+        listBlock.push(ScenarioFactory.buildCustomLineBlock(frameId, options.customLinesBeforeEvent));
       }
 
       if (currentEvent.comments) {
-        listBlock.push(ScenarioFactory.generateComments(block, currentEvent.comments));
+        listBlock.push(ScenarioFactory.buildCommentBlock(block, currentEvent.comments));
       } else {
         listBlock.push(block);
       }
     }
+  }
+  if (options.customLinesBeforeEvent) {
+
+    listBlock.push(ScenarioFactory.buildCustomLineBlock(frameId, options.customLinesBeforeEvent));
   }
 
   // Insertion des lignes vide entre deux Block
@@ -88,129 +103,130 @@ function createScenario(options : OptionModel) {
     let i = 0;
     while (i <= listBlock.length) {
 
-      const blankLine = ScenarioFactory.generateBlankLine();
+      const blankLine = ScenarioFactory.buildBlankLineBlock();
       listBlock.splice(i, 0, blankLine);
       i += 2;
     }
   }
   // Passage des Block en string
-  scenarioExcepted += blocksToString(listBlock, options.wrapAsync);
+  scenarioExcepted = `${scenarioExcepted}${blocksToString(listBlock, options.wrapAsync)}`;
   // Footer du scénario
-  scenarioExcepted += FooterFactory.generateFooter(options.wrapAsync);
+  scenarioExcepted = `${scenarioExcepted}${ScenarioService.getFooter(options.wrapAsync)}`;
   return scenarioExcepted;
 }
 
 describe('Test de Code Generator', () => {
 
-  before('Initialisation du tableau d\'event', () => {
+  beforeAll(() => {
     // On créé la liste des events enregistrés pour le scénario
-    listEventModel.push(
-      {typeEvent: pptrActions.pptr , action: actionEvents.GOTO, value: 'localhost'}
+    messageList.push(
+      { typeEvent : EPptrAction.PPTR , action : EPptrAction.GOTO, value : 'localhost' }
     );
 
-    listEventModel.push(
-      {typeEvent: domEventsToRecord.CLICK, action: actionEvents.BASIC_CLICK, selector: '#idInput'}
+    messageList.push(
+      { typeEvent : EDomEvent.CLICK, action : EDomEvent.CLICK, selector : '#idInput' }
     );
 
-    listEventModel.push(
-      {typeEvent: domEventsToRecord.CHANGE, action: actionEvents.CHANGE, selector: '#idInput', value: 'change de value input'}
-    );
-  });
-
-  /**
-   * On fait cela car dans code generator
-   * On change les valeurs par défauts par celle passer en paramètre
-   */
-  after('On remet les valeurs initales des options par défauts', () => {
-    Object.assign(defaults, optionsDefault);
-  });
-
-  it('Test avec les options par défauts', () => {
-
-    assert.strictEqual(
-      new CodeGenerator(optionsDefault).generate(listEventModel),
-      createScenario(optionsDefault)
+    messageList.push(
+      { typeEvent : EDomEvent.CHANGE, action : EDomEvent.CHANGE, selector : '#idInput', value : 'change de value input' }
     );
   });
 
-  it('Test avec les options la custom ligne après chaque click', () => {
+  test('Test avec les options par défauts', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    expect(
+      new CodeGenerator(defaultOptions).generate(messageList))
+      .toEqual(
+      createScenario(defaultOptions)
+    );
+  });
+
+  test('Test avec les options de base et la custom ligne après chaque click', () => {
+
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.customLineAfterClick = 'ligne custom 2';
 
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(messageList))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec les options la custom ligne après chaque event', () => {
+  test('Test avec les options de  base et la custom ligne après chaque event', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
-    options.customLineBeforeEvent = 'line beofre event';
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    const options = JSON.parse(JSON.stringify(defaultOptions));
+    options.customLinesBeforeEvent = 'line before event';
+    expect(
+      new CodeGenerator(options).generate(messageList))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec l\'option des requetes http activé', () => {
+  test('Test avec l\'option des requetes http activé', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.recordHttpRequest = true;
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(messageList))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec l\'option des requetes http desactivé', () => {
+  test('Test avec l\'option des requetes http desactivé', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.recordHttpRequest = false;
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(messageList))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec le scénario dans une fonction async', () => {
+  test('Test avec le scénario dans une fonction async', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.wrapAsync = true;
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(messageList))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec le scénario en dehors de la fonction async', () => {
+  test('Test avec le scénario en dehors de la fonction async', () => {
 
-    const options = JSON.parse(JSON.stringify(optionsDefault));
+    const options = JSON.parse(JSON.stringify(defaultOptions));
     options.wrapAsync = false;
-    assert.strictEqual(
-      new CodeGenerator(options).generate(listEventModel),
+    expect(
+      new CodeGenerator(options).generate(messageList))
+      .toEqual(
       createScenario(options)
     );
   });
 
-  it('Test avec un event', () => {
+  test('Test avec un event', () => {
 
     // On garde que le premier event
-    listEventModel = listEventModel.splice(0, 1);
+    messageList = messageList.splice(0, 1);
 
-    assert.strictEqual(
-      new CodeGenerator(optionsDefault).generate(listEventModel),
-      createScenario(optionsDefault)
+    expect(
+      new CodeGenerator(defaultOptions).generate(messageList))
+      .toEqual(
+      createScenario(defaultOptions)
     );
   });
 
-  it('Test avec une liste d\'event vide', () => {
+  test('Test avec une liste d\'event vide', () => {
 
-    listEventModel = [];
-    assert.strictEqual(
-      new CodeGenerator(optionsDefault).generate(listEventModel),
-      createScenario(optionsDefault)
+    messageList = [];
+    expect(
+      new CodeGenerator(defaultOptions).generate(messageList))
+      .toEqual(
+      createScenario(defaultOptions)
     );
   });
 

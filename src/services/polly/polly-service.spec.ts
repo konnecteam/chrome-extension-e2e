@@ -1,21 +1,20 @@
 import { PollyService } from './polly-service';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 
 let pollyService : PollyService;
 describe('Test de Polly Service', () => {
 
-  before(function() {
+  beforeAll(function() {
     pollyService = PollyService.Instance;
   });
 
-  it('Test du reset des attributs du service', () => {
+  test('Test du reset des attributs du service', () => {
     const resultExcepted = { har : '', id : ''};
 
-    pollyService.har = 'testHAR';
-    pollyService.id = 'ID';
+    pollyService.record.har = 'testHAR';
+    pollyService.record.id = 'ID';
     pollyService.flush();
 
-    assert.deepStrictEqual({har : pollyService.har, id : pollyService.id}, resultExcepted);
+    expect({ har : pollyService.record.har, id : pollyService.record.id }).toEqual(resultExcepted);
   });
 });

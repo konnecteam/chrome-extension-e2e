@@ -1,5 +1,5 @@
 /**
- * Service qui permet la gestion des enregistrement depuis le background
+ * Service qui permet la gestion des enregistrements depuis le background
  */
 export class StorageService {
 
@@ -13,14 +13,35 @@ export class StorageService {
   /**
    * Permet de récupérer un objet
    */
-  public static get(keys : string[] , callback? : (any) => void) : void {
-    chrome.storage.local.get(keys, callback);
+  public static async getDataAsync(keys : string[]) : Promise<{ [keys : string] : any }> {
+    return new Promise((resolve, reject) => {
+
+      chrome.storage.local.get(keys, data => {
+        if (chrome.runtime.lastError) {
+
+          reject(chrome.runtime.lastError);
+        } else {
+
+          resolve(data);
+        }
+      });
+    });
   }
 
   /**
    * Supprime des données dans le local storage
    */
-  public static remove(key : string, callback? : () => void) : void {
-    chrome.storage.local.remove(key, callback);
+  public static async removeDataAsync(key : string) : Promise<void> {
+    return new Promise((resolve, reject) => {
+      chrome.storage.local.remove(key, () => {
+        if (chrome.runtime.lastError) {
+
+          reject(chrome.runtime.lastError);
+        } else {
+
+          resolve();
+        }
+      });
+    });
   }
 }

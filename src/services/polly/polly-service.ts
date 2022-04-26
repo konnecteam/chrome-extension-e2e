@@ -1,31 +1,32 @@
+import { ChromeService } from '../../services/chrome/chrome-service';
+
 /**
- * Service qui permet la gestion des enregistrement depuis le background
+ * Service qui permet la gestion des enregistrements depuis le background
  */
 export class PollyService {
 
-  // Event entre content-script et le script injecté
-
-  /** GET_HAR event */
-  public static readonly GET_HAR_ACTION = 'GET_HAR';
-
-  /** GOT_HAR event */
-  public static readonly GOT_HAR_ACTION = 'GOT_HAR';
-
   /** Path du script à injecter */
-  public static readonly POLLY_SCRIPT_PATH = './polly-build/polly.js';
+  public static readonly POLLY_SCRIPT_PATH = 'lib/scripts/polly/polly.js';
 
   /** Instance de classe */
   public static instance : PollyService;
 
-  /** Id de l'enregristrement Polly */
-  public id : string;
+  /** PollyJS déjà injecté ? */
+  private _scriptAlreadyInjected : boolean = false;
 
-  /** Har de l'enregistrement */
-  public har : string;
+  /**
+   * Contient le résultat de l'enregistrement de polly
+   */
+  public record : {
+    id : string,
+    har : string
+  };
 
   constructor() {
-    this.id = '';
-    this.har = '';
+    this.record = {
+      id : '',
+      har : ''
+    };
   }
 
   /**
@@ -41,23 +42,23 @@ export class PollyService {
   /**
    * Getter pour l'id
    */
-  public getId() : string {
-    return this.id;
+  public getRecordId() : string {
+    return this.record.id;
   }
 
   /**
    * Getter pour har
    */
-  public getHar() : string {
-    return this.har;
+  public getRecordHar() : string {
+    return this.record.har;
   }
 
   /**
-   * Réinitialise les data
+   * Réinitialise les datas
    */
   public flush() : void {
-    this.id = '';
-    this.har = '';
+    this.record.id = '';
+    this.record.har = '';
   }
 
   /**
@@ -65,5 +66,19 @@ export class PollyService {
    */
   public listen(window : Window, callback : () => void) : void {
     window.addEventListener('message', callback, false);
+  }
+
+  /** Injection du script pollyJS dans la page */
+  public injectScript() {
+
+    if (chrome && chrome.extension && !this._scriptAlreadyInjected) {
+
+      const script = document.createElement('script');
+      script.async = false;
+      script.defer = false;
+      script.setAttribute('src', ChromeService.getUrl(PollyService.POLLY_SCRIPT_PATH));
+      (document.head || document.documentElement).prepend(script);
+      this._scriptAlreadyInjected = true;
+    }
   }
 }

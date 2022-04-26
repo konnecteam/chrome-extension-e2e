@@ -1,33 +1,36 @@
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import { RegExpFactory } from './regexp-factory';
 
 // tslint:disable: no-identical-functions
 describe('Test de RegExp Factory', () => {
 
-  it('RegExp bien formatée', () => {
+  test('RegExp bien formatée', () => {
 
-    assert.deepStrictEqual(
-      RegExpFactory.buildRegeExp('/*.localhost.*/g'),
-      { regexp: '*.localhost.*', flags: 'g'}
+    expect(
+      RegExpFactory.buildRegexpAndFlag('/*.localhost.*/g')
+    ).toEqual(
+      { regexp : '*.localhost.*', flag : 'g'}
+
     );
   });
 
 
-  it('RegExp Mal formatée', () => {
+  test('RegExp mal formatée', () => {
 
-    assert.deepStrictEqual(
-      RegExpFactory.buildRegeExp('/*.localhost.*'),
-      { regexp: '', flags: ''}
+    expect(
+      RegExpFactory.buildRegexpAndFlag('/*.localhost.*')
+    ).toEqual(
+      { regexp : '', flag : ''}
     );
   });
 
 
-  it('RegExp sans flag', () => {
+  test('RegExp sans flag', () => {
 
-    assert.deepStrictEqual(
-      RegExpFactory.buildRegeExp('/*.localhost.*/'),
-      { regexp: '*.localhost.*', flags: ''}
+    expect(
+      RegExpFactory.buildRegexpAndFlag('/*.localhost.*/')
+    ).toEqual(
+      { regexp : '*.localhost.*', flag : ''}
     );
   });
 });

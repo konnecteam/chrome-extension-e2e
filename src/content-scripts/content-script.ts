@@ -1,67 +1,74 @@
-import { ComponentModel } from './../models/component-model';
-import  elementsTagName  from '../constants/elements-tagName';
-import { EventModel } from './../models/event-model';
+import { EventService } from './../services/event/event-service';
+import { ConditionalService } from '../services/condition/conditional-service';
+import { DebounceService } from '../services/debounce/debounce-service';
+import { URLService } from './../services/url/url-service';
+import { SelectorService } from './../services/selector/selector-service';
+import { IMessage } from '../interfaces/i-message';
 import { KeyDownService } from '../services/key-down/key-down-service';
-import { SelectorService } from '../services/selector/selector-service';
 import { StorageService } from '../services/storage/storage-service';
-import eventsToRecord from '../constants/dom-events-to-record';
 import { ChromeService } from '../services/chrome/chrome-service';
 import { WindowService } from '../services/window/window-service';
 import { PollyService } from '../services/polly/polly-service';
-import { ComponentManager } from '../manager/component-manager';
-import { EventMessageBuilderFactory } from '../factory/message-builder/event-message-builder-factory';
+import { ETagName } from '../enum/elements/tag-name';
+import { EEventMessage } from '../enum/events/events-message';
+import { EDomEvent} from '../enum/events/events-dom';
 
 /**
  * Enregistre les intéractions de l'utilisateur avec la page
  */
 class EventRecorder {
 
-  // event
   /** élément précédant */
   private _previousEvent : Event;
 
-  // Boolean
-  /** Utilisation de la regex pour les data attribute */
-  private _useRegexForDataAttribute : boolean;
+  /** Permet de savoir si il faut enregistrer les requêtes http */
+  private _recordHttpRequest : boolean;
 
-  // services
   /** Service qui permet de gérer les keydown */
   private _keyDownService : KeyDownService;
 
-  /** Liste des data attributes */
-  private _dataAttributes : any = [];
+  /** Service qui permet de trouver le selecteur d'un élément */
+  private _selectorService : SelectorService;
 
-  /** Liste des events à ecouter */
-  private _events;
-
-  /** Savoir si on a déjà injecté le script */
-  private _isAlreadyInjected : boolean = false;
+  /** PollyJS service */
+  private _pollyService : PollyService;
 
   /** Savoir si on traite un event */
-  private _isRecordTreated : boolean;
+  private _isEventProcessed : boolean;
+
+  /** Fonction qui permet d'écouter les events */
+  private _boundedRecordEvent : () => void = null;
+
+  /** Fonction qui permet d'écouter les events scroll */
+  private _boundedScrollEvent : () => void = null;
+
+  /** Fonction qui permet d'ecouter l'event onbeforeunload */
+  private _boundedOnBeforeUnload : () => void = null;
+
+  /** Fonction qui permet d'ecouter l'event du PollyRecorder */
+  private _boundedSendPollyResult : () => void = null;
+
+  /** Fonction qui permet d'ecouter les messages du RecordingController */
+  private _boundedMessageControl : () => void = null;
 
   /** Selecteur de l'élément de l'event précédant */
   private _previousSelector = null;
 
-  /** Contient les informations de la dernière K list détéctée */
-  private _previousKList : { selector : string; typeList :
-     string; element : Element; };
-
   /** Time de départ d'un mousesdown */
   private _startMouseDown : number;
+
+  /** Message précédemment envoyé */
+  private _previousMessage : IMessage;
 
   constructor() {
 
     // Boolean
-    this._useRegexForDataAttribute = false;
+    this._recordHttpRequest = false;
 
     // Service
     this._keyDownService = KeyDownService.Instance;
-    this._events = Object.values(eventsToRecord);
-
-    // Enregistre les informations avant un click d'un item de list
-    this._previousKList = {selector: '', typeList: '', element: null};
-    this._init();
+    this._selectorService = SelectorService.Instance;
+    this._pollyService = PollyService.Instance;
   }
 
   /**
@@ -73,75 +80,99 @@ class EventRecorder {
     if (document.readyState === 'complete') {
 
       // On inject le script et on clone le body courant
-      this.injectScript();
+      this._pollyService.injectScript();
       (window as any).saveBody = document.cloneNode(true);
     }
-
-    // écoute de l'évènement before unload
-    window.onbeforeunload = () => {
-      WindowService.dispatchEvent(new CustomEvent(PollyService.GET_HAR_ACTION));
-    };
 
     // écoute du state change pour cloner de nouveau le body
     document.onreadystatechange = () => {
+
       if (document.readyState === 'interactive') {
-        this.injectScript();
+        this._pollyService.injectScript();
       }
+
       (window as any).saveBody = document.cloneNode(true);
     };
-  }
-
-  /**
-   * Permet d'injecter le script dans le dom de la page
-   */
-  public injectScript() : void {
-    if (chrome && chrome.extension && !this._isAlreadyInjected) {
-      const script = document.createElement('script');
-      script.async = false;
-      script.defer = false;
-      script.setAttribute('src', ChromeService.getUrl(PollyService.POLLY_SCRIPT_PATH));
-      (document.head || document.documentElement).prepend(script);
-      this._isAlreadyInjected = true;
-    }
   }
 
   /**
    * Démarrage du recorder
    */
-  public start() {
+  public async startAsync() {
 
-    // Récupération des options
-    StorageService.get(['options'], data => {
-
-      // mise à jour des options
-      this._updateOptions(data.options);
-
-      if (!(window as any).pptRecorderAddedControlListeners) {
-        this._addAllListeners(this._events);
-        (window as any).pptRecorderAddedControlListeners = true;
-      }
-
-      // Ajout d'un listener afin d'écouter les messages du background
-      if (!(window.document as any).pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
-
-        const boundedGetCurrentUrl = WindowService.getCurrentUrl.bind(this);
-        const boundedGetViewPortSize = WindowService.getViewPortSize.bind(this);
-        const boundedGetResult = this._getResult.bind(this);
-
-        ChromeService.addOnMessageListener(boundedGetCurrentUrl);
-        ChromeService.addOnMessageListener(boundedGetViewPortSize);
-        ChromeService.addOnMessageListener(boundedGetResult);
-
-        (window as any).document.pptRecorderAddedControlListeners = true;
-        window.addEventListener('message', this._sendPollyResult.bind(this), false);
-      }
-
-      // On observe les changement et on ajoute un listener sur les inputs
-      (window as any).observer = new MutationObserver(this._listenerObserver);
-      (window as any).observer.observe(document, {childList: true, subtree: true});
-
-      ChromeService.sendMessage({ control: 'event-recorder-started' });
+    /**
+     * Quand on start,
+     * On met loadingPage à flase
+     * car on n'a pas reload
+     * et il faut le définir
+     */
+    StorageService.setData({
+      loadingPage : false
     });
+
+    try {
+
+      // Récupération des options
+      const data = await StorageService.getDataAsync(['options']);
+      if (data) {
+
+        // Mise à jour des options
+        this._updateOptions(data.options);
+
+        this._recordHttpRequest = data.options.recordHttpRequest;
+
+        // Si On record les requests on initialise et inject le script polly
+        if (data.options.recordHttpRequest) {
+          this._init();
+        } else {
+          // On dit au startup config que pollyJS est prêt et que les modules peuvent être chargé
+          WindowService.dispatchEvent(new CustomEvent(EEventMessage.POLLY_READY));
+        }
+
+        // Ajout d'un listener afin d'écouter les messages du background
+        if (!(window.document as any).pptRecorderAddedControlListeners && chrome.runtime && chrome.runtime.onMessage) {
+          this._addAllListeners();
+        }
+
+        // On observe les changement et on ajoute un listener sur les inputs
+        (window as any).observer = new MutationObserver(this._listenerObserverAsync);
+        (window as any).observer.observe(document, { childList : true, subtree : true });
+
+        ChromeService.sendMessage({ control : EEventMessage.EVENT_RECORDER_STARTED });
+      }
+    } catch (err) {
+      alert('Error with start of event recorder');
+      console.error('Error with start Event Recorder : ', err);
+    }
+
+  }
+
+  /**
+   * Permet de rediriger les messages dans la bonne méthode
+   */
+  private _redirectMessage(message : IMessage) : void {
+
+    if (message && message.hasOwnProperty('control')) {
+
+      switch (message.control) {
+        case EEventMessage.GET_CURRENT_URL :
+          WindowService.getCurrentUrl(message);
+          break;
+        case EEventMessage.GET_VIEWPORT_SIZE :
+          WindowService.getViewPortSize(message);
+          break;
+        case EEventMessage.GET_RESULT :
+          this._getResult();
+          break;
+        case EEventMessage.PAUSE :
+          this._doPause();
+          break;
+        case EEventMessage.UNPAUSE :
+          this._doUnPause();
+          break;
+        // default
+      }
+    }
   }
 
   /**
@@ -149,208 +180,182 @@ class EventRecorder {
    */
   private _recordEvent(e : any) : void {
 
-    let filesUpload : FileList = null;
-    let durationClick : number = null;
-    this._isRecordTreated = false;
+    if (EventService.continueEventTreatment(this._previousEvent, e, this._previousMessage)) {
 
-    // Si aucun évènement capturé on met à jour la variable et on ne fait rien
-    if (!e.target) {
-      this._isRecordTreated = true;
-      return;
-    }
+      let filesUpload : FileList = null;
+      let durationClick : number = null;
+      this._isEventProcessed = false;
 
-    // si des fichiers sont en cours de transfère on les stocks
-    if (e.dataTransfer) {
-      filesUpload = e.dataTransfer.files;
-    }
+      // Si des fichiers sont en cours de transfère on les stocks
+      if (e.dataTransfer) {
+        filesUpload = e.dataTransfer.files;
+      }
 
-    // Gestion de la durée du click (principalement pour les input numérique)
-    if (e.type === eventsToRecord.MOUSEDOWN ) {
-      this._startMouseDown =  Date.now();
-      return;
-    }
-
-    if (e.type === eventsToRecord.CLICK ) {
-      durationClick = Date.now() - this._startMouseDown;
-    }
-
-    // On vérifie que la box use attribute est coché
-    StorageService.get(['useRegexForDataAttribute'], data => {
-
-      // Mise à jour du boolean
-      this._useRegexForDataAttribute = data.useRegexForDataAttribute;
-
-      // Si un evènement précédent est toujours en cours on ne fait rien
-      if (this._previousEvent && this._previousEvent.timeStamp === e.timeStamp) {
+      // Gestion de la durée du click (principalement pour les input numérique)
+      if (e.type === EDomEvent.MOUSEDOWN) {
+        this._startMouseDown = Date.now();
         return;
+      } else if (e.type === EDomEvent.CLICK) {
+        durationClick = Date.now() - this._startMouseDown;
       }
 
-      let customAttribute = null;
-
-      // Gestion des cutom attributes
-      if (this._dataAttributes && this._dataAttributes.length && e.target.hasAttribute) {
-        // On recherche les custom attributes
-        const targetAttributes = e.target.attributes;
-        // Ordre des patterns sont important
-        this._dataAttributes.find(patternAttr => {
-          const regexp = RegExp(patternAttr);
-          // On test chaques attribute avec le pattern
-          for (let i = 0; i < targetAttributes.length; i++) {
-            // Regex ou string test
-            if (this._useRegexForDataAttribute ? regexp.test(targetAttributes[i].name) : patternAttr === targetAttributes[i].name) {
-              customAttribute = targetAttributes[i].name;
-
-              // La recherche est terminé
-              // On traite les cas spéciaux des customs attributes
-              customAttribute = SelectorService.manageSpecialCase(customAttribute);
-              return true;
-            }
-          }
-          return false;
-        });
-      }
+      const value = EventService.valueEvent(e);
 
       // définition du selecteur
-      let selector = '';
-      if (e.target.type === 'file'  && e.target.tagName === elementsTagName.INPUT.toLocaleUpperCase() && e.type === eventsToRecord.CHANGE) {
-        selector = this._previousSelector;
-      } else {
-        selector = customAttribute
-          ? SelectorService.formatDataOfSelector(e.target, customAttribute)
-          : SelectorService.find(e.target);
-      }
+      const selector = EventService.selectorEvent(e, this._previousSelector);
 
-      let comments = '';
+      const comments = EventService.commentsEvent(selector);
 
-      // On vérifie si le sélecteur est ambigu (plus de deux réponses)
-      if (customAttribute && document.querySelectorAll(selector).length > 1) {
-        comments = '/!\\ The selector returns more than one element, thus the test will be wrong.';
-      }
+      // construction du message: IMessage
+      const message = EventService.messageEvent(e, selector, value, durationClick, comments, filesUpload);
 
-      // construction du message model: EventModel
-      let message : EventModel;
-      message = {
-        selector: SelectorService.standardizeSelector(selector),
-        comments,
-        value: e.target.value,
-        tagName: e.target.tagName,
-        action: e.type,
-        typeEvent : e.type,
-        key: e.key ? e.key : null,
-        keyCode: e.keyCode ? e.keyCode : null,
-        href: e.target.href ? e.target.href : null,
-        durancyClick: durationClick ? durationClick : 0,
-        coordinates: this._keyDownService.getCoordinates(e),
-        scrollY: window.pageYOffset,
-        scrollX: window.pageXOffset
-      };
+      this._sendToScenario(message, e);
 
-      // On vérifie si un composant est concerné par l'event
-      const component = ComponentManager.determinateComponent(message.typeEvent, e.target,
-         message.selector , this._previousSelector, this._previousKList);
-
-      /* Si c'est le cas et qu'on a un previousElement
-         c'est que on a une klist, on update donc la value des k list
-      */
-      if (component && component.previousElement) {
-        this._previousKList = component.previousElement;
-        this._previousSelector = component.previousSelector;
-      }
-
-      // Si on a un component on edit le message de l'event
-      if (component) {
-        message = EventMessageBuilderFactory.buildMessageEvent(component, message, filesUpload);
-      }
-      // On vérifie si on a eu des keydown ou si on a fini les keydown et dans ce cas on modifie le message car c'est un listkeydown
-      this._keyDownService.handleEvent(message, e.target);
       this._previousEvent = e;
       this._previousSelector = selector;
 
-      ChromeService.sendMessage(message);
-      this._isRecordTreated = true;
-    });
+      this._previousMessage = message;
+
+      this._isEventProcessed = true;
+    }
+
   }
 
   /**
    * Observer des listener
    */
-  private async _listenerObserver(mutationList) {
-    // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
-    while (!(window as any).eventRecorder._isRecordTreated) {
-      await new Promise(resolve => setTimeout(resolve, 500));
-    }
-    // On bind la méthode de record des events
-    const boundedRecordEvent = ((window as any).eventRecorder as EventRecorder)._recordEvent.bind(
-      (window as any).eventRecorder
-    );
+  private async _listenerObserverAsync(mutationList : any[]) {
 
-    for (const mutation of mutationList) {
+    try {
 
-      for (const child of mutation.addedNodes) {
-        // Si pn a une iframe on rajoute les listener car de base il n'y en pas
-        if (child.tagName === elementsTagName.IFRAME.toUpperCase()) {
+      // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
+      await ConditionalService.waitForConditionAsync(
+        () => (window as any).eventRecorder._isEventProcessed,
+        250
+      );
 
-          (window as any).eventRecorder._events.forEach(type => {
-            child.contentDocument.addEventListener(type, boundedRecordEvent, true);
-          });
-        }
+      // On bind la méthode de record des events
+      const boundedRecordEvent = ((window as any).eventRecorder as EventRecorder)._recordEvent.bind(
+        (window as any).eventRecorder
+      );
 
-        // Si ona un input file on rajoute le listener des change
-        if (child.tagName === elementsTagName.INPUT.toUpperCase() && child.type === 'file') {
+      for (let i = 0 ; i < mutationList.length ; i++) {
 
-          child.addEventListener('change', boundedRecordEvent, false);
-        }
+        const mutation = mutationList[i];
 
-        /* Si on a une balise style aurelia-hide, on la supprimer
-           car elle apparait à cause l'injection du scripts
-        */
-        if (child.tagName === 'STYLE' && child.parentElement.tagName === 'BODY') {
+        for (let j = 0 ; j < mutation.addedNodes.length; j++ ) {
 
-          if (child.textContent === '.aurelia-hide { display:none !important; }') {
+          const child = mutation.addedNodes[j];
 
-            child.remove();
+          // Si on a une iframe on rajoute les listener car de base il n'y en pas
+          if (child.tagName === ETagName.IFRAME.toUpperCase() && child.contentDocument) {
+            Object.keys(EDomEvent).forEach(key => {
+              const type = EDomEvent[key];
+              child.contentDocument.addEventListener(type, boundedRecordEvent, true);
+            });
+          }
+
+          // Si on a un input file on rajoute le listener des change
+          if (child.tagName === ETagName.INPUT.toUpperCase() && child.type === 'file') {
+            child.addEventListener(EDomEvent.CHANGE, boundedRecordEvent, false);
           }
         }
-
       }
+
+      /**
+       * On fait une copie du document car quand un élément disparait
+       * on ne peut pas récupérer son sélecteur donc on utilise la copie pour trouver le sélecteur
+       */
+      (window as any).saveBody = document.cloneNode(true);
+    } catch (err) {
+      console.error('Error with listener observer : ', err);
     }
 
-    (window as any).saveBody = document.cloneNode(true);
+  }
+
+  /** Ajout des listners */
+  private _addAllListeners() : void {
+
+    (window as any).document.pptRecorderAddedControlListeners = true;
+
+    this._boundedMessageControl = this._redirectMessage.bind(this);
+    ChromeService.addOnMessageListener(this._boundedMessageControl);
+
+    this._boundedSendPollyResult = this._sendPollyResult.bind(this);
+    WindowService.addEventListener('message', this._boundedSendPollyResult, false);
+
+    // écoute de l'évènement before unload
+    this._boundedOnBeforeUnload = this._onBeforeUnload.bind(this);
+    WindowService.addEventListener('beforeunload', this._boundedOnBeforeUnload);
+
+    this._boundedRecordEvent = this._recordEvent.bind(this);
+
+    // Debounce du scroll
+    this._boundedScrollEvent = DebounceService.debounce(event => {
+
+      // Message pour un event scoll
+      const message : IMessage = {
+        selector : this._selectorService.find(event.target),
+        tagName : event.target.tagName,
+        action : event.type,
+        typeEvent : event.type,
+        // Si on a un scrollLeft c'est que c'est un element et sinon c'est la window donc on utilise pageXOffset
+        scrollX : event.target.scrollLeft ? event.target.scrollLeft : window.pageXOffset,
+        scrollY : event.target.scrollTop ? event.target.scrollTop : window.pageYOffset,
+      };
+
+      // On verfie si il y a eu un keydown avant pour envoyer l'event list keydown si le keydown est fini
+      this._keyDownService.handleEvent(Object.assign({}, message), event.target);
+      this._sendToScenario(message, event);
+
+    }, 150);
+
+    Object.keys(EDomEvent).forEach(key => {
+      const type = EDomEvent[key];
+      if (type !== EDomEvent.SCROLL) {
+        WindowService.addEventListener(type, this._boundedRecordEvent, true);
+      } else {
+        WindowService.addEventListener(type, this._boundedScrollEvent, true);
+      }
+    });
   }
 
   /**
-   * Ajout des listeners
-   *
+   * Supprime les listeners de la page
    */
-  private _addAllListeners(events) : void {
-    const boundedRecordEvent = this._recordEvent.bind(this);
+  private _deleteAllListeners() : void {
 
-    events.forEach(type => {
-      window.addEventListener(type, boundedRecordEvent, true);
+    Object.keys(EDomEvent).forEach(key => {
+      const type = EDomEvent[key];
+      if (type !== EDomEvent.SCROLL) {
+        WindowService.removeEventListener(type, this._boundedRecordEvent, true);
+      } else {
+        WindowService.removeEventListener(type, this._boundedScrollEvent, true);
+      }
     });
+
+    ChromeService.removeOnMessageListener(this._boundedMessageControl);
+    WindowService.removeEventListener('message', this._boundedSendPollyResult, false);
+    WindowService.removeEventListener('beforeunload', this._boundedOnBeforeUnload);
+    (window as any).document.pptRecorderAddedControlListeners = false;
+  }
+
+  /**
+   * Onbefore unload action
+   */
+  private _onBeforeUnload() {
+
+    // On set que le page reload
+    StorageService.setData({ loadingPage : true });
+    this._getResult();
+    this._deleteAllListeners();
   }
 
   /**
    * Mise à jour des options
    */
   private _updateOptions(options : {[key : string] : any}) : void {
-    const dataAttribute = options.code.dataAttribute;
-    const useRegexForDataAttribute = options.code.useRegexForDataAttribute;
-    if (dataAttribute) {
-      this._dataAttributes = dataAttribute.split(' ').filter(f => f !== '').map(f => {
-        if (useRegexForDataAttribute) {
-          return new RegExp(f);
-        } else {
-          return f;
-        }
-      });
-    }
-
-    this._useRegexForDataAttribute = useRegexForDataAttribute;
-
-    StorageService.setData({
-      useRegexForDataAttribute: this._useRegexForDataAttribute
-    });
+    StorageService.setData({ useRegexForDataAttribute : options.useRegexForDataAttribute });
   }
 
   /**
@@ -359,39 +364,65 @@ class EventRecorder {
   private _sendPollyResult(event) : void {
 
     // On demande à récupérer le har
-    if (event?.data.action === PollyService.GOT_HAR_ACTION) {
+    if (event?.data.action === EEventMessage.GOT_HAR) {
+
+      const data = new File([event.data.payload.result], 'har.json', { type : 'text/json;charset=utf-8' });
 
       // On diffuse le message
       ChromeService.sendMessage({
-        control : 'get-result',
+        control : EEventMessage.GET_RESULT,
         recordingId : event.data.payload.recordingId,
-        result : event.data.payload.result
+        resultURL : URLService.createURLObject(data)
       });
+    }
+
+    /* Si on récupère le résultat de PollyJS c'est qu'on a terminé
+     * donc on peut delete les listeners
+     */
+    this._deleteAllListeners();
+  }
+
+  /** Récupère les résultats de pollyJS */
+  private _getResult() : void {
+
+    WindowService.dispatchEvent(new CustomEvent(EEventMessage.GET_HAR));
+
+    // Si on n'enregistre pas les requêtes on peut directement supprimer les listeners
+    if (!this._recordHttpRequest) {
+      this._deleteAllListeners();
     }
   }
 
   /**
-   * Récupère les résultats de pollyJS
+   * Envoi un event à Polly pour mettre le record en pause
    */
-  private _getResult(message) : void {
-    if (message && message.hasOwnProperty('control') && message.control === 'get-result') {
-      WindowService.dispatchEvent(
-        new CustomEvent(PollyService.GET_HAR_ACTION)
-      );
-    }
+  private _doPause() : void {
+    WindowService.dispatchEvent(new CustomEvent(EEventMessage.PAUSE));
   }
+
+  /**
+   * Envoi un event à Polly pour reprendre l'enregistrement
+   */
+  private _doUnPause() : void {
+    WindowService.dispatchEvent(new CustomEvent(EEventMessage.UNPAUSE));
+  }
+
+  /**
+   * Envoi les events catchés pour le scénario
+   */
+  private _sendToScenario(message : IMessage, event : any) : void {
+    /*
+     * On vérifie si on a eu des keydown ou si on a fini les keydown et dans ce cas on modifie le message car c'est un listkeydown
+     * On utilise un object assign car on veut pas que les modifications faites affectent le message
+     */
+    this._keyDownService.handleEvent(Object.assign({}, message), event.target);
+
+    // On standardise le selecteur avant de l'envoyer pour le script du scénario
+    message.selector = this._selectorService.standardizeSelector(message.selector);
+    ChromeService.sendMessage(message);
+  }
+
 }
 
-// //usefull when we start record with buttom of plugin
-// if (document.readyState == "complete") {
-//   (window as any).eventRecorder.injectScript();
-//   (window as any).saveBody = document.cloneNode(true);
-// }
-
 (window as any).eventRecorder = new EventRecorder();
-(window as any).eventRecorder.start();
-
-window.onbeforeunload = function() {
-  const event = new CustomEvent(PollyService.GET_HAR_ACTION);
-  window.dispatchEvent(event);
-};
+(window as any).eventRecorder.startAsync();

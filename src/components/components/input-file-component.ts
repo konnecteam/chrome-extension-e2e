@@ -1,7 +1,7 @@
 import { FileService } from './../../services/file/file-service';
-import { ComponentModel } from '../../models/component-model';
-import componentName from '../../constants/component-name';
-import { EventModel } from '../../models/event-model';
+import { IComponent } from '../../interfaces/i-component';
+import { IMessage } from '../../interfaces/i-message';
+import { EComponent }  from '../../enum/component/component';
 
 /**
  * Composant qui permet la gestion des input files
@@ -9,22 +9,22 @@ import { EventModel } from '../../models/event-model';
 export class InputFilesComponent {
 
   /**
-   * Verifie si l'élément est un input file et retourne un composant
+   * Récupère le IComponent input file
    */
-  public static isInputFile(element : HTMLInputElement) : ComponentModel {
+  public static getElement(element : HTMLInputElement) : IComponent {
     if (element.files && element.files[0]) {
-      return { component : componentName.INPUTFILE, element };
+      return { component : EComponent.INPUT_FILE, element };
     }
     return null;
   }
 
   /**
    * Modifie l'event et
-   * envoi les fichiers au background pour les ajouter dans le zip
+   * envoie les fichiers au background pour les ajouter dans le zip
    */
-  public static editInputFileMessage(event : EventModel, filesUpload : FileList) : EventModel {
+  public static editInputFileComponentMessage(event : IMessage, filesUpload : FileList) : IMessage {
 
-    event.files = FileService.Instance.sendFilesToBackground(filesUpload);
+    event.files = FileService.Instance.prepareFilesForScenario(filesUpload);
     return event;
   }
 }

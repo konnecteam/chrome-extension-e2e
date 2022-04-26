@@ -1,8 +1,9 @@
 import { FileFactory } from '../../factory/file/file-facory';
 import { ChromeService } from './../chrome/chrome-service';
+import * as fs from 'fs';
 
 /**
- * Service Global qui permet la gestion des enregistrements depuis le background
+ * Service de gestion de fichier
  */
 export class FileService {
 
@@ -10,29 +11,26 @@ export class FileService {
   public static instance : FileService;
 
   /** Liste des fichiers uplaodés */
-  private _uploadedFiles : File[];
+  private _uploadedFiles : File[] = [];
 
   /** Nom du fichier */
-  private _filename : string;
+  private _filename : string = '';
 
   /** Control du message */
-  private _control : string;
+  private _control : string = '';
 
-  /** Lis le contenu du fichier */
+  /** Lit le contenu du fichier */
   private _reader : FileReader;
 
   constructor() {
-    this._uploadedFiles = [];
-    this._filename = '';
-    this._control = '';
     this._reader = new FileReader();
 
     // Après avoir lu le fichier on l'envoi au background
     this._reader.addEventListener('load', () => {
       ChromeService.sendMessage({
-        control: this._control,
-        filename: this._filename,
-        content: this._reader.result
+        control  : this._control,
+        filename : this._filename,
+        content : this._reader.result
       });
     }, false);
 
@@ -49,10 +47,7 @@ export class FileService {
   }
 
   /**
-   * Ajoute un fichier dans la liste de fichier uploadé
-   *
-   * @param name nom du fichier
-   * @param content contenu du fichier en base 64
+   * Ajoute un fichier dans la liste de fichiers uploadés
    */
   public addfile(name : string, content : string) : void {
     this._uploadedFiles.push(this.buildFile(name, content));
@@ -60,9 +55,6 @@ export class FileService {
 
   /**
    * Construit un fichier à partir d'un content en base64
-   *
-   * @param name nom du fichier
-   * @param content contenu du fichier en base 64
    */
   public buildFile(name : string, content : string) : File {
     const filObject = FileFactory.buildFileObject(content);
@@ -70,23 +62,23 @@ export class FileService {
   }
 
   /**
-   * Permet de nettoyer la liste des fichier uploadé
+   * Permet de nettoyer la liste des fichiers uploadés
    */
-  public clearList() : void {
+  public clearUploadedFiles() : void {
     this._uploadedFiles = [];
   }
 
   /**
    * Récupère la liste des fichiers uploadés
    */
-  public getFilesList() : File[] {
+  public getUploadedFiles() : File[] {
     return this._uploadedFiles;
   }
 
   /**
    * Envoi un fichier au background
    */
-  private _getFileTOSend(file : File) : string  {
+  private _getFileToSend(file : File) : string  {
 
     if (file) {
 
@@ -94,22 +86,40 @@ export class FileService {
       this._control = 'get-newFile';
       this._reader.readAsDataURL(file);
     }
+
     return this._filename;
   }
 
   /**
-   * Envoi au background la liste des fichiers à uploader
+   * Prepare les fichiers pour les utiliser dans le scénario
    */
-  public sendFilesToBackground(files : FileList) : string {
+  public prepareFilesForScenario(files : FileList) : string {
 
     const listFiles : string[] = [];
+
     if (files) {
+
       for (let i = 0; i < files.length; i++) {
 
-        listFiles.push(this._getFileTOSend(files[i]));
+        listFiles.push(this._getFileToSend(files[i]));
       }
     }
 
     return listFiles.join(';');
+  }
+
+  /**
+   * Permet de lire un fichier
+   */
+  public static async readFileAsync(filePath : string) : Promise<any> {
+    return new Promise((resolve, reject) => {
+      fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+          return reject(err);
+        } else {
+          return resolve(data);
+        }
+      });
+    });
   }
 }

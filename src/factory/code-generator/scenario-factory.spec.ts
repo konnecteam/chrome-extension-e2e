@@ -1,42 +1,63 @@
-import { PPtrActionBlockFactory } from './block-event-factory/pptr-action-block-factory';
-import { KeydownBlockFactory } from './block-event-factory/keydown-block-factory';
-import { SubmitBlockFactory } from './block-event-factory/submit-block-factory';
-import { DropBlockFactory } from './block-event-factory/drop-block-factory';
-import { ChangeBlockFactory } from './block-event-factory/change-block-factory';
-import { ClickBlockFactory } from './block-event-factory/click-block-factory';
-import { defaults } from './../../constants/default-options';
-import actionEvents from '../../constants/action-events';
-import domEventsToRecord from '../../constants/dom-events-to-record';
-import { EventModel } from './../../models/event-model';
+import { DbClickFactory } from './events-factory/dbclick-factory';
+import { IOption } from './../../interfaces/i-options';
+import { PPtrFactory } from './events-factory/pptr-factory';
+import { KeydownFactory } from './events-factory/keydown-factory';
+import { SubmitFactory } from './events-factory/submit-factory';
+import { DropFactory } from './events-factory/drop-factory';
+import { ChangeFactory } from './events-factory/change-factory';
+import { ClickFactory } from './events-factory/click-factory';
+import { IMessage } from '../../interfaces/i-message';
 import { Block } from '../../code-generator/block';
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import { ScenarioFactory } from './scenario-factory';
-import pptrActions from '../../constants/pptr-actions';
+import { ECustomEvent } from '../../enum/events/events-custom';
+import { EDomEvent } from '../../enum/events/events-dom';
+import { EPptrAction } from '../../enum/action/pptr-actions';
 
 /** Frame définie pour les tests */
 const frameId = 0;
 const frame = 'page';
 
+/**
+ * Options
+ */
+const defaultOptions : IOption = {
+  wrapAsync : true,
+  headless : false,
+  waitForNavigation : true,
+  waitForSelectorOnClick : true,
+  blankLinesBetweenBlocks : true,
+  dataAttribute : '',
+  useRegexForDataAttribute : false,
+  customLineAfterClick  : '',
+  recordHttpRequest : true,
+  regexHTTPrequest : '',
+  customLinesBeforeEvent : `await page.evaluate(async() => {
+    await konnect.engineStateService.Instance.waitForAsync(1);
+  });`,
+  deleteSiteData : true,
+};
+
 describe('Test de Scenario Factory', () => {
 
-  it('Test de generate cutome ligne', () => {
+  test('Test de build cutome ligne', () => {
 
     const customLine = 'await page.waitFor(1500);';
-    assert.deepStrictEqual(
-      ScenarioFactory.generateCustomLine(
+    expect(
+      ScenarioFactory.buildCustomLineBlock(
         frameId,
         customLine
-      ),
+      )
+    ).toEqual(
       new Block(frameId, {
         frameId,
-        type: 'custom-line',
-        value: customLine
+        type : 'custom-line',
+        value : customLine
       })
     );
   });
 
-  it('Test de generate SetFrame', () => {
+  test('Test de build SetFrame', () => {
 
     const allFrames : any = [];
     allFrames[1] = 'kimoce.com';
@@ -47,74 +68,60 @@ describe('Test de Scenario Factory', () => {
     const block = new Block(1, {
       frameId : 0, value : 'line de frame simple', type : 'line'
     });
-    block.addLine({frameId: 1, type: 'line', value: 'line dans une autre frame'});
+    block.addLine({frameId : 1, type : 'line', value : 'line dans une autre frame'});
 
     const blockToAddResult = new Block(0);
 
     const declaration = `const frame_${1} = frames.find(f => f.url() === '${allFramesResult[1]}')`;
 
     blockToAddResult.addLineToTop(({
-      type: pptrActions.FRAME_SET,
-      value: declaration
+      type : EPptrAction.FRAME_SET,
+      value : declaration
     }));
 
     blockToAddResult.addLineToTop({
-      type: pptrActions.FRAME_SET,
-      value: 'let frames = await page.frames()'
+      type : EPptrAction.FRAME_SET,
+      value : 'let frames = await page.frames()'
     });
 
     delete allFramesResult[1];
 
-    assert.deepStrictEqual(
-      ScenarioFactory.generateSetFrame(
+    expect(
+      ScenarioFactory.buildSetFrame(
         block,
         new Block(0),
         allFrames
-      ),
+      )
+    ).toEqual(
       {allFrames : allFramesResult, block : blockToAddResult}
     );
   });
 
-  it('Test de generate Blank Line', () => {
+  test('Test de build Blank Line', () => {
 
-    assert.deepStrictEqual(
-      ScenarioFactory.generateBlankLine(),
+    expect(
+      ScenarioFactory.buildBlankLineBlock()
+    ).toEqual(
       new Block(undefined, {
-        type: null,
-        value: ''
+        type : null,
+        value : ''
       })
     );
   });
 
-  it('Test de generate Scroll', () => {
-    const scrollX = 150;
-    const scrollY = 250;
+  test('Test de build NavigationVar', () => {
 
-    assert.deepStrictEqual(
-      ScenarioFactory.generateScroll(frameId, frame, scrollX, scrollY),
+    expect(
+      ScenarioFactory.buildNavigationBlock(frameId)
+    ).toEqual(
       new Block(frameId, {
-        type: 'scroll',
-        value: ` await ${frame}.evaluate( async function(){
-        window.scroll(${scrollX}, ${scrollY});
-        return Promise.resolve('finish');
-      });`
+        type : EPptrAction.NAVIGATION_PROMISE,
+        value : 'const navigationPromise = page.waitForNavigation();'
       })
     );
   });
 
-  it('Test de generate NavigationVar', () => {
-
-    assert.deepStrictEqual(
-      ScenarioFactory.generateNavigationVar(frameId),
-      new Block(frameId, {
-        type: pptrActions.NAVIGATION_PROMISE,
-        value: 'const navigationPromise = page.waitForNavigation();'
-      })
-    );
-  });
-
-
-  it('Test de generate comments', () => {
+  test('Test de build comments', () => {
     const block = new Block(frameId, {
       value : 'test de comment',
       type : 'comment'
@@ -126,97 +133,117 @@ describe('Test de Scenario Factory', () => {
       value : 'test de comment',
       type : 'comment'
     });
-    blockResult.addLineToTop({value: `/** ${comment} */`});
+    blockResult.addLineToTop({value : `/** ${comment} */`});
 
-    assert.deepStrictEqual(
-      ScenarioFactory.generateComments(block, comment),
+    expect(
+      ScenarioFactory.buildCommentBlock(block, comment)
+    ).toEqual(
       blockResult
     );
   });
 
 
-  it('Test de generate Click event', () => {
-    const eventModel : EventModel = {
-      typeEvent : domEventsToRecord.CLICK,
+  test('Test de build Click event', () => {
+    const eventMessage : IMessage = {
+      typeEvent : EDomEvent.CLICK,
       selector : '#id',
-      action : actionEvents.BASIC_CLICK
+      action :   EDomEvent.CLICK
     };
 
-    assert.deepStrictEqual(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults),
-      ClickBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+    expect(
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    ).toEqual(
+      ClickFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
 
-  it('Test de generate Change event', () => {
-    const eventModel : EventModel = {
-      typeEvent : domEventsToRecord.CHANGE,
+  test('Test de build Change event', () => {
+    const eventMessage : IMessage = {
+      typeEvent : EDomEvent.CHANGE,
       selector : '#id',
-      action : actionEvents.CHANGE,
-      value: 'content'
+      action :   EDomEvent.CHANGE,
+      value : 'content'
     };
-
-    assert.deepStrictEqual(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults),
-      ChangeBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+    expect(
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    ).toEqual(
+      ChangeFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
 
-  it('Test de generate Drop event', () => {
-    const eventModel : EventModel = {
-      typeEvent : domEventsToRecord.DROP,
+  test('Test de build Drop event', () => {
+    const eventMessage : IMessage = {
+      typeEvent : EDomEvent.DROP,
       selector : '#id',
-      action : actionEvents.DROP_DROPZONE,
+      action : ECustomEvent.DROP_FILE,
       files : 'text.txt'
     };
 
-    assert.deepStrictEqual(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults),
-      DropBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+    expect(
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    ).toEqual(
+      DropFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
-  it('Test de generate Submit event', () => {
-    const eventModel : EventModel = {
-      typeEvent : domEventsToRecord.SUBMIT,
+  test('Test de build Submit event', () => {
+    const eventMessage : IMessage = {
+      typeEvent : EDomEvent.SUBMIT,
       selector : '#id',
-      action : actionEvents.SUBMIT
+      action : ECustomEvent.SUBMIT
     };
 
-    assert.deepStrictEqual(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults),
-      SubmitBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+    expect(
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    ).toEqual(
+      SubmitFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
-  it('Test de generate Kedown event', () => {
-    const eventModel : EventModel = {
-      typeEvent : domEventsToRecord.KEYDOWN,
+  test('Test de build Kedown event', () => {
+    const eventMessage : IMessage = {
+      typeEvent : EDomEvent.KEYDOWN,
       selector : '#id',
-      action : actionEvents.LISTKEYDOWN,
+      action : ECustomEvent.LIST_KEYDOWN,
       value : 'content',
       iframe : '#iframe'
     };
 
-    assert.deepStrictEqual(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults),
-      KeydownBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+    expect(
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    ).toEqual(
+      KeydownFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 
-  it('Test de generate PPtr action event', () => {
-    const eventModel : EventModel = {
-      typeEvent : pptrActions.pptr,
+  test('Test de build PPtr action event', () => {
+    const eventMessage : IMessage = {
+      typeEvent : EPptrAction.PPTR,
       selector : '#id',
-      action : actionEvents.GOTO,
+      action : EPptrAction.GOTO,
       value : 'localhost'
     };
 
-    assert.deepStrictEqual(
-      ScenarioFactory.parseEvent(eventModel, frameId, frame, defaults),
-      PPtrActionBlockFactory.generateBlock(eventModel, frameId, frame, defaults)
+    expect(
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    ).toEqual(
+      PPtrFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    );
+  });
+
+  test('Test de build double click event', () => {
+    const eventMessage : IMessage = {
+      typeEvent : EDomEvent.DBLCLICK,
+      selector : '#id',
+      action : EDomEvent.DBLCLICK
+    };
+
+    expect(
+      ScenarioFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
+    ).toEqual(
+      DbClickFactory.buildBlock(eventMessage, frameId, frame, defaultOptions)
     );
   });
 });

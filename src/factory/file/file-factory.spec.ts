@@ -1,5 +1,4 @@
-import 'mocha';
-import * as assert from 'assert';
+import 'jest';
 import { FileFactory } from './file-facory';
 import * as atob from 'atob';
 import * as path from 'path';
@@ -63,7 +62,8 @@ function deleteFile(filePath : string) : Promise<boolean> {
 
 describe('Test de File factory', () => {
 
-  before('Définition de atob et d\'un data url', async() => {
+  // Définition de atob et d\'un data url
+  beforeAll(async() => {
 
     // Définition de atob
     global.atob = atob;
@@ -74,7 +74,7 @@ describe('Test de File factory', () => {
 
   });
 
-  after(async () => {
+  afterAll(async () => {
     const fileExist = await isFileExist(fileTestWrite);
 
     if (fileExist) {
@@ -82,7 +82,7 @@ describe('Test de File factory', () => {
     }
   });
 
-  it('Test de build d\'un data url', async () => {
+  test('Test de build d\'un data url', async () => {
 
     const result = FileFactory.buildFileObject(dataURL);
 
@@ -102,6 +102,6 @@ describe('Test de File factory', () => {
       contentOfWriteFile = await readFileAsync(fileTestWrite);
     }
 
-    assert.strictEqual(contentOfWriteFile, contentFile);
+    expect(contentOfWriteFile).toEqual(contentFile);
   });
 });
