@@ -2,7 +2,7 @@
   <div id="puppeteer-recorder" class="recorder">
     <div class="header">
       <a href="#" @click="goHome">
-       Extension Chrome e2e  <span class="text-muted"><small>{{version}}</small></span>
+       Extension Chrome e2e  <span class="text-muted"><small>{{packageInfo.version}}</small></span>
       </a>
       <div class="left">
         <div class="recording-badge" v-show="isRecording">
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-  import { version } from '../../../package.json'
+  import packageInfo from '../../../package.json'
   import CodeGenerator from '../../code-generator/code-generator'
   import RecordingTab from "./RecordingTab.vue"
   import ResultsTab from "./ResultsTab.vue";
@@ -78,7 +78,7 @@
         loadingPage: false,
         errorMessage : '',
         bus: null,
-        version
+        version : packageInfo.version
       }
     },
     mounted () {

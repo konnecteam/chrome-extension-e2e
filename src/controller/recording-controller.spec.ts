@@ -115,12 +115,11 @@ describe('Test de Recording Controller', () => {
 
 
       // On utilise sendMessage donc il faut le declarer mais on a pas besoin de l'overwrite
-      window.chrome.runtime.sendMessage = event => {};
+      window.chrome.runtime.sendMessage = (async event => {});
 
       // On overwrite pour adapter le get au local storage
       window.chrome.storage.local.get = (key, callback?) => {
         callback(JSON.parse(window.localStorage.getItem(key[0])));
-        Promise.resolve(params.options);
       };
 
 
@@ -185,7 +184,7 @@ describe('Test de Recording Controller', () => {
        * On overwrite la méthode setBadge text pour connaitre l'état du badge
        */
       (window as any).badgeText = '';
-      chrome.browserAction.setBadgeText = (badge : { text : string}) => {
+      chrome.action.setBadgeText = (badge : { text : string}) => {
         (window as any).badgeText = badge.text;
       };
 
@@ -193,7 +192,7 @@ describe('Test de Recording Controller', () => {
         * On overwrite la méthode seticon pour connaitre l'état de l'icon
         */
       (window as any).badgeIcon = '';
-      chrome.browserAction.setIcon = (badge : { path : string }) => {
+      chrome.action.setIcon = (badge : { path : string }) => {
         (window as any).badgeIcon = badge.path;
       };
 
@@ -201,7 +200,7 @@ describe('Test de Recording Controller', () => {
        * On overwrite la méthode seticon pour connaitre l'état du background
        */
       (window as any).badgeColor = '';
-      chrome.browserAction.setBadgeBackgroundColor = (badge : { color : string }) => {
+      chrome.action.setBadgeBackgroundColor = (badge : { color : string }) => {
         (window as any).badgeIcon = badge.color;
       };
 

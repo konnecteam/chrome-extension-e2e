@@ -119,21 +119,21 @@ describe('Test Content script ', () => {
       });
 
       // On overwrite le set pour set dans local storage pour les tests
-      window.chrome.storage.local.set = valueTOsave => {
+      window.chrome.storage.local.set = (async valueTOsave => {
         const key = Object.keys(valueTOsave)[0];
         const value = valueTOsave[key];
         window.localStorage.setItem(key, JSON.stringify(value));
-      };
+      });
 
       (window as any).events = [];
       // On overwrite sendMessage pour sauvegarder les events catchés
-      window.chrome.runtime.sendMessage = event => {
+      window.chrome.runtime.sendMessage = (async event => {
         // Si le recorder est prêt alors on resolve pour continuer les tests
         if (event.control && event.control === 'event-recorder-started') {
           (window as any).recorderReady = true;
         }
         (window as any).events.push(event);
-      };
+      });
 
       // On overwrite le onMessage pour utiliser le event listener de la window pour les tests
       chrome.runtime.onMessage.addListener = fct => {

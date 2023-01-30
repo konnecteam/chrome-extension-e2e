@@ -7,4 +7,5 @@ dist-zip
 *.pem
 *.crx
 package-lock.json
-.vscode
+.vscode/*
+!.vscode/launch.json

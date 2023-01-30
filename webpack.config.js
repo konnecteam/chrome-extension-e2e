@@ -107,8 +107,12 @@ module.exports = {
   ],
   resolve: {
     extensions: ['.ts', '.js'],
+    fallback: {
+      "fs": false,
+      util: require.resolve("util/")
+    }
   },
-  node : {
-    fs : 'empty' // Utile pour pouvoir builder le fichier FileService
-  }
+  // node : {
+  //   fs : 'empty' // Utile pour pouvoir builder le fichier FileService
+  // }
 };
