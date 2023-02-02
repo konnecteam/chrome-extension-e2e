@@ -70,14 +70,14 @@ export class ChromeService {
    * Permet de définir une icone
    */
   public static setIcon(path : string) : void {
-    chrome.browserAction.setIcon({ path });
+    chrome.action.setIcon({ path });
   }
 
   /**
    * Permet de définir un badge
    */
   public static setBadgeText(text : string) : void {
-    chrome.browserAction.setBadgeText({ text });
+    chrome.action.setBadgeText({ text });
   }
 
   /**
@@ -85,10 +85,10 @@ export class ChromeService {
    */
   public static async getBadgeTextAsync() : Promise<string> {
 
-    const currentTab = await this.getCurrentTabIdAsync();
+    const currentTab = await this.getCurrentTabAsync();
     return new Promise((resolve, reject) => {
 
-      chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
+      chrome.action.getBadgeText({ tabId : currentTab.id }, result => {
         if (result === 'non-tab-specific') {
 
           reject('problem with tabId');
@@ -104,17 +104,16 @@ export class ChromeService {
    * Permet de définir une couleur
    */
   public static setBadgeBackgroundColor(color : string) : void {
-    chrome.browserAction.setBadgeBackgroundColor({ color });
+    chrome.action.setBadgeBackgroundColor({ color });
   }
 
   /**
    * Permet de récupérer l'id du tab courrant
    */
-  public static async getCurrentTabIdAsync() : Promise<{id : number, url : string}> {
+  public static async getCurrentTabAsync() : Promise<{id : number, url : string}> {
     return new Promise(async (resolve, reject) => {
       const tabs = await this._queryAsync({
-        active : true,
-        currentWindow : true
+        active : true
       });
       if (tabs && tabs[0]) {
         resolve({id : tabs[0].id, url : tabs[0].url});
@@ -127,23 +126,22 @@ export class ChromeService {
   /**
    * Permet d'exécuter un script
    */
-  public static executeScript(details : chrome.tabs.InjectDetails) : Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      chrome.tabs.executeScript(details, () => {
-        resolve(true);
-      });
-    });
+  public static async executeScript(details : any, allFrames : boolean = false) : Promise<boolean> {
+    const currentTab = await this.getCurrentTabAsync();
+    const params : chrome.scripting.ScriptInjection<any[], unknown> = {
+      ...details,
+      target: { tabId: currentTab.id, allFrames }
+    };
+    await chrome.scripting.executeScript(params);
+    return true;
   }
 
   /**
    * Permet de récupérer des info via une query
    */
   private static async _queryAsync(queryInfo : chrome.tabs.QueryInfo) : Promise<chrome.tabs.Tab[]> {
-    return new Promise((resolve, reject) => {
-      chrome.tabs.query(queryInfo, (result : chrome.tabs.Tab[]) => {
-        resolve(result);
-      });
-    });
+    const tabs = await chrome.tabs.query(queryInfo);
+    return tabs;
   }
 
   /**
@@ -215,6 +213,6 @@ export class ChromeService {
    * Permet de récupérer l'url d'un fichier
    */
   public static getUrl(url : string) : string {
-    return chrome.extension.getURL(url);
+    return chrome.runtime.getURL(url);
   }
 }

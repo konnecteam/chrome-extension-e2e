@@ -227,7 +227,6 @@ class EventRecorder {
   private async _listenerObserverAsync(mutationList : any[]) {
 
     try {
-
       // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
       await ConditionalService.waitForConditionAsync(
         () => (window as any).eventRecorder._isEventProcessed,
@@ -268,7 +267,8 @@ class EventRecorder {
        */
       (window as any).saveBody = document.cloneNode(true);
     } catch (err) {
-      console.error('Error with listener observer : ', err);
+      /** Voir waitForConditionAsync si le catch se déclenche */
+      console.info('Listener observer failed : ', err);
     }
 
   }

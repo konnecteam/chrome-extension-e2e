@@ -8,10 +8,12 @@
     "downloads",
     "webNavigation",
     "browsingData",
-    "tabs"
+    "tabs",
+    "scripting"
   ],
-  "optional_host_permissions": [
-    "*://*/*"
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
   ],
   "icons" : {
     "128": "assets/images/app_icon_128.png"

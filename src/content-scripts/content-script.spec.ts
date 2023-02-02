@@ -95,7 +95,7 @@ describe('Test Content script ', () => {
       window.localStorage.setItem('options', JSON.stringify({ options : { code : browserOption.options } }));
 
       // On overwrite la foncion pour lui donner l'url de polly js
-      window.chrome.extension.getURL = () => 'build/lib/scripts/polly/polly.js';
+      window.chrome.runtime.getURL = () => 'build/lib/scripts/polly/polly.js';
 
       // On overwrite pour adapter le get au local storage
       window.chrome.storage.local.get = (key, callback?) => {

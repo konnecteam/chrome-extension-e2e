@@ -124,7 +124,7 @@ describe('Test de Recording Controller', () => {
 
 
       // On overwrite la foncion pour lui donner l'url de fake time js
-      window.chrome.extension.getURL = () => 'libs/scripts/fake-time/fake-time.js';
+      window.chrome.runtime.getURL = () => 'libs/scripts/fake-time/fake-time.js';
 
       // On overwrite le set pour set dans local storage pour les tests
       window.chrome.storage.local.set = valueTOsave => {
@@ -145,7 +145,7 @@ describe('Test de Recording Controller', () => {
        *  pour les tests car nous avons pas accès aux méthodes nécessaire
        *
        */
-      (chrome.extension as any).onConnect = {
+      chrome.runtime.onConnect = {
         addListener(fct) {
 
           // On adapte la méthode boot pour les tests
@@ -209,7 +209,7 @@ describe('Test de Recording Controller', () => {
        * On overwite la méthode executeScript
        */
       (window as any).executeScript = false;
-      chrome.tabs.executeScript = (any, callback) => {
+      chrome.scripting.executeScript = (any, callback) => {
         (window as any).executeScript = true;
         callback();
       };

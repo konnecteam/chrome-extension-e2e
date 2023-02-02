@@ -14,6 +14,7 @@ import { EPptrAction } from '../enum/action/pptr-actions';
 
 // Constant
 import ZIP_CONTENT from '../constants/package-json-zip';
+global.window = self;
 
 /**
  * Background du Plugin qui permet de gérer le recording
@@ -132,7 +133,7 @@ class RecordingController {
    * Exécuté à l'installation du plugin
    */
   public boot() {
-    (chrome.extension as any).onConnect.addListener(port => {
+    chrome.runtime.onConnect.addListener(port => {
       port.onMessage.addListener(msg => {
         switch (msg.action) {
           case EControlAction.START :
@@ -369,11 +370,11 @@ class RecordingController {
     this._zipService.resetZip();
     this._pollyService.flush();
     this._isPaused = false;
-    chrome.browserAction.setBadgeText({ text : '' });
+    chrome.action.setBadgeText({ text : 'sdfsdf' });
 
     try {
 
-      const currentTab = await ChromeService.getCurrentTabIdAsync();
+      const currentTab = await ChromeService.getCurrentTabAsync();
 
       // 2 - On récupère les options
       const data = await StorageService.getDataAsync(['options']);
@@ -401,9 +402,7 @@ class RecordingController {
 
       // 5 - Inject le script
       await ChromeService.executeScript({
-        file : RecordingController._CONTENT_SCRIPT_FILENAME,
-        allFrames : false,
-        runAt : 'document_start'
+        files : [ RecordingController._CONTENT_SCRIPT_FILENAME],
       });
 
       // Récupération du viewport
@@ -468,9 +467,7 @@ class RecordingController {
     try {
 
       await ChromeService.executeScript({
-        file : RecordingController._CONTENT_SCRIPT_FILENAME,
-        allFrames : false,
-        runAt : 'document-start'
+        file : RecordingController._CONTENT_SCRIPT_FILENAME
       });
 
       if (callback) {
