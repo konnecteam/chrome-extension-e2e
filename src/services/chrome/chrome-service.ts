@@ -189,24 +189,8 @@ export class ChromeService {
   /**
    * Permet de télécharger un fichier
    */
-  public static download(content : File, filename : string) : Promise<void> {
-
-    return new Promise((resolve, reject) => {
-      chrome.downloads.download({
-        url : URL.createObjectURL(content),
-        filename,
-        saveAs : true
-      }, (downloadId : number) => {
-
-        if (downloadId) {
-
-          resolve();
-        } else {
-          // chrome.runtime.lastError contient la raison de l'erreur
-          reject(chrome.runtime.lastError);
-        }
-      });
-    });
+  public static download(content : File, filename : string) : void {
+    ChromeService.downloadBlob(content, filename);
   }
 
   /**
@@ -214,5 +198,52 @@ export class ChromeService {
    */
   public static getUrl(url : string) : string {
     return chrome.runtime.getURL(url);
+  }
+
+  /**
+   * Permet de télécharger du contenu
+   * https://stackoverflow.com/questions/73348151/downloading-a-large-blob-to-local-file-in-manifestv3-service-worker
+   * Workaround qui permet de télécharger un fichier dans une extension manifest V3 (Il y aura potentiellement des solutions plus simples dans un futur proche)
+   */
+  public static async downloadBlob(blob : Blob, name : string, destroyBlob : boolean = true) {
+    const send = async (dst : any, close : boolean) => {
+      dst.postMessage({ blob, name, close }, destroyBlob ? [await blob.arrayBuffer()] : []);
+    };
+
+    if ('clients' in self) {
+      const clients = await (self as unknown as ServiceWorkerGlobalScope).clients.matchAll({ type: 'window' });
+      const client = clients[0];
+      if (client) {
+        return send(client, false);
+      }
+    }
+
+    const manifest = chrome.runtime.getManifest();
+    const webAccessibleResources = manifest.web_accessible_resources;
+    let downloaderTab : chrome.tabs.Tab;
+    if (webAccessibleResources?.some(r => r.includes('downloader.html'))) {
+      const tabs = await chrome.tabs.query({ url: '*://*/*' });
+      downloaderTab = tabs.find(t => t.url);
+    }
+
+    if (downloaderTab) {
+      chrome.tabs.executeScript(downloaderTab.id, {
+        code: `
+          const iframe = document.createElement('iframe');
+          iframe.src = '${chrome.runtime.getURL('downloader.html')}';
+          iframe.style.cssText = 'display:none!important';
+          document.body.appendChild(iframe);
+        `,
+      });
+    } else {
+      chrome.windows.create({ url: 'downloader.html', state: 'minimized' });
+    }
+
+    self.addEventListener('message', e => {
+      if (e.data === 'sendBlob') {
+        self.removeEventListener('message', (e as any).listener);
+        send(e.source, !downloaderTab);
+      }
+    });
   }
 }

@@ -134,8 +134,14 @@
           }
         }
       },
-      toggleRecord () {
-        
+      async toggleRecord () {
+        // const [tab] = await chrome.tabs.query({  active: true });
+
+        // if (!this.isRecording && tab && tab.url.indexOf('login') === -1) {
+        //   alert('Vous devez être sur la page de login et partir de zéro pour enregistrer un scénario.');
+        //   return;
+        // } 
+
         if (this.isRecording) {
           this.stop();
         } else {

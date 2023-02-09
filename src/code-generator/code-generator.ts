@@ -118,13 +118,13 @@ export default class CodeGenerator {
       this._blocks.unshift(ScenarioFactory.buildNavigationBlock(this._frameId));
     }
 
-    // 2- on effectue les opération post processs
+    // 2 - on effectue les opération post processs
     this._postProcess();
 
     const indent = this._options.wrapAsync ? '  ' : '';
     const newLine = `\n`;
 
-    // 3- on récupère le result
+    // 3 - on récupère le result
     for (let i = 0; i < this._blocks.length; i++) {
 
       const lines = this._blocks[i].getLines();

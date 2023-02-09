@@ -29,21 +29,8 @@ module.exports = {
     'services/window/window-service' : './src/services/window/window-service.ts',
     'services/zip/zip-service' : './src/services/zip/zip-service.ts',
     'lib/scripts/polly/polly' : './lib/scripts/polly/polly-recorder.ts',
-    'lib/scripts/fake-time/fake-time' : './lib/scripts/fake-time/fake-time.ts'
-/*
-    'constants/action-events' : './src/constants/action-events.ts',
-    'constants/elements-tagName' : './src/constants/elements-tagName.ts',
-    'constants/default-options' : './src/constants/default-options.ts',
-    'constants/dom-events-to-record' : './src/constants/dom-events-to-record.ts',
-    'constants/pptr-actions' : './src/constants/pptr-actions.ts',
-    'constants/code-generate/footer-code' : './src/constants/code-generate/footer-code.ts',
-    'constants/code-generate/header-code' : './src/constants/code-generate/header-code.ts',
-
-    'factory/generate-code/scenario-generate-factory' : './src/factory/generate-code/scenario-generate-factory.ts',
-    'factory/generate-code/footer-generate-factory' : './src/factory/generate-code/footer-generate-factory.ts',
-    'factory/generate-code/header-generate-factory': './src/factory/generate-code/header-generate-factory.ts',
-    'code-generator/code-generator' : './src/code-generator/code-generator.ts'
-    */
+    'lib/scripts/fake-time/fake-time' : './lib/scripts/fake-time/fake-time.ts',
+    download : './src/download/download.ts'
   },
   output: {
     path: join(__dirname, 'dist'),
@@ -103,6 +90,11 @@ module.exports = {
       chunks: ['options'],
       filename: 'options.html'
     }),
+    new HtmlWebpackPlugin({
+      template: './src/download/download.html',
+      chunks: ['download'],
+      filename: 'download.html'
+    }),
     new VueLoaderPlugin()
   ],
   resolve: {
@@ -112,7 +104,4 @@ module.exports = {
       util: require.resolve("util/")
     }
   },
-  // node : {
-  //   fs : 'empty' // Utile pour pouvoir builder le fichier FileService
-  // }
 };

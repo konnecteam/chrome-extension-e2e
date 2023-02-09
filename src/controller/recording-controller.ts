@@ -232,7 +232,7 @@ class RecordingController {
 
           const recording = {
             folderName : this._pollyService.getRecordId() !== '' ? this._pollyService.getRecordId() : 'emptyResult',
-            har : this._pollyService.getRecordHar() !== '' ? this._pollyService.getRecordHar() : 'No request recorded'
+            har : this._pollyService.getRecordHar() !== '' ? JSON.stringify(this._pollyService.getRecordHar()) : 'No request recorded'
           };
 
           // changement de la barre de progression
@@ -242,16 +242,15 @@ class RecordingController {
 
           // Ajoute le recording dans le zip
           this._zipService.addFileInFolder(
-              `recordings/${recording.folderName}/${RecordingController._RECORDING_FILENAME}`,
-              new File([recording.har],
-              RecordingController._RECORDING_FILENAME
-          ));
+            `recordings/${recording.folderName}/${RecordingController._RECORDING_FILENAME}`,
+            new File([recording.har], RecordingController._RECORDING_FILENAME)
+          );
         }
 
           // changement de la barre de progression
         ChromeService.sendMessage({ valueLoad : 75 });
 
-        const zipInNodeBuffer = await this._zipService.generateAsync();
+        const zipInNodeBase64 = await this._zipService.generateAsync();
 
         // changement de la barre de progression
         ChromeService.sendMessage({ valueLoad : 100 });
@@ -260,7 +259,7 @@ class RecordingController {
         const dataURLZip = DataURLFactory.buildDataURL(
           RecordingController._MIMETYPE,
           RecordingController._TYPEDATA,
-          zipInNodeBuffer.toString((RecordingController._TYPEDATA) as BufferEncoding)
+          zipInNodeBase64
         );
 
         this._zipContent = FileService.Instance.buildFile(RecordingController._SCENARIO_ZIP_NAME, dataURLZip);
@@ -271,7 +270,7 @@ class RecordingController {
     } catch (err) {
 
       StorageService.setData({ errorMessage : 'Problem with exported script' });
-      console.error('Problem with exported script');
+      console.error('Problem with exported script', err);
     }
   }
 
@@ -572,7 +571,7 @@ class RecordingController {
           this._pollyService.record.har = har;
         }
 
-        URL.revokeObjectURL(message.resultURL);
+        // URL.revokeObjectURL(message.resultURL);
 
         this._isResult = true;
         StorageService.setData({ isResult : this._isResult });
