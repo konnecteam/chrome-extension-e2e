@@ -119,7 +119,7 @@ class RecordingController {
         dataAttribute : `^data\-value$ ^title$ ^data\-offset\-index$ ^e2e\-id$ ^src$ ^route-href$ ^[a-z\-]*\.trigger$ ^[a-z\-]*\.delegate$ ^[a-z\-]*\.bind$ ^[a-z\-]*\.two-way$ ^[a-z\-]*\.one-way$`,
         useRegexForDataAttribute : true,
         customLineAfterClick : '',
-        recordHttpRequest : true,
+        recordHttpRequest : false,
         regexHTTPrequest : '',
         customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
