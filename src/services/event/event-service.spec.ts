@@ -78,35 +78,6 @@ describe('Test du Event Service', () => {
 
   });
 
-  test('Test de la fonction valueEvent pour un change de password', async () => {
-
-    const currentEvent = {
-      target : {
-        type : 'password',
-        tagName : ETagName.INPUT.toUpperCase()
-      },
-      type : EDomEvent.CHANGE,
-      timeStamp : 50
-    };
-
-    expect(EventService.valueEvent(currentEvent)).toBeDefined();
-  });
-
-  test('Test de la fonction valueEvent pour un change de password', async () => {
-
-    const currentEvent = {
-      target : {
-        type : 'text',
-        tagName : ETagName.INPUT.toUpperCase()
-      },
-      type : EDomEvent.CHANGE,
-      timeStamp : 50
-    };
-
-    expect(EventService.valueEvent(currentEvent)).toEqual('');
-  });
-
-
   test('Test de la fonction selectorEvent pour un input file ', async () => {
 
     const currentEvent = {
@@ -153,6 +124,6 @@ describe('Test du Event Service', () => {
       timeStamp : 50,
       href : 'local'
     };
-    expect(EventService.messageEvent(currentEvent, '#button', null, null, null, null)).toBeDefined();
+    expect(EventService.messageEvent(currentEvent, '#button', null, null, null)).toBeDefined();
   });
 });

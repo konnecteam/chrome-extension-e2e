@@ -199,15 +199,13 @@ class EventRecorder {
         durationClick = Date.now() - this._startMouseDown;
       }
 
-      const value = EventService.valueEvent(e);
-
       // définition du selecteur
       const selector = EventService.selectorEvent(e, this._previousSelector);
 
       const comments = EventService.commentsEvent(selector);
 
       // construction du message: IMessage
-      const message = EventService.messageEvent(e, selector, value, durationClick, comments, filesUpload);
+      const message = EventService.messageEvent(e, selector, durationClick, comments, filesUpload);
 
       this._sendToScenario(message, e);
 

@@ -67,22 +67,6 @@ export class EventService {
   }
 
   /**
-   * Permet de gérer la valeur de l'event
-   */
-  public static valueEvent(currentEvent : any) : string {
-    /**
-     * Si c'est un input de type password et que c'est un event de type change
-     * il faut changer la value
-     */
-    if (currentEvent.target.tagName === ETagName.INPUT.toUpperCase() && currentEvent.target.type === 'password' && currentEvent.type === EDomEvent.CHANGE) {
-
-      return PasswordService.generate();
-    } else {
-      return '';
-    }
-  }
-
-  /**
    * Permet de gérer le selecteur de l'event
    */
   public static selectorEvent(currentEvent : any, previousSelector : string) : string {
@@ -114,13 +98,12 @@ export class EventService {
   /**
    * Permet de récupérer le IMessage lié à l'event
    */
-  public static messageEvent(currentEvent : any, selector : string, value : string, durancyClick : number
-    , comments : string, filesUpload : FileList) : IMessage {
+  public static messageEvent(currentEvent : any, selector : string, durancyClick : number, comments : string, filesUpload : FileList) : IMessage {
 
     let message : IMessage = {
       selector,
       comments,
-      value : value ? value : currentEvent.target.value,
+      value : currentEvent.target.value,
       tagName : currentEvent.target.tagName,
       action : currentEvent.type,
       typeEvent : currentEvent.type,
