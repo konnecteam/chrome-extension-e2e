@@ -369,7 +369,7 @@ class RecordingController {
     this._zipService.resetZip();
     this._pollyService.flush();
     this._isPaused = false;
-    chrome.action.setBadgeText({ text : 'sdfsdf' });
+    chrome.action.setBadgeText({ text : '' });
 
     try {
 
