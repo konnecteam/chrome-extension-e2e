@@ -243,7 +243,7 @@ export class SelectorService {
    * Sortie : collapse-panel > div > div > div > div\:nth-child(2) > div > input
    */
   public standardizeSelector(selector : string) : string {
-    return selector.replace(/\\\./g, '\\\\.')
+    return selector.replace(/\\\./g, '\\\\\.')
     .replace('\n', '\\"').split('\:').join('\\\:')
     /* Quand un sélécteur est trouvé par le finder, au lieu de mettre ":" il met 3A donc
      * il faut transformer le 3A en \\: pour le sélecteur
