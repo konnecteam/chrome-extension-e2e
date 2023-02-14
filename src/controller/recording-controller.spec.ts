@@ -117,22 +117,8 @@ describe('Test de Recording Controller', () => {
       // On utilise sendMessage donc il faut le declarer mais on a pas besoin de l'overwrite
       window.chrome.runtime.sendMessage = (async event => {});
 
-      // On overwrite pour adapter le get au local storage
-      window.chrome.storage.local.get = (key, callback?) => {
-        callback(JSON.parse(window.localStorage.getItem(key[0])));
-      };
-
-
       // On overwrite la foncion pour lui donner l'url de fake time js
       window.chrome.runtime.getURL = () => 'libs/scripts/fake-time/fake-time.js';
-
-      // On overwrite le set pour set dans local storage pour les tests
-      window.chrome.storage.local.set = valueTOsave => {
-        const key = Object.keys(valueTOsave)[0];
-        const value = valueTOsave[key];
-        window.localStorage.setItem(key, JSON.stringify(value));
-      };
-
 
       // On overwrite remove pour supprimer des éléments
       chrome.storage.local.remove = key => {
