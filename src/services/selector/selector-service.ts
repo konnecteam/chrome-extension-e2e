@@ -108,9 +108,10 @@ export class SelectorService {
    * Récupère le selector d'un élément html
    */
   public find(element : HTMLElement) : string {
+    let selector : string;
 
     // On verifie si on peut utiliser ses custom attribut pour faire le selecteur
-    if (this._dataAttributes && this._dataAttributes.length > 0) {
+    if (this._dataAttributes?.length > 0) {
 
       // On récupère les custom attributs d'un élément si il y en a
       const customAttributes : string[] = this._getCustomAttributes(element);
@@ -118,18 +119,27 @@ export class SelectorService {
       // On construit le custom selector
       const customSelector = customAttributes.length > 0 ? this._findCustomSelector(element, customAttributes) : '';
 
-      // Si le customSelector est vide ou qu'on trouve plus d'un element alors on utilise le standard
-      if (customSelector === '' || document.querySelectorAll(customSelector).length > 1) {
-
-        return this._findStandardSelector(element);
+      if (customSelector === '' || this._findQuerySelector(customSelector).length > 1) {
+        selector = this._findStandardSelector(element);
       } else {
-
-        return customSelector;
+        selector = customSelector;
       }
     } else {
-
-      return this._findStandardSelector(element);
+      selector = this._findStandardSelector(element);
     }
+
+    return selector;
+  }
+
+  private _findQuerySelector(customSelector : string) : any {
+    // Si le customSelector est vide ou qu'on trouve plus d'un element alors on utilise le standard
+    let querySelectorResult : any = [];
+    try {
+      querySelectorResult = document.querySelectorAll(customSelector);
+    } catch (error) {
+      console.error(`Erreur lors de l'exécution de : document.querySelectorAll('${customSelector}')`, querySelectorResult = document.querySelectorAll('body'));
+    }
+    return querySelectorResult;
   }
 
   /**
@@ -234,7 +244,13 @@ export class SelectorService {
    * Sortie : [click\.delegate="modalGdprVM.close()"]
    */
   private _formatDataOfSelector(element : HTMLElement, attribute : string) : string {
-    return `[${attribute.replace(/[.]/g, '\\\.')}="${element.getAttribute(attribute).replace(/[']/g, '\\\'').replace(/["]/g, '\\\"')}"]`;
+    let selector = CSS.escape(`[${attribute}="${element.getAttribute(attribute)}"]`);
+    // Couvre le cas de '\[e2e-id\=\"login-button\"\]\[submit\.delegate\=\"submit\(\)\"\]'
+    // Ou submit\.delegate a besoin d'être submit\\.delegate
+    // TEST ko : document.querySelectorAll('\[e2e-id\=\"login-button\"\]\[submit\.delegate\=\"submit\(\)\"\]');
+    // TEST ok : document.querySelectorAll('\[e2e-id\=\"login-button\"\]\[submit\\.delegate\=\"submit\(\)\"\]');
+    selector = selector.replace(/\\\./g, '\\\\\.');
+    return selector;
   }
 
   /**
