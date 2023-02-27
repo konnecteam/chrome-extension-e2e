@@ -218,31 +218,10 @@ export class ChromeService {
       }
     }
 
-    const manifest = chrome.runtime.getManifest();
-    const webAccessibleResources = manifest.web_accessible_resources;
-    let downloaderTab : chrome.tabs.Tab;
-    if (webAccessibleResources?.some(r => r.includes('downloader.html'))) {
-      const tabs = await chrome.tabs.query({ url: '*://*/*' });
-      downloaderTab = tabs.find(t => t.url);
-    }
-
-    if (downloaderTab) {
-      chrome.tabs.executeScript(downloaderTab.id, {
-        code: `
-          const iframe = document.createElement('iframe');
-          iframe.src = '${chrome.runtime.getURL('downloader.html')}';
-          iframe.style.cssText = 'display:none!important';
-          document.body.appendChild(iframe);
-        `,
-      });
-    } else {
-      chrome.windows.create({ url: 'downloader.html', state: 'minimized' });
-    }
-
     self.addEventListener('message', e => {
       if (e.data === 'sendBlob') {
         self.removeEventListener('message', (e as any).listener);
-        send(e.source, !downloaderTab);
+        send(e.source, false);
       }
     });
   }

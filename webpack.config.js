@@ -22,8 +22,7 @@ module.exports = {
     'services/window/window-service' : './src/services/window/window-service.ts',
     'services/zip/zip-service' : './src/services/zip/zip-service.ts',
     'lib/scripts/polly/polly' : './lib/scripts/polly/polly-recorder.ts',
-    'lib/scripts/fake-time/fake-time' : './lib/scripts/fake-time/fake-time.ts',
-    download : './src/download/download.ts'
+    'lib/scripts/fake-time/fake-time' : './lib/scripts/fake-time/fake-time.ts'
   },
   output: {
     path: join(__dirname, 'dist'),
@@ -81,11 +80,6 @@ module.exports = {
       template: './src/options/template.html',
       chunks: ['options'],
       filename: 'options.html'
-    }),
-    new HtmlWebpackPlugin({
-      template: './src/download/download.html',
-      chunks: ['download'],
-      filename: 'download.html'
     }),
     new VueLoaderPlugin()
   ],
