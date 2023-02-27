@@ -25,7 +25,8 @@ let harContent = JSON.stringify(JSON.parse(harFileContent));
 
 RequestService.getInstance().setHarContent(harContent);\n`,
 
-  HEADER : `const browser = await puppeteer.launch()
+  HEADER : `const params = (process.env.PUPPETEER_HEADLESS === 'false') ? { headless : false } : {};
+const browser = await puppeteer.launch(params);
 const page = await browser.newPage()
 page.setDefaultTimeout('100000')
 let fileChooser = null;
@@ -36,7 +37,8 @@ BrowserService.addTargetCreatedHandler(browser);
 \n`,
 
   WRAPPED_HEADER : `(async () => {
-  const browser = await puppeteer.launch()
+  const params = (process.env.PUPPETEER_HEADLESS === 'false') ? { headless : false } : {};
+  const browser = await puppeteer.launch(params)
   const page = await browser.newPage()
   page.setDefaultTimeout('100000')
   let fileChooser = null;
