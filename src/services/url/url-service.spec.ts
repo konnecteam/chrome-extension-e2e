@@ -14,8 +14,7 @@ let page : puppeteer.Page;
 
 describe('Test de du Service UrlService', function() {
 
-  beforeAll(async function (done) {
-    await runBuild();
+  beforeAll(async function() {
     // On démarre le serveur de test
     server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
@@ -23,7 +22,6 @@ describe('Test de du Service UrlService', function() {
     // On lance puppeteer et on met en place la page pour les tests
     page = await browser.newPage();
     await page.goto('http://localhost:3000/');
-    done();
   }, 50000);
 
   // Close server

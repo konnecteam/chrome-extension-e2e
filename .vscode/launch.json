@@ -10,6 +10,22 @@
       "name": "Launch Chrome localhost:9009",
       "url": "http://localhost:9009?e2e=true",
       "runtimeArgs": ["--load-extension=${workspaceFolder}/dist"]
+    },
+    {
+      "name": "Test dev",
+      "type": "node",
+      "request": "launch",
+      "program": "node_modules/jest/bin/jest.js",
+      "args": [
+        "--runInBand"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/**/*.js",
+        "!**/node_modules/**"
+      ],
+      "sourceMaps": true,
+      "outputCapture": "std",
+      "console": "internalConsole"
     }
   ]
 }

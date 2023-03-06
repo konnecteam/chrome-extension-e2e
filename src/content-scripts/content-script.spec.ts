@@ -74,11 +74,7 @@ async function waitContentScriptReadyAsync() : Promise<string> {
 describe('Test Content script ', () => {
 
   // Start test server
-  beforeAll(async done => {
-
-    // On met un timeout car runbuild met plus de 2000ms
-    await runBuild();
-
+  beforeAll(async () => {
     // On démarre le serveur de test
     server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
@@ -148,8 +144,6 @@ describe('Test Content script ', () => {
       el.src = scriptText;
       document.body.parentElement.appendChild(el);
     }, 'build/content-script.js');
-
-    done();
   }, 50000);
 
   // Close Server

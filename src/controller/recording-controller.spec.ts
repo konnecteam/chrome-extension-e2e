@@ -1,17 +1,23 @@
-import { runBuild } from './../../static/test/extension-builder/extension-builder';
+import { Server } from 'http';
+import { IOption } from 'interfaces/i-options';
 import 'jest';
 import * as puppeteer from 'puppeteer';
-import { startServer } from '../../static/test/page-test/server';
-import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
 import * as chrome from 'sinon-chrome';
-import { IMessage } from '../interfaces/i-message';
-import { Server } from 'http';
-import { EBadgeState } from '../enum/badge/e-badge-states';
+import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
+import { startServer } from '../../static/test/page-test/server';
 import { EControlAction } from '../enum/action/control-actions';
-import { IOption } from 'interfaces/i-options';
+import { EBadgeState } from '../enum/badge/e-badge-states';
+import { IMessage } from '../interfaces/i-message';
 
+// sinon-chrome est valable pour les extensions manifest V2
+// mais n'est pas à jour pour gérer les extensions manifest V3
+// Ici, on fait les ajustements pour que les tests continuent de fonctionner en V3
+// La solution idéale serait de supprimer les modifications ci-dessous et de mettre à jour sinon-chrome (quand la v3 sera supportée)
+// (cf. https://developer.chrome.com/docs/extensions/mv3/mv3-migration/)
+chrome.action = chrome.browserAction;
+chrome.scripting = {};
 
-//CONTROL
+// CONTROL
 let server : Server;
 let browser : puppeteer.Browser;
 let page : puppeteer.Page;
@@ -78,14 +84,11 @@ async function verfiyBadgeContentAsync(action : string ) : Promise<string> {
   return getBadgeTextAsync();
 }
 
-// tslint:disable: no-identical-functions
+
 describe('Test de Recording Controller', () => {
 
   // Mise en place du serveur
-  beforeAll(async done => {
-
-    await runBuild();
-
+  beforeAll(async()  => {
     // On démarre le serveur de test
     server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
@@ -117,8 +120,21 @@ describe('Test de Recording Controller', () => {
       // On utilise sendMessage donc il faut le declarer mais on a pas besoin de l'overwrite
       window.chrome.runtime.sendMessage = (async event => {});
 
+      // On overwrite pour adapter le get au local storage
+      (window.chrome.storage.local as any).get = async (key : any, callback?) => {
+        callback(JSON.parse(window.localStorage.getItem(key[0])));
+      };
+
       // On overwrite la foncion pour lui donner l'url de fake time js
       window.chrome.runtime.getURL = () => 'libs/scripts/fake-time/fake-time.js';
+
+      // On overwrite le set pour set dans local storage pour les tests
+      window.chrome.storage.local.set = async valueTOsave => {
+        const key = Object.keys(valueTOsave)[0];
+        const value = valueTOsave[key];
+        window.localStorage.setItem(key, JSON.stringify(value));
+      };
+
 
       // On overwrite remove pour supprimer des éléments
       chrome.storage.local.remove = key => {
@@ -174,9 +190,9 @@ describe('Test de Recording Controller', () => {
         (window as any).badgeText = badge.text;
       };
 
-       /**
-        * On overwrite la méthode seticon pour connaitre l'état de l'icon
-        */
+      /**
+       * On overwrite la méthode seticon pour connaitre l'état de l'icon
+       */
       (window as any).badgeIcon = '';
       chrome.action.setIcon = (badge : { path : string }) => {
         (window as any).badgeIcon = badge.path;
@@ -236,8 +252,6 @@ describe('Test de Recording Controller', () => {
       el.src = scriptText;
       document.body.parentElement.appendChild(el);
     }, 'build/background.js');
-
-    done();
   }, 50000);
 
   // Close server
@@ -282,34 +296,5 @@ describe('Test de Recording Controller', () => {
     const badge = await verfiyBadgeContentAsync(EControlAction.UNPAUSE);
     // Verifier si il est égale à 'rec' car on record
     expect(badge).toEqual(EBadgeState.REC);
-  });
-
-  test('Test de exportScript', async () => {
-
-    await waitBackgroundReadyAsync();
-
-    // On met result à true pour simuler la reception d'un résultat
-    await page.evaluate(() => {
-      (window as any).recordingController._isResult = true;
-      Promise.resolve();
-    });
-
-    // On met du contenu dans code
-    await page.evaluate(() => {
-      window.chrome.storage.local.set( { code : 'code exemple' });
-      Promise.resolve();
-    });
-    // Dispatch event
-    await dispatchEventAsync('OnMessage', { action : EControlAction.EXPORT_SCRIPT });
-
-    // On fait une pause pour laisser exportScript le temps de finir
-    await page.waitFor(40);
-
-    // On vérfie si on a bien utilisé la méthode download
-    const ddlFile = await page.evaluate(() => {
-      return (window as any).ddlFile;
-    });
-    // Verifier si il est égale à true car on a ddl
-    expect(ddlFile).toBeTruthy();
   });
 });

@@ -1,4 +1,3 @@
-const { CheckerPlugin } = require('awesome-typescript-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader').VueLoaderPlugin;
@@ -44,7 +43,7 @@ module.exports = {
       {
         exclude: /node_modules/,
         test: /\.ts?$/,
-        use: 'awesome-typescript-loader?{configFileName: "tsconfig.json"}',
+        use: 'ts-loader',
       },
       {
         test: /\.scss$/,
@@ -63,7 +62,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new CheckerPlugin(),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',

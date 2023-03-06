@@ -39,10 +39,7 @@ async function isPausedPollyAsync() : Promise<any> {
 describe('Test de Polly recorder', () => {
 
   // Start test server
-  beforeAll(async done => {
-
-    await runBuild();
-
+  beforeAll(async () => {
     // On démarre le serveur de test
     server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
@@ -71,7 +68,6 @@ describe('Test de Polly recorder', () => {
       document.body.parentElement.appendChild(el);
 
     }, 'build/lib/scripts/polly/polly.js');
-    done();
   }, 50000);
 
   // Close server
