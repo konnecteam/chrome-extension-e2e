@@ -28,7 +28,7 @@ RequestService.getInstance().setHarContent(harContent);\n`,
   HEADER : `const params = (process.env.PUPPETEER_HEADLESS === 'false') ? { headless : false } : {};
 const browser = await puppeteer.launch(params);
 const page = await browser.newPage()
-page.setDefaultTimeout('100000')
+page.setDefaultTimeout(process.env.PUPPETEER_TIMEOUT || '100000')
 let fileChooser = null;
 /** On met en place le handle du chargement de la page */
 PageService.addLoadHandler(page);
@@ -40,7 +40,7 @@ BrowserService.addTargetCreatedHandler(browser);
   const params = (process.env.PUPPETEER_HEADLESS === 'false') ? { headless : false } : {};
   const browser = await puppeteer.launch(params)
   const page = await browser.newPage()
-  page.setDefaultTimeout('100000')
+  page.setDefaultTimeout(process.env.PUPPETEER_TIMEOUT || '100000')
   let fileChooser = null;
   /** On met en place le handle du chargement de la page */
   PageService.addLoadHandler(page);
