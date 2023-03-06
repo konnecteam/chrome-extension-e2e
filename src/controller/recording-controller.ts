@@ -14,7 +14,12 @@ import { EPptrAction } from '../enum/action/pptr-actions';
 
 // Constant
 import ZIP_CONTENT from '../constants/package-json-zip';
-global.window = self;
+
+// On ajoute une condition pour les tests unitaires
+// Qui ne s'effectuent pas dans un contexte de service worker (self vaut undefined)
+if (!global?.window && self) {
+  global.window = self;
+}
 
 /**
  * Background du Plugin qui permet de gérer le recording
