@@ -34,7 +34,7 @@ describe('Test de File Service', () => {
   });
 
   test('Test de readFileAsync', async () => {
-    const fileTestFile = path.join(__dirname, './../../../static/test/file/test.txt');
+    const fileTestFile = path.join(__dirname, './../../test/file/test.txt');
 
     const contentFileExpect = fs.readFileSync(fileTestFile, 'utf-8');
 

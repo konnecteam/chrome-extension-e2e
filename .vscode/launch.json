@@ -12,7 +12,7 @@
       "runtimeArgs": ["--load-extension=${workspaceFolder}/dist"]
     },
     {
-      "name": "Test dev",
+      "name": "Jest Test local",
       "type": "node",
       "request": "launch",
       "program": "node_modules/jest/bin/jest.js",

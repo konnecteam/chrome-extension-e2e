@@ -4,8 +4,8 @@ import * as atob from 'atob';
 import * as path from 'path';
 import * as fs from 'fs';
 
-const fileTestFile = path.join(__dirname, './../../../static/test/file/test.txt');
-const fileTestWrite = path.join(__dirname, './../../../static/test/file/test_write.txt');
+const fileTestFile = path.join(__dirname, './../../test/file/test.txt');
+const fileTestWrite = path.join(__dirname, './../../test/file/test_write.txt');
 const mimeType = 'text/plain;';
 let dataURL : string;
 let contentFile : string;

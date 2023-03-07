@@ -13,14 +13,14 @@ import { InputFilesComponent } from '../../components/components/input-file-comp
 import { InputNumericComponent } from '../../components/konnect/input-numeric-component';
 import { ETagName } from '../../enum/elements/tag-name';
 
-const FILE_DROP_ZONE_PATH = '/static/test/dom/dom-filedropzone.html';
-const K_SELECT_PATH = '/static/test/dom/dom-k-select.html';
-const KM_SWITCH_PATH = '/static/test/dom/dom-km-switch.html';
-const INPUT_LIST_PATH = '/static/test/dom/dom-input-list.html';
-const POPOVER_PATH = '/static/test/dom/dom-popover.html';
-const INPUT_NUMERIC = '/static/test/dom/dom-input-numeric.html';
-const TEXT_EDITOR_DOM = '/static/test/dom/dom-text-editor.html';
-const TAGS_LIST = '/static/test/dom/dom-tags-list.html';
+const FILE_DROP_ZONE_PATH = '/src/test/dom/dom-filedropzone.html';
+const K_SELECT_PATH = '/src/test/dom/dom-k-select.html';
+const KM_SWITCH_PATH = '/src/test/dom/dom-km-switch.html';
+const INPUT_LIST_PATH = '/src/test/dom/dom-input-list.html';
+const POPOVER_PATH = '/src/test/dom/dom-popover.html';
+const INPUT_NUMERIC = '/src/test/dom/dom-input-numeric.html';
+const TEXT_EDITOR_DOM = '/src/test/dom/dom-text-editor.html';
+const TAGS_LIST = '/src/test/dom/dom-tags-list.html';
 /**
  * Selecteurs
  */

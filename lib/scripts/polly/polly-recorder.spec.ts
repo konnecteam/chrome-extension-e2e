@@ -1,8 +1,7 @@
 import 'jest';
-import { runBuild } from '../../../static/test/extension-builder/extension-builder';
 import * as puppeteer from 'puppeteer';
-import { startServer } from '../../../static/test/page-test/server';
-import { launchPuppeteerWithExtension } from '../../../static/test/lauch-puppeteer/lauch-puppeteer';
+import { startServer } from '../../../src/test/page-test/server';
+import { launchPuppeteerWithExtension } from '../../../src/test/lauch-puppeteer/lauch-puppeteer';
 import { Server } from 'http';
 
 let server : Server;

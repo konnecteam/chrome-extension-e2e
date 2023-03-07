@@ -8,7 +8,7 @@ import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 // Path pour acceder au contenu du body que l'on va utiliser
-const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-input-numeric.html');
+const PATH_DOM = path.join(__dirname, './../../test/dom/dom-input-numeric.html');
 
 /**
  * Selecteurs

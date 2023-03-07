@@ -7,7 +7,7 @@ import { FileService } from '../../services/file/file-service';
 
 let zipService : ZipService;
 
-const fileTestFile = path.join(__dirname, './../../../static/test/file/test.txt');
+const fileTestFile = path.join(__dirname, './../../test/file/test.txt');
 
 // tslint:disable: no-identical-functions
 
@@ -55,7 +55,7 @@ describe('Test de Zip service', () => {
   });
 
   afterAll(async () => {
-    const zipPath = path.join(__dirname, './../../../static/test/file/test.zip');
+    const zipPath = path.join(__dirname, './../../test/file/test.zip');
     const fileExist = await isFileExist(zipPath);
 
     if (fileExist) {
@@ -91,7 +91,7 @@ describe('Test de Zip service', () => {
     const zip = await zipService.generateAsync();
 
     // Création du zip sur le disque
-    const zipPath = path.join(__dirname, './../../../static/test/file/test.zip');
+    const zipPath = path.join(__dirname, './../../test/file/test.zip');
     await createFileAsync(zipPath, zip);
 
     const fileExist = await isFileExist(zipPath);

@@ -9,7 +9,7 @@ import { ECustomEvent } from '../../enum/events/events-custom';
 /**
  * chemin du fichier html qui contient le body
  */
-const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-filedropzone.html');
+const PATH_DOM = path.join(__dirname, './../../test/dom/dom-filedropzone.html');
 
 /**
  * Selecteurs

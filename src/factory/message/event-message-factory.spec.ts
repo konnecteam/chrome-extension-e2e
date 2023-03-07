@@ -29,15 +29,15 @@ async function changeBodyDocumentAsync(pathDoc : string) {
 /**
  * Path des dom HTMl de chaque component
  */
-const FILE_DROP_ZONE_DOM = '/static/test/dom/dom-filedropzone.html';
-const INPUT_NUMERIC_DOM = '/static/test/dom/dom-input-numeric.html';
-const K_SELECT_DOM = '/static/test/dom/dom-k-select.html';
-const INPUT_LIST_DOM = '/static/test/dom/dom-input-list.html';
-const POPOVER_DOM = '/static/test/dom/dom-popover.html';
-const CHECKBOX_DOM = '/static/test/dom/dom-checkbox.html';
-const RADIO_GROUP_DOM = '/static/test/dom/dom-radio-group.html';
-const TEXT_EDITOR_DOM = '/static/test/dom/dom-text-editor.html';
-const TAGS_LIST_DOM = '/static/test/dom/dom-tags-list.html';
+const FILE_DROP_ZONE_DOM = '/src/test/dom/dom-filedropzone.html';
+const INPUT_NUMERIC_DOM = '/src/test/dom/dom-input-numeric.html';
+const K_SELECT_DOM = '/src/test/dom/dom-k-select.html';
+const INPUT_LIST_DOM = '/src/test/dom/dom-input-list.html';
+const POPOVER_DOM = '/src/test/dom/dom-popover.html';
+const CHECKBOX_DOM = '/src/test/dom/dom-checkbox.html';
+const RADIO_GROUP_DOM = '/src/test/dom/dom-radio-group.html';
+const TEXT_EDITOR_DOM = '/src/test/dom/dom-text-editor.html';
+const TAGS_LIST_DOM = '/src/test/dom/dom-tags-list.html';
 
 /**
  * Selecteurs

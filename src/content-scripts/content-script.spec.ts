@@ -1,9 +1,8 @@
 import { IMessage } from '../interfaces/i-message';
-import { runBuild } from './../../static/test/extension-builder/extension-builder';
 import 'jest';
 import * as puppeteer from 'puppeteer';
-import { startServer } from '../../static/test/page-test/server';
-import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
+import { startServer } from '../test/page-test/server';
+import { launchPuppeteerWithExtension } from '../test/lauch-puppeteer/lauch-puppeteer';
 import * as chrome from 'sinon-chrome';
 import { Server } from 'http';
 import { IOption } from '../interfaces/i-options';
