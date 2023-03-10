@@ -48,7 +48,9 @@ describe('Test de Pptr Action Block Factory', () => {
 
     exceptedResult.addLine({
       type : EPptrAction.GOTO,
-      value : `await page.waitForTimeout(1000);
+      value : `const context = browser.defaultBrowserContext();
+  context.overridePermissions('${href}', ['notifications']);
+  await page.waitForTimeout(1000);
   await page.evaluate( () => {
     window.konnect.engineStateService.Instance.start();
   });`

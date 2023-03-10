@@ -9,7 +9,7 @@ import { EComponent } from '../../enum/component/component';
 /**
  * chemin du fichier html qui contient le body
  */
-const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-tags-list.html');
+const PATH_DOM = path.join(__dirname, './../../test/dom/dom-tags-list.html');
 
 describe('Test de TagsList', () => {
 

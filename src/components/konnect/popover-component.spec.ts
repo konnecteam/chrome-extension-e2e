@@ -7,7 +7,7 @@ import { EComponent } from '../../enum/component/component';
 import { ECustomEvent } from '../../enum/events/events-custom';
 
 // Path du fichier qui contient le body
-const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-popover.html');
+const PATH_DOM = path.join(__dirname, './../../test/dom/dom-popover.html');
 
 /**
  * Selecteur

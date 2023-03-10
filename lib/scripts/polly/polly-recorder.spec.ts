@@ -1,8 +1,7 @@
 import 'jest';
-import { runBuild } from '../../../static/test/extension-builder/extension-builder';
 import * as puppeteer from 'puppeteer';
-import { startServer } from '../../../static/test/page-test/server';
-import { launchPuppeteerWithExtension } from '../../../static/test/lauch-puppeteer/lauch-puppeteer';
+import { startServer } from '../../../src/test/page-test/server';
+import { launchPuppeteerWithExtension } from '../../../src/test/launch-puppeteer/launch-puppeteer';
 import { Server } from 'http';
 
 let server : Server;
@@ -39,10 +38,7 @@ async function isPausedPollyAsync() : Promise<any> {
 describe('Test de Polly recorder', () => {
 
   // Start test server
-  beforeAll(async done => {
-
-    await runBuild();
-
+  beforeAll(async () => {
     // On démarre le serveur de test
     server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
@@ -71,7 +67,6 @@ describe('Test de Polly recorder', () => {
       document.body.parentElement.appendChild(el);
 
     }, 'build/lib/scripts/polly/polly.js');
-    done();
   }, 50000);
 
   // Close server

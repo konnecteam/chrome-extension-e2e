@@ -15,6 +15,12 @@ import { EPptrAction } from '../enum/action/pptr-actions';
 // Constant
 import ZIP_CONTENT from '../constants/package-json-zip';
 
+// On ajoute une condition pour les tests unitaires
+// Qui ne s'effectuent pas dans un contexte de service worker (self vaut undefined)
+if (!global?.window && self) {
+  global.window = self;
+}
+
 /**
  * Background du Plugin qui permet de gérer le recording
  */
@@ -118,7 +124,7 @@ class RecordingController {
         dataAttribute : `^data\-value$ ^title$ ^data\-offset\-index$ ^e2e\-id$ ^src$ ^route-href$ ^[a-z\-]*\.trigger$ ^[a-z\-]*\.delegate$ ^[a-z\-]*\.bind$ ^[a-z\-]*\.two-way$ ^[a-z\-]*\.one-way$`,
         useRegexForDataAttribute : true,
         customLineAfterClick : '',
-        recordHttpRequest : true,
+        recordHttpRequest : false,
         regexHTTPrequest : '',
         customLinesBeforeEvent : `await page.evaluate(async() => {
     await konnect.engineStateService.Instance.waitForAsync(1);
@@ -132,7 +138,7 @@ class RecordingController {
    * Exécuté à l'installation du plugin
    */
   public boot() {
-    (chrome.extension as any).onConnect.addListener(port => {
+    chrome.runtime.onConnect.addListener(port => {
       port.onMessage.addListener(msg => {
         switch (msg.action) {
           case EControlAction.START :
@@ -231,7 +237,7 @@ class RecordingController {
 
           const recording = {
             folderName : this._pollyService.getRecordId() !== '' ? this._pollyService.getRecordId() : 'emptyResult',
-            har : this._pollyService.getRecordHar() !== '' ? this._pollyService.getRecordHar() : 'No request recorded'
+            har : this._pollyService.getRecordHar() !== '' ? JSON.stringify(this._pollyService.getRecordHar()) : 'No request recorded'
           };
 
           // changement de la barre de progression
@@ -241,16 +247,15 @@ class RecordingController {
 
           // Ajoute le recording dans le zip
           this._zipService.addFileInFolder(
-              `recordings/${recording.folderName}/${RecordingController._RECORDING_FILENAME}`,
-              new File([recording.har],
-              RecordingController._RECORDING_FILENAME
-          ));
+            `recordings/${recording.folderName}/${RecordingController._RECORDING_FILENAME}`,
+            new File([recording.har], RecordingController._RECORDING_FILENAME)
+          );
         }
 
           // changement de la barre de progression
         ChromeService.sendMessage({ valueLoad : 75 });
 
-        const zipInNodeBuffer = await this._zipService.generateAsync();
+        const zipInNodeBase64 = await this._zipService.generateAsync();
 
         // changement de la barre de progression
         ChromeService.sendMessage({ valueLoad : 100 });
@@ -259,7 +264,7 @@ class RecordingController {
         const dataURLZip = DataURLFactory.buildDataURL(
           RecordingController._MIMETYPE,
           RecordingController._TYPEDATA,
-          zipInNodeBuffer.toString((RecordingController._TYPEDATA) as BufferEncoding)
+          zipInNodeBase64
         );
 
         this._zipContent = FileService.Instance.buildFile(RecordingController._SCENARIO_ZIP_NAME, dataURLZip);
@@ -270,7 +275,7 @@ class RecordingController {
     } catch (err) {
 
       StorageService.setData({ errorMessage : 'Problem with exported script' });
-      console.error('Problem with exported script');
+      console.error('Problem with exported script', err);
     }
   }
 
@@ -369,11 +374,11 @@ class RecordingController {
     this._zipService.resetZip();
     this._pollyService.flush();
     this._isPaused = false;
-    chrome.browserAction.setBadgeText({ text : '' });
+    chrome.action.setBadgeText({ text : '' });
 
     try {
 
-      const currentTab = await ChromeService.getCurrentTabIdAsync();
+      const currentTab = await ChromeService.getCurrentTabAsync();
 
       // 2 - On récupère les options
       const data = await StorageService.getDataAsync(['options']);
@@ -401,9 +406,7 @@ class RecordingController {
 
       // 5 - Inject le script
       await ChromeService.executeScript({
-        file : RecordingController._CONTENT_SCRIPT_FILENAME,
-        allFrames : false,
-        runAt : 'document_start'
+        files : [ RecordingController._CONTENT_SCRIPT_FILENAME],
       });
 
       // Récupération du viewport
@@ -468,9 +471,7 @@ class RecordingController {
     try {
 
       await ChromeService.executeScript({
-        file : RecordingController._CONTENT_SCRIPT_FILENAME,
-        allFrames : false,
-        runAt : 'document-start'
+        file : RecordingController._CONTENT_SCRIPT_FILENAME
       });
 
       if (callback) {
@@ -575,7 +576,7 @@ class RecordingController {
           this._pollyService.record.har = har;
         }
 
-        URL.revokeObjectURL(message.resultURL);
+        // URL.revokeObjectURL(message.resultURL);
 
         this._isResult = true;
         StorageService.setData({ isResult : this._isResult });

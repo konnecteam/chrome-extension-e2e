@@ -1,9 +1,8 @@
 import 'jest';
 import { HttpService } from './http-service';
-import { runBuild } from './../../../static/test/extension-builder/extension-builder';
 import * as puppeteer from 'puppeteer';
-import { startServer } from '../../../static/test/page-test/server';
-import { launchPuppeteerWithExtension } from '../../../static/test/lauch-puppeteer/lauch-puppeteer';
+import { startServer } from '../../test/page-test/server';
+import { launchPuppeteerWithExtension } from '../../test/launch-puppeteer/launch-puppeteer';
 import { Server } from 'http';
 
 let server : Server;
@@ -12,10 +11,7 @@ let page : puppeteer.Page;
 
 describe('Test de du Service HttpService', function() {
 
-  beforeAll(async done => {
-
-    await runBuild();
-
+  beforeAll(async () => {
     // On démarre le serveur de test
     server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
@@ -23,8 +19,6 @@ describe('Test de du Service HttpService', function() {
     // On lance puppeteer et on met en place la page pour les tests
     page = await browser.newPage();
     await page.goto('http://localhost:3000/');
-    done();
-
     // On met un timeout car runbuild met plus de 2000ms
   }, 50000);
 

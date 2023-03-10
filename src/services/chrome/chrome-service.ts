@@ -70,14 +70,14 @@ export class ChromeService {
    * Permet de définir une icone
    */
   public static setIcon(path : string) : void {
-    chrome.browserAction.setIcon({ path });
+    chrome.action.setIcon({ path });
   }
 
   /**
    * Permet de définir un badge
    */
   public static setBadgeText(text : string) : void {
-    chrome.browserAction.setBadgeText({ text });
+    chrome.action.setBadgeText({ text });
   }
 
   /**
@@ -85,10 +85,10 @@ export class ChromeService {
    */
   public static async getBadgeTextAsync() : Promise<string> {
 
-    const currentTab = await this.getCurrentTabIdAsync();
+    const currentTab = await this.getCurrentTabAsync();
     return new Promise((resolve, reject) => {
 
-      chrome.browserAction.getBadgeText({ tabId : currentTab.id }, result => {
+      chrome.action.getBadgeText({ tabId : currentTab.id }, result => {
         if (result === 'non-tab-specific') {
 
           reject('problem with tabId');
@@ -104,17 +104,16 @@ export class ChromeService {
    * Permet de définir une couleur
    */
   public static setBadgeBackgroundColor(color : string) : void {
-    chrome.browserAction.setBadgeBackgroundColor({ color });
+    chrome.action.setBadgeBackgroundColor({ color });
   }
 
   /**
    * Permet de récupérer l'id du tab courrant
    */
-  public static async getCurrentTabIdAsync() : Promise<{id : number, url : string}> {
+  public static async getCurrentTabAsync() : Promise<{id : number, url : string}> {
     return new Promise(async (resolve, reject) => {
       const tabs = await this._queryAsync({
-        active : true,
-        currentWindow : true
+        active : true
       });
       if (tabs && tabs[0]) {
         resolve({id : tabs[0].id, url : tabs[0].url});
@@ -127,23 +126,22 @@ export class ChromeService {
   /**
    * Permet d'exécuter un script
    */
-  public static executeScript(details : chrome.tabs.InjectDetails) : Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      chrome.tabs.executeScript(details, () => {
-        resolve(true);
-      });
-    });
+  public static async executeScript(details : any, allFrames : boolean = false) : Promise<boolean> {
+    const currentTab = await this.getCurrentTabAsync();
+    const params : chrome.scripting.ScriptInjection<any[], unknown> = {
+      ...details,
+      target: { tabId: currentTab.id, allFrames }
+    };
+    await chrome.scripting.executeScript(params);
+    return true;
   }
 
   /**
    * Permet de récupérer des info via une query
    */
   private static async _queryAsync(queryInfo : chrome.tabs.QueryInfo) : Promise<chrome.tabs.Tab[]> {
-    return new Promise((resolve, reject) => {
-      chrome.tabs.query(queryInfo, (result : chrome.tabs.Tab[]) => {
-        resolve(result);
-      });
-    });
+    const tabs = await chrome.tabs.query(queryInfo);
+    return tabs;
   }
 
   /**
@@ -191,30 +189,40 @@ export class ChromeService {
   /**
    * Permet de télécharger un fichier
    */
-  public static download(content : File, filename : string) : Promise<void> {
-
-    return new Promise((resolve, reject) => {
-      chrome.downloads.download({
-        url : URL.createObjectURL(content),
-        filename,
-        saveAs : true
-      }, (downloadId : number) => {
-
-        if (downloadId) {
-
-          resolve();
-        } else {
-          // chrome.runtime.lastError contient la raison de l'erreur
-          reject(chrome.runtime.lastError);
-        }
-      });
-    });
+  public static download(content : File, filename : string) : void {
+    ChromeService.downloadBlob(content, filename);
   }
 
   /**
    * Permet de récupérer l'url d'un fichier
    */
   public static getUrl(url : string) : string {
-    return chrome.extension.getURL(url);
+    return chrome.runtime.getURL(url);
+  }
+
+  /**
+   * Permet de télécharger du contenu
+   * https://stackoverflow.com/questions/73348151/downloading-a-large-blob-to-local-file-in-manifestv3-service-worker
+   * Workaround qui permet de télécharger un fichier dans une extension manifest V3 (Il y aura potentiellement des solutions plus simples dans un futur proche)
+   */
+  public static async downloadBlob(blob : Blob, name : string, destroyBlob : boolean = true) {
+    const send = async (dst : any, close : boolean) => {
+      dst.postMessage({ blob, name, close }, destroyBlob ? [await blob.arrayBuffer()] : []);
+    };
+
+    if ('clients' in self) {
+      const clients = await (self as unknown as ServiceWorkerGlobalScope).clients.matchAll({ type: 'window' });
+      const client = clients[0];
+      if (client) {
+        return send(client, false);
+      }
+    }
+
+    self.addEventListener('message', e => {
+      if (e.data === 'sendBlob') {
+        self.removeEventListener('message', (e as any).listener);
+        send(e.source, false);
+      }
+    });
   }
 }

@@ -94,7 +94,7 @@
         }
       })
 
-      this.bus = this.$chrome.extension.connect({ name: 'recordControls' });
+      this.bus = this.$chrome.runtime.connect({ name: 'recordControls' });
 
       // On écoute les message pour savoir si le scénario a été exporté
       chrome.runtime.onMessage.addListener(this.handleMessage);
@@ -134,8 +134,7 @@
           }
         }
       },
-      toggleRecord () {
-        
+      async toggleRecord () {
         if (this.isRecording) {
           this.stop();
         } else {

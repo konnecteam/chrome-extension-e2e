@@ -199,15 +199,13 @@ class EventRecorder {
         durationClick = Date.now() - this._startMouseDown;
       }
 
-      const value = EventService.valueEvent(e);
-
       // définition du selecteur
       const selector = EventService.selectorEvent(e, this._previousSelector);
 
       const comments = EventService.commentsEvent(selector);
 
       // construction du message: IMessage
-      const message = EventService.messageEvent(e, selector, value, durationClick, comments, filesUpload);
+      const message = EventService.messageEvent(e, selector, durationClick, comments, filesUpload);
 
       this._sendToScenario(message, e);
 
@@ -227,7 +225,6 @@ class EventRecorder {
   private async _listenerObserverAsync(mutationList : any[]) {
 
     try {
-
       // On bloque l'update du window.saveBody que l'on copie, tant qu'on traite l'event
       await ConditionalService.waitForConditionAsync(
         () => (window as any).eventRecorder._isEventProcessed,
@@ -268,7 +265,8 @@ class EventRecorder {
        */
       (window as any).saveBody = document.cloneNode(true);
     } catch (err) {
-      console.error('Error with listener observer : ', err);
+      /** Voir waitForConditionAsync si le catch se déclenche */
+      console.info('Listener observer failed : ', err);
     }
 
   }

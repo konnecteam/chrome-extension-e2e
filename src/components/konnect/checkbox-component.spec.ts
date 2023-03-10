@@ -9,7 +9,7 @@ import { EDomEvent } from '../../enum/events/events-dom';
 /**
  * chemin du fichier html qui contient le body
  */
-const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-checkbox.html');
+const PATH_DOM = path.join(__dirname, './../../test/dom/dom-checkbox.html');
 
 const CHECKBOX_ID = 'ckb146';
 

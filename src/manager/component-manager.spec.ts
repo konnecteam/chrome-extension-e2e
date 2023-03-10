@@ -18,8 +18,8 @@ async function changeBodyDocumentAsync(pathDoc : string) {
 /**
  * Chemin des fichiers sources
  */
-const FILE_DROP_ZONE_DOM = '/static/test/dom/dom-filedropzone.html';
-const INPUT_NUMERIC_DOM = '/static/test/dom/dom-input-numeric.html';
+const FILE_DROP_ZONE_DOM = '/src/test/dom/dom-filedropzone.html';
+const INPUT_NUMERIC_DOM = '/src/test/dom/dom-input-numeric.html';
 
 /**
  * Selecteurs

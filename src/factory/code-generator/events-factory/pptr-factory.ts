@@ -47,7 +47,9 @@ export class PPtrFactory {
     // On wait une seconde pour attendre konnect
     block.addLine({
       type : EPptrAction.GOTO,
-      value : `await page.waitForTimeout(1000);
+      value : `const context = browser.defaultBrowserContext();
+  context.overridePermissions('${href}', ['notifications']);
+  await page.waitForTimeout(1000);
   await page.evaluate( () => {
     window.konnect.engineStateService.Instance.start();
   });`

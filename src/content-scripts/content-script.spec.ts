@@ -1,9 +1,8 @@
 import { IMessage } from '../interfaces/i-message';
-import { runBuild } from './../../static/test/extension-builder/extension-builder';
 import 'jest';
 import * as puppeteer from 'puppeteer';
-import { startServer } from '../../static/test/page-test/server';
-import { launchPuppeteerWithExtension } from '../../static/test/lauch-puppeteer/lauch-puppeteer';
+import { startServer } from '../test/page-test/server';
+import { launchPuppeteerWithExtension } from '../test/launch-puppeteer/launch-puppeteer';
 import * as chrome from 'sinon-chrome';
 import { Server } from 'http';
 import { IOption } from '../interfaces/i-options';
@@ -74,11 +73,7 @@ async function waitContentScriptReadyAsync() : Promise<string> {
 describe('Test Content script ', () => {
 
   // Start test server
-  beforeAll(async done => {
-
-    // On met un timeout car runbuild met plus de 2000ms
-    await runBuild();
-
+  beforeAll(async () => {
     // On démarre le serveur de test
     server = await startServer();
     browser = await launchPuppeteerWithExtension(puppeteer);
@@ -95,7 +90,7 @@ describe('Test Content script ', () => {
       window.localStorage.setItem('options', JSON.stringify({ options : { code : browserOption.options } }));
 
       // On overwrite la foncion pour lui donner l'url de polly js
-      window.chrome.extension.getURL = () => 'build/lib/scripts/polly/polly.js';
+      window.chrome.runtime.getURL = () => 'build/lib/scripts/polly/polly.js';
 
       // On overwrite pour adapter le get au local storage
       window.chrome.storage.local.get = (key, callback?) => {
@@ -119,21 +114,21 @@ describe('Test Content script ', () => {
       });
 
       // On overwrite le set pour set dans local storage pour les tests
-      window.chrome.storage.local.set = valueTOsave => {
+      window.chrome.storage.local.set = (async valueTOsave => {
         const key = Object.keys(valueTOsave)[0];
         const value = valueTOsave[key];
         window.localStorage.setItem(key, JSON.stringify(value));
-      };
+      });
 
       (window as any).events = [];
       // On overwrite sendMessage pour sauvegarder les events catchés
-      window.chrome.runtime.sendMessage = event => {
+      window.chrome.runtime.sendMessage = (async event => {
         // Si le recorder est prêt alors on resolve pour continuer les tests
         if (event.control && event.control === 'event-recorder-started') {
           (window as any).recorderReady = true;
         }
         (window as any).events.push(event);
-      };
+      });
 
       // On overwrite le onMessage pour utiliser le event listener de la window pour les tests
       chrome.runtime.onMessage.addListener = fct => {
@@ -148,8 +143,6 @@ describe('Test Content script ', () => {
       el.src = scriptText;
       document.body.parentElement.appendChild(el);
     }, 'build/content-script.js');
-
-    done();
   }, 50000);
 
   // Close Server

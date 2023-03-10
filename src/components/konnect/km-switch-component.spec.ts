@@ -10,7 +10,7 @@ import { ECustomEvent } from '../../enum/events/events-custom';
 /**
  * Path du fichier qui contient le body
  */
-const PATH_DOM = path.join(__dirname, './../../../static/test/dom/dom-km-switch.html');
+const PATH_DOM = path.join(__dirname, './../../test/dom/dom-km-switch.html');
 
 /**
  * Selecteurs
