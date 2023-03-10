@@ -3,7 +3,7 @@ import { IOption } from 'interfaces/i-options';
 import 'jest';
 import * as puppeteer from 'puppeteer';
 import * as chrome from 'sinon-chrome';
-import { launchPuppeteerWithExtension } from '../test/lauch-puppeteer/lauch-puppeteer';
+import { launchPuppeteerWithExtension } from '../test/launch-puppeteer/launch-puppeteer';
 import { startServer } from '../test/page-test/server';
 import { EControlAction } from '../enum/action/control-actions';
 import { EBadgeState } from '../enum/badge/e-badge-states';

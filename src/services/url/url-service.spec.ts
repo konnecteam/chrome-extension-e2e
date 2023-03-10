@@ -2,7 +2,7 @@ import { URLService } from './url-service';
 import 'jest';
 import * as puppeteer from 'puppeteer';
 import { startServer } from '../../test/page-test/server';
-import { launchPuppeteerWithExtension } from '../../test/lauch-puppeteer/lauch-puppeteer';
+import { launchPuppeteerWithExtension } from '../../test/launch-puppeteer/launch-puppeteer';
 import { Server } from 'http';
 
 let urlLink = '';

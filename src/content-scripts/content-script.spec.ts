@@ -2,7 +2,7 @@ import { IMessage } from '../interfaces/i-message';
 import 'jest';
 import * as puppeteer from 'puppeteer';
 import { startServer } from '../test/page-test/server';
-import { launchPuppeteerWithExtension } from '../test/lauch-puppeteer/lauch-puppeteer';
+import { launchPuppeteerWithExtension } from '../test/launch-puppeteer/launch-puppeteer';
 import * as chrome from 'sinon-chrome';
 import { Server } from 'http';
 import { IOption } from '../interfaces/i-options';

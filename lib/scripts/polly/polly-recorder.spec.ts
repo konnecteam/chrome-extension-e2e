@@ -1,7 +1,7 @@
 import 'jest';
 import * as puppeteer from 'puppeteer';
 import { startServer } from '../../../src/test/page-test/server';
-import { launchPuppeteerWithExtension } from '../../../src/test/lauch-puppeteer/lauch-puppeteer';
+import { launchPuppeteerWithExtension } from '../../../src/test/launch-puppeteer/launch-puppeteer';
 import { Server } from 'http';
 
 let server : Server;
