@@ -1,7 +1,6 @@
 import { KeyDownService } from './../key-down/key-down-service';
 import { SelectorService } from './../selector/selector-service';
 import { IMessage } from '../../interfaces/i-message';
-import { PasswordService } from '../../services/password/password-service';
 import { ComponentManager } from '../../manager/component-manager';
 import { EventMessageFactory } from '../../factory/message/event-message-factory';
 import { ETagName } from '../../enum/elements/tag-name';
