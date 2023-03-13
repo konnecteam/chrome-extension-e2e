@@ -9,3 +9,4 @@ dist-zip
 package-lock.json
 .vscode/*
 !.vscode/launch.json
+.history
